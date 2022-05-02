@@ -3,10 +3,14 @@ namespace Blind
     /// <summary>
     /// 매니저의 인터페이스입니다. 매니저들 싱글턴이 구현되어 있습니다.
     /// </summary>
-    public interface IManager
+    public interface ISingleton
     {
-        public static IManager Instance { get; set; }
-        private static IManager Create()
+        public static ISingleton Instance { get; set; }
+        private static void Create()
+        {
+            throw new System.NotImplementedException();
+        }
+        private static void Find()
         {
             throw new System.NotImplementedException();
         }

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Blind
 {
     /// <summary>
-    /// 씬의 트랜지션,재시작등을 관리하는 컨트롤러입니다.
+    /// 씬의 트랜지션, 재시작 등을 관리하는 컨트롤러입니다.
     /// </summary>
     public class SceneController : Manager<SceneController>
     {
