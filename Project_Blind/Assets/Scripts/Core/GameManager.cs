@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Blind 
@@ -7,9 +8,20 @@ namespace Blind
     /// </summary>
     public class GameManager : Manager<GameManager>
     {
+        [SerializeField] public PlayerCharacter Player{ get; set; }
         protected override void Awake()
         {
             base.Awake();
+        }
+
+        private void Update()
+        {
+            
+        }
+
+        private void FixedUpdate()
+        {
+            Player.OnFixedUpdate();
         }
     }
 }
