@@ -9,9 +9,11 @@ namespace Blind
     public class GameManager : Manager<GameManager>
     {
         [SerializeField] public PlayerCharacter Player;
+        private InputController _inputController;
         protected override void Awake()
         {
             base.Awake();
+            _inputController = InputController.Instance;
         }
 
         private void Update()
