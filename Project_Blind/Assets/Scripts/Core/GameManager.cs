@@ -8,7 +8,7 @@ namespace Blind
     /// </summary>
     public class GameManager : Manager<GameManager>
     {
-        [SerializeField] public PlayerCharacter Player{ get; set; }
+        [SerializeField] public PlayerCharacter Player;
         protected override void Awake()
         {
             base.Awake();
@@ -23,6 +23,7 @@ namespace Blind
         {
             Player.OnFixedUpdate();
         }
+        
     }
 }
 
