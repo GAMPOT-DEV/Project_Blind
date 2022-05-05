@@ -11,6 +11,7 @@ namespace Blind
     {
         private Vector2 _moveVector;
         private CharacterController2D _characterController2D;
+        private Animator _animator;
         
         [SerializeField] private float _jumpSpeed = 3f;
         [SerializeField] private float _jumpAbortSpeedReduction = 100f;
@@ -23,6 +24,12 @@ namespace Blind
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<CharacterController2D>();
+            _animator = GetComponent<Animator>();
+        }
+
+        private void Start()
+        {
+            SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
         }
 
         public void OnFixedUpdate()
@@ -32,6 +39,8 @@ namespace Blind
             UpdateJump();
             AirborneVerticalMovement();
             GroundedHorizontalMovement(true);
+            CheckForGrounded();
+            UpdateVelocity();
             // 나중에 StateMachine으로 옮겨야 합니다.
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
@@ -53,8 +62,10 @@ namespace Blind
             {
                 Debug.Log("jump");
                 _moveVector.y = _jumpSpeed;
+                _animator.SetTrigger("Jump");
             }
         }
+        
         public void UpdateJump()
         {
             if (!InputController.Instance.Jump.Held && _moveVector.y > 0.0f)
@@ -74,5 +85,17 @@ namespace Blind
             _moveVector.y -= _gravity * Time.deltaTime;
         }
 
+        public void CheckForGrounded()
+        {
+            bool grounded = _characterController2D.IsGrounded;
+            
+            _animator.SetBool("Grounded",grounded);
+        }
+
+        public void UpdateVelocity()
+        {
+            Vector2 velocity = _characterController2D.Velocity;
+            _animator.SetFloat("RunningSpeed",velocity.x);
+        }
     }
 }
