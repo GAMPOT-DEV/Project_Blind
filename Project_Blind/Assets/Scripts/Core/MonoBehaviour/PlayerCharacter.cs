@@ -60,7 +60,6 @@ namespace Blind
         {
             if (InputController.Instance.Jump.Down)
             {
-                Debug.Log("jump");
                 _moveVector.y = _jumpSpeed;
                 _animator.SetTrigger("Jump");
             }
@@ -84,6 +83,14 @@ namespace Blind
             }
             _moveVector.y -= _gravity * Time.deltaTime;
         }
+        public void GroundedVerticalMovement()
+        {
+            if (Mathf.Approximately(_moveVector.y, 0f) )//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
+            {
+                _moveVector.y = 0f;
+            }
+            _moveVector.y -= _gravity * Time.deltaTime;
+        }
 
         public void CheckForGrounded()
         {
@@ -95,7 +102,7 @@ namespace Blind
         public void UpdateVelocity()
         {
             Vector2 velocity = _characterController2D.Velocity;
-            _animator.SetFloat("RunningSpeed",velocity.x);
+            _animator.SetFloat("RunningSpeed",Mathf.Abs(velocity.x));
         }
     }
 }
