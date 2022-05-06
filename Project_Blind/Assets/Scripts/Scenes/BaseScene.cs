@@ -1,26 +1,33 @@
+using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
 /// <summary>
 /// BaseScene 클래스입니다. 각 씬 스크립트들은 이 클래스를 상속받습니다.
 /// </summary>
-public abstract class BaseScene : MonoBehaviour
+
+namespace Blind
 {
-    public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;
-
-    void Awake()
+    public abstract class BaseScene : MonoBehaviour
     {
-        Init();
-    }
+        public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;
 
-    protected virtual void Init()
-    {
-        Object obj = GameObject.FindObjectOfType(typeof(EventSystem));
-        if (obj == null)
-            ResourceManager.Instance.Instantiate("UI/EventSystem").name = "@EventSystem";
-    }
+        void Awake()
+        {
+            Init();
+        }
 
-    public abstract void Clear();
+        protected virtual void Init()
+        {
+            Object obj = GameObject.FindObjectOfType(typeof(EventSystem));
+            if (obj == null)
+                ResourceManager.Instance.Instantiate("UI/EventSystem").name = "@EventSystem";
+        }
+
+        public abstract void Clear();
+    }
 }
+

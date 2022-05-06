@@ -1,3 +1,4 @@
+using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,54 +6,58 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // TEST CLASS
-public class UI_TestSceneUI : UI_Scene
+namespace Blind
 {
-    int _clickCnt = 0;
-    int _dragCnt = 0;
-    enum Texts
+    public class UI_TestSceneUI : UI_Scene
     {
-        TestText
-    }
-    enum Buttons
-    {
-        TestButton
-    }
-    public override void Init()
-    {
-        Bind<Text>(typeof(Texts));
-        Bind<Button>(typeof(Buttons));
-        Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnClick);
-        Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnDrag, Define.UIEvent.Drag);
-        Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnEndDrag, Define.UIEvent.EndDrag);
-    }
-    void OnClick(PointerEventData evt)
-    {
-        _clickCnt++;
-        RefreshUI(Define.UIEvent.Click);
-    }
-    void OnDrag(PointerEventData evt)
-    {
-        _dragCnt++;
-        RefreshUI(Define.UIEvent.Drag);
-    }
-    void OnEndDrag(PointerEventData evt)
-    {
-        _dragCnt = 0;
-        RefreshUI(Define.UIEvent.EndDrag);
-    }
-    void RefreshUI(Define.UIEvent evt)
-    {
-        if (evt == Define.UIEvent.Click)
+        int _clickCnt = 0;
+        int _dragCnt = 0;
+        enum Texts
         {
-            Get<Text>((int)Texts.TestText).text = "Click : " + _clickCnt.ToString();
+            TestText
         }
-        else if (evt == Define.UIEvent.Drag)
+        enum Buttons
         {
-            Get<Text>((int)Texts.TestText).text = "Drag : " + _dragCnt.ToString();
+            TestButton
         }
-        else if (evt == Define.UIEvent.EndDrag)
+        public override void Init()
         {
-            Get<Text>((int)Texts.TestText).text = "EndDrag";
+            Bind<Text>(typeof(Texts));
+            Bind<Button>(typeof(Buttons));
+            Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnClick);
+            Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnDrag, Define.UIEvent.Drag);
+            Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnEndDrag, Define.UIEvent.EndDrag);
+        }
+        void OnClick(PointerEventData evt)
+        {
+            _clickCnt++;
+            RefreshUI(Define.UIEvent.Click);
+        }
+        void OnDrag(PointerEventData evt)
+        {
+            _dragCnt++;
+            RefreshUI(Define.UIEvent.Drag);
+        }
+        void OnEndDrag(PointerEventData evt)
+        {
+            _dragCnt = 0;
+            RefreshUI(Define.UIEvent.EndDrag);
+        }
+        void RefreshUI(Define.UIEvent evt)
+        {
+            if (evt == Define.UIEvent.Click)
+            {
+                Get<Text>((int)Texts.TestText).text = "Click : " + _clickCnt.ToString();
+            }
+            else if (evt == Define.UIEvent.Drag)
+            {
+                Get<Text>((int)Texts.TestText).text = "Drag : " + _dragCnt.ToString();
+            }
+            else if (evt == Define.UIEvent.EndDrag)
+            {
+                Get<Text>((int)Texts.TestText).text = "EndDrag";
+            }
         }
     }
+
 }

@@ -2,10 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_Scene : UI_Base
+
+namespace Blind
 {
-	public override void Init()
+	public class UI_Scene : UI_Base
 	{
-		UIManager.Instance.SetCanvas(gameObject, false);
+		public override void Init()
+		{
+			UIManager.Instance.SetCanvas(gameObject, false);
+		}
 	}
 }
+
