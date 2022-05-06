@@ -25,6 +25,7 @@ namespace Blind
         {
             if(s_instance == null)
                 Create();
+            Init();
         }
 
         private static void Create()
@@ -43,6 +44,7 @@ namespace Blind
         {
             s_instance = FindObjectOfType<T>(); // 현재 씬에 클래스가 있는지 확인
         }
-        
+
+        protected virtual void Init() { }
     }
 }
