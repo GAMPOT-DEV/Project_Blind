@@ -87,8 +87,9 @@ namespace Blind
         Dictionary<string, Pool> _pool = new Dictionary<string, Pool>();
         Transform _root;
 
-        protected override void Init()
+        protected override void Awake()
         {
+            base.Awake();
             if (_root == null)
             {
                 _root = new GameObject { name = "@Pool_Root" }.transform;

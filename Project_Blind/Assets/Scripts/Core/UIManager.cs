@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// PoolManager 클래스입니다. UI를 관리합니다.
+/// UIManager 클래스입니다. UI를 관리합니다.
 /// </summary>
 
 namespace Blind
