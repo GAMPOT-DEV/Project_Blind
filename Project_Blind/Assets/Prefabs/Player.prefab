@@ -248,12 +248,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca3a64169bd4dd4bb08e07908ae7a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpSpeed: 3
-  _jumpAbortSpeedReduction: 100
-  _gravity: 30
-  _maxSpeed: 5
-  groundAcceleration: 100
-  groundDeceleration: 100
+  _jumpSpeed: 0.5
+  _jumpAbortSpeedReduction: 1
+  _gravity: 1
+  _maxSpeed: 2
+  groundAcceleration: 15
+  groundDeceleration: 15
 --- !u!114 &8314999231079122169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,4 +265,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f74e83fe3a344529635b8e616a22d61, type: 3}
   m_Name: 
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
