@@ -14,8 +14,8 @@ namespace Blind
             _monoBehaviour.UpdateJump();
             _monoBehaviour.AirborneVerticalMovement();
             _monoBehaviour.GroundedHorizontalMovement(true);
-            _monoBehaviour.CheckForGrounded();
             _monoBehaviour.UpdateVelocity();
+            _monoBehaviour.CheckForGrounded();
         }
     }
 }

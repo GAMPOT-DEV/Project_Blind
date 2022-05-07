@@ -13,8 +13,8 @@ namespace Blind
             _monoBehaviour.Jump();
             _monoBehaviour.GroundedVerticalMovement();
             _monoBehaviour.GroundedHorizontalMovement(true);
-            _monoBehaviour.CheckForGrounded();
             _monoBehaviour.UpdateVelocity();
+            _monoBehaviour.CheckForGrounded();
         }
         
     }

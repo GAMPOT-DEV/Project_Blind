@@ -97,6 +97,7 @@ namespace Blind
         {
             Vector2 velocity = _characterController2D.Velocity;
             _animator.SetFloat("RunningSpeed",Mathf.Abs(velocity.x));
+            _animator.SetFloat("VerticalSpeed",velocity.y);
         }
     }
 }
