@@ -20,6 +20,7 @@ namespace Blind
         [SerializeField] private float _maxSpeed = 5f;
         [SerializeField] private float groundAcceleration = 100f;
         [SerializeField] private float groundDeceleration = 100f;
+        protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private void Awake()
         {
             _moveVector = new Vector2();
@@ -34,14 +35,6 @@ namespace Blind
 
         public void OnFixedUpdate()
         {
-            // 키 입력 체크
-            Jump();
-            UpdateJump();
-            AirborneVerticalMovement();
-            GroundedHorizontalMovement(true);
-            CheckForGrounded();
-            UpdateVelocity();
-            // 나중에 StateMachine으로 옮겨야 합니다.
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
         }
@@ -56,7 +49,7 @@ namespace Blind
         /// <summary>
         /// 점프 키를 입력하면 위로 가속을 줍니다.
         /// </summary>
-        private void Jump()
+        public void Jump()
         {
             if (InputController.Instance.Jump.Down)
             {
@@ -85,11 +78,12 @@ namespace Blind
         }
         public void GroundedVerticalMovement()
         {
-            if (Mathf.Approximately(_moveVector.y, 0f) )//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
-            {
-                _moveVector.y = 0f;
-            }
             _moveVector.y -= _gravity * Time.deltaTime;
+
+            if (_moveVector.y < -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier)
+            {
+                _moveVector.y = -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier;
+            }
         }
 
         public void CheckForGrounded()
@@ -103,6 +97,7 @@ namespace Blind
         {
             Vector2 velocity = _characterController2D.Velocity;
             _animator.SetFloat("RunningSpeed",Mathf.Abs(velocity.x));
+            _animator.SetFloat("VerticalSpeed",velocity.y);
         }
     }
 }
