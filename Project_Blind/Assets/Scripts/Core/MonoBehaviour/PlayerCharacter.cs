@@ -12,6 +12,7 @@ namespace Blind
         private Vector2 _moveVector;
         private CharacterController2D _characterController2D;
         private Animator _animator;
+        private SpriteRenderer _renderer;
         
         [SerializeField] private float _jumpSpeed = 3f;
         [SerializeField] private float _jumpAbortSpeedReduction = 100f;
@@ -20,12 +21,19 @@ namespace Blind
         [SerializeField] private float _maxSpeed = 5f;
         [SerializeField] private float groundAcceleration = 100f;
         [SerializeField] private float groundDeceleration = 100f;
+        
+        [SerializeField] private float _dashSpeed;
+        [SerializeField] private float _defaultTime;
+        private float _dashTime;
+        private float _defaultSpeed;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private void Awake()
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<CharacterController2D>();
             _animator = GetComponent<Animator>();
+            _renderer = GetComponent<SpriteRenderer>();
+            _defaultSpeed = _maxSpeed;
         }
 
         private void Start()
@@ -46,6 +54,30 @@ namespace Blind
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
 
+        public void Dash()
+        {
+            if (_dashTime <= 0)
+            {
+                _maxSpeed = _defaultSpeed;
+                if (InputController.Instance.Dash.Down)
+                {
+                    _dashTime = _defaultTime;
+                }
+            }
+            else
+            {
+                _dashTime -= Time.deltaTime;
+                _maxSpeed = _dashSpeed;
+                int Playerflip;
+                
+                if (_renderer.flipX) Playerflip = -1;
+                else Playerflip = 1;
+                        
+                float desiredSpeed = Playerflip * _maxSpeed * 0.1f;
+                _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
+            }   
+        }
+
         /// <summary>
         /// 점프 키를 입력하면 위로 가속을 줍니다.
         /// </summary>
@@ -56,7 +88,7 @@ namespace Blind
                 _moveVector.y = _jumpSpeed;
                 _animator.SetTrigger("Jump");
             }
-        }
+        } 
         
         public void UpdateJump()
         {
@@ -72,7 +104,7 @@ namespace Blind
         {
             if (Mathf.Approximately(_moveVector.y, 0f) )//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
             {
-                _moveVector.y = 0f;
+                _moveVector.y = 0;
             }
             _moveVector.y -= _gravity * Time.deltaTime;
         }
@@ -99,5 +131,19 @@ namespace Blind
             _animator.SetFloat("RunningSpeed",Mathf.Abs(velocity.x));
             _animator.SetFloat("VerticalSpeed",velocity.y);
         }
+
+        public void UpdateFacing()
+        {
+            bool faceLeft = InputController.Instance.Horizontal.Value < 0f;
+            bool faceRight = InputController.Instance.Horizontal.Value > 0f;
+            if (faceLeft)
+            {
+                _renderer.flipX = true;
+            }
+            else if(faceRight)
+            {
+                _renderer.flipX = false;
+            }
+        } 
     }
 }
