@@ -14,6 +14,7 @@ namespace Blind
         // <키들을 정의하는 공간입니다>
         public InputButton Jump;
         public InputAxis Horizontal;
+        public InputButton Dash;
         public InputAxis Vertical;
         // </키들을 정의하는 공간입니다>
         
@@ -22,7 +23,8 @@ namespace Blind
             base.Awake();
             // 조작키를 할당합니다.
             Jump = new InputButton(KeyCode.Space,XboxControllerButtons.A);
-            Horizontal = new InputAxis(KeyCode.D,KeyCode.A,XboxControllerAxes.LeftstickHorizontal);
+            Dash = new InputButton(KeyCode.X, XboxControllerButtons.LeftBumper);
+            Horizontal = new InputAxis(KeyCode.D, KeyCode.A, XboxControllerAxes.LeftstickHorizontal);
             Vertical = new InputAxis(KeyCode.W,KeyCode.S,XboxControllerAxes.LeftstickVertical);
         }
 
@@ -35,6 +37,7 @@ namespace Blind
             _HaveControl = true;
             
             Jump.Get(fixedUpdateHappened,inputType);
+            Dash.Get(fixedUpdateHappened, inputType);
             Horizontal.Get(inputType);
             Vertical.Get(inputType);
         }
@@ -50,6 +53,7 @@ namespace Blind
             GainControl(Jump);
             GainControl(Horizontal);
             GainControl(Vertical);
+            GainControl(Dash);
         }
         
         /// <summary>
@@ -64,6 +68,7 @@ namespace Blind
             ReleaseControl(Jump,resetValues);
             ReleaseControl(Horizontal,resetValues);
             ReleaseControl(Vertical,resetValues);
+            ReleaseControl(Dash,resetValues);
         }
     }
 }

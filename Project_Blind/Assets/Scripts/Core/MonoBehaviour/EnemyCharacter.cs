@@ -89,5 +89,10 @@ namespace Blind
                 state = State.Return;
             }
         }
+
+        private void Patrol()
+        {
+            _characterController2D.Move(new Vector2(transform.position.x+3,transform.position.y));
+        }
     }
 }

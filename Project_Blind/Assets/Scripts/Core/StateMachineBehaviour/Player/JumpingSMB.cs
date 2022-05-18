@@ -15,6 +15,8 @@ namespace Blind
             _monoBehaviour.GroundedHorizontalMovement(true);
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.CheckForGrounded();
+            _monoBehaviour.Dash();
+            _monoBehaviour.UpdateFacing();
         }
     }
 }
