@@ -53,7 +53,9 @@ namespace Blind
         {
             if (InputController.Instance.Jump.Down)
             {
-                _moveVector.y = _jumpSpeed;
+                if(!(InputController.Instance.Vertical.Value < 0)) { // 아래 버튼을 누르지 않았다면
+                    _moveVector.y = _jumpSpeed;
+                }
                 _animator.SetTrigger("Jump");
             }
         }
@@ -91,6 +93,10 @@ namespace Blind
             bool grounded = _characterController2D.IsGrounded;
             
             _animator.SetBool("Grounded",grounded);
+        }
+
+        public void setJumping(bool status = false) {
+            this.gameObject.layer = status ? LayerMask.NameToLayer("UnitsJumping") : LayerMask.NameToLayer("Units");
         }
 
         public void UpdateVelocity()
