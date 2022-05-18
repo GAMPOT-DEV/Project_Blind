@@ -7,6 +7,10 @@ namespace Blind
     /// </summary>
     public class JumpingSMB : SceneLinkedSMB<PlayerCharacter>
     {
+        public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
+            Debug.Log("공중");
+            _monoBehaviour.setJumping(true);
+        }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {

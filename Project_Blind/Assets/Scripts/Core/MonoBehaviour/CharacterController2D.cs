@@ -16,6 +16,8 @@ namespace Blind
         private Vector2 _nextMovement;
         private Vector2 _previousPosition;
         private Vector2 _currentPosition;
+        private Vector2 _boxCastSize = new Vector2(0.4f,0.1f);
+        private float _boxCastMaxDistance = 0.5f;
         private int _groundMask;
         
         public Vector2 Velocity { get; private set; }
@@ -43,6 +45,20 @@ namespace Blind
             CheckGrounded();
         }
 
+        public void OnDrawGizmos() {
+            RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, _boxCastSize, 0f, Vector2.down, _boxCastMaxDistance,_groundMask); // 다리 밑으로 레이캐스트를 쏴 바닥을 체크합니다.
+            Gizmos.color = Color.red;
+            if (raycastHit.collider != null)
+            {
+                Gizmos.DrawRay(transform.position, Vector2.down * raycastHit.distance);
+                Gizmos.DrawWireCube(transform.position + Vector3.down * raycastHit.distance, _boxCastSize);
+            }
+            else
+            {
+                Gizmos.DrawRay(transform.position, Vector2.down * _boxCastMaxDistance);
+            }
+        }
+
         public void Move(Vector2 movement)
         {
             _nextMovement += movement;
@@ -50,7 +66,8 @@ namespace Blind
 
         private void CheckGrounded()
         {
-            if (_collider2D.IsTouchingLayers(_groundMask))
+            RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position - new Vector3(0,1f,0), _boxCastSize, 0f, Vector2.down, _boxCastMaxDistance,_groundMask); // 다리 밑으로 레이캐스트를 쏴 바닥을 체크합니다.
+            if (raycastHit.collider != null)
             {
                 IsGrounded = true;
             }
