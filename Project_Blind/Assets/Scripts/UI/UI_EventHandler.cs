@@ -1,4 +1,4 @@
-using Blind;
+ï»¿using Blind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// UI_EventHandler Å¬·¡½ºÀÔ´Ï´Ù. UI °ü·Ã ÀÎÅÍÆäÀÌ½ºµéÀ» ÀÌ¿ëÇØ¼­ 
-/// Äİº¤À¸·Î ÀÌº¥Æ®µéÀ» È£ÃâÇØÁİ´Ï´Ù.
+/// UI_EventHandler í´ë˜ìŠ¤ì…ë‹ˆë‹¤. UI ê´€ë ¨ ì¸í„°í˜ì´ìŠ¤ë“¤ì„ ì´ìš©í•´ì„œ 
+/// ì½œë²¡ìœ¼ë¡œ ì´ë²¤íŠ¸ë“¤ì„ í˜¸ì¶œí•´ì¤ë‹ˆë‹¤.
 /// </summary>
 
 namespace Blind

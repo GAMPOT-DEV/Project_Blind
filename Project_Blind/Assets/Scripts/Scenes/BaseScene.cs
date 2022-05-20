@@ -1,4 +1,4 @@
-using Blind;
+ï»¿using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 
 /// <summary>
-/// BaseScene Å¬·¡½ºÀÔ´Ï´Ù. °¢ ¾À ½ºÅ©¸³Æ®µéÀº ÀÌ Å¬·¡½º¸¦ »ó¼Ó¹Ş½À´Ï´Ù.
+/// BaseScene í´ë˜ìŠ¤ì…ë‹ˆë‹¤. ê° ì”¬ ìŠ¤í¬ë¦½íŠ¸ë“¤ì€ ì´ í´ë˜ìŠ¤ë¥¼ ìƒì†ë°›ìŠµë‹ˆë‹¤.
 /// </summary>
 
 namespace Blind
