@@ -1,9 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Define Å¬·¡½ºÀÔ´Ï´Ù. enumµéÀ» °ü¸®ÇÕ´Ï´Ù.
+/// Define í´ë˜ìŠ¤ì…ë‹ˆë‹¤. enumë“¤ì„ ê´€ë¦¬í•©ë‹ˆë‹¤.
 /// </summary>
 public class Define
 {

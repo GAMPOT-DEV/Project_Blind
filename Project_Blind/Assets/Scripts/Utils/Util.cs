@@ -1,9 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Util Å¬·¡½ºÀÔ´Ï´Ù. ÀÚÁÖ ¾²´Â ÇÔ¼öµéÀ» ¿©±â¿¡ ¸ğ¾ÆµÎ¸é ÁÁÀ» °Í °°½À´Ï´Ù.
+/// Util í´ë˜ìŠ¤ì…ë‹ˆë‹¤. ìì£¼ ì“°ëŠ” í•¨ìˆ˜ë“¤ì„ ì—¬ê¸°ì— ëª¨ì•„ë‘ë©´ ì¢‹ì„ ê²ƒ ê°™ìŠµë‹ˆë‹¤.
 /// </summary>
 public class Util
 {
@@ -24,8 +24,8 @@ public class Util
         return transform.gameObject;
     }
 
-    // recursive°¡ true¸é ÀÚ±âÀÇ »Ñ¸®±îÁö ¸ğµç ÀÚ½ÄµéÀ» Å½»öÇÏ°í
-    // false¶ó¸é ÀÚ±âÀÇ ¹Ù·Î ¾Æ·¡¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®¸¸ Å½»öÇÑ´Ù.
+    // recursiveê°€ trueë©´ ìê¸°ì˜ ë¿Œë¦¬ê¹Œì§€ ëª¨ë“  ìì‹ë“¤ì„ íƒìƒ‰í•˜ê³ 
+    // falseë¼ë©´ ìê¸°ì˜ ë°”ë¡œ ì•„ë˜ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸ë§Œ íƒìƒ‰í•œë‹¤.
     public static T FindChild<T>(GameObject go, string name = null, bool recursive = false) where T : UnityEngine.Object
     {
         if (go == null)

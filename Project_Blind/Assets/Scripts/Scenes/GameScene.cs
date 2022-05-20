@@ -1,10 +1,10 @@
-using Blind;
+ï»¿using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// GameScene Å¬·¡½ºÀÔ´Ï´Ù. GameScene¿¡¼­ ÀÏ¾î³ª´Â ·ÎÁ÷µéÀ» ¿©±â¼­ °ü¸®ÇÏ¸é ÁÁÀ» °Í °°½À´Ï´Ù.
+/// GameScene í´ë˜ìŠ¤ì…ë‹ˆë‹¤. GameSceneì—ì„œ ì¼ì–´ë‚˜ëŠ” ë¡œì§ë“¤ì„ ì—¬ê¸°ì„œ ê´€ë¦¬í•˜ë©´ ì¢‹ì„ ê²ƒ ê°™ìŠµë‹ˆë‹¤.
 /// </summary>
 
 namespace Blind

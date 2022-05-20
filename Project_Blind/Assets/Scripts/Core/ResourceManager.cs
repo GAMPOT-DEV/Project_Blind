@@ -1,25 +1,25 @@
-using Blind;
+ï»¿using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ResourceManager Å¬·¡½ºÀÔ´Ï´Ù. ¸®¼Ò½ºµéÀ» °ü¸®ÇÕ´Ï´Ù.
+/// ResourceManager í´ë˜ìŠ¤ì…ë‹ˆë‹¤. ë¦¬ì†ŒìŠ¤ë“¤ì„ ê´€ë¦¬í•©ë‹ˆë‹¤.
 /// </summary>
 
 namespace Blind
 {
     public class ResourceManager : Manager<ResourceManager>
     {
-        // PoolManager¿¡ ÀúÀåµÇ¾î ÀÖÀ¸¸é ±×°ÍÀ» °¡Á®¿À°í,
-        // ¾Æ´Ï¸é »õ·Î Load ÇÑ´Ù.
+        // PoolManagerì— ì €ì¥ë˜ì–´ ìˆìœ¼ë©´ ê·¸ê²ƒì„ ê°€ì ¸ì˜¤ê³ ,
+        // ì•„ë‹ˆë©´ ìƒˆë¡œ Load í•œë‹¤.
         public T Load<T>(string path) where T : Object
         {
             if (typeof(T) == typeof(GameObject))
             {
                 string name = path;
 
-                // path¿¡¼­ ¿ÀºêÁ§Æ®ÀÇ ÀÌ¸§À» ÃßÃâ
+                // pathì—ì„œ ì˜¤ë¸Œì íŠ¸ì˜ ì´ë¦„ì„ ì¶”ì¶œ
                 int index = name.LastIndexOf('/');
                 if (index >= 0)
                     name = name.Substring(index + 1);
@@ -32,8 +32,8 @@ namespace Blind
             return Resources.Load<T>(path);
         }
 
-        // Poolable ÄÄÆ÷³ÍÆ®°¡ ºÙ¾îÀÖ´Ù¸é ¿ÀºêÁ§Æ® Ç®¸µÀ» ÇÏ°í,
-        // ¾Æ´Ï¸é ±×³É »ı¼ºÇÑ´Ù.
+        // Poolable ì»´í¬ë„ŒíŠ¸ê°€ ë¶™ì–´ìˆë‹¤ë©´ ì˜¤ë¸Œì íŠ¸ í’€ë§ì„ í•˜ê³ ,
+        // ì•„ë‹ˆë©´ ê·¸ëƒ¥ ìƒì„±í•œë‹¤.
         public GameObject Instantiate(string path, Transform parent = null)
         {
             GameObject original = Load<GameObject>($"Prefabs/{path}");
@@ -43,7 +43,7 @@ namespace Blind
                 return null;
             }
 
-            // Poolable ÄÄÆ÷³ÍÆ®°¡ ºÙ¾îÀÖ´Ù¸é ¿ÀºêÁ§Æ® Ç®¸µÀ» ÇÑ´Ù.
+            // Poolable ì»´í¬ë„ŒíŠ¸ê°€ ë¶™ì–´ìˆë‹¤ë©´ ì˜¤ë¸Œì íŠ¸ í’€ë§ì„ í•œë‹¤.
             if (original.GetComponent<Poolable>() != null)
                 return PoolManager.Instance.Pop(original, parent).gameObject;
 
@@ -52,7 +52,7 @@ namespace Blind
             return go;
         }
 
-        // ¿ÀºêÁ§Æ® Ç®¸µ ÁßÀÎ ¿ÀºêÁ§Æ®¶ó¸é ´Ù½Ã Ç®¿¡ ³Ö°í, ¾Æ´Ï¶ó¸é Destroy¸¦ ÇÑ´Ù.
+        // ì˜¤ë¸Œì íŠ¸ í’€ë§ ì¤‘ì¸ ì˜¤ë¸Œì íŠ¸ë¼ë©´ ë‹¤ì‹œ í’€ì— ë„£ê³ , ì•„ë‹ˆë¼ë©´ Destroyë¥¼ í•œë‹¤.
         public void Destroy(GameObject go)
         {
             if (go == null)

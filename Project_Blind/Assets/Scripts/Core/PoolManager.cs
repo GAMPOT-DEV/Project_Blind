@@ -1,17 +1,17 @@
-using Blind;
+﻿using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// PoolManager Ŭ�����Դϴ�. ������Ʈ Ǯ���� �����մϴ�.
+/// PoolManager 클래스입니다. 오브젝트 풀링을 관리합니다.
 /// </summary>
 
 namespace Blind
 {
     public class PoolManager : Manager<PoolManager>
     {
-        // ������Ʈ���� ����ִ� pool
+        // 오브젝트들이 담겨있는 pool
         #region Pool
         class Pool
         {
@@ -22,13 +22,13 @@ namespace Blind
 
             public void Init(GameObject original, int count = 5)
             {
-                // Ǯ�� ����ִ� ������Ʈ�� ����
+                // 풀이 담고있는 오브젝트의 원본
                 Original = original;
 
                 Root = new GameObject().transform;
                 Root.name = $"{original.name}_Root";
 
-                // count ��ŭ ������Ʈ�� �����ϰ� Ǯ�� �־��ش�.
+                // count 만큼 오브젝트를 생성하고 풀에 넣어준다.
                 for (int i = 0; i < count; i++)
                     Push(Create());
             }
@@ -40,9 +40,9 @@ namespace Blind
                 return go.GetOrAddComponent<Poolable>();
             }
 
-            // Ǯ�� ������Ʈ�� �־��ִ� �Լ�.
-            // Ǯ�� ������ �޸𸮿����� �����ϰ� ���ӿ����� ���̸� �ȵǱ� ������
-            // ��Ȱ��ȭ ���·� �ٲ��ش�.
+            // 풀에 오브젝트를 넣어주는 함수.
+            // 풀에 있으면 메모리에서만 존재하고 게임에서는 보이면 안되기 때문에
+            // 비활성화 상태로 바꿔준다.
             public void Push(Poolable poolable)
             {
                 if (poolable == null)
@@ -55,11 +55,11 @@ namespace Blind
                 _poolStack.Push(poolable);
             }
 
-            // Ǯ���� ������Ʈ�� ������ �Լ�
-            // Ǯ�� �ִ� ������Ʈ���� �̹� ��� ������̾ ���� �� ���ٸ�
-            // ������Ʈ�� ���� ������ش�.
-            // ���� ���� ������Ʈ�� ����� ������ Resource Manager���� Destory�� ȣ���ϸ�
-            // Push�� ���� Ǯ�� ���� �ȴ�.
+            // 풀에서 오브젝트를 꺼내는 함수
+            // 풀에 있는 오브젝트들이 이미 모두 사용중이어서 꺼낼 수 없다면
+            // 오브젝트를 새로 만들어준다.
+            // 새로 만든 오브젝트도 사용이 끝나고 Resource Manager에서 Destory를 호출하면
+            // Push를 통해 풀에 들어가게 된다.
             public Poolable Pop(Transform parent)
             {
                 Poolable poolable;
@@ -71,7 +71,7 @@ namespace Blind
 
                 poolable.gameObject.SetActive(true);
 
-                // DontDestroyOnLoad ���� �뵵
+                // DontDestroyOnLoad 해제 용도
                 if (parent == null)
                     poolable.transform.parent = SceneController.Instance.CurrentScene.transform;
 
@@ -83,7 +83,7 @@ namespace Blind
         }
         #endregion
 
-        // Pool ���� �����ϴ� ��ųʸ�
+        // Pool 들을 관리하는 딕셔너리
         Dictionary<string, Pool> _pool = new Dictionary<string, Pool>();
         Transform _root;
 
@@ -97,7 +97,7 @@ namespace Blind
             }
         }
 
-        // Ǯ�� ���� ������ִ� �Լ�
+        // 풀을 새로 만들어주는 함수
         public void CreatePool(GameObject original, int count = 5)
         {
             Pool pool = new Pool();
@@ -107,7 +107,7 @@ namespace Blind
             _pool.Add(original.name, pool);
         }
 
-        // ������Ʈ�� Ǯ�� Push ���ִ� �Լ�
+        // 오브젝트를 풀에 Push 해주는 함수
         public void Push(Poolable poolable)
         {
             string name = poolable.gameObject.name;
@@ -120,8 +120,8 @@ namespace Blind
             _pool[name].Push(poolable);
         }
 
-        // Ǯ���� pop�� �Ϸ� �ߴµ� Ǯ�� ���ٸ� Ǯ�� ���� ������ش�.
-        // Ǯ���� ������Ʈ�� pop �ؼ� parent�� �ڽĿ� ���̰� ��ȯ���ش�. 
+        // 풀에서 pop을 하려 했는데 풀이 없다면 풀을 새로 만들어준다.
+        // 풀에서 오브젝트를 pop 해서 parent의 자식에 붙이고 반환해준다. 
         public Poolable Pop(GameObject original, Transform parent = null)
         {
             if (_pool.ContainsKey(original.name) == false)
@@ -137,8 +137,8 @@ namespace Blind
             return _pool[name].Original;
         }
 
-        // root �ؿ� �ִ� ������Ʈ���� ���� �����Ѵ�.
-        // ���� ����ǰų� �� �� ȣ���ϸ� �� ��?
+        // root 밑에 있는 오브젝트들을 전부 삭제한다.
+        // 씬이 변경되거나 할 때 호출하면 될 듯?
         public void Clear()
         {
             foreach (Transform child in _root)
