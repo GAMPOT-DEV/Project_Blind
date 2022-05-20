@@ -1,23 +1,23 @@
-using Blind;
+ï»¿using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// UIManager Å¬·¡½ºÀÔ´Ï´Ù. UI¸¦ °ü¸®ÇÕ´Ï´Ù.
+/// UIManager í´ë˜ìŠ¤ì…ë‹ˆë‹¤. UIë¥¼ ê´€ë¦¬í•©ë‹ˆë‹¤.
 /// </summary>
 
 namespace Blind
 {
     public class UIManager : Manager<UIManager>
     {
-        // sortingOrderÀ» °ü¸®ÇÏ±â À§ÇÑ º¯¼ö
+        // sortingOrderì„ ê´€ë¦¬í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
         int _order = 10;
 
-        // ÆË¾÷ UIµéÀ» ´ã°íÀÖ´Â ½ºÅÃ
+        // íŒì—… UIë“¤ì„ ë‹´ê³ ìˆëŠ” ìŠ¤íƒ
         Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
 
-        // °¢ ¾À¸¶´Ù ÀÖ´Â °íÀ¯ÇÑ UI
+        // ê° ì”¬ë§ˆë‹¤ ìˆëŠ” ê³ ìœ í•œ UI
         public UI_Scene SceneUI { get; private set; }
 
         public GameObject Root
@@ -47,8 +47,8 @@ namespace Blind
                 canvas.sortingOrder = 0;
             }
         }
-        // ¾À¿¡ ÀÖ´Â °íÀ¯ÇÑ UI¸¦ º¸¿©ÁÖ´Â ÇÔ¼ö.
-        // ¾ÀÀÌ ½ÃÀÛµÉ ¶§ ÇÑ¹ø È£ÃâÇÏ¸é µÉµí?
+        // ì”¬ì— ìˆëŠ” ê³ ìœ í•œ UIë¥¼ ë³´ì—¬ì£¼ëŠ” í•¨ìˆ˜.
+        // ì”¬ì´ ì‹œì‘ë  ë•Œ í•œë²ˆ í˜¸ì¶œí•˜ë©´ ë ë“¯?
         public T ShowSceneUI<T>(string name = null) where T : UI_Scene
         {
             if (string.IsNullOrEmpty(name))
@@ -63,7 +63,7 @@ namespace Blind
             return sceneUI;
         }
 
-        // ÆË¾÷ UI¸¦ ¶ç¿öÁÖ´Â ÇÔ¼ö
+        // íŒì—… UIë¥¼ ë„ì›Œì£¼ëŠ” í•¨ìˆ˜
         public T ShowPopupUI<T>(string name = null) where T : UI_Popup
         {
             if (string.IsNullOrEmpty(name))
@@ -77,7 +77,7 @@ namespace Blind
 
             return popup;
         }
-        // ÆË¾÷ UI¸¦ ´İ¾ÆÁÖ´Â ÇÔ¼ö
+        // íŒì—… UIë¥¼ ë‹«ì•„ì£¼ëŠ” í•¨ìˆ˜
         public void ClosePopupUI(UI_Popup popup)
         {
             if (_popupStack.Count == 0)
@@ -102,7 +102,7 @@ namespace Blind
             popup = null;
             _order--;
         }
-        // ¸ğµç ÆË¾÷ UI¸¦ ´İ¾ÆÁÖ´Â ÇÔ¼ö
+        // ëª¨ë“  íŒì—… UIë¥¼ ë‹«ì•„ì£¼ëŠ” í•¨ìˆ˜
         public void CloseAllPopupUI()
         {
             while (_popupStack.Count > 0)

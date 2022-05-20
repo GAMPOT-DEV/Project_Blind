@@ -1,4 +1,4 @@
-using Blind;
+ï»¿using Blind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,13 +7,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// UI_Base Å¬·¡½ºÀÔ´Ï´Ù. UI ½ºÅ©¸³Æ®µéÀÇ ÃÖ»óÀ§ Å¬·¡½º ÀÔ´Ï´Ù.
+/// UI_Base í´ë˜ìŠ¤ì…ë‹ˆë‹¤. UI ìŠ¤í¬ë¦½íŠ¸ë“¤ì˜ ìµœìƒìœ„ í´ë˜ìŠ¤ ì…ë‹ˆë‹¤.
 /// </summary>
 
 
-// UI_Base¿¡¼­ UI_Scene°ú UI_PopupÀ¸·Î ³ª´²Áı´Ï´Ù.
-// UI_Scene : °¢ ¾À¸¶´Ù Á¸ÀçÇÏ´Â °íÀ¯ÇÑ UI (¿¹) ¸ŞÀÌÇÃ½ºÅä¸®ÀÇ HP UI)
-// UI_Popup : ¾Ë¸²Ã¢Ã³·³ ÆË¾÷ Çü½ÄÀ¸·Î ½×ÀÌ´Â UI
+// UI_Baseì—ì„œ UI_Sceneê³¼ UI_Popupìœ¼ë¡œ ë‚˜ëˆ ì§‘ë‹ˆë‹¤.
+// UI_Scene : ê° ì”¬ë§ˆë‹¤ ì¡´ì¬í•˜ëŠ” ê³ ìœ í•œ UI (ì˜ˆ) ë©”ì´í”ŒìŠ¤í† ë¦¬ì˜ HP UI)
+// UI_Popup : ì•Œë¦¼ì°½ì²˜ëŸ¼ íŒì—… í˜•ì‹ìœ¼ë¡œ ìŒ“ì´ëŠ” UI
 
 namespace Blind
 {
@@ -27,10 +27,10 @@ namespace Blind
 			Init();
 		}
 
-		// UI¸¦ ÀÚµ¿À¸·Î ¹ÙÀÎµù ÇØÁÖ´Â ÇÔ¼ö
-		// enum °ªÀ» ¹®ÀÚ¿­·Î º¯È¯ÇÒ ¼ö ÀÖ´Â ±â´ÉÀ» ÀÌ¿ëÇÑ´Ù.
-		// UIÀÇ Á¾·ùº°·Î _objects µñ¼Å³Ê¸®¿¡ ÀúÀåµÈ´Ù.
-		// UI_TestSceneUI ½ºÅ©¸³Æ®¿¡ »ç¿ë ¿¹Á¦°¡ ÀÖ´Ù.
+		// UIë¥¼ ìë™ìœ¼ë¡œ ë°”ì¸ë”© í•´ì£¼ëŠ” í•¨ìˆ˜
+		// enum ê°’ì„ ë¬¸ìì—´ë¡œ ë³€í™˜í•  ìˆ˜ ìˆëŠ” ê¸°ëŠ¥ì„ ì´ìš©í•œë‹¤.
+		// UIì˜ ì¢…ë¥˜ë³„ë¡œ _objects ë”•ì…”ë„ˆë¦¬ì— ì €ì¥ëœë‹¤.
+		// UI_TestSceneUI ìŠ¤í¬ë¦½íŠ¸ì— ì‚¬ìš© ì˜ˆì œê°€ ìˆë‹¤.
 		protected void Bind<T>(Type type) where T : UnityEngine.Object
 		{
 			string[] names = Enum.GetNames(type);
@@ -49,8 +49,8 @@ namespace Blind
 			}
 		}
 
-		// _objects¿¡ ÀúÀåµÈ UI¸¦ ½±°Ô ºÒ·¯¿Ã ¼ö ÀÖ´Â ÇÔ¼ö
-		// UI_TestSceneUI ½ºÅ©¸³Æ®¿¡ »ç¿ë ¿¹Á¦°¡ ÀÖ´Ù.
+		// _objectsì— ì €ì¥ëœ UIë¥¼ ì‰½ê²Œ ë¶ˆëŸ¬ì˜¬ ìˆ˜ ìˆëŠ” í•¨ìˆ˜
+		// UI_TestSceneUI ìŠ¤í¬ë¦½íŠ¸ì— ì‚¬ìš© ì˜ˆì œê°€ ìˆë‹¤.
 		protected T Get<T>(int idx) where T : UnityEngine.Object
 		{
 			UnityEngine.Object[] objects = null;
@@ -60,14 +60,14 @@ namespace Blind
 			return objects[idx] as T;
 		}
 
-		// ÀÚÁÖ »ç¿ëµÇ´Â UIµéÀ» À§ÇØ¼­ Get<T>¸¦ ¸ÅÇÎÇÑ ÇÔ¼öµé
+		// ìì£¼ ì‚¬ìš©ë˜ëŠ” UIë“¤ì„ ìœ„í•´ì„œ Get<T>ë¥¼ ë§¤í•‘í•œ í•¨ìˆ˜ë“¤
 		protected GameObject GetObject(int idx) { return Get<GameObject>(idx); }
 		protected Text GetText(int idx) { return Get<Text>(idx); }
 		protected Button GetButton(int idx) { return Get<Button>(idx); }
 		protected Image GetImage(int idx) { return Get<Image>(idx); }
 
-		// UI¿¡ Äİ¹éÀ¸·Î ÀÌº¥Æ®¸¦ ÇÒ´çÇÏ´Â ÇÔ¼ö
-		// UI_TestSceneUI ½ºÅ©¸³Æ®¿¡ »ç¿ë ¿¹Á¦°¡ ÀÖ´Ù.
+		// UIì— ì½œë°±ìœ¼ë¡œ ì´ë²¤íŠ¸ë¥¼ í• ë‹¹í•˜ëŠ” í•¨ìˆ˜
+		// UI_TestSceneUI ìŠ¤í¬ë¦½íŠ¸ì— ì‚¬ìš© ì˜ˆì œê°€ ìˆë‹¤.
 		public static void BindEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
 		{
 			UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);
