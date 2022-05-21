@@ -47,15 +47,15 @@ namespace Blind
 
         public void OnDrawGizmos() {
             RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, _boxCastSize, 0f, Vector2.down, _boxCastMaxDistance,_groundMask); // 다리 밑으로 레이캐스트를 쏴 바닥을 체크합니다.
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.cyan;
             if (raycastHit.collider != null)
             {
-                Gizmos.DrawRay(transform.position, Vector2.down * raycastHit.distance);
-                Gizmos.DrawWireCube(transform.position + Vector3.down * raycastHit.distance, _boxCastSize);
+                Gizmos.DrawRay(transform.position - new Vector3(0,1f,0), Vector2.down * raycastHit.distance);
+                Gizmos.DrawWireCube(transform.position - new Vector3(0,1f,0) + Vector3.down * raycastHit.distance, _boxCastSize);
             }
             else
             {
-                Gizmos.DrawRay(transform.position, Vector2.down * _boxCastMaxDistance);
+                Gizmos.DrawRay(transform.position- new Vector3(0,1f,0), Vector2.down * _boxCastMaxDistance);
             }
         }
 

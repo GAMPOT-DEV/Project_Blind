@@ -24,9 +24,13 @@ namespace Blind
         
         [SerializeField] private float _dashSpeed = 10f;
         [SerializeField] private float _defaultTime = 0.1f;
+        
         private float _dashTime;
         private float _defaultSpeed;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
+
+
+        private GameObject _waveSense;
         private void Awake()
         {
             _moveVector = new Vector2();
@@ -36,6 +40,8 @@ namespace Blind
             _defaultSpeed = _maxSpeed;
             _dashSpeed = 10f;
             _defaultTime = 0.1f;
+
+            _waveSense = transform.GetChild(1).gameObject;
         }
 
         private void Start()
@@ -92,7 +98,15 @@ namespace Blind
                 }
                 _animator.SetTrigger("Jump");
             }
-        } 
+        }
+
+        public void WaveSensePress()
+        {
+            if (InputController.Instance.Wave.Down)
+            {
+                _waveSense.GetComponent<WaveSense>().StartSpread();
+            }
+        }
         
         public void UpdateJump()
         {
