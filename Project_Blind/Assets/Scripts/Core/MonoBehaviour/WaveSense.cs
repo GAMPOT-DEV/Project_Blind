@@ -38,7 +38,7 @@ namespace  Blind
             _collider2D.radius = 0;
             _collider2D.enabled = false;
             _coroutine = null;
-            yield break;
+            ResourceManager.Instance.Destroy(this.gameObject);
         }
 
         private void OnTriggerEnter2D(Collider2D col)

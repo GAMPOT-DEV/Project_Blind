@@ -28,8 +28,6 @@ namespace Blind
         private float _dashTime;
         private float _defaultSpeed;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
-
-
         private GameObject _waveSense;
         private void Awake()
         {
@@ -41,7 +39,7 @@ namespace Blind
             _dashSpeed = 10f;
             _defaultTime = 0.1f;
 
-            _waveSense = transform.GetChild(1).gameObject;
+			ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
         }
 
         private void Start()
@@ -104,7 +102,9 @@ namespace Blind
         {
             if (InputController.Instance.Wave.Down)
             {
-                _waveSense.GetComponent<WaveSense>().StartSpread();
+                var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
+                waveSense.transform.position = transform.position;
+			    waveSense.StartSpread();
             }
         }
         
@@ -139,7 +139,7 @@ namespace Blind
         public void CheckForGrounded()
         {
             bool grounded = _characterController2D.IsGrounded;
-            
+            setJumping(!grounded);
             _animator.SetBool("Grounded",grounded);
         }
 
@@ -167,5 +167,8 @@ namespace Blind
                 _renderer.flipX = false;
             }
         } 
+        public void Log() {
+            //Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
+        }
     }
 }
