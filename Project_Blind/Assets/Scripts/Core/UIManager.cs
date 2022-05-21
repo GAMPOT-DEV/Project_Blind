@@ -17,6 +17,8 @@ namespace Blind
         // 팝업 UI들을 담고있는 스택
         Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
 
+        HashSet<UI_WorldSpace> _worldSpaceUIs = new HashSet<UI_WorldSpace>();
+
         // 각 씬마다 있는 고유한 UI
         public UI_Scene SceneUI { get; private set; }
 
@@ -47,6 +49,12 @@ namespace Blind
                 canvas.sortingOrder = 0;
             }
         }
+        public void SetCanvasWorldSpace(GameObject go)
+        {
+            Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.worldCamera = Camera.main;
+        }
         // 씬에 있는 고유한 UI를 보여주는 함수.
         // 씬이 시작될 때 한번 호출하면 될듯?
         public T ShowSceneUI<T>(string name = null) where T : UI_Scene
@@ -76,6 +84,19 @@ namespace Blind
             go.transform.SetParent(Root.transform);
 
             return popup;
+        }
+        public T ShowWorldSpaceUI<T>(string name = null) where T : UI_WorldSpace
+        {
+            if (string.IsNullOrEmpty(name))
+                name = typeof(T).Name;
+
+            GameObject go = ResourceManager.Instance.Instantiate($"TestKjh/{name}");
+            T ui = Util.GetOrAddComponent<T>(go);
+            _worldSpaceUIs.Add(ui);
+
+            go.transform.SetParent(Root.transform);
+
+            return ui;
         }
         // 팝업 UI를 닫아주는 함수
         public void ClosePopupUI(UI_Popup popup)
@@ -108,7 +129,13 @@ namespace Blind
             while (_popupStack.Count > 0)
                 ClosePopupUI();
         }
-
+        public void CloseWorldSpaceUI(UI_WorldSpace ui)
+        {
+            if (_worldSpaceUIs.Count == 0)
+                return;
+            _worldSpaceUIs.Remove(ui);
+            ResourceManager.Instance.Destroy(ui.gameObject);
+        }
         public void Clear()
         {
             CloseAllPopupUI();
