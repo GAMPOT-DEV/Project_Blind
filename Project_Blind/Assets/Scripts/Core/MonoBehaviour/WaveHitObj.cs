@@ -10,6 +10,7 @@ namespace Blind
     /// </summary>
     public class WaveHitObj : MonoBehaviour
     {
+        private Coroutine _coroutine = null;
         public void Awake()
         {
             GetComponent<Light2D>().intensity = 0;
@@ -17,7 +18,8 @@ namespace Blind
 
         public void GetHit()
         {
-            StartCoroutine(Glow());
+            if(_coroutine != null) StopCoroutine(_coroutine);
+            _coroutine =  StartCoroutine(Glow());
         }
 
         private IEnumerator Glow()
@@ -25,6 +27,7 @@ namespace Blind
             GetComponent<Light2D>().intensity = 1;
             yield return new WaitForSeconds(5f);
             GetComponent<Light2D>().intensity = 0;
+            _coroutine = null;
         }
     }
 }
