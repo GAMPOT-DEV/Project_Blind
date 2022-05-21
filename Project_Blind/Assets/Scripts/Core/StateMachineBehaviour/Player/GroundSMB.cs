@@ -20,6 +20,7 @@ namespace Blind
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.CheckForGrounded();
             _monoBehaviour.Dash();
+            _monoBehaviour.WaveSensePress();
             _monoBehaviour.UpdateFacing();
         }
         
