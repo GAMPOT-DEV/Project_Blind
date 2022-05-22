@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Net.NetworkInformation;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ namespace Blind
         
         private float _dashTime;
         private float _defaultSpeed;
+        private int _dashCount;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         private void Awake()
@@ -38,6 +40,7 @@ namespace Blind
             _defaultSpeed = _maxSpeed;
             _dashSpeed = 10f;
             _defaultTime = 0.1f;
+            _dashCount = 1;
 
 			ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
         }
@@ -59,29 +62,41 @@ namespace Blind
             float acceleration = useInput && InputController.Instance.Horizontal.ReceivingInput ? groundAcceleration : groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
-
+        
         public void Dash()
         {
             if (_dashTime <= 0)
             {
                 _maxSpeed = _defaultSpeed;
-                if (InputController.Instance.Dash.Down)
+                if (_dashCount == 1)
                 {
-                    _dashTime = _defaultTime;
+                    if (InputController.Instance.Dash.Down)
+                    {
+                        _dashCount--;
+                        _dashTime = _defaultTime;
+                        StartCoroutine(ReturnDashCount());
+                    }
                 }
+
             }
             else
             {
                 _dashTime -= Time.deltaTime;
                 _maxSpeed = _dashSpeed;
                 int Playerflip;
-                
+
                 if (_renderer.flipX) Playerflip = -1;
                 else Playerflip = 1;
-                        
+
                 float desiredSpeed = Playerflip * _maxSpeed * 0.1f;
                 _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
-            }   
+            }
+        }
+
+        IEnumerator ReturnDashCount()
+        {
+            yield return new WaitForSeconds(1f);
+            _dashCount = 1;
         }
 
         /// <summary>
@@ -143,6 +158,13 @@ namespace Blind
             _animator.SetBool("Grounded",grounded);
         }
 
+        public bool CheckForFallInput()
+        {
+            return InputController.Instance.Vertical.Value < -float.Epsilon && InputController.Instance.Jump.Down;
+        }
+
+        //public bool MakePlatformFallthrough();
+    
         public void setJumping(bool status = false) {
             this.gameObject.layer = status ? LayerMask.NameToLayer("UnitsJumping") : LayerMask.NameToLayer("Units");
         }
