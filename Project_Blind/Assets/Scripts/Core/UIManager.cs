@@ -17,6 +17,7 @@ namespace Blind
         // 팝업 UI들을 담고있는 스택
         Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
 
+        // WorldSpace UI들을 관리하는 HashSet
         HashSet<UI_WorldSpace> _worldSpaceUIs = new HashSet<UI_WorldSpace>();
 
         // 각 씬마다 있는 고유한 UI
@@ -136,9 +137,17 @@ namespace Blind
             _worldSpaceUIs.Remove(ui);
             ResourceManager.Instance.Destroy(ui.gameObject);
         }
+        public void CloseAllWorldSpaceUI()
+        {
+            foreach(var ui in _worldSpaceUIs)
+            {
+                CloseWorldSpaceUI(ui);
+            }
+        }
         public void Clear()
         {
             CloseAllPopupUI();
+            CloseAllWorldSpaceUI();
             SceneUI = null;
         }
     }

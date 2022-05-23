@@ -11,6 +11,18 @@ namespace Blind
 {
     public class ResourceManager : Manager<ResourceManager>
     {
+        GameObject _prefabs = null;
+        public GameObject PrefabsRoot
+        {
+            get
+            {
+                if (_prefabs == null)
+                {
+                    _prefabs = new GameObject() { name = "@Prefabs_Root" };
+                }
+                return _prefabs;
+            }
+        }
         // PoolManager에 저장되어 있으면 그것을 가져오고,
         // 아니면 새로 Load 한다.
         public T Load<T>(string path) where T : Object
