@@ -10,7 +10,7 @@ namespace Blind
         InteractionAble _interaction;
         void Start()
         {
-            _interaction = gameObject.GetOrAddComponent<InteractionAble>();
+            _interaction = gameObject.GetOrAddComponent<InteractionTest>();
         }
     }
 }
