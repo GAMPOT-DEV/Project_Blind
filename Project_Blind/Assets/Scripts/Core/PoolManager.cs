@@ -73,9 +73,10 @@ namespace Blind
 
                 // DontDestroyOnLoad 해제 용도
                 if (parent == null)
-                    poolable.transform.parent = SceneController.Instance.CurrentScene.transform;
+                    poolable.transform.parent = ResourceManager.Instance.PrefabsRoot.transform;
+                else
+                    poolable.transform.parent = parent;
 
-                poolable.transform.parent = parent;
                 poolable.IsUsing = true;
 
                 return poolable;
