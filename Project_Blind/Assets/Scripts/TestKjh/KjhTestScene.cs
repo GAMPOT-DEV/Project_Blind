@@ -18,14 +18,6 @@ namespace Blind
             GameManager.Instance.Player = CreatePlayer();
             CreateObj();
 
-            List<string> conversations = ConversationScriptStorage.Instance.GetConversation("Test");
-
-            if (conversations != null)
-            {
-                foreach (string str in conversations)
-                    Debug.Log(str);
-            }
-
             #region TestCode
             // TEST
 
@@ -148,7 +140,7 @@ namespace Blind
                 GameObject go = ResourceManager.Instance.Instantiate("TestKjh/TestObject");
                 go.transform.position += Vector3.right * i * 3;
             }
-            
+            ResourceManager.Instance.Instantiate("TestKjh/TestNPC");
         }
     }
 }

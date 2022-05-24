@@ -13,17 +13,21 @@ namespace Blind
         }
         public override void DoInteraction(GameObject player)
         {
-            throw new System.NotImplementedException();
+
         }
 
         protected override void OnTriggerEnter2D(Collider2D collision)
         {
-            throw new System.NotImplementedException();
+            if (collision.gameObject.GetComponent<PlayerCharacter>() == null) return;
+            _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestConversation>();
+            _ui.Owner = gameObject;
+            _ui.SetPosition(gameObject.transform.position, Vector3.up * 3);
         }
 
         protected override void OnTriggerExit2D(Collider2D collision)
         {
-            throw new System.NotImplementedException();
+            if (collision.gameObject.GetComponent<PlayerCharacter>() == null) return;
+            _ui.CloseWorldSpaceUI();
         }
     }
 }
