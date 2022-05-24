@@ -18,6 +18,14 @@ namespace Blind
             GameManager.Instance.Player = CreatePlayer();
             CreateObj();
 
+            List<string> conversations = ConversationScriptStorage.Instance.GetConversation("Test");
+
+            if (conversations != null)
+            {
+                foreach (string str in conversations)
+                    Debug.Log(str);
+            }
+
             #region TestCode
             // TEST
 
