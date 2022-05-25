@@ -11,7 +11,7 @@ namespace Blind
     public class CharacterController2D : MonoBehaviour,IGameManagerObj
     {
         private Rigidbody2D _rigidBody2D;
-        private Collider2D _collider2D;
+        public Collider2D _collider2D;
 
         private Vector2 _nextMovement;
         private Vector2 _previousPosition;
@@ -69,6 +69,7 @@ namespace Blind
         {
             var _FootPos = transform.position - new Vector3(0,1f,0);
             RaycastHit2D raycastHit = Physics2D.BoxCast(_FootPos, _boxCastSize, 0f, Vector2.down, _boxCastMaxDistance,_groundMask); // 다리 밑으로 레이캐스트를 쏴 바닥을 체크합니다.
+            _collider2D = raycastHit.collider;
             if (raycastHit.collider != null && Velocity.y <= 0)
             {
                 IsGrounded = true;

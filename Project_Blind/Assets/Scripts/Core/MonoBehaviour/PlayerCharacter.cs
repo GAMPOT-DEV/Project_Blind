@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Net.NetworkInformation;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Blind
 {
@@ -154,28 +156,40 @@ namespace Blind
         public void CheckForGrounded()
         {
             bool grounded = _characterController2D.IsGrounded;
-            setJumping(!grounded);
             _animator.SetBool("Grounded",grounded);
         }
-
+        /// <summary>
+        /// 아래 키를 누른 상태에 점프키를 눌렀는지 체크
+        /// </summary>
         public bool CheckForFallInput()
         {
             return InputController.Instance.Vertical.Value < -float.Epsilon && InputController.Instance.Jump.Down;
         }
-
-        //public bool MakePlatformFallthrough();
-    
-        public void setJumping(bool status = false) {
-            this.gameObject.layer = status ? LayerMask.NameToLayer("UnitsJumping") : LayerMask.NameToLayer("Units");
+        /// <summary>
+        /// 레이캐스트에 맞은 오브젝트가 PlatformEffector를 가지고있는지 판별 후 있다면 아래점프 실행
+        /// </summary>
+        public void MakePlatformFallthrough()
+        {
+            Collider2D col = _characterController2D._collider2D;
+            if (PhysicHelper.ColliderHasPlatformEffector(col))
+            {
+                if (col != null)
+                {
+                    PlatformEffector2D effector;
+                    PhysicHelper.TryGetPlatformEffector(col, out effector);
+                    FallthroughReseter reseter = effector.gameObject.AddComponent<FallthroughReseter>();
+                    reseter.StarFall(effector);
+                } 
+            }
         }
-
+        
         public void UpdateVelocity()
         {
             Vector2 velocity = _characterController2D.Velocity;
             _animator.SetFloat("RunningSpeed",Mathf.Abs(velocity.x));
             _animator.SetFloat("VerticalSpeed",velocity.y);
         }
-
+        
         public void UpdateFacing()
         {
             bool faceLeft = InputController.Instance.Horizontal.Value < 0f;

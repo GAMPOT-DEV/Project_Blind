@@ -17,6 +17,8 @@ namespace Blind
             _monoBehaviour.CheckForGrounded();
             _monoBehaviour.Jump();
             _monoBehaviour.Dash();
+            if (_monoBehaviour.CheckForFallInput())
+                _monoBehaviour.MakePlatformFallthrough();
             _monoBehaviour.WaveSensePress();
             _monoBehaviour.GroundedVerticalMovement();
             _monoBehaviour.GroundedHorizontalMovement(true);
