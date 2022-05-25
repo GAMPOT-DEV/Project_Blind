@@ -8,8 +8,8 @@ namespace Blind
         private float _health;
         private float _maxHealth;
         public UnitHP(int maxHealth) {
-            _health = _maxHealth;
             _maxHealth = maxHealth;
+            _health = _maxHealth;
         }
         public void GetDamage(float damage) {
             _health -= damage;
