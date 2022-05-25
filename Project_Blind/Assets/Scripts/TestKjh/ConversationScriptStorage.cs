@@ -4,32 +4,12 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class ConversationScriptStorage : MonoBehaviour
+    public class ConversationScriptStorage : Manager<ConversationScriptStorage>
     {
-        static ConversationScriptStorage _instance = null;
-        public static ConversationScriptStorage Instance
+        protected override void Awake()
         {
-            get
-            {
-                Init();
-                return _instance;
-            }
-        }
-        static void Init()
-        {
-            if (_instance == null)
-            {
-                GameObject go = new GameObject() { name = "@ConversationStorage" };
-                go.AddComponent<ConversationScriptStorage>();
-
-                DontDestroyOnLoad(go);
-                _instance = go.GetComponent<ConversationScriptStorage>();
-                _instance.Init_Dict();
-            }
-        }
-        private void Start()
-        {
-            Init();
+            base.Awake();
+            Init_Dict();
         }
         Dictionary<string, List<string>> _dict = new Dictionary<string, List<string>>();
         public List<string> GetConversation(string text)

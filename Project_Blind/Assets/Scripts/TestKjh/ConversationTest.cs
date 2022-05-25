@@ -21,7 +21,7 @@ namespace Blind
             if (collision.gameObject.GetComponent<PlayerCharacter>() == null) return;
             _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestConversation>();
             _ui.Owner = gameObject;
-            (_ui as UI_TestConversation).Title = "Test2";
+            (_ui as UI_TestConversation).Title = "Test1";
             _ui.SetPosition(gameObject.transform.position, Vector3.up * 3);
         }
 
