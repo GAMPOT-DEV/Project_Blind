@@ -7,6 +7,7 @@ namespace Blind
     {
         private float _health;
         private float _maxHealth;
+
         public UnitHP(int maxHealth) {
             _maxHealth = maxHealth;
             _health = _maxHealth;
@@ -15,6 +16,10 @@ namespace Blind
             _health -= damage;
         }
         public void GetHeal(float heal) {
+            if(_health + heal > _maxHealth) {
+                _health = _maxHealth;
+                return;
+            }
             _health += heal;
         }
         public float GetHP() {
