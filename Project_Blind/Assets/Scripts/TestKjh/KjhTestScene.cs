@@ -140,7 +140,7 @@ namespace Blind
                 GameObject go = ResourceManager.Instance.Instantiate("TestKjh/TestObject");
                 go.transform.position += Vector3.right * i * 3;
             }
-            
+            ResourceManager.Instance.Instantiate("TestKjh/TestNPC");
         }
     }
 }

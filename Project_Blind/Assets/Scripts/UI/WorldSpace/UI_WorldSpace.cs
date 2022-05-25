@@ -7,6 +7,7 @@ namespace Blind
 {
     public class UI_WorldSpace : UI_Base
     {
+        public GameObject Owner = null;
         public override void Init()
         {
             UIManager.Instance.SetCanvasWorldSpace(gameObject);
@@ -15,9 +16,9 @@ namespace Blind
         {
             UIManager.Instance.CloseWorldSpaceUI(this);
         }
-        public virtual void SetPosition(Transform obj)
+        public virtual void SetPosition(Vector3 pos, Vector3 offset)
         {
-            gameObject.transform.position = obj.position + Vector3.up * 3;
+            gameObject.transform.position = pos + offset;
         }
     }
 }

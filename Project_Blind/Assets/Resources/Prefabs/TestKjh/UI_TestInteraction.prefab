@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7658998901124918047}
   - component: {fileID: 6066736138860665903}
   - component: {fileID: -385656436989509604}
+  - component: {fileID: 6037303745849093376}
   m_Layer: 5
   m_Name: UI_TestInteraction
   m_TagString: Untagged
@@ -84,7 +85,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &6066736138860665903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +115,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9c0d1caac7d75c428b2e07cf36fce91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6037303745849093376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995360788013191634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfdda8e5d4d91c43baaa6f4d33706c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0
 --- !u!1 &3275912966479873886
 GameObject:
   m_ObjectHideFlags: 0

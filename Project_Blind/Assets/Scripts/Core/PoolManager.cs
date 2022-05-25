@@ -48,7 +48,7 @@ namespace Blind
                 if (poolable == null)
                     return;
 
-                poolable.transform.parent = Root;
+                poolable.transform.SetParent(Root);
                 poolable.gameObject.SetActive(false);
                 poolable.IsUsing = false;
 
@@ -73,7 +73,7 @@ namespace Blind
 
                 // DontDestroyOnLoad 해제 용도
                 if (parent == null)
-                    poolable.transform.parent = ResourceManager.Instance.PrefabsRoot.transform;
+                    poolable.transform.SetParent(ResourceManager.Instance.PrefabsRoot.transform);
                 else
                     poolable.transform.parent = parent;
 

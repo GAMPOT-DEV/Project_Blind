@@ -134,6 +134,7 @@ namespace Blind
         {
             if (_worldSpaceUIs.Count == 0)
                 return;
+            if (ui == null) return;
             _worldSpaceUIs.Remove(ui);
             ResourceManager.Instance.Destroy(ui.gameObject);
         }

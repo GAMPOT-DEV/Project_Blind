@@ -21,7 +21,10 @@ namespace Blind
 	{
 		protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 		public abstract void Init();
+		protected virtual void Start()
+        {
 
+        }
 		private void Awake()
 		{
 			Init();
