@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace  Blind
+namespace Blind
 {
     /// <summary>
     /// 파동의 로직을 처리하는 클래스입니다.
@@ -14,11 +14,12 @@ namespace  Blind
         private float _spreadSpeed = 0.5f;
         private CircleCollider2D _collider2D;
         private Coroutine _coroutine = null;
-
+        private float _radius;
         private void Awake()
         {
             _collider2D = GetComponent<CircleCollider2D>();
             _collider2D.enabled = false;
+            _radius = 0;
         }
 
         public void StartSpread()
@@ -30,12 +31,13 @@ namespace  Blind
         private IEnumerator Spread()
         {
             _collider2D.enabled = true;
-            while (_collider2D.radius < _maxRadious)
+            while (_radius < _maxRadious)
             {
-                _collider2D.radius += _spreadSpeed;
+                _radius += _spreadSpeed;
+                transform.localScale = new Vector3(_radius, _radius, 0);
                 yield return new WaitForSeconds(.05f);
             }
-            _collider2D.radius = 0;
+            _radius = 0;
             _collider2D.enabled = false;
             _coroutine = null;
             ResourceManager.Instance.Destroy(this.gameObject);
