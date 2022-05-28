@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,18 +21,6 @@ namespace Blind
         }
 
         // Update is called once per frame
-        void Update()
-        {
-            if (Input.GetKey(KeyCode.W))
-                transform.position += transform.up * Time.deltaTime * 2;
-            if (Input.GetKey(KeyCode.S))
-                transform.position -= transform.up * Time.deltaTime * 2;
-            if (Input.GetKey(KeyCode.A))
-                transform.position -= transform.right * Time.deltaTime * 2;
-            if (Input.GetKey(KeyCode.D))
-                transform.position += transform.right * Time.deltaTime * 2;
-        }
-
         private IEnumerator CheckFogOfWar(float checkInterval)
         {
             while (true)
