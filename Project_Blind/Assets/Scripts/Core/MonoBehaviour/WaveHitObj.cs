@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -25,7 +26,11 @@ namespace Blind
         private IEnumerator Glow()
         {
             GetComponent<Light2D>().intensity = 1;
+            if (GetComponent<SpriteRenderer>() != null)
+            GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.None; 
             yield return new WaitForSeconds(5f);
+            if (GetComponent<SpriteRenderer>() != null)
+            GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
             GetComponent<Light2D>().intensity = 0;
             _coroutine = null;
         }
