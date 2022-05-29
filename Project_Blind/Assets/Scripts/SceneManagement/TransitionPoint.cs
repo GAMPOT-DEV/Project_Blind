@@ -11,8 +11,6 @@ namespace Blind
             SameScene, DifferentScene, DifferentNonGameplayScene,
         }
 
-        
-
         [Tooltip("인스펙터 창에서 이동 타입을 선택해주면 됩니다.")]
         public TransitionType transitionType;
         [Tooltip("이동할 다음 씬을 선택하면 됩니다.")]
@@ -21,10 +19,7 @@ namespace Blind
         public GameObject transitioningGameObject;
 
 
-        private void Awake()
-        {
-                   }
-
+        
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject == transitioningGameObject)
@@ -36,7 +31,7 @@ namespace Blind
         protected void TransitionInternal()
         {
             //씬을 옮기기 전에 가져가야 할 데이터가 있는지 확인합니다
-            //if(inventoryCheck)
+            //if(inventorysssheck)
             //..
 
             if (transitionType == TransitionType.SameScene)
