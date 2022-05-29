@@ -20,12 +20,10 @@ namespace Blind
         [Tooltip("이동하고 싶은 게임오브젝트를 인스펙터창에서 집어넣으면 됩니다. ex)메인캐릭터")]
         public GameObject transitioningGameObject;
 
-        private SceneController sceneController; //이거 꼭 선언해야 하나
 
         private void Awake()
         {
-            sceneController = GetComponent<SceneController>();
-        }
+                   }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
@@ -50,7 +48,7 @@ namespace Blind
             else
             {
                 //다른 씬으로 이동할 경우입니다.
-                sceneController.LoadScene(NextSceneName); //여기서 SceneController 선언 없이 할 수 없을까..? SceneController.LoadScene(Define.Scene.황현택_dest);
+                SceneController.Instance.LoadScene(NextSceneName); //여기서 SceneController 선언 없이 할 수 없을까..? SceneController.LoadScene(Define.Scene.황현택_dest);
             }
         }
     }
