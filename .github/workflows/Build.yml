@@ -14,8 +14,6 @@ jobs:
 
     name: Build for ${{ matrix.targetPlatform }}
 
-    runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
@@ -41,7 +39,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          projectPath: project_blind
+          projectPath: Project_Blind
 
       - uses: actions/upload-artifact@v2
         with:
