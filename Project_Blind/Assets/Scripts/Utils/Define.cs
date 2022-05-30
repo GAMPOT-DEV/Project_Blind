@@ -11,6 +11,8 @@ public class Define
     {
         Unknown,
         GameScene,
+        황현택,
+        황현택_dest,
     }
 
     public enum Sound
