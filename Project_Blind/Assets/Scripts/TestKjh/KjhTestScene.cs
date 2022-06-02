@@ -18,8 +18,6 @@ namespace Blind
             //GameManager.Instance.Player = CreatePlayer();
             //CreateObj();
 
-
-
             #region TestCode
             // TEST
 
@@ -96,6 +94,10 @@ namespace Blind
             // -------------------------------------------------------------------------------------------------------------------
             #endregion
 
+            #region SoundManager
+            //SoundManager.Instance.Play("TestSound", Define.Sound.Effect);
+            //StartCoroutine(CoStopBGM(2));
+            #endregion
             // TEST
             #endregion
         }
@@ -111,6 +113,11 @@ namespace Blind
             {
                 ResourceManager.Instance.Instantiate("TestKjh/abc");
             }
+        }
+        IEnumerator CoStopBGM(int time)
+        {
+            yield return new WaitForSeconds(time);
+            SoundManager.Instance.Clear();
         }
         public override void Clear()
         {
