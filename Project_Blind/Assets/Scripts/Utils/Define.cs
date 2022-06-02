@@ -28,4 +28,10 @@ public class Define
         Drag,
         EndDrag,
     }
+    public enum Language
+    {
+        KOR,
+        ENG,
+        MaxCount
+    }
 }

@@ -12,11 +12,11 @@ namespace Blind
         {
             base.Init();
 
-            // 카메라, 플레이어 등 생성
-            //CreateCamera();
-            //CreateEnv();
-            //GameManager.Instance.Player = CreatePlayer();
-            //CreateObj();
+            //카메라, 플레이어 등 생성
+            CreateCamera();
+            CreateEnv();
+            GameManager.Instance.Player = CreatePlayer();
+            CreateObj();
 
             #region TestCode
             // TEST
