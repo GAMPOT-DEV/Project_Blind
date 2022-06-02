@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Data;
 
 namespace Blind
 {
@@ -17,7 +18,7 @@ namespace Blind
             get { return _title; }
             set { _title = value; }
         }
-        List<string> conversations;
+        Dictionary<int, List<Data.Script>> conversations;
         Coroutine _showText;
         enum Texts
         {
@@ -46,7 +47,7 @@ namespace Blind
         }
         void ShowText(int page)
         {
-            int height = (conversations[page].Length - 1) / _defaultWidth;
+            int height = (conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length - 1) / _defaultWidth;
             if (height >= 10) height++;
             Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + height);
             _showText = StartCoroutine(CoShowTexts(page));
@@ -58,16 +59,16 @@ namespace Blind
                 StopCoroutine(_showText);
                 _showText = null;
                 string text = "";
-                for (int i = 0; i < conversations[page].Length; i++)
+                for (int i = 0; i < conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length; i++)
                 {
                     if (i % 10 == 0 && i != 0) text += "\n";
-                    text += conversations[page][i];
+                    text += conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script[i];
                     Get<Text>((int)Texts.ConversationText).text = text;
                 }
                 return;
             }
             page++;
-            if (page >= conversations.Count)
+            if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
                 UIManager.Instance.CloseWorldSpaceUI(this);
                 return;
@@ -83,10 +84,10 @@ namespace Blind
         IEnumerator CoShowTexts(int page)
         {
             string text = "";
-            for(int i = 0; i < conversations[page].Length; i++)
+            for(int i = 0; i < conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length; i++)
             {
                 if (i % 10 == 0 && i != 0) text += "\n";
-                text += conversations[page][i];
+                text += conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script[i];
                 Get<Text>((int)Texts.ConversationText).text = text;
                 yield return new WaitForSeconds(0.1f);
             }
