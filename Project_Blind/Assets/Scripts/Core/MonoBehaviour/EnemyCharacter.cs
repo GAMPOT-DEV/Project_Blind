@@ -11,6 +11,7 @@ namespace Blind
             Roaming,
             ChasePlayer,
             Return,
+            Attack,
         }
         private CharacterController2D _characterController2D;
         private Vector2 _moveVector;

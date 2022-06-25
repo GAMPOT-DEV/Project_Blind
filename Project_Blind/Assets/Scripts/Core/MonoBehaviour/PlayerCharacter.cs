@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Net.NetworkInformation;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -13,7 +14,7 @@ namespace Blind
     public class PlayerCharacter : MonoBehaviour,IGameManagerObj
     {
         private Vector2 _moveVector;
-        private CharacterController2D _characterController2D;
+        private PlayerCharacterController2D _characterController2D;
         private Animator _animator;
         private SpriteRenderer _renderer;
         
@@ -33,10 +34,11 @@ namespace Blind
         private int _dashCount;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
+        private GameObject _enemyObject;
         private void Awake()
         {
             _moveVector = new Vector2();
-            _characterController2D = GetComponent<CharacterController2D>();
+            _characterController2D = GetComponent<PlayerCharacterController2D>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
@@ -158,6 +160,17 @@ namespace Blind
             bool grounded = _characterController2D.IsGrounded;
             _animator.SetBool("Grounded",grounded);
         }
+
+        public void CheckForParing()
+        {
+            bool isParing = InputController.Instance.Paring.Down;
+            _animator.SetBool("Paring" , isParing);
+        }
+
+        public void EnemyStateCheck()
+        {
+            
+        }
         /// <summary>
         /// 아래 키를 누른 상태에 점프키를 눌렀는지 체크
         /// </summary>
@@ -165,22 +178,13 @@ namespace Blind
         {
             return InputController.Instance.Vertical.Value < -float.Epsilon && InputController.Instance.Jump.Down;
         }
+
         /// <summary>
         /// 레이캐스트에 맞은 오브젝트가 PlatformEffector를 가지고있는지 판별 후 있다면 아래점프 실행
         /// </summary>
         public void MakePlatformFallthrough()
         {
-            Collider2D col = _characterController2D._collider2D;
-            if (PhysicHelper.ColliderHasPlatformEffector(col))
-            {
-                if (col != null)
-                {
-                    PlatformEffector2D effector;
-                    PhysicHelper.TryGetPlatformEffector(col, out effector);
-                    FallthroughReseter reseter = effector.gameObject.AddComponent<FallthroughReseter>();
-                    reseter.StarFall(effector);
-                } 
-            }
+            _characterController2D.MakePlatformFallthrough();
         }
         
         public void UpdateVelocity()
@@ -205,6 +209,16 @@ namespace Blind
         } 
         public void Log() {
             //Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
+        }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            GameObject obj = col.gameObject;
+            if (obj.tag.Equals("Enemy"))
+            {
+                _enemyObject = obj;
+                Debug.Log("tlfgod");
+            }
         }
     }
 }

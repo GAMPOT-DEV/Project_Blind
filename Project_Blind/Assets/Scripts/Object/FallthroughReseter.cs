@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Blind
 {
     public class FallthroughReseter : MonoBehaviour
     {
-        // Start is called before the first frame update
         public void StarFall(PlatformEffector2D effector)
         {
             StartCoroutine(FallCoroutine(effector));
@@ -14,12 +12,16 @@ namespace Blind
 
         IEnumerator FallCoroutine(PlatformEffector2D effector)
         {
-            effector.surfaceArc = -180;
+            
+            int playerLayerMask = 1 << LayerMask.NameToLayer("Units");
 
-            yield return new WaitForSeconds(1.5f);
+            effector.colliderMask &= ~playerLayerMask;
+            gameObject.GetComponent<BoxCollider2D>().isTrigger = true;
+            yield return new WaitForSeconds(0.7f);
 
-            effector.surfaceArc = 180;
-
+            effector.colliderMask |= playerLayerMask;
+            gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
+            
             Destroy(this);
         }
     }
