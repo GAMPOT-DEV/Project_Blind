@@ -6,32 +6,41 @@ namespace Blind
 {
     public class ConversationScriptStorage : Manager<ConversationScriptStorage>
     {
+        // 이부분을 바꾸면 언어 바꿀 수 있음
+        private int _languageNumber = (int)Define.Language.KOR;
+        public int LanguageNumber
+        {
+            get { return _languageNumber; }
+            private set { }
+        }
+        public void SetLanguageNum(Define.Language lang)
+        {
+            if (lang == Define.Language.MaxCount) return;
+            _languageNumber = (int)lang;
+        }
         protected override void Awake()
         {
             base.Awake();
             Init_Dict();
         }
-        Dictionary<string, List<string>> _dict = new Dictionary<string, List<string>>();
-        public List<string> GetConversation(string text)
+        Dictionary<string, Dictionary<int, List<Data.Script>>> _dict = new Dictionary<string, Dictionary<int, List<Data.Script>>>();
+        public Dictionary<int, List<Data.Script>> GetConversation(string text)
         {
-            List<string> list = null;
-            _dict.TryGetValue(text, out list);
+            Dictionary<int, List<Data.Script>> dict = null;
+            _dict.TryGetValue(text, out dict);
 
-            return list;
+            return dict;
         }
         void Init_Dict()
         {
-            _dict.Add("Test1", new List<string>()
+            var dict = DataManager.Instance.ConversationDict;
+            Dictionary<int, List<Data.Script>> tmp = new Dictionary<int, List<Data.Script>>();
+            foreach (var scripts in dict.Values)
             {
-                "안녕하세요",
-                "반갑습니다 반갑습니다 반갑습니다 반갑습니다 반갑습니다 반갑습니다 반갑습니다",
-                "수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요수고하세요"
-            });
-            _dict.Add("Test2", new List<string>()
-            {
-                "안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?",
-                "잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!잘가!!"
-            });
+                tmp.Add((int)Define.Language.KOR, scripts.KOR);
+                tmp.Add((int)Define.Language.ENG, scripts.ENG);
+                _dict.Add(scripts.title, tmp);
+            }
         }
     }
 }
