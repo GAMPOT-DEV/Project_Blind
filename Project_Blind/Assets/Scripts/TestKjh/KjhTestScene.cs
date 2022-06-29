@@ -18,8 +18,10 @@ namespace Blind
             GameManager.Instance.Player = CreatePlayer();
             CreateObj();
 
+            /*----------------------
+                    TestCode
+            ----------------------*/
             #region TestCode
-            // TEST
 
             #region UI Test
             // 설명
@@ -98,7 +100,11 @@ namespace Blind
             //SoundManager.Instance.Play("TestSound", Define.Sound.Effect);
             //StartCoroutine(CoStopBGM(2));
             #endregion
-            // TEST
+
+            #region 다국어 지원
+            ConversationScriptStorage.Instance.SetLanguageNum(Define.Language.KOR);
+            #endregion
+
             #endregion
         }
         IEnumerator CoDestroyObjs(int time)
