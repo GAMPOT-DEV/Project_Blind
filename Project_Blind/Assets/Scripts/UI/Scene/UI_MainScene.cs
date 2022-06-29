@@ -33,15 +33,15 @@ namespace Blind
             Get<Button>((int)Buttons.Button_Option).gameObject.BindEvent(PushOptionButton, Define.UIEvent.Click);
             Get<Button>((int)Buttons.Button_Exit).gameObject.BindEvent(PushExitButton, Define.UIEvent.Click);
         }
-        private void PushStartButton(PointerEventData evt)
+        private void PushStartButton()
         {
             Debug.Log("Push Start");
         }
-        private void PushOptionButton(PointerEventData evt)
+        private void PushOptionButton()
         {
             Debug.Log("Push Option");
         }
-        private void PushExitButton(PointerEventData evt)
+        private void PushExitButton()
         {
             Debug.Log("Push Exit");
         }
