@@ -17,9 +17,14 @@ namespace Blind
         [SerializeField] Define.Scene NextSceneName;
         [Tooltip("이동하고 싶은 게임오브젝트를 인스펙터창에서 집어넣으면 됩니다. ex)메인캐릭터")]
         public GameObject transitioningGameObject;
+        public Define.Scene newSceneName;
+        [Tooltip("도착지점의 태그")]
+        public TransitionDestination.DestinationTag transitionDestinationTag;
+        [Tooltip("도착지점의 위치")]
+        public TransitionPoint destinationTransform;
 
 
-        
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject == transitioningGameObject)
@@ -43,7 +48,7 @@ namespace Blind
             else
             {
                 //다른 씬으로 이동할 경우입니다.
-                SceneController.Instance.LoadScene(NextSceneName); //여기서 SceneController 선언 없이 할 수 없을까..? SceneController.LoadScene(Define.Scene.황현택_dest);
+                SceneController.TransitionToScene(this);
             }
         }
     }
