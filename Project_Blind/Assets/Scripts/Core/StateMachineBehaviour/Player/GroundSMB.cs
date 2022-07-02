@@ -17,13 +17,15 @@ namespace Blind
             _monoBehaviour.CheckForGrounded();
             _monoBehaviour.Jump();
             _monoBehaviour.Dash();
-            if (_monoBehaviour.CheckForFallInput())
-                _monoBehaviour.MakePlatformFallthrough();
             _monoBehaviour.WaveSensePress();
             _monoBehaviour.GroundedVerticalMovement();
             _monoBehaviour.GroundedHorizontalMovement(true);
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.UpdateFacing();
+            if (_monoBehaviour.CheckForFallInput())
+                _monoBehaviour.MakePlatformFallthrough();
+            else if(_monoBehaviour.CheckForParing())
+                _monoBehaviour.Paring();
         }
         
     }
