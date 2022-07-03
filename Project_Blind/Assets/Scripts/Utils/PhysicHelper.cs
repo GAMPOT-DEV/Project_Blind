@@ -11,8 +11,9 @@ namespace Blind
     {
         Dictionary<Collider2D, PlatformEffector2D> m_PlatformEffectorCache = new Dictionary<Collider2D, PlatformEffector2D> ();
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             if (Instance != this)
             {
                 Destroy (gameObject);
