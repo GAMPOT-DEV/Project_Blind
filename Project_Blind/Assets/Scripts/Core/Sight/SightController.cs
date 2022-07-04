@@ -17,7 +17,6 @@ namespace Blind
         
         public int Resolution = 64;
         public float Width = 5f;
-        public Material FogMaterial;
         public Transform FogCam;
         [Range(1f, 20f)]
         public float SightRange = 5f;
@@ -25,6 +24,7 @@ namespace Blind
         private MeshFilter _filter;
         private MeshRenderer _renderer;
         private Mesh _mesh;
+        private Material _fogMaterial;
 
         private MeshData _meshData;
         
@@ -33,78 +33,13 @@ namespace Blind
         {
             _filter = GetComponent<MeshFilter>();
             _renderer = GetComponent<MeshRenderer>();
-            _meshData = new MeshData();
+
+            _fogMaterial = _renderer.material;
+            Texture2D texbuffer = new Texture2D(500,500,TextureFormat.ARGB32,false);
+            var renderBuffer = RenderTexture.GetTemporary(500, 500,0);
             
-            
-            GenerateMeshPlane(_meshData);
-            _mesh = new Mesh();
-            _filter.mesh = _mesh;
-            _mesh.vertices = _meshData.Verts;
-            _mesh.triangles = _meshData.Tris;
-            
-            InitBlackColor();
+            Graphics.Blit(texbuffer,renderBuffer,_fogMaterial);
         }
         
-        private void InitBlackColor()
-        {
-            Color[] colors = new Color[_mesh.vertexCount];
-
-            for (int i = 0; i < colors.Length; i++)
-            {
-                colors[i] = new Color(1,0,0);
-            }
-
-            _mesh.colors = colors;
-        }
-
-        
-        private void GenerateMeshPlane(MeshData meshData)
-        {
-            Vector3 widthV3 = new Vector3(Width, 0f, Width);
-            Vector3 startPoint = -widthV3 * 0.5f;
-            meshData.GridUnit = Vector2.one*(Width / Resolution);
-
-            meshData.VCount = new Vector2Int(Resolution + 1, Resolution + 1);
-            int vertsCount = meshData.VCount.x * meshData.VCount.y;
-            int trisCount = Resolution * Resolution * 6;
-
-            meshData.Verts = new Vector3[vertsCount];
-            meshData.Tris = new int[trisCount];
-
-            for (int j = 0; j < meshData.VCount.y; j++)
-            {
-                for (int i = 0; i < meshData.VCount.x; i++)
-                {
-                    int index = i + j * meshData.VCount.x;
-                    meshData.Verts[index] = startPoint
-                                            + new Vector3(
-                                                meshData.GridUnit.x * i,
-                                                0f,
-                                                meshData.GridUnit.y * j
-                                            );
-                }
-            }
-
-            int tIndex = 0;
-            for (int j = 0; j < meshData.VCount.y - 1; j++)
-            {
-                for (int i = 0; i < meshData.VCount.x - 1; i++)
-                {
-                    int vIndex = i + j * meshData.VCount.x;
-                    
-                    var tris = meshData.Tris;
-                    
-                    tris[tIndex + 0] = vIndex;
-                    tris[tIndex + 1] = vIndex + meshData.VCount.x;
-                    tris[tIndex + 2] = vIndex + 1;
-
-                    tris[tIndex + 3] = vIndex + meshData.VCount.x;
-                    tris[tIndex + 4] = vIndex + meshData.VCount.x + 1;
-                    tris[tIndex + 5] = vIndex + 1;
-
-                    tIndex += 6;
-                }
-            }
-        }
     }
 }
