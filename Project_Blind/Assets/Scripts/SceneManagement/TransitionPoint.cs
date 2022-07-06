@@ -14,14 +14,11 @@ namespace Blind
         [Tooltip("인스펙터 창에서 이동 타입을 선택해주면 됩니다.")]
         public TransitionType transitionType;
         [Tooltip("이동할 다음 씬을 선택하면 됩니다.")]
-        [SerializeField] Define.Scene NextSceneName;
+        public Define.Scene newSceneName;
         [Tooltip("이동하고 싶은 게임오브젝트를 인스펙터창에서 집어넣으면 됩니다. ex)메인캐릭터")]
         public GameObject transitioningGameObject;
-        public Define.Scene newSceneName;
         [Tooltip("도착지점의 태그")]
         public TransitionDestination.DestinationTag transitionDestinationTag;
-        [Tooltip("도착지점의 위치")]
-        public TransitionPoint destinationTransform;
 
 
 

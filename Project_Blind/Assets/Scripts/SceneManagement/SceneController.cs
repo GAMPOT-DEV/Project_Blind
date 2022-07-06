@@ -34,7 +34,7 @@ namespace Blind
 
         public static void TransitionToScene(TransitionPoint transitionPoint)
         {
-            Instance.StartCoroutine(Instance.Transition(transitionPoint.newSceneName, transitionPoint.transitionDestinationTag,transitionPoint.transitionType));
+            Instance.StartCoroutine(Instance.Transition(transitionPoint.newSceneName, transitionPoint.transitionDestinationTag, transitionPoint.transitionType));
         }
 
         //여기에 씬 이동 전 인벤토리 세이브, 로딩, 게임 세이브 등 작업을 합니다.
@@ -50,19 +50,19 @@ namespace Blind
         protected TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
         {
             TransitionDestination[] entrances = FindObjectsOfType<TransitionDestination>();
-            for(int i = 0; i < entrances.Length; i++)
+            for (int i = 0; i < entrances.Length; i++)
             {
-                if(entrances[i].destinationTag == destinationTag)
-                        return entrances[i];
+                if (entrances[i].destinationTag == destinationTag)
+                    return entrances[i];
             }
             Debug.LogWarning("No Destination Found");
             return null;
         }
-        
+
         // 캐릭터 이동
         protected void SetEnteringLocation(TransitionDestination entrance)
         {
-            if(entrance == null)
+            if (entrance == null)
             {
                 Debug.LogWarning("entrance가 설정되지 않음");
                 return;
@@ -74,3 +74,4 @@ namespace Blind
         }
     }
 }
+
