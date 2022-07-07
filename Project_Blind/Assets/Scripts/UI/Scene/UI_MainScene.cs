@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -40,6 +40,7 @@ namespace Blind
         private void PushOptionButton()
         {
             Debug.Log("Push Option");
+            UIManager.Instance.ShowNormalUI<UI_Setting>();
         }
         private void PushExitButton()
         {

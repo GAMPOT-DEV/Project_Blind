@@ -20,6 +20,9 @@ namespace Blind
         // WorldSpace UI들을 관리하는 HashSet
         HashSet<UI_WorldSpace> _worldSpaceUIs = new HashSet<UI_WorldSpace>();
 
+        // Normal UI들을 관리하는 HashSet
+        HashSet<UI_Base> _normalUIs = new HashSet<UI_Base>();
+
         // 각 씬마다 있는 고유한 UI
         public UI_Scene SceneUI { get; private set; }
 
@@ -94,6 +97,19 @@ namespace Blind
             GameObject go = ResourceManager.Instance.Instantiate($"TestKjh/{name}");
             T ui = Util.GetOrAddComponent<T>(go);
             _worldSpaceUIs.Add(ui);
+
+            go.transform.SetParent(Root.transform);
+
+            return ui;
+        }
+        public T ShowNormalUI<T>(string name = null) where T : UI_Base
+        {
+            if (string.IsNullOrEmpty(name))
+                name = typeof(T).Name;
+
+            GameObject go = ResourceManager.Instance.Instantiate($"UI/Normal/{name}");
+            T ui = Util.GetOrAddComponent<T>(go);
+            _normalUIs.Add(ui);
 
             go.transform.SetParent(Root.transform);
 
