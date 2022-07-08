@@ -64,12 +64,31 @@ namespace Blind
         #endregion
         public override void Init()
         {
+            _uiNum = UIManager.Instance.UINum;
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
             Bind<Slider>(typeof(Sliders));
             InitTexts();
             InitSliders();
             InitEvents();
+        }
+        private void Update()
+        {
+            HandleKeyInput();
+        }
+        private void HandleKeyInput()
+        {
+            if (!Input.anyKey)
+                return;
+
+            if (_uiNum != UIManager.Instance.UINum)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                PushCloseButton();
+                return;
+            }
         }
         #region Initialize
         private void InitTexts()
@@ -128,7 +147,7 @@ namespace Blind
         private void PushCloseButton()
         {
             SoundManager.Instance.StopBGM();
-            ResourceManager.Instance.Destroy(this.gameObject);
+            UIManager.Instance.CloseNormalUI(this);
         }
         #endregion
         #region Sound Event

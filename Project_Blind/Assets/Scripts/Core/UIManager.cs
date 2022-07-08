@@ -22,6 +22,18 @@ namespace Blind
 
         // Normal UI들을 관리하는 HashSet
         HashSet<UI_Base> _normalUIs = new HashSet<UI_Base>();
+        private int _uiNum = 0;
+        public int UINum
+        {
+            get
+            {
+                return _uiNum;
+            }
+            private set
+            {
+                _uiNum = value;
+            }
+        }
 
         // 각 씬마다 있는 고유한 UI
         public UI_Scene SceneUI { get; private set; }
@@ -66,6 +78,7 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
+            _uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"UI/Scene/{name}");
             T sceneUI = Util.GetOrAddComponent<T>(go);
             SceneUI = sceneUI;
@@ -81,6 +94,7 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
+            _uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"UI/Popup/{name}");
             T popup = Util.GetOrAddComponent<T>(go);
             _popupStack.Push(popup);
@@ -94,6 +108,7 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
+            _uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"TestKjh/{name}");
             T ui = Util.GetOrAddComponent<T>(go);
             _worldSpaceUIs.Add(ui);
@@ -107,6 +122,7 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
+            _uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"UI/Normal/{name}");
             T ui = Util.GetOrAddComponent<T>(go);
             _normalUIs.Add(ui);
@@ -136,6 +152,8 @@ namespace Blind
                 return;
 
             UI_Popup popup = _popupStack.Pop();
+
+            _uiNum = _uiNum - 1;
             ResourceManager.Instance.Destroy(popup.gameObject);
             popup = null;
             _order--;
@@ -152,6 +170,16 @@ namespace Blind
                 return;
             if (ui == null) return;
             _worldSpaceUIs.Remove(ui);
+            _uiNum = _uiNum - 1;
+            ResourceManager.Instance.Destroy(ui.gameObject);
+        }
+        public void CloseNormalUI(UI_Base ui)
+        {
+            if (_normalUIs.Count == 0)
+                return;
+            if (ui == null) return;
+            _normalUIs.Remove(ui);
+            _uiNum = _uiNum - 1;
             ResourceManager.Instance.Destroy(ui.gameObject);
         }
         public void CloseAllWorldSpaceUI()
