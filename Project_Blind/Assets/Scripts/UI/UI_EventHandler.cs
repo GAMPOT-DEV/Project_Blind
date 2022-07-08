@@ -14,26 +14,26 @@ namespace Blind
 {
 	public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler, IEndDragHandler
 	{
-		public Action<PointerEventData> OnClickHandler = null;
-		public Action<PointerEventData> OnDragHandler = null;
-		public Action<PointerEventData> OnEndDragHandler = null;
+		public Action OnClickHandler = null;
+		public Action OnDragHandler = null;
+		public Action OnEndDragHandler = null;
 
 		public void OnPointerClick(PointerEventData eventData)
 		{
 			if (OnClickHandler != null)
-				OnClickHandler.Invoke(eventData);
+				OnClickHandler.Invoke();
 		}
 
 		public void OnDrag(PointerEventData eventData)
 		{
 			if (OnDragHandler != null)
-				OnDragHandler.Invoke(eventData);
+				OnDragHandler.Invoke();
 		}
 
 		public void OnEndDrag(PointerEventData eventData)
 		{
 			if (OnEndDragHandler != null)
-				OnEndDragHandler.Invoke(eventData);
+				OnEndDragHandler.Invoke();
 		}
 	}
 }

@@ -52,7 +52,7 @@ namespace Blind
             Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + height);
             _showText = StartCoroutine(CoShowTexts(page));
         }
-        void PushNextButton(PointerEventData evt)
+        void PushNextButton()
         {
             if (_showText != null)
             {
@@ -75,7 +75,7 @@ namespace Blind
             }
             ShowText(page);
         }
-        void DragUI(PointerEventData evt)
+        void DragUI()
         {
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos = new Vector3(pos.x, pos.y, 0);

@@ -28,17 +28,17 @@ namespace Blind
             Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnDrag, Define.UIEvent.Drag);
             Get<Button>((int)Buttons.TestButton).gameObject.BindEvent(OnEndDrag, Define.UIEvent.EndDrag);
         }
-        void OnClick(PointerEventData evt)
+        void OnClick()
         {
             _clickCnt++;
             RefreshUI(Define.UIEvent.Click);
         }
-        void OnDrag(PointerEventData evt)
+        void OnDrag()
         {
             _dragCnt++;
             RefreshUI(Define.UIEvent.Drag);
         }
-        void OnEndDrag(PointerEventData evt)
+        void OnEndDrag()
         {
             _dragCnt = 0;
             RefreshUI(Define.UIEvent.EndDrag);

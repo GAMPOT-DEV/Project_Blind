@@ -13,6 +13,7 @@ public class Define
         GameScene,
         황현택,
         황현택_dest,
+        MainScene,
     }
 
     public enum Sound
