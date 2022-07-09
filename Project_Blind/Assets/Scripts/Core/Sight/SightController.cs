@@ -2,109 +2,83 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 namespace Blind
 {
     public class SightController : MonoBehaviour
     {
-        public class MeshData
-        {
-            public Vector3[] Verts;
-            public int[] Tris;
-            public Vector2 GridUnit; // 한 그리드의 x, z 길이
-            public Vector2Int VCount;  // 각각 x, z의 버텍스 개수
-        }
-        
-        public int Resolution = 64;
-        public float Width = 5f;
-        public Material FogMaterial;
-        public Transform FogCam;
-        [Range(1f, 20f)]
-        public float SightRange = 5f;
-        
-        private MeshFilter _filter;
-        private MeshRenderer _renderer;
-        private Mesh _mesh;
+        public int resolution = 512;
+        [Range(0.01f, 1f)]
+        public float brushSize = 0.1f;
+        public Texture2D brushTexture;
+        public GameObject target;
+        private Texture2D mainTex;
+        private MeshRenderer mr;
+        private RenderTexture rt;
 
-        private MeshData _meshData;
-        
-        private Color[] _colorArray;
         private void Awake()
         {
-            _filter = GetComponent<MeshFilter>();
-            _renderer = GetComponent<MeshRenderer>();
-            _meshData = new MeshData();
-            
-            
-            GenerateMeshPlane(_meshData);
-            _mesh = new Mesh();
-            _filter.mesh = _mesh;
-            _mesh.vertices = _meshData.Verts;
-            _mesh.triangles = _meshData.Tris;
-            
-            InitBlackColor();
+            TryGetComponent(out mr);
+            rt = new RenderTexture(resolution, resolution, 32);
+
+            if (mr.material.mainTexture != null)
+            {
+                mainTex = mr.material.mainTexture as Texture2D;
+            }
+            // 메인 텍스쳐가 없을 경우, 하얀 텍스쳐를 생성하여 사용
+            else
+            {
+                mainTex = new Texture2D(resolution, resolution);
+            }
+
+            // 메인 텍스쳐 -> 렌더 텍스쳐 복제
+            Graphics.Blit(mainTex, rt);
+
+            // 렌더 텍스쳐를 메인 텍스쳐에 등록
+            mr.material.mainTexture = rt;
+
+            // 브러시 텍스쳐가 없을 경우 임시 생성(red 색상)
+            if (brushTexture == null)
+            {
+                brushTexture = new Texture2D(resolution, resolution);
+                for (int i = 0; i < resolution; i++)
+                    for (int j = 0; j < resolution; j++)
+                        brushTexture.SetPixel(i, j, Color.red);
+                brushTexture.Apply();
+            }
         }
-        
-        private void InitBlackColor()
+
+        private void Update()
         {
-            Color[] colors = new Color[_mesh.vertexCount];
-
-            for (int i = 0; i < colors.Length; i++)
-            {
-                colors[i] = new Color(1,0,0);
-            }
-
-            _mesh.colors = colors;
+            Vector2 pixelUV = target.transform.position;
+            pixelUV *= resolution;
+            DrawTexture(pixelUV);
         }
 
-        
-        private void GenerateMeshPlane(MeshData meshData)
+        /// <summary> 렌더 텍스쳐에 브러시 텍스쳐로 그리기 </summary>
+        public void DrawTexture(in Vector2 uv)
         {
-            Vector3 widthV3 = new Vector3(Width, 0f, Width);
-            Vector3 startPoint = -widthV3 * 0.5f;
-            meshData.GridUnit = Vector2.one*(Width / Resolution);
+            Debug.Log(uv);
+            RenderTexture.active = rt; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
+            GL.PushMatrix();                                  // 매트릭스 백업
+            GL.LoadPixelMatrix(0, resolution, resolution, 0); // 알맞은 크기로 픽셀 매트릭스 설정
 
-            meshData.VCount = new Vector2Int(Resolution + 1, Resolution + 1);
-            int vertsCount = meshData.VCount.x * meshData.VCount.y;
-            int trisCount = Resolution * Resolution * 6;
+            float brushPixelSize = brushSize * resolution;
+            
+            // 렌더 텍스쳐에 브러시 텍스쳐를 이용해 그리기
+            Graphics.DrawTexture(
+                new Rect(
+                    uv.x - brushPixelSize * 0.5f,
+                    (rt.height - uv.y) - brushPixelSize * 0.5f,
+                    brushPixelSize,
+                    brushPixelSize
+                ),
+                brushTexture
+            );
 
-            meshData.Verts = new Vector3[vertsCount];
-            meshData.Tris = new int[trisCount];
-
-            for (int j = 0; j < meshData.VCount.y; j++)
-            {
-                for (int i = 0; i < meshData.VCount.x; i++)
-                {
-                    int index = i + j * meshData.VCount.x;
-                    meshData.Verts[index] = startPoint
-                                            + new Vector3(
-                                                meshData.GridUnit.x * i,
-                                                0f,
-                                                meshData.GridUnit.y * j
-                                            );
-                }
-            }
-
-            int tIndex = 0;
-            for (int j = 0; j < meshData.VCount.y - 1; j++)
-            {
-                for (int i = 0; i < meshData.VCount.x - 1; i++)
-                {
-                    int vIndex = i + j * meshData.VCount.x;
-                    
-                    var tris = meshData.Tris;
-                    
-                    tris[tIndex + 0] = vIndex;
-                    tris[tIndex + 1] = vIndex + meshData.VCount.x;
-                    tris[tIndex + 2] = vIndex + 1;
-
-                    tris[tIndex + 3] = vIndex + meshData.VCount.x;
-                    tris[tIndex + 4] = vIndex + meshData.VCount.x + 1;
-                    tris[tIndex + 5] = vIndex + 1;
-
-                    tIndex += 6;
-                }
-            }
+            GL.PopMatrix();              // 매트릭스 복구
+            RenderTexture.active = null; // 활성 렌더 텍스쳐 해제
         }
     }
 }
