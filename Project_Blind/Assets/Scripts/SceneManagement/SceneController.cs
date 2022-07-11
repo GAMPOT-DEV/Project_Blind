@@ -41,7 +41,8 @@ namespace Blind
         protected IEnumerator Transition(Define.Scene newSceneName, TransitionDestination.DestinationTag destinationTag, TransitionPoint.TransitionType transitionType = TransitionPoint.TransitionType.DifferentScene)
         {
             string sceneName = newSceneName.ToString();
-            yield return SceneManager.LoadSceneAsync(sceneName);
+            //yield return SceneManager.LoadSceneAsync(sceneName);
+            LoadingSceneController.LoadScene(sceneName);
             TransitionDestination entrance = GetDestination(destinationTag);
             SetEnteringLocation(entrance);
             yield return new WaitForSeconds(1);

@@ -20,8 +20,6 @@ namespace Blind
         [Tooltip("도착지점의 태그")]
         public TransitionDestination.DestinationTag transitionDestinationTag;
 
-
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject == transitioningGameObject)
