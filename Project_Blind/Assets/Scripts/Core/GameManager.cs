@@ -23,7 +23,10 @@ namespace Blind
 
         private void FixedUpdate()
         {
-            Player.OnFixedUpdate();
+            if(Player != null)
+            {
+                Player.OnFixedUpdate();
+            }
         }
         
     }

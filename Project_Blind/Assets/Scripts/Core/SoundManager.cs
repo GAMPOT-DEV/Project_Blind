@@ -14,7 +14,10 @@ namespace Blind
     public class SoundManager : Manager<SoundManager>
     {
         AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount];
+        float[] _volumes = new float[(int)Define.Sound.MaxCount];
         Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
+
+        private float _masterVolume = 1.0f;
 
         protected override void Awake()
         {
@@ -30,6 +33,7 @@ namespace Blind
                 GameObject go = new GameObject { name = soundNames[i] };
                 _audioSources[i] = go.AddComponent<AudioSource>();
                 go.transform.parent = transform;
+                _volumes[i] = 1.0f;
             }
             _audioSources[(int)Define.Sound.Bgm].loop = true;
         }
@@ -98,6 +102,23 @@ namespace Blind
             }
 
             return audioClip;
+        }
+        public void ChangeMasterVolume(float volume)
+        {
+            _masterVolume = volume;
+            RefreshSound();
+        }
+        public void ChangeVolume(Define.Sound sound, float volume)
+        {
+            _volumes[(int)sound] = volume;
+            _audioSources[(int)sound].volume = _volumes[(int)sound] * _masterVolume;
+        }
+        private void RefreshSound()
+        {
+            for(int i = 0; i < (int)Define.Sound.MaxCount; i++)
+            {
+                _audioSources[i].volume = _volumes[i] * _masterVolume;
+            }
         }
     }
 }
