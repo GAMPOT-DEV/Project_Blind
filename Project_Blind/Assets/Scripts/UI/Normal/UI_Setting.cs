@@ -11,9 +11,11 @@ namespace Blind
 
         bool _vibration = true;
 
-        int _screenMode = 0;
+        int _screenMode = SIZE - 1;
         const int SIZE = 3;
-        bool _isWindowMode = false;
+        bool _isWindowMode;
+
+        Define.Resolution[] _resolutions = new Define.Resolution[SIZE];
         #region Enums
         enum Texts
         {
@@ -68,6 +70,8 @@ namespace Blind
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
             Bind<Slider>(typeof(Sliders));
+
+            InitResolution();
             InitTexts();
             InitSliders();
             InitEvents();
@@ -91,6 +95,22 @@ namespace Blind
             }
         }
         #region Initialize
+        private void InitResolution()
+        {
+            _resolutions[0].width = 960;
+            _resolutions[0].height = 540;
+
+            _resolutions[1].width = 1280;
+            _resolutions[1].height = 720;
+
+            _resolutions[2].width = 1920;
+            _resolutions[2].height = 1080;
+
+            _isWindowMode = false;
+
+            UIManager.Instance.Resolution = _resolutions[_screenMode];
+            UIManager.Instance.IsWindowMode = _isWindowMode;
+        }
         private void InitTexts()
         {
             // 사운드 관련
@@ -110,7 +130,8 @@ namespace Blind
             // 해상도 관련 TODO
             Get<Text>((int)Texts.Text_Screen).text = "해상도";
             Get<Text>((int)Texts.Text_ScreenSize).text = "해상도";
-            Get<Text>((int)Texts.Text_ScreenSizeValue).text = _screenMode.ToString();
+            Get<Text>((int)Texts.Text_ScreenSizeValue).text =
+               $"{_resolutions[_screenMode].width} * {_resolutions[_screenMode].height}";
             Get<Text>((int)Texts.Text_ScreenMode).text = "창모드";
             Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _isWindowMode ? "On" : "Off";
         }
@@ -210,12 +231,16 @@ namespace Blind
         private void PushRightButton()
         {
             _screenMode = (_screenMode + 1) % SIZE;
-            Get<Text>((int)Texts.Text_ScreenSizeValue).text = _screenMode.ToString();
+            Get<Text>((int)Texts.Text_ScreenSizeValue).text =
+                $"{_resolutions[_screenMode].width} * {_resolutions[_screenMode].height}";
+            UIManager.Instance.Resolution = _resolutions[_screenMode];
         }
         private void PushLeftButton()
         {
             _screenMode = (_screenMode - 1 + SIZE) % SIZE;
-            Get<Text>((int)Texts.Text_ScreenSizeValue).text = _screenMode.ToString();
+            Get<Text>((int)Texts.Text_ScreenSizeValue).text =
+               $"{_resolutions[_screenMode].width} * {_resolutions[_screenMode].height}";
+            UIManager.Instance.Resolution = _resolutions[_screenMode];
         }
         private void PushWindowModeButton()
         {
@@ -223,11 +248,13 @@ namespace Blind
             {
                 _isWindowMode = false;
                 Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _isWindowMode ? "On" : "Off";
+                UIManager.Instance.IsWindowMode = _isWindowMode;
             }
             else
             {
                 _isWindowMode = true;
                 Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _isWindowMode ? "On" : "Off";
+                UIManager.Instance.IsWindowMode = _isWindowMode;
             }
         }
         #endregion

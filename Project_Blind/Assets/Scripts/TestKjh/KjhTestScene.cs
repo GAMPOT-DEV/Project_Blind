@@ -107,6 +107,23 @@ namespace Blind
 
             #endregion
         }
+        private void Update()
+        {
+            HandleUIKeyInput();
+        }
+        private void HandleUIKeyInput()
+        {
+            if (!Input.anyKey)
+                return;
+
+            if (UIManager.Instance.UINum != 0)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // TODO 메뉴 UI
+            }
+        }
         IEnumerator CoDestroyObjs(int time)
         {
             yield return new WaitForSeconds(time);
