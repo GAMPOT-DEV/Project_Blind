@@ -71,6 +71,8 @@ namespace Blind
             if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
                 UIManager.Instance.CloseWorldSpaceUI(this);
+                Owner.GetComponent<ConversationTest>()._player.GetComponent<PlayerCharacter>().UnTalk();
+                Owner.GetComponent<ConversationTest>()._state = Define.ObjectState.NonKeyDown;
                 return;
             }
             ShowText(page);

@@ -6,10 +6,12 @@ namespace Blind
 {
     public class TestNPC : MonoBehaviour
     {
+        InteractionAble _interactionConversation;
         InteractionAble _interaction;
         void Awake()
         {
-            _interaction = gameObject.GetOrAddComponent<ConversationTest>();
+            _interactionConversation = gameObject.GetOrAddComponent<ConversationTest>();
+            _interaction = gameObject.GetOrAddComponent<InteractionTest>();
         }
     }
 }
