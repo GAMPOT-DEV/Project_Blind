@@ -7,6 +7,18 @@ using UnityEngine;
 /// </summary>
 public class Define
 {
+    public enum ObjectType
+    {
+        Item,
+        Npc
+    }
+    public enum ObjectState
+    {
+        NonKeyDown,
+        KeyDown,
+        Ing
+    }
+    
     public enum Scene
     {
         Unknown,
