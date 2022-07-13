@@ -11,6 +11,13 @@ namespace Blind
     
     public abstract class InteractionAble : MonoBehaviour
     {
+        protected enum State
+        {
+            NonKeyDown,
+            KeyDown,
+            Ing
+        }
+
         protected BoxCollider2D _collider;
         protected UI_WorldSpace _ui;
         protected virtual void Init(int x = 5, int y = 5)
@@ -28,7 +35,7 @@ namespace Blind
         // 상호작용 범위에서 벗어났을 때
         protected abstract void OnTriggerExit2D(Collider2D collision);
         // 상호작용 키를 눌렀을때 호출
-        public abstract void DoInteraction(GameObject player);
+        public abstract void DoInteraction();
 
     }
 }

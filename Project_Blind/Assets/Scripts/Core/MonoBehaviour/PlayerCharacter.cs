@@ -187,8 +187,7 @@ namespace Blind
             }
 
             return isEnemy;
-        }   
-
+        }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
@@ -217,7 +216,7 @@ namespace Blind
             }
         }
 
-        IEnumerator Invincibility()
+        IEnumerator Invincibility() 
         {
             _damage.Invincibility();
             yield return new WaitForSeconds(0.5f);
@@ -238,6 +237,20 @@ namespace Blind
         public void MakePlatformFallthrough()
         {
             _characterController2D.MakePlatformFallthrough();
+        }
+
+        public void GetItem()
+        {
+            _animator.SetTrigger("Item");
+        }
+        public void Talk()
+        {
+            _animator.SetBool("Talk", true);
+        }
+
+        public void UnTalk()
+        {
+            _animator.SetBool("Talk" , false);
         }
         
         public void UpdateVelocity()
