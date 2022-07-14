@@ -51,9 +51,20 @@ namespace Blind
 
         private void Update()
         {
-            Vector2 pixelUV = target.transform.position;
-            pixelUV *= resolution;
-            DrawTexture(pixelUV);
+            var ray = new Ray(target.transform.position, new Vector3(0,0,10));
+            bool raycast = Physics.Raycast(ray, out var hit);
+            Collider col = hit.collider;
+
+            Debug.DrawRay(ray.origin, ray.direction, Color.red);
+            
+            // 본인이 레이캐스트에 맞았으면 그리기
+            if (raycast && col && col.transform == transform)
+            {
+                Vector2 pixelUV = hit.textureCoord;
+                pixelUV *= resolution;
+                Debug.Log(pixelUV);
+                DrawTexture(pixelUV);
+            }
         }
 
         /// <summary> 렌더 텍스쳐에 브러시 텍스쳐로 그리기 </summary>
