@@ -5,7 +5,7 @@ namespace Blind
         public int x;
         public int y;
 
-        public TilePos(int x, int y, float height)
+        public TilePos(int x, int y)
         {
             this.x = x;
             this.y = y;
@@ -21,6 +21,11 @@ namespace Blind
         public int GetTileIndex(in int mapWidth)
         {
             return x + y * mapWidth;
+        }
+
+        public override string ToString()
+        {
+            return $"{x} , {y}";
         }
     }
 }

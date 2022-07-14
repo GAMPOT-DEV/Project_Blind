@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Codice.Client.BaseCommands;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
@@ -19,8 +20,6 @@ namespace Blind
         public LayerMask _groundLayer;
 
         [Space(8f)]
-        public float FogWidthX = 20;
-        public float FogWidthZ = 20;
         public float TileSize = 1; // 타일 하나의 크기
 
         
@@ -29,12 +28,22 @@ namespace Blind
         private MeshRenderer _mr;
         private RenderTexture _rt;
         private RenderTexture _originalRT;
+        
+        private Vector3 _size;
+        private Vector3 _center;
+        private Vector3 _origin;
+        
+        private List<TilePos> _visibleTiles = new List<TilePos>();
+        private List<SightUnit> _unitList = new List<SightUnit>();
+
+        private FOWMap _fowMap;
 
         protected override void Awake()
         {
             base.Awake();
             GetComponent<MeshRenderer>().enabled = true;
             TryGetComponent(out _mr);
+
             _rt = new RenderTexture(resolution, resolution, 32);
 
             if (_mr.material.mainTexture != null)
@@ -71,21 +80,65 @@ namespace Blind
                 }
             }
             _brushTexture.Apply();
+            
+            // size측정
+            var bounds = _mr.bounds;
+            _size = bounds.size;
+            _center = bounds.center;
+            int sizeX = (int)(_size.x / (float)TileSize);
+            int sizeY = (int)(_size.y / (float)TileSize);
+            _fowMap = new FOWMap(sizeX,sizeY);
+            
+            _origin = _center - (Vector3)_fowMap.MapSize / 2;
+        }
+
+        private void Update()
+        {
+            foreach(var unit in _unitList)
+            {
+                _visibleTiles.Add(GetUnitTilePos(unit.transform));
+            }
+        }
+
+        public void AssignUnit(SightUnit unit)
+        {
+            _unitList.Add(unit);
+        }
+
+        private TilePos GetUnitTilePos(Transform pos)
+        {
+            var tmp = (pos.position - _origin)/TileSize;
+            return new TilePos((int)tmp.x, (int)tmp.y);
+        }
+
+        private Vector2 GetTileCenterPos(int x,int y)
+        {
+            var res = new Vector2(x * TileSize + TileSize/2 , y * TileSize + TileSize / 2);
+            res = (Vector2)_origin + res;
+            return res;
         }
 
         private void OnDrawGizmos()
         {
             if (Application.isPlaying == false) return;
-#if DEBUG_RANGE
-            foreach (var tile in visibleTiles)
-            {
-                Vector2 pos = GetTileCenterPoint(tile.x, tile.y);
-                Gizmos.color = Color.green;
-                Gizmos.DrawCube(new Vector3(pos.x, 0f, pos.y), new Vector3(_tileSize, 1f, _tileSize));
-            }
-#endif
-            if (ShowGizmos == false) return;
             
+            foreach (var tile in _visibleTiles)
+            {
+                Debug.Log(tile);
+                Vector2 pos = GetTileCenterPos(tile.x, tile.y);
+                Gizmos.color = Color.green;
+                Gizmos.DrawCube(new Vector3(pos.x,pos.y,0f), new Vector3(TileSize, TileSize,1f));
+            }
+            
+            if (ShowGizmos == false) return;
+            for (int i = 0; i < _fowMap.MapSizeX; i++)
+            {
+                for (int j = 0; j < _fowMap.MapSizeY; j++)
+                {
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawWireCube(GetTileCenterPos(i,j),new Vector3(TileSize,TileSize,0));
+                }
+            }
         }
 
         public void DrawTexture(RaycastHit hit)

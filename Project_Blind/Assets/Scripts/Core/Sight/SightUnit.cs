@@ -5,12 +5,11 @@ namespace Blind
 {
     public class SightUnit : MonoBehaviour
     {
-        private void Update()
-        {
-            var ray = new Ray(transform.position + new Vector3(0,0,-1),new Vector3(0,0,1) * 10 );
-            bool raycast = Physics.Raycast(ray, out var hit);
+        public int Range = 3;
 
-            SightController.Instance.DrawTexture(hit);
+        private void Awake()
+        {
+            SightController.Instance.AssignUnit(this);
         }
     }
 }
