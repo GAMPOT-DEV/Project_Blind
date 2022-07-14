@@ -26,8 +26,10 @@ namespace Blind
         {
 
         }
-		private void Awake()
+		protected virtual void Awake()
 		{
+			_uiNum = UIManager.Instance.UINum;
+			gameObject.GetComponent<Canvas>().sortingOrder = _uiNum;
 			Init();
 		}
 

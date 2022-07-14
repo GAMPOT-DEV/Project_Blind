@@ -32,7 +32,6 @@ namespace Blind
         public override void Init()
         {
             base.Init();
-            _uiNum = UIManager.Instance.UINum;
             Debug.Log("Main Scene");
             Bind<Button>(typeof(Buttons));
             Bind<Text>(typeof(Texts));

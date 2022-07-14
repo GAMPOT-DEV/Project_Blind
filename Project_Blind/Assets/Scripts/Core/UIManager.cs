@@ -130,7 +130,6 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
-            _uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"UI/Scene/{name}");
             T sceneUI = Util.GetOrAddComponent<T>(go);
             SceneUI = sceneUI;
@@ -160,7 +159,7 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
-            _uiNum = _uiNum + 1;
+            //_uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"TestKjh/{name}");
             T ui = Util.GetOrAddComponent<T>(go);
             _worldSpaceUIs.Add(ui);
@@ -222,7 +221,7 @@ namespace Blind
                 return;
             if (ui == null) return;
             _worldSpaceUIs.Remove(ui);
-            _uiNum = _uiNum - 1;
+            //_uiNum = _uiNum - 1;
             ResourceManager.Instance.Destroy(ui.gameObject);
         }
         public void CloseNormalUI(UI_Base ui)
@@ -236,28 +235,30 @@ namespace Blind
         }
         public void CloseAllWorldSpaceUI()
         {
+            Stack<UI_WorldSpace> st = new Stack<UI_WorldSpace>();
             foreach(var ui in _worldSpaceUIs)
             {
-                CloseWorldSpaceUI(ui);
+                st.Push(ui);
             }
+            while (st.Count > 0)
+                CloseWorldSpaceUI(st.Pop());
         }
         public void CloseAllNormalUI()
         {
+            Stack<UI_Base> st = new Stack<UI_Base>();
             foreach (var ui in _normalUIs)
             {
-                CloseNormalUI(ui);
+                st.Push(ui);
             }
+            while (st.Count > 0)
+                CloseNormalUI(st.Pop());
         }
         public void Clear()
         {
             CloseAllPopupUI();
             CloseAllWorldSpaceUI();
             CloseAllNormalUI();
-            if (SceneUI != null)
-            {
-                UINum = UINum - 1;
-                SceneUI = null;
-            }
+            SceneUI = null;
         }
     }
 }

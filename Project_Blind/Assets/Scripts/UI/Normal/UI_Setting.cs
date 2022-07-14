@@ -66,7 +66,6 @@ namespace Blind
         #endregion
         public override void Init()
         {
-            _uiNum = UIManager.Instance.UINum;
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
             Bind<Slider>(typeof(Sliders));
