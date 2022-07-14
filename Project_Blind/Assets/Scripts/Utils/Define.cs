@@ -7,12 +7,25 @@ using UnityEngine;
 /// </summary>
 public class Define
 {
+    public enum ObjectType
+    {
+        Item,
+        Npc
+    }
+    public enum ObjectState
+    {
+        NonKeyDown,
+        KeyDown,
+        Ing
+    }
+    
     public enum Scene
     {
         Unknown,
         GameScene,
         황현택,
         황현택_dest,
+        MainScene,
     }
 
     public enum Sound

@@ -52,7 +52,7 @@ namespace Blind
             Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + height);
             _showText = StartCoroutine(CoShowTexts(page));
         }
-        void PushNextButton(PointerEventData evt)
+        void PushNextButton()
         {
             if (_showText != null)
             {
@@ -71,11 +71,13 @@ namespace Blind
             if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
                 UIManager.Instance.CloseWorldSpaceUI(this);
+                Owner.GetComponent<ConversationTest>()._player.GetComponent<PlayerCharacter>().UnTalk();
+                Owner.GetComponent<ConversationTest>()._state = Define.ObjectState.NonKeyDown;
                 return;
             }
             ShowText(page);
         }
-        void DragUI(PointerEventData evt)
+        void DragUI()
         {
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos = new Vector3(pos.x, pos.y, 0);

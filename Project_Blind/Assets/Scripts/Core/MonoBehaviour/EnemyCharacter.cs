@@ -11,6 +11,7 @@ namespace Blind
             Roaming,
             ChasePlayer,
             Return,
+            Attack,
         }
         private CharacterController2D _characterController2D;
         private Vector2 _moveVector;
@@ -20,6 +21,7 @@ namespace Blind
         private GameObject _player;
         private State state;
         private float _speed = 0.3f;
+        public bool isAttack = false;
 
         private void Start()
         {
@@ -42,6 +44,7 @@ namespace Blind
 
                 case State.ChasePlayer:
                     _characterController2D.Move(new Vector2(DirectionVector(_player.transform.position), 0f));
+                    isAttack = true;
                     MissTarget();
                     break;
 
@@ -55,9 +58,19 @@ namespace Blind
                     _characterController2D.Move(new Vector2(direction, 0f));
                     FindTarget();
                     break;
+                case State.Attack:
+                    isAttack = true;
+                    StartCoroutine(AttackEnd());
+                    break;
             }
 
             _characterController2D.OnFixedUpdate();
+        }
+
+        private IEnumerator AttackEnd()
+        {
+            yield return new WaitForSeconds(0.7f);
+            isAttack = false;
         }
 
         private float DirectionVector(Vector2 goal)
@@ -89,10 +102,10 @@ namespace Blind
                 state = State.Return;
             }
         }
-
         private void Patrol()
         {
             _characterController2D.Move(new Vector2(transform.position.x+3,transform.position.y));
         }
+        
     }
 }

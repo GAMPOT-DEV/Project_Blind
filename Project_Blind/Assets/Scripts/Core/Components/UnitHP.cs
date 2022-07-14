@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Blind
 {
     /// <summary>
@@ -7,13 +9,15 @@ namespace Blind
     {
         private float _health;
         private float _maxHealth;
+        private bool isInvincibility = false;
 
         public UnitHP(int maxHealth) {
             _maxHealth = maxHealth;
             _health = _maxHealth;
         }
         public void GetDamage(float damage) {
-            _health -= damage;
+            if(!isInvincibility)
+                _health -= damage;
         }
         public void GetHeal(float heal) {
             if(_health + heal > _maxHealth) {
@@ -24,6 +28,18 @@ namespace Blind
         }
         public float GetHP() {
             return _health;
+        }
+
+        public void Invincibility()
+        {
+            isInvincibility = true;
+            Debug.Log("무적!");
+        }
+
+        public void unInvicibility()
+        {
+            isInvincibility = false;
+            Debug.Log("무적 풀림");
         }
     }
 }

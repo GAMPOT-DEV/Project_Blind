@@ -22,6 +22,10 @@ namespace Blind
             _monoBehaviour.GroundedHorizontalMovement(true);
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.UpdateFacing();
+            if (_monoBehaviour.CheckForFallInput())
+                _monoBehaviour.MakePlatformFallthrough();
+            else if(_monoBehaviour.CheckForParing())
+                _monoBehaviour.Paring();
         }
         
     }

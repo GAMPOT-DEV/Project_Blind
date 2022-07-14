@@ -19,6 +19,7 @@ namespace Blind
 {
 	public abstract class UI_Base : MonoBehaviour
 	{
+		protected int _uiNum;
 		protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 		public abstract void Init();
 		protected virtual void Start()
@@ -71,7 +72,7 @@ namespace Blind
 
 		// UI에 콜백으로 이벤트를 할당하는 함수
 		// UI_TestSceneUI 스크립트에 사용 예제가 있다.
-		public static void BindEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
+		public static void BindEvent(GameObject go, Action action, Define.UIEvent type = Define.UIEvent.Click)
 		{
 			UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);
 
