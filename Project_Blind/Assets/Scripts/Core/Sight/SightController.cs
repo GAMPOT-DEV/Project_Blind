@@ -6,7 +6,7 @@ using UnityEngine.Experimental.Rendering;
 
 namespace Blind
 {
-    public class SightController : MonoBehaviour
+    public class SightController : Singleton<SightController>
     {
         public int resolution = 512;
         [Range(0.01f, 1f)]
@@ -17,8 +17,9 @@ namespace Blind
         private MeshRenderer mr;
         private RenderTexture rt;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             TryGetComponent(out mr);
             rt = new RenderTexture(resolution, resolution, 32);
 
@@ -44,31 +45,26 @@ namespace Blind
                 brushTexture = new Texture2D(resolution, resolution);
                 for (int i = 0; i < resolution; i++)
                     for (int j = 0; j < resolution; j++)
-                        brushTexture.SetPixel(i, j, Color.red);
+                        brushTexture.SetPixel(i, j, new Color(0,0,0,0.5f));
                 brushTexture.Apply();
             }
         }
 
-        private void Update()
+        public void DrawTexture(RaycastHit hit)
         {
-            var ray = new Ray(target.transform.position, new Vector3(0,0,10));
-            bool raycast = Physics.Raycast(ray, out var hit);
-            Collider col = hit.collider;
-
-            Debug.DrawRay(ray.origin, ray.direction, Color.red);
-            
-            // 본인이 레이캐스트에 맞았으면 그리기
-            if (raycast && col && col.transform == transform)
+            var col = hit.collider;
+            if (col && col.transform == transform)
             {
                 Vector2 pixelUV = hit.textureCoord;
                 pixelUV *= resolution;
                 Debug.Log(pixelUV);
-                DrawTexture(pixelUV);
+                _DrawTexture(pixelUV);
             }
         }
 
+
         /// <summary> 렌더 텍스쳐에 브러시 텍스쳐로 그리기 </summary>
-        public void DrawTexture(in Vector2 uv)
+        private void _DrawTexture(in Vector2 uv)
         {
             Debug.Log(uv);
             RenderTexture.active = rt; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
