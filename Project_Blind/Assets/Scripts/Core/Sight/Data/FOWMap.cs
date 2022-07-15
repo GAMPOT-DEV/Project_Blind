@@ -18,11 +18,11 @@ namespace Blind
             }
         }
 
-        public FOWMap(int x,int y)
+        public FOWMap(int x, int y)
         {
             MapSizeX = x;
             MapSizeY = y;
+
         }
-        
     }
 }

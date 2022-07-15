@@ -88,15 +88,38 @@ namespace Blind
             int sizeX = (int)(_size.x / (float)TileSize);
             int sizeY = (int)(_size.y / (float)TileSize);
             _fowMap = new FOWMap(sizeX,sizeY);
-            
             _origin = _center - (Vector3)_fowMap.MapSize / 2;
+            FowMapInit();
         }
 
         private void Update()
         {
+            _visibleTiles.Clear();
             foreach(var unit in _unitList)
             {
                 _visibleTiles.Add(GetUnitTilePos(unit.transform));
+            }
+        }
+        
+        /// <summary>
+        /// 맵 초기화
+        /// </summary>
+        public void FowMapInit()
+        {
+            var mapSize = _fowMap.MapSize;
+            for (var i = -1; i < mapSize.x; i++)
+            {
+                for (var j = -1; j < mapSize.y; j++)
+                {
+                    int layermask = 1 << LayerMask.NameToLayer("Floor");
+                    var ray = new Ray(GetTileCenterPos(i, j), new Vector3(0,0,1) * 10);
+                    RaycastHit hit;
+                    var raycast = Physics.Raycast(ray,out hit);
+                    if (raycast)
+                    {
+                        Debug.Log(10);
+                    }
+                }
             }
         }
 
@@ -124,7 +147,6 @@ namespace Blind
             
             foreach (var tile in _visibleTiles)
             {
-                Debug.Log(tile);
                 Vector2 pos = GetTileCenterPos(tile.x, tile.y);
                 Gizmos.color = Color.green;
                 Gizmos.DrawCube(new Vector3(pos.x,pos.y,0f), new Vector3(TileSize, TileSize,1f));
