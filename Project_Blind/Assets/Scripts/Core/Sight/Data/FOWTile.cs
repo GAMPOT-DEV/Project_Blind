@@ -5,20 +5,20 @@ namespace Blind
         public TilePos pos;
 
         /// <summary> (x,y) 좌표, width를 이용해 계산한 일차원 배열 내 인덱스 </summary>
-        public int index;
+        public int Index;
 
         public int X => pos.x;
         public int Y => pos.y;
 
-        public bool isBlock = false;
+        public bool IsBlock = false;
 
         public FOWTile(bool isBlock, int x, int y, int width)
         {
             pos.x = x;
             pos.y = y;
-            this.isBlock = isBlock;
+            IsBlock = isBlock;
 
-            index = x + y * width;
+            Index = x + y * width;
         }
     }
 }
