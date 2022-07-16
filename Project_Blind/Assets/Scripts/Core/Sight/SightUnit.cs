@@ -12,7 +12,8 @@ namespace Blind
 
         private void Awake()
         {
-            SightController.Instance.AssignUnit(this);
+            if (SightController.Instance is not null)
+                SightController.Instance.AssignUnit(this);
         }
 
         public List<TilePos> GetRangeTiles(TilePos center)
