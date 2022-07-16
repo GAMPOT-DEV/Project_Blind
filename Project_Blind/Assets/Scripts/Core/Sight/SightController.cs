@@ -7,7 +7,7 @@ using UnityEngine.Experimental.Rendering;
 
 namespace Blind
 {
-    public class SightController : Singleton<SightController>
+    public class SightController : SingletonDontCreate<SightController>
     {
         public int resolution = 512;
         [Range(0.01f, 1f)]
