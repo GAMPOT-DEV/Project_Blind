@@ -17,7 +17,7 @@ namespace Blind
         float[] _volumes = new float[(int)Define.Sound.MaxCount];
         Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
 
-        private float _masterVolume = 1.0f;
+        //private float _masterVolume = DataManager.Instance.GameData.mastetVolume;
 
         protected override void Awake()
         {
@@ -33,8 +33,9 @@ namespace Blind
                 GameObject go = new GameObject { name = soundNames[i] };
                 _audioSources[i] = go.AddComponent<AudioSource>();
                 go.transform.parent = transform;
-                _volumes[i] = 1.0f;
             }
+            _volumes[(int)Define.Sound.Bgm] = DataManager.Instance.GameData.bgmVolume;
+            _volumes[(int)Define.Sound.Effect] = DataManager.Instance.GameData.effectVolume;
             _audioSources[(int)Define.Sound.Bgm].loop = true;
         }
         public void Clear()
@@ -105,19 +106,29 @@ namespace Blind
         }
         public void ChangeMasterVolume(float volume)
         {
-            _masterVolume = volume;
+            DataManager.Instance.GameData.mastetVolume = volume;
+            //_masterVolume = volume;
             RefreshSound();
         }
         public void ChangeVolume(Define.Sound sound, float volume)
         {
+            switch (sound)
+            {
+                case Define.Sound.Bgm:
+                    DataManager.Instance.GameData.bgmVolume = volume;
+                    break;
+                case Define.Sound.Effect:
+                    DataManager.Instance.GameData.effectVolume = volume;
+                    break;
+            }
             _volumes[(int)sound] = volume;
-            _audioSources[(int)sound].volume = _volumes[(int)sound] * _masterVolume;
+            _audioSources[(int)sound].volume = _volumes[(int)sound] * DataManager.Instance.GameData.mastetVolume;
         }
         private void RefreshSound()
         {
             for(int i = 0; i < (int)Define.Sound.MaxCount; i++)
             {
-                _audioSources[i].volume = _volumes[i] * _masterVolume;
+                _audioSources[i].volume = _volumes[i] * DataManager.Instance.GameData.mastetVolume;
             }
         }
     }
