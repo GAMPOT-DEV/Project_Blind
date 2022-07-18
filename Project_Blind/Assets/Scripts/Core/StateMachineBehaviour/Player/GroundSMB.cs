@@ -24,8 +24,15 @@ namespace Blind
             _monoBehaviour.UpdateFacing();
             if (_monoBehaviour.CheckForFallInput())
                 _monoBehaviour.MakePlatformFallthrough();
-            else if(_monoBehaviour.CheckForParing())
+            if(_monoBehaviour.CheckForParing())
                 _monoBehaviour.Paring();
+            if (_monoBehaviour.CheckForAttack())
+            {
+                _monoBehaviour.MeleeAttack();
+                _monoBehaviour._lastClickTime = Time.time;
+                _monoBehaviour._clickcount++;
+                _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 3);
+            }
         }
         
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,8 @@ namespace Blind
     {
         private Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
-        private UnitHP _damage;
+        public UnitHP _damage;
+        private MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
 
@@ -29,6 +31,13 @@ namespace Blind
         
         [SerializeField] private float _dashSpeed = 10f;
         [SerializeField] private float _defaultTime = 0.1f;
+        [SerializeField] public float _attackMove = 1f;
+        [SerializeField] public float _maxComboDelay;
+        public float _lastClickTime;
+        public int _clickcount = 0;
+
+        [SerializeField] private int x;
+        [SerializeField] private int y;
         
         private float _dashTime;
         private float _defaultSpeed;
@@ -40,6 +49,7 @@ namespace Blind
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
+            _attack = GetComponent<MeleeAttackable>();
             _damage = new UnitHP(10);
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
@@ -47,8 +57,9 @@ namespace Blind
             _dashSpeed = 10f;
             _defaultTime = 0.1f;
             _dashCount = 1;
-            
-			ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
+
+            ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
+            _attack.Init(x,y);
         }
 
         private void Start()
@@ -223,6 +234,52 @@ namespace Blind
             _damage.unInvicibility();
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
         }
+
+        public bool CheckForAttack()
+        {
+            return InputController.Instance.Attack.Down;
+        }
+
+        public bool CheckForAttackTime()
+        {
+            return Time.time - _lastClickTime > _maxComboDelay;
+        }
+        public void MeleeAttack()
+        {
+            _animator.SetBool("Attack", true);
+        }
+
+        public void MeleeAttackCombo1()
+        {
+            _animator.SetBool("Attack2", true);
+        }
+
+        public void MeleeAttackCombo2()
+        {
+            _animator.SetBool("Attack3", true);
+        }
+
+        public void MeleeAttackComoEnd()
+        {
+            _animator.SetBool("Attack", false);
+            _animator.SetBool("Attack2" ,false);
+            _animator.SetBool("Attack3", false);
+            _clickcount = 0;
+        }
+        public void AttackableMove(float newMoveVector)
+        {
+            _moveVector.x = newMoveVector;
+        }
+
+        public void enableAttack()
+        {
+            _attack.EnableDamage();
+        }
+
+        public void DisableAttack()
+        {
+            _attack.DisableDamage();
+        }
         /// <summary>
         /// 아래 키를 누른 상태에 점프키를 눌렀는지 체크
         /// </summary>
@@ -272,7 +329,12 @@ namespace Blind
             {
                 _renderer.flipX = false;
             }
-        } 
+        }
+
+        public int GetFacing()
+        {
+            return _renderer.flipX ? -1 : 1;
+        }
         public void Log() {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
         }
