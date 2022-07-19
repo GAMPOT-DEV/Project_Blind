@@ -26,6 +26,7 @@ public class Define
         황현택,
         황현택_dest,
         MainScene,
+        김종현,
     }
 
     public enum Sound
@@ -46,5 +47,11 @@ public class Define
         KOR,
         ENG,
         MaxCount
+    }
+
+    public struct Resolution
+    {
+        public int width;
+        public int height;
     }
 }

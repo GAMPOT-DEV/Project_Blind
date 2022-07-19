@@ -12,6 +12,7 @@ namespace Blind
         const int BUTTON_COUNT = (int)Buttons.Button_Exit + 1;
         private Action[] _actions = new Action[BUTTON_COUNT];
         private int _currCursor;
+        TransitionPoint _transition;
         enum Buttons
         {
             Button_Start,
@@ -31,7 +32,6 @@ namespace Blind
         public override void Init()
         {
             base.Init();
-            _uiNum = UIManager.Instance.UINum;
             Debug.Log("Main Scene");
             Bind<Button>(typeof(Buttons));
             Bind<Text>(typeof(Texts));
@@ -48,6 +48,8 @@ namespace Blind
             _actions[0] += PushStartButton;
             _actions[1] += PushOptionButton;
             _actions[2] += PushExitButton;
+
+            _transition = FindObjectOfType<TransitionPoint>();
         }
         private void Update()
         {
@@ -59,11 +61,7 @@ namespace Blind
                 return;
 
             if (_uiNum != UIManager.Instance.UINum)
-            {
-                Debug.Log(_uiNum);
-                Debug.Log(UIManager.Instance.UINum);
                 return;
-            }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
@@ -89,6 +87,8 @@ namespace Blind
         private void PushStartButton()
         {
             Debug.Log("Push Start");
+            UIManager.Instance.Clear();
+            _transition.TransitionInternal();
         }
         private void PushOptionButton()
         {

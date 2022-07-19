@@ -14,7 +14,8 @@ namespace Blind
         {
             if (InputController.Instance.Interaction.Down)
             {
-                _ui.CloseWorldSpaceUI();
+                if (_ui != null)
+                    _ui.CloseWorldSpaceUI();
             }
         }
 
