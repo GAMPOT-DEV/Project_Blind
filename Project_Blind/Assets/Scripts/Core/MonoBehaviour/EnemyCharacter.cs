@@ -21,6 +21,7 @@ namespace Blind
         private GameObject _player;
         private State state;
         private float _speed = 0.3f;
+        public UnitHP _damage;
         public bool isAttack = false;
 
         private void Start()
@@ -29,6 +30,7 @@ namespace Blind
             _startingPosition = transform.position;
             _roamingPosition = new Vector2(-_speed, 0f);
             _player = GameObject.Find("Player");
+            _damage = new UnitHP(10);
             state = State.Roaming;
         }
 
