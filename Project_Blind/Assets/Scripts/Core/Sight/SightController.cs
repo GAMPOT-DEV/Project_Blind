@@ -25,9 +25,9 @@ namespace Blind
         
         private Texture2D _brushTexture;
         private Texture2D _mainTex;
+        private Texture2D _originalRT;
         private MeshRenderer _mr;
         private RenderTexture _rt;
-        private RenderTexture _originalRT;
         
         private Vector3 _size;
         private Vector3 _center;
@@ -56,11 +56,20 @@ namespace Blind
                 _mainTex = new Texture2D(resolution, resolution);
             }
 
-            // 메인 텍스쳐 -> 렌더 텍스쳐 복제
-            Graphics.Blit(_mainTex, _rt);
+            _originalRT = new Texture2D(_mainTex.width, _mainTex.height);
+            
+            Color32[] resetColorArray = _originalRT.GetPixels32();
 
-            // 렌더 텍스쳐를 메인 텍스쳐에 등록
-            _mr.material.mainTexture = _rt;
+            for (int i = 0; i < resetColorArray.Length; i++) {
+                resetColorArray[i] = Color.white;
+            }
+      
+            _originalRT.SetPixels32(resetColorArray);
+            _originalRT.Apply();
+
+            Graphics.Blit(_originalRT,_rt);
+
+            _mr.material.SetTexture("_RenderTexture",_rt);
 
             // 시야 텍스쳐 추가
             _brushTexture = new Texture2D(resolution, resolution);
@@ -89,6 +98,7 @@ namespace Blind
             int sizeY = (int)(_size.y / (float)TileSize);
             _fowMap = new FOWMap(sizeX,sizeY);
             _origin = _center - (Vector3)_fowMap.MapSize / 2;
+
             FowMapInit();
         }
 
@@ -99,6 +109,13 @@ namespace Blind
             {
                 _visibleTiles.Add(GetUnitTilePos(unit.transform));
             }
+
+            var positions = new List<Vector2>();
+            foreach (var tile in _visibleTiles)
+            {
+                positions.Add(GetTileCenterPos(tile));
+            }
+            DrawTexture(positions);
         }
         
         /// <summary>
@@ -134,6 +151,11 @@ namespace Blind
             return new TilePos((int)tmp.x, (int)tmp.y);
         }
 
+        private Vector2 GetTileCenterPos(TilePos tile)
+        {
+            return GetTileCenterPos(tile.x, tile.y);
+        }
+
         private Vector2 GetTileCenterPos(int x,int y)
         {
             var res = new Vector2(x * TileSize + TileSize/2 , y * TileSize + TileSize / 2);
@@ -163,22 +185,30 @@ namespace Blind
             }
         }
 
-        public void DrawTexture(RaycastHit hit)
+        public void DrawTexture(IEnumerable<Vector2> positions)
         {
-            var col = hit.collider;
-            if (col && col.transform == transform)
+            var res = new List<Vector2>();
+            foreach (var pos in positions)
             {
-                Vector2 pixelUV = hit.textureCoord;
+                var ray = new Ray((Vector3)pos + new Vector3(0,0,-1),new Vector3(0,0,1) * 10 );
+                RaycastHit hit;
+                var raycast = Physics.Raycast(ray,out hit);
+                var col = hit.collider;
+                if (!raycast || !col || col.transform != transform) return;
+                
+                var pixelUV = hit.textureCoord;
                 pixelUV *= resolution;
-                _DrawTexture(pixelUV);
+                res.Add(pixelUV);
             }
+
+            _DrawTexture(res);
         }
 
 
         /// <summary> 렌더 텍스쳐에 브러시 텍스쳐로 그리기 </summary>
-        private void _DrawTexture(in Vector2 uv)
+        private void _DrawTexture(in IEnumerable<Vector2> uvList)
         {
-            Graphics.Blit(_mainTex, _rt);
+            Graphics.Blit(_originalRT, _rt);
             RenderTexture.active = _rt; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
             GL.PushMatrix();                                  // 매트릭스 백업
             GL.LoadPixelMatrix(0, resolution, resolution, 0); // 알맞은 크기로 픽셀 매트릭스 설정
@@ -186,16 +216,18 @@ namespace Blind
             float brushPixelSize = brushSize * resolution;
             
             // 렌더 텍스쳐에 브러시 텍스쳐를 이용해 그리기
-            Graphics.DrawTexture(
-                new Rect(
-                    uv.x - brushPixelSize * 0.5f,
-                    (_rt.height - uv.y) - brushPixelSize * 0.5f,
-                    brushPixelSize,
-                    brushPixelSize
-                ),
-                _brushTexture
-            );
-            
+            foreach (var uv in uvList)
+            {
+                Graphics.DrawTexture(
+                    new Rect(
+                        uv.x - brushPixelSize * 0.5f,
+                        (_rt.height - uv.y) - brushPixelSize * 0.5f,
+                        brushPixelSize,
+                        brushPixelSize
+                    ),
+                    _brushTexture
+                );
+            }
             GL.PopMatrix();              // 매트릭스 복구
             RenderTexture.active = null; // 활성 렌더 텍스쳐 해제
         }
