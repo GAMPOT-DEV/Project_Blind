@@ -17,6 +17,7 @@ namespace Blind
         public InputButton Wave;
         public InputButton Paring;
         public InputButton Interaction;
+        public InputButton Attack;
 
         public InputAxis Horizontal;
         public InputAxis Vertical;
@@ -29,6 +30,7 @@ namespace Blind
             Jump = new InputButton(KeyCode.Space,XboxControllerButtons.A);
             Paring = new InputButton(KeyCode.L, XboxControllerButtons.Leftstick);
             Interaction = new InputButton(KeyCode.F, XboxControllerButtons.X);
+            Attack = new InputButton(KeyCode.K, XboxControllerButtons.RightBumper);
             Dash = new InputButton(KeyCode.X, XboxControllerButtons.LeftBumper);
             Wave = new InputButton(KeyCode.C,XboxControllerButtons.B);
             Horizontal = new InputAxis(KeyCode.D, KeyCode.A, XboxControllerAxes.LeftstickHorizontal);
@@ -47,6 +49,7 @@ namespace Blind
             Paring.Get(fixedUpdateHappened, inputType);
             Interaction.Get(fixedUpdateHappened, inputType);
             Dash.Get(fixedUpdateHappened, inputType);
+            Attack.Get(fixedUpdateHappened, inputType);
             Wave.Get(fixedUpdateHappened,inputType);
             Horizontal.Get(inputType);
             Vertical.Get(inputType);
@@ -67,6 +70,7 @@ namespace Blind
             GainControl(Vertical);
             GainControl(Dash);
             GainControl(Wave);
+            GainControl(Attack);
         }
         
         /// <summary>
@@ -85,6 +89,7 @@ namespace Blind
             ReleaseControl(Vertical,resetValues);
             ReleaseControl(Dash,resetValues);
             ReleaseControl(Wave,resetValues);
+            ReleaseControl(Attack, resetValues);
         }
     }
 }
