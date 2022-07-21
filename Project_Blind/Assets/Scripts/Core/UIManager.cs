@@ -20,6 +20,73 @@ namespace Blind
         // WorldSpace UI들을 관리하는 HashSet
         HashSet<UI_WorldSpace> _worldSpaceUIs = new HashSet<UI_WorldSpace>();
 
+        // Normal UI들을 관리하는 HashSet
+        HashSet<UI_Base> _normalUIs = new HashSet<UI_Base>();
+        private int _uiNum = 0;
+
+        Define.Resolution _resolution = new Define.Resolution() { width = 1080, height = 1920 };
+        bool _isWindowMode;
+
+        int _deviceWidth = Screen.width;
+        int _deviceHeight = Screen.height;
+        public Define.Resolution Resolution
+        {
+            get
+            {
+                return _resolution;
+            }
+            set
+            {
+                _resolution = value;
+                Screen.SetResolution(_resolution.width, 
+                    (int)(((float)_deviceHeight / _deviceWidth) * _resolution.width), !_isWindowMode);
+                if ((float)_resolution.width / _resolution.height < (float)_deviceWidth / _deviceHeight) // 기기의 해상도 비가 더 큰 경우
+                {
+                    float newWidth = ((float)_resolution.width / _resolution.height) / ((float)_deviceWidth / _deviceHeight); // 새로운 너비
+                    Camera.main.rect = new Rect((1f - newWidth) / 2f, 0f, newWidth, 1f); // 새로운 Rect 적용
+                }
+                else // 게임의 해상도 비가 더 큰 경우
+                {
+                    float newHeight = ((float)_deviceWidth / _deviceHeight) / ((float)_resolution.width / _resolution.height); // 새로운 높이
+                    Camera.main.rect = new Rect(0f, (1f - newHeight) / 2f, 1f, newHeight); // 새로운 Rect 적용
+                }
+            }
+        }
+        public bool IsWindowMode
+        {
+            get
+            {
+                return _isWindowMode;
+            }
+            set
+            {
+                _isWindowMode = value;
+                Screen.SetResolution(_resolution.width,
+                    (int)(((float)_deviceHeight / _deviceWidth) * _resolution.width), !_isWindowMode);
+                if ((float)_resolution.width / _resolution.height < (float)_deviceWidth / _deviceHeight) // 기기의 해상도 비가 더 큰 경우
+                {
+                    float newWidth = ((float)_resolution.width / _resolution.height) / ((float)_deviceWidth / _deviceHeight); // 새로운 너비
+                    Camera.main.rect = new Rect((1f - newWidth) / 2f, 0f, newWidth, 1f); // 새로운 Rect 적용
+                }
+                else // 게임의 해상도 비가 더 큰 경우
+                {
+                    float newHeight = ((float)_deviceWidth / _deviceHeight) / ((float)_resolution.width / _resolution.height); // 새로운 높이
+                    Camera.main.rect = new Rect(0f, (1f - newHeight) / 2f, 1f, newHeight); // 새로운 Rect 적용
+                }
+            }
+        }
+        public int UINum
+        {
+            get
+            {
+                return _uiNum;
+            }
+            private set
+            {
+                _uiNum = value;
+            }
+        }
+
         // 각 씬마다 있는 고유한 UI
         public UI_Scene SceneUI { get; private set; }
 
@@ -78,6 +145,7 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
+            _uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"UI/Popup/{name}");
             T popup = Util.GetOrAddComponent<T>(go);
             _popupStack.Push(popup);
@@ -91,9 +159,24 @@ namespace Blind
             if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
+            //_uiNum = _uiNum + 1;
             GameObject go = ResourceManager.Instance.Instantiate($"TestKjh/{name}");
             T ui = Util.GetOrAddComponent<T>(go);
             _worldSpaceUIs.Add(ui);
+
+            go.transform.SetParent(Root.transform);
+
+            return ui;
+        }
+        public T ShowNormalUI<T>(string name = null) where T : UI_Base
+        {
+            if (string.IsNullOrEmpty(name))
+                name = typeof(T).Name;
+
+            _uiNum = _uiNum + 1;
+            GameObject go = ResourceManager.Instance.Instantiate($"UI/Normal/{name}");
+            T ui = Util.GetOrAddComponent<T>(go);
+            _normalUIs.Add(ui);
 
             go.transform.SetParent(Root.transform);
 
@@ -120,6 +203,8 @@ namespace Blind
                 return;
 
             UI_Popup popup = _popupStack.Pop();
+
+            _uiNum = _uiNum - 1;
             ResourceManager.Instance.Destroy(popup.gameObject);
             popup = null;
             _order--;
@@ -136,19 +221,43 @@ namespace Blind
                 return;
             if (ui == null) return;
             _worldSpaceUIs.Remove(ui);
+            //_uiNum = _uiNum - 1;
+            ResourceManager.Instance.Destroy(ui.gameObject);
+        }
+        public void CloseNormalUI(UI_Base ui)
+        {
+            if (_normalUIs.Count == 0)
+                return;
+            if (ui == null) return;
+            _normalUIs.Remove(ui);
+            _uiNum = _uiNum - 1;
             ResourceManager.Instance.Destroy(ui.gameObject);
         }
         public void CloseAllWorldSpaceUI()
         {
+            Stack<UI_WorldSpace> st = new Stack<UI_WorldSpace>();
             foreach(var ui in _worldSpaceUIs)
             {
-                CloseWorldSpaceUI(ui);
+                st.Push(ui);
             }
+            while (st.Count > 0)
+                CloseWorldSpaceUI(st.Pop());
+        }
+        public void CloseAllNormalUI()
+        {
+            Stack<UI_Base> st = new Stack<UI_Base>();
+            foreach (var ui in _normalUIs)
+            {
+                st.Push(ui);
+            }
+            while (st.Count > 0)
+                CloseNormalUI(st.Pop());
         }
         public void Clear()
         {
             CloseAllPopupUI();
             CloseAllWorldSpaceUI();
+            CloseAllNormalUI();
             SceneUI = null;
         }
     }

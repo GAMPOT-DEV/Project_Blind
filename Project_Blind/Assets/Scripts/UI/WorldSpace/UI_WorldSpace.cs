@@ -20,6 +20,10 @@ namespace Blind
         {
             gameObject.transform.position = pos + offset;
         }
+        protected override void Awake()
+        {
+            Init();
+        }
     }
 }
 

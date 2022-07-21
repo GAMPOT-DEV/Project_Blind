@@ -28,7 +28,7 @@ namespace Blind
             }
         }
 
-        protected void TransitionInternal()
+        public void TransitionInternal()
         {
             //씬을 옮기기 전에 가져가야 할 데이터가 있는지 확인합니다
             //if(inventorysssheck)

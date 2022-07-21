@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,15 @@ namespace Blind
     {
         int _x = 7;
         int _y = 7;
+
+        private void FixedUpdate()
+        {
+            if (InputController.Instance.Interaction.Down)
+            {
+                if (_ui != null)
+                    _ui.CloseWorldSpaceUI();
+            }
+        }
 
         protected override void Init(int x = 5, int y = 5)
         {
@@ -25,9 +35,9 @@ namespace Blind
             if (collision.gameObject.GetComponent<PlayerCharacter>() == null) return;
             _ui.CloseWorldSpaceUI();
         }
-        public override void DoInteraction(GameObject player)
+        public override void DoInteraction()
         {
-            Debug.Log($"Interaction : {player.name}");
+            
         }
     }
 }

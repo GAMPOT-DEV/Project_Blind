@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Blind
 {
     /// <summary>
@@ -31,11 +33,13 @@ namespace Blind
         public void Invincibility()
         {
             isInvincibility = true;
+            Debug.Log("무적!");
         }
 
         public void unInvicibility()
         {
             isInvincibility = false;
+            Debug.Log("무적 풀림");
         }
     }
 }

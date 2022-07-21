@@ -14,7 +14,10 @@ namespace Blind
     public class SoundManager : Manager<SoundManager>
     {
         AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount];
+        float[] _volumes = new float[(int)Define.Sound.MaxCount];
         Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
+
+        //private float _masterVolume = DataManager.Instance.GameData.mastetVolume;
 
         protected override void Awake()
         {
@@ -31,6 +34,8 @@ namespace Blind
                 _audioSources[i] = go.AddComponent<AudioSource>();
                 go.transform.parent = transform;
             }
+            _volumes[(int)Define.Sound.Bgm] = DataManager.Instance.GameData.bgmVolume;
+            _volumes[(int)Define.Sound.Effect] = DataManager.Instance.GameData.effectVolume;
             _audioSources[(int)Define.Sound.Bgm].loop = true;
         }
         public void Clear()
@@ -98,6 +103,33 @@ namespace Blind
             }
 
             return audioClip;
+        }
+        public void ChangeMasterVolume(float volume)
+        {
+            DataManager.Instance.GameData.mastetVolume = volume;
+            //_masterVolume = volume;
+            RefreshSound();
+        }
+        public void ChangeVolume(Define.Sound sound, float volume)
+        {
+            switch (sound)
+            {
+                case Define.Sound.Bgm:
+                    DataManager.Instance.GameData.bgmVolume = volume;
+                    break;
+                case Define.Sound.Effect:
+                    DataManager.Instance.GameData.effectVolume = volume;
+                    break;
+            }
+            _volumes[(int)sound] = volume;
+            _audioSources[(int)sound].volume = _volumes[(int)sound] * DataManager.Instance.GameData.mastetVolume;
+        }
+        private void RefreshSound()
+        {
+            for(int i = 0; i < (int)Define.Sound.MaxCount; i++)
+            {
+                _audioSources[i].volume = _volumes[i] * DataManager.Instance.GameData.mastetVolume;
+            }
         }
     }
 }

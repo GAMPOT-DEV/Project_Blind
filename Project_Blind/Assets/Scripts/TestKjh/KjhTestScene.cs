@@ -13,13 +13,17 @@ namespace Blind
             base.Init();
 
             //카메라, 플레이어 등 생성
-            CreateCamera();
+            //CreateCamera();
             CreateEnv();
             GameManager.Instance.Player = CreatePlayer();
             CreateObj();
 
+            UIManager.Instance.ShowSceneUI<UI_FieldScene>();
+
+            /*----------------------
+                    TestCode
+            ----------------------*/
             #region TestCode
-            // TEST
 
             #region UI Test
             // 설명
@@ -98,7 +102,11 @@ namespace Blind
             //SoundManager.Instance.Play("TestSound", Define.Sound.Effect);
             //StartCoroutine(CoStopBGM(2));
             #endregion
-            // TEST
+
+            #region 다국어 지원
+            ConversationScriptStorage.Instance.SetLanguageNum(Define.Language.KOR);
+            #endregion
+
             #endregion
         }
         IEnumerator CoDestroyObjs(int time)
@@ -144,11 +152,11 @@ namespace Blind
         }
         void CreateObj()
         {
-            for(int i = 0; i < 5; i++)
-            {
-                GameObject go = ResourceManager.Instance.Instantiate("TestKjh/TestObject");
-                go.transform.position += Vector3.right * i * 3;
-            }
+            //for(int i = 0; i < 5; i++)
+            //{
+            //    GameObject go = ResourceManager.Instance.Instantiate("TestKjh/TestObject");
+            //    go.transform.position += Vector3.right * i * 3;
+            //}
             ResourceManager.Instance.Instantiate("TestKjh/TestNPC");
         }
     }

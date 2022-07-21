@@ -68,10 +68,13 @@ namespace Blind
                 Debug.LogWarning("entrance가 설정되지 않음");
                 return;
             }
-            Transform entranceLocation = entrance.transform;
-            Transform enteringTransform = entrance.transformingObject.transform;
-            enteringTransform.position = entranceLocation.position;
-            enteringTransform.rotation = entranceLocation.rotation;
+            if (entrance.transformingObject != null)
+            {
+                Transform entranceLocation = entrance.transform;
+                Transform enteringTransform = entrance.transformingObject.transform;
+                enteringTransform.position = entranceLocation.position;
+                enteringTransform.rotation = entranceLocation.rotation;
+            }
         }
     }
 }
