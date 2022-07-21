@@ -30,6 +30,7 @@ namespace Blind
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            _monoBehaviour.MeleeAttackComoEnd();
             _monoBehaviour.DisableAttack();
         }
     }
