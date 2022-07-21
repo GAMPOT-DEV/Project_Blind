@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Codice.Client.BaseCommands;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using UnityEngine.Profiling;
 
 namespace Blind
 {
@@ -100,22 +101,31 @@ namespace Blind
             _origin = _center - (Vector3)_fowMap.MapSize / 2;
 
             FowMapInit();
+            StartCoroutine(UpdateFog());
         }
 
-        private void Update()
+        private IEnumerator UpdateFog()
         {
-            _visibleTiles.Clear();
-            foreach(var unit in _unitList)
+            while (true)
             {
-                _visibleTiles.Add(GetUnitTilePos(unit.transform));
+                _visibleTiles.Clear();
+                foreach(var unit in _unitList)
+                {
+                    for (int i = -unit.Range; i < unit.Range; i++)
+                    {
+                        for (int j = -unit.Range; j < unit.Range; j++)
+                        {
+                            _visibleTiles.Add(GetUnitTilePos(unit.transform) + new TilePos(i,j));
+                        }
+                    }
+                }
+                var positions = new List<Vector2>();
+                foreach (var tile in _visibleTiles)
+                {
+                    positions.Add(GetTileCenterPos(tile));
+                }
+                DrawTexture(positions); yield return new WaitForSeconds(0.02f); 
             }
-
-            var positions = new List<Vector2>();
-            foreach (var tile in _visibleTiles)
-            {
-                positions.Add(GetTileCenterPos(tile));
-            }
-            DrawTexture(positions);
         }
         
         /// <summary>
@@ -187,6 +197,7 @@ namespace Blind
 
         public void DrawTexture(IEnumerable<Vector2> positions)
         {
+            Profiler.BeginSample("DrawTexture");
             var res = new List<Vector2>();
             foreach (var pos in positions)
             {
@@ -202,12 +213,14 @@ namespace Blind
             }
 
             _DrawTexture(res);
+            Profiler.EndSample();
         }
 
 
         /// <summary> 렌더 텍스쳐에 브러시 텍스쳐로 그리기 </summary>
         private void _DrawTexture(in IEnumerable<Vector2> uvList)
-        {
+        {   
+            Profiler.BeginSample("_DrawTexture");
             Graphics.Blit(_originalRT, _rt);
             RenderTexture.active = _rt; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
             GL.PushMatrix();                                  // 매트릭스 백업
@@ -230,6 +243,7 @@ namespace Blind
             }
             GL.PopMatrix();              // 매트릭스 복구
             RenderTexture.active = null; // 활성 렌더 텍스쳐 해제
+            Profiler.EndSample();
         }
     }
 }
