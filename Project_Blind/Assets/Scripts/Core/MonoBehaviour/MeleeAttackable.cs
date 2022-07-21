@@ -1,11 +1,12 @@
 ﻿using System;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 
 namespace Blind
 {
     public class MeleeAttackable: MonoBehaviour
     {
+        private int x;
+        private int y;
         private int _damage = 0;
         private bool canDamage;
         private Vector2 size;
@@ -17,6 +18,8 @@ namespace Blind
         private bool _isSpriteFlip;
         public  void Init(int x = 1, int y = 1, int _damage = 1)
         {
+            this.x = x;
+            this.y = y;
             this._damage = _damage;
             size = new Vector2(x, y);
             _attackcontactfilter.layerMask = hitLayer;
@@ -37,6 +40,15 @@ namespace Blind
         {
             canDamage = false;
         }
+
+        public void OnDrawGizmos()
+        {
+            Gizmos.color = Color.blue;
+            if (sprite.flipX) Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
+            else Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x -1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
+
+        }
+
         private void FixedUpdate()
         {
             if (!canDamage) return;
