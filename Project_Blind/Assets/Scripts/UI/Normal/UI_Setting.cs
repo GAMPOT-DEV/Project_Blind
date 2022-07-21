@@ -8,12 +8,10 @@ namespace Blind
     public class UI_Setting : UI_Base
     {
         int tmp = 0;
-
-        bool _vibration = true;
-
-        int _screenMode = 0;
         const int SIZE = 3;
-        bool _isWindowMode = false;
+        Define.Resolution[] _resolutions = new Define.Resolution[SIZE];
+
+        GameData _gameData = null;
         #region Enums
         enum Texts
         {
@@ -64,10 +62,13 @@ namespace Blind
         #endregion
         public override void Init()
         {
-            _uiNum = UIManager.Instance.UINum;
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
             Bind<Slider>(typeof(Sliders));
+
+            _gameData = DataManager.Instance.GameData;
+
+            InitResolution();
             InitTexts();
             InitSliders();
             InitEvents();
@@ -91,6 +92,20 @@ namespace Blind
             }
         }
         #region Initialize
+        private void InitResolution()
+        {
+            _resolutions[0].width = 960;
+            _resolutions[0].height = 540;
+
+            _resolutions[1].width = 1280;
+            _resolutions[1].height = 720;
+
+            _resolutions[2].width = 1920;
+            _resolutions[2].height = 1080;
+
+            UIManager.Instance.Resolution = _resolutions[_gameData.resolutionIndex];
+            UIManager.Instance.IsWindowMode = _gameData.windowMode;
+        }
         private void InitTexts()
         {
             // 사운드 관련
@@ -102,7 +117,7 @@ namespace Blind
             // 이펙트 관련 TODO
             Get<Text>((int)Texts.Text_Effect).text = "이펙트";
             Get<Text>((int)Texts.Text_Vibration).text = "화면 전체 진동";
-            Get<Text>((int)Texts.Text_Vibration_OnOff).text = "On";
+            Get<Text>((int)Texts.Text_Vibration_OnOff).text = _gameData.vibration ? "On" : "Off";
             Get<Text>((int)Texts.Text_MotionEffect).text = "모션 이펙트";
             // 키셋팅 관련 TODO
             Get<Text>((int)Texts.Text_KeySetting).text = "키셋팅";
@@ -110,20 +125,23 @@ namespace Blind
             // 해상도 관련 TODO
             Get<Text>((int)Texts.Text_Screen).text = "해상도";
             Get<Text>((int)Texts.Text_ScreenSize).text = "해상도";
-            Get<Text>((int)Texts.Text_ScreenSizeValue).text = _screenMode.ToString();
+            Get<Text>((int)Texts.Text_ScreenSizeValue).text =
+               $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
             Get<Text>((int)Texts.Text_ScreenMode).text = "창모드";
-            Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _isWindowMode ? "On" : "Off";
+            Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _gameData.windowMode ? "On" : "Off";
         }
         private void InitSliders()
         {
             // 사운드 관련
-            Get<Slider>((int)Sliders.Slider_MasterVolume).value = 1.0f;
-            Get<Slider>((int)Sliders.Slider_BgmVolume).value = 1.0f;
-            Get<Slider>((int)Sliders.Slider_EffectVolume).value = 1.0f;
+            Get<Slider>((int)Sliders.Slider_MasterVolume).value = _gameData.mastetVolume;
+            Get<Slider>((int)Sliders.Slider_BgmVolume).value = _gameData.bgmVolume;
+            Get<Slider>((int)Sliders.Slider_EffectVolume).value = _gameData.effectVolume;
             Get<Slider>((int)Sliders.Slider_MasterVolume).onValueChanged.AddListener(delegate { ChangeMasterVolume(); });
             Get<Slider>((int)Sliders.Slider_BgmVolume).onValueChanged.AddListener(delegate { ChangeVolume(Define.Sound.Bgm); });
             Get<Slider>((int)Sliders.Slider_EffectVolume).onValueChanged.AddListener(delegate { ChangeVolume(Define.Sound.Effect); });
             // 이펙트 관련 TODO
+            Get<Slider>((int)Sliders.Slider_MotionEffect).value = _gameData.motionEffect;
+            Get<Slider>((int)Sliders.Slider_MotionEffect).onValueChanged.AddListener(delegate { ChangeMotionEffect(); });
             // 키셋팅 관련 TODO
             // 해상도 관련 TODO
         }
@@ -147,6 +165,7 @@ namespace Blind
         private void PushCloseButton()
         {
             SoundManager.Instance.StopBGM();
+            DataManager.Instance.SaveGameData();
             UIManager.Instance.CloseNormalUI(this);
         }
         #endregion
@@ -188,16 +207,22 @@ namespace Blind
         #region Effect Event
         private void PushVibrationOnOffButton()
         {
-            if (_vibration)
+            if (_gameData.vibration)
             {
                 Get<Text>((int)Texts.Text_Vibration_OnOff).text = "Off";
-                _vibration = false;
+                _gameData.vibration = false;
+                //DataManager.Instance.GameData.vibration = false;
             }
             else
             {
                 Get<Text>((int)Texts.Text_Vibration_OnOff).text = "On";
-                _vibration = true;
+                _gameData.vibration = true;
+                //DataManager.Instance.GameData.vibration = true;
             }
+        }
+        private void ChangeMotionEffect()
+        {
+            _gameData.motionEffect = Get<Slider>((int)Sliders.Slider_MotionEffect).value;
         }
         #endregion
         #region KeySetting Event
@@ -209,25 +234,31 @@ namespace Blind
         #region ScreenEvent
         private void PushRightButton()
         {
-            _screenMode = (_screenMode + 1) % SIZE;
-            Get<Text>((int)Texts.Text_ScreenSizeValue).text = _screenMode.ToString();
+            _gameData.resolutionIndex = (_gameData.resolutionIndex + 1) % SIZE;
+            Get<Text>((int)Texts.Text_ScreenSizeValue).text =
+                $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
+            UIManager.Instance.Resolution = _resolutions[_gameData.resolutionIndex];
         }
         private void PushLeftButton()
         {
-            _screenMode = (_screenMode - 1 + SIZE) % SIZE;
-            Get<Text>((int)Texts.Text_ScreenSizeValue).text = _screenMode.ToString();
+            _gameData.resolutionIndex = (_gameData.resolutionIndex - 1 + SIZE) % SIZE;
+            Get<Text>((int)Texts.Text_ScreenSizeValue).text =
+               $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
+            UIManager.Instance.Resolution = _resolutions[_gameData.resolutionIndex];
         }
         private void PushWindowModeButton()
         {
-            if (_isWindowMode)
+            if (_gameData.windowMode)
             {
-                _isWindowMode = false;
-                Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _isWindowMode ? "On" : "Off";
+                _gameData.windowMode = false;
+                Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _gameData.windowMode ? "On" : "Off";
+                UIManager.Instance.IsWindowMode = _gameData.windowMode;
             }
             else
             {
-                _isWindowMode = true;
-                Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _isWindowMode ? "On" : "Off";
+                _gameData.windowMode = true;
+                Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _gameData.windowMode ? "On" : "Off";
+                UIManager.Instance.IsWindowMode = _gameData.windowMode;
             }
         }
         #endregion
