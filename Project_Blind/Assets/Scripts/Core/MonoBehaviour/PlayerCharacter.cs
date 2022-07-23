@@ -134,9 +134,12 @@ namespace Blind
         {
             if (InputController.Instance.Wave.Down)
             {
+                if (WaveSense.IsUsing)
+                    return;
+
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
                 waveSense.transform.position = transform.position;
-			    waveSense.StartSpread();
+                waveSense.StartSpread();
             }
         }
         
