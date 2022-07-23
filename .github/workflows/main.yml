@@ -1,6 +1,7 @@
 name: Acquire activation file
 on:
-  workflow_dispatch: {}
+  pull_request:
+    branches: [ main ]
 jobs:
   activation:
     name: Request manual activation file 🔑
@@ -16,4 +17,3 @@ jobs:
         with:
           name: ${{ steps.getManualLicenseFile.outputs.filePath }}
           path: ${{ steps.getManualLicenseFile.outputs.filePath }}
-출처: https://sonseungha.tistory.com/568?category=758332 [Developer's Delight:티스토리]
