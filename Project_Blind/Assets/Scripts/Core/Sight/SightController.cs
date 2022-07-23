@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Codice.Client.BaseCommands;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 using UnityEngine.Profiling;
 
 namespace Blind
@@ -22,6 +19,8 @@ namespace Blind
 
         [Space(8f)]
         public float TileSize = 1; // 타일 하나의 크기
+        
+        public float Offset = 3f; // 타일 하나의 크기
 
         
         private Texture2D _brushTexture;
@@ -29,10 +28,12 @@ namespace Blind
         private Texture2D _originalRT;
         private MeshRenderer _mr;
         private RenderTexture _rt;
+        private RenderTexture _rtBuffer;
         
         private Vector3 _size;
         private Vector3 _center;
         private Vector3 _origin;
+        private Bounds _bounds;
         
         private List<TilePos> _visibleTiles = new List<TilePos>();
         private List<SightUnit> _unitList = new List<SightUnit>();
@@ -46,6 +47,7 @@ namespace Blind
             TryGetComponent(out _mr);
 
             _rt = new RenderTexture(resolution, resolution, 32);
+            _rtBuffer  = new RenderTexture(resolution,resolution,32);
 
             if (_mr.material.mainTexture != null)
             {
@@ -57,6 +59,7 @@ namespace Blind
                 _mainTex = new Texture2D(resolution, resolution);
             }
 
+            _bounds = _mr.localBounds;
             _originalRT = new Texture2D(_mainTex.width, _mainTex.height);
             
             Color32[] resetColorArray = _originalRT.GetPixels32();
@@ -92,7 +95,7 @@ namespace Blind
             _brushTexture.Apply();
             
             // size측정
-            var bounds = _mr.bounds;
+            bounds = _mr.bounds;
             _size = bounds.size;
             _center = bounds.center;
             int sizeX = (int)(_size.x / (float)TileSize);
@@ -221,8 +224,8 @@ namespace Blind
         private void _DrawTexture(in IEnumerable<Vector2> uvList)
         {   
             Profiler.BeginSample("_DrawTexture");
-            Graphics.Blit(_originalRT, _rt);
-            RenderTexture.active = _rt; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
+            Graphics.Blit(_originalRT, _rtBuffer);
+            RenderTexture.active = _rtBuffer; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
             GL.PushMatrix();                                  // 매트릭스 백업
             GL.LoadPixelMatrix(0, resolution, resolution, 0); // 알맞은 크기로 픽셀 매트릭스 설정
 
@@ -244,6 +247,12 @@ namespace Blind
             GL.PopMatrix();              // 매트릭스 복구
             RenderTexture.active = null; // 활성 렌더 텍스쳐 해제
             Profiler.EndSample();
+
+            Material blurMat = Resources.Load<Material>("Materials/SightBlur");
+            blurMat.SetFloat("_Offset",Offset);
+            Graphics.Blit(_rtBuffer,_rt,blurMat,0);
+            Graphics.Blit(_rt,_rtBuffer,blurMat,0);
+            Graphics.Blit(_rtBuffer,_rt,blurMat,0);
         }
     }
 }

@@ -14,14 +14,17 @@ void Blur_float(UnityTexture2D tex,float offset,float2 uv,out float res)
         4,16,26,16,4,
         1,4,7,4,1,
     };
-    for(float x = 0;x<5;x++)
+    for(float k = 0;k<2;k++)
     {
-        for(float y = 0;y<5;y++)
+        for(float x = 0;x<5;x++)
         {
-            res += tex2D(tex,uv + float2(x - 1, y - 1)*(offset)).x * filter[x+y*5];
+            for(float y = 0;y<5;y++)
+            {
+                res += tex2D(tex,uv + float2(x - 1, y - 1)*(offset)).x * filter[x+y*5];
+            }
         }
+        res /=273;
     }
-    res /=273;
 }
 
 void test_float(UnityTexture2D tex,float2 uv,out float res)
