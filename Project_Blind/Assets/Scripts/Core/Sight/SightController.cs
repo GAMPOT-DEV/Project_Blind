@@ -28,7 +28,7 @@ namespace Blind
         private Texture2D _originalRT;
         private MeshRenderer _mr;
         private RenderTexture _rt;
-        private RenderTexture _rtBuffer;
+        private RenderTexture _preRt;
         
         private Vector3 _size;
         private Vector3 _center;
@@ -47,7 +47,7 @@ namespace Blind
             TryGetComponent(out _mr);
 
             _rt = new RenderTexture(resolution, resolution, 32);
-            _rtBuffer  = new RenderTexture(resolution,resolution,32);
+            _preRt  = new RenderTexture(resolution,resolution,32);
 
             if (_mr.material.mainTexture != null)
             {
@@ -59,7 +59,7 @@ namespace Blind
                 _mainTex = new Texture2D(resolution, resolution);
             }
 
-            _bounds = _mr.localBounds;
+            _bounds = _mr.bounds;
             _originalRT = new Texture2D(_mainTex.width, _mainTex.height);
             
             Color32[] resetColorArray = _originalRT.GetPixels32();
@@ -71,6 +71,7 @@ namespace Blind
             _originalRT.SetPixels32(resetColorArray);
             _originalRT.Apply();
 
+            Graphics.Blit(_originalRT,_preRt);
             Graphics.Blit(_originalRT,_rt);
 
             _mr.material.SetTexture("_RenderTexture",_rt);
@@ -95,7 +96,7 @@ namespace Blind
             _brushTexture.Apply();
             
             // size측정
-            bounds = _mr.bounds;
+            var bounds = _mr.bounds;
             _size = bounds.size;
             _center = bounds.center;
             int sizeX = (int)(_size.x / (float)TileSize);
@@ -200,37 +201,37 @@ namespace Blind
 
         public void DrawTexture(IEnumerable<Vector2> positions)
         {
-            Profiler.BeginSample("DrawTexture");
             var res = new List<Vector2>();
+            Profiler.BeginSample("UvPoint Calc");
             foreach (var pos in positions)
             {
-                var ray = new Ray((Vector3)pos + new Vector3(0,0,-1),new Vector3(0,0,1) * 10 );
-                RaycastHit hit;
-                var raycast = Physics.Raycast(ray,out hit);
-                var col = hit.collider;
-                if (!raycast || !col || col.transform != transform) return;
-                
-                var pixelUV = hit.textureCoord;
-                pixelUV *= resolution;
-                res.Add(pixelUV);
+                Vector2 size = (_bounds.max - _bounds.min);
+                Vector2 uvPoint = ((Vector3)pos - _bounds.min) / size;
+                uvPoint = new Vector2(1,1)-uvPoint;
+                uvPoint *= resolution;
+                res.Add(uvPoint);
             }
-
-            _DrawTexture(res);
             Profiler.EndSample();
+            _DrawTexture(res);
         }
 
 
         /// <summary> 렌더 텍스쳐에 브러시 텍스쳐로 그리기 </summary>
         private void _DrawTexture(in IEnumerable<Vector2> uvList)
-        {   
-            Profiler.BeginSample("_DrawTexture");
-            Graphics.Blit(_originalRT, _rtBuffer);
-            RenderTexture.active = _rtBuffer; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
+        {
+            var sightSetAlpha = Resources.Load<Material>("Materials/Sight/SightSetAlpha");
+            sightSetAlpha.SetFloat("_Alpha",0.5f);
+            Material blurMat = Resources.Load<Material>("Materials/Sight/SightBlur");
+            blurMat.SetFloat("_Offset",Offset);
+            
+            Graphics.Blit(_preRt, _rt);
+            RenderTexture.active = _rt; // 페인팅을 위해 활성 렌더 텍스쳐 임시 할당
             GL.PushMatrix();                                  // 매트릭스 백업
             GL.LoadPixelMatrix(0, resolution, resolution, 0); // 알맞은 크기로 픽셀 매트릭스 설정
 
             float brushPixelSize = brushSize * resolution;
             
+            Profiler.BeginSample("_DrawTexture");
             // 렌더 텍스쳐에 브러시 텍스쳐를 이용해 그리기
             foreach (var uv in uvList)
             {
@@ -244,15 +245,13 @@ namespace Blind
                     _brushTexture
                 );
             }
+            Profiler.EndSample();
             GL.PopMatrix();              // 매트릭스 복구
             RenderTexture.active = null; // 활성 렌더 텍스쳐 해제
-            Profiler.EndSample();
-
-            Material blurMat = Resources.Load<Material>("Materials/SightBlur");
-            blurMat.SetFloat("_Offset",Offset);
-            Graphics.Blit(_rtBuffer,_rt,blurMat,0);
-            Graphics.Blit(_rt,_rtBuffer,blurMat,0);
-            Graphics.Blit(_rtBuffer,_rt,blurMat,0);
+            
+            Graphics.Blit(_rt,_preRt,sightSetAlpha,0);
+            Graphics.Blit(_rt,_rt,blurMat,0);
+            Graphics.Blit(_rt,_rt,blurMat,0);
         }
     }
 }
