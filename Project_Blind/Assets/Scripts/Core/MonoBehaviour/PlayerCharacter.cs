@@ -17,6 +17,8 @@ namespace Blind
         private Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
         public UnitHP _damage;
+        [SerializeField] private float _hp;
+        [SerializeField] private int maxhp;
         private MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
@@ -54,7 +56,7 @@ namespace Blind
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
-            _damage = new UnitHP(10);
+            _damage = new UnitHP(maxhp);
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
@@ -76,6 +78,7 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
+            _hp = _damage.GetHP();
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -243,11 +246,17 @@ namespace Blind
             _animator.SetBool("Attack3", true);
         }
 
+        public void MeleeAttackCombo3()
+        {
+            _animator.SetBool("Attack4", true);
+        }
+
         public void MeleeAttackComoEnd()
         {
             _animator.SetBool("Attack", false);
             _animator.SetBool("Attack2" ,false);
             _animator.SetBool("Attack3", false);
+            _animator.SetBool("Attack4", false);
             _clickcount = 0;
         }
         public void AttackableMove(float newMoveVector)

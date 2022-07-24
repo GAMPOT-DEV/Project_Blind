@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Blind
 {
@@ -41,6 +40,12 @@ namespace Blind
             canDamage = false;
         }
 
+        public void AttackRangeReset(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
@@ -49,6 +54,15 @@ namespace Blind
 
         }
 
+        private void PlayerMeleeAttack()
+        {
+            
+        }
+
+        private void EnmeyMeleeAttack()
+        {
+            
+        }
         private void FixedUpdate()
         {
             if (!canDamage) return;
@@ -67,11 +81,13 @@ namespace Blind
                 if (hitobj.tag.Equals("Player"))
                 {
                     hitobj.GetComponent<PlayerCharacter>()._damage.GetDamage(_damage);
+                    canDamage = false;
                 }
                 else
                 {
-                    Debug.Log("맞음");
                     hitobj.GetComponent<EnemyCharacter>()._damage.GetDamage(_damage);
+                    canDamage = false;
+                    Debug.Log("맞음");
                 }
             }
         }
