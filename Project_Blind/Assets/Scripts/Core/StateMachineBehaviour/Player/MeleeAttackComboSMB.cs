@@ -16,7 +16,7 @@ namespace Blind
             {
                 _monoBehaviour._lastClickTime = Time.time;
                 _monoBehaviour._clickcount++;
-                _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 3);
+                _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
             }
             if (_monoBehaviour.CheckForAttackTime())
                 _monoBehaviour._clickcount = 0; 
@@ -28,8 +28,10 @@ namespace Blind
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            Debug.Log("실행됨");
-            _monoBehaviour.MeleeAttackComoEnd();
+            if (_monoBehaviour._clickcount == 1)
+            {
+                _monoBehaviour.MeleeAttackComoEnd();
+            }
             _monoBehaviour.DisableAttack();
         }
     }
