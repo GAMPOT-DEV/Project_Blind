@@ -17,9 +17,12 @@ namespace Blind
         private Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
         public UnitHP _damage;
+        [SerializeField] private float _hp;
+        [SerializeField] private int maxhp;
         private MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
+        private Paringable _paring;
 
         [SerializeField] private float _jumpSpeed = 3f;
         [SerializeField] private float _jumpAbortSpeedReduction = 100f;
@@ -36,8 +39,10 @@ namespace Blind
         public float _lastClickTime;
         public int _clickcount = 0;
 
-        [SerializeField] private int x;
-        [SerializeField] private int y;
+        [SerializeField] private int attack_x;
+        [SerializeField] private int attack_y;
+        [SerializeField] private int paring_x;
+        [SerializeField] private int paring_y;
         
         private float _dashTime;
         private float _defaultSpeed;
@@ -50,7 +55,8 @@ namespace Blind
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             _attack = GetComponent<MeleeAttackable>();
-            _damage = new UnitHP(10);
+            _paring = GetComponent<Paringable>();
+            _damage = new UnitHP(maxhp);
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
@@ -59,7 +65,8 @@ namespace Blind
             _dashCount = 1;
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
-            _attack.Init(x,y);
+            _attack.Init(attack_x,attack_y);
+            _paring.Init(paring_x, paring_y);
         }
 
         private void Start()
@@ -71,6 +78,7 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
+            _hp = _damage.GetHP();
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -102,8 +110,8 @@ namespace Blind
                 _maxSpeed = _dashSpeed;
                 int Playerflip;
 
-                if (_renderer.flipX) Playerflip = -1;
-                else Playerflip = 1;
+                if (_renderer.flipX) Playerflip = 1;
+                else Playerflip = -1;
 
                 float desiredSpeed = Playerflip * _maxSpeed * 0.1f;
                 _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
@@ -173,37 +181,6 @@ namespace Blind
             bool grounded = _characterController2D.IsGrounded;
             _animator.SetBool("Grounded",grounded);
         }
-        public bool CheckEnemy()
-        {
-            bool isEnemy = false;
-            Collider2D[] _col;
-            
-            if (_renderer.flipX)
-                _col = Physics2D.OverlapBoxAll(
-                    new Vector2(gameObject.transform.position.x - 1, gameObject.transform.position.y),
-                    new Vector2(1f, 3), 0);
-            else
-                _col = Physics2D.OverlapBoxAll(
-                    new Vector2(gameObject.transform.position.x + 1, gameObject.transform.position.y),
-                    new Vector2(1f, 3), 0);
-            
-            foreach (Collider2D colliders in _col)
-            {
-                Debug.Log(colliders.tag);
-                if (colliders.tag .Equals("Enemy"))
-                {
-                    _enemyObject = colliders.gameObject;
-                    isEnemy = true;
-                }
-            }
-
-            return isEnemy;
-        }
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(1,3,0));
-        }
 
         public bool CheckForParing()
         {
@@ -214,17 +191,19 @@ namespace Blind
         {
             _animator.SetTrigger("Paring");
         }
-        
-        public void ParingObjCheck()
+
+        public void EnableParing()
         {
-            
+            _paring.EnParing();
         }
-        public void EnemyStateCheck()
+
+        public void DisableParing()
         {
-            if (_enemyObject.GetComponent<EnemyCharacter>().isAttack)
-            {
-                StartCoroutine(Invincibility());
-            }
+            _paring.DisableParing();
+        }
+        public void PlayerInvincibility()
+        {
+            StartCoroutine(Invincibility());
         }
 
         IEnumerator Invincibility() 
@@ -244,6 +223,11 @@ namespace Blind
         {
             return Time.time - _lastClickTime > _maxComboDelay;
         }
+
+        public void ReAttackSize(int x, int y)
+        {
+            _attack.Init(x, y);
+        }
         public void MeleeAttack()
         {
             _animator.SetBool("Attack", true);
@@ -259,11 +243,17 @@ namespace Blind
             _animator.SetBool("Attack3", true);
         }
 
+        public void MeleeAttackCombo3()
+        {
+            _animator.SetBool("Attack4", true);
+        }
+
         public void MeleeAttackComoEnd()
         {
             _animator.SetBool("Attack", false);
             _animator.SetBool("Attack2" ,false);
             _animator.SetBool("Attack3", false);
+            _animator.SetBool("Attack4", false);
             _clickcount = 0;
         }
         public void AttackableMove(float newMoveVector)
@@ -323,17 +313,17 @@ namespace Blind
             bool faceRight = InputController.Instance.Horizontal.Value > 0f;
             if (faceLeft)
             {
-                _renderer.flipX = true;
+                _renderer.flipX = false;
             }
             else if(faceRight)
             {
-                _renderer.flipX = false;
+                _renderer.flipX = true;
             }
         }
 
         public int GetFacing()
         {
-            return _renderer.flipX ? -1 : 1;
+            return _renderer.flipX ? 1 : -1;
         }
         public void Log() {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");

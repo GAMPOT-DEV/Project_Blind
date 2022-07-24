@@ -27,5 +27,11 @@ namespace Blind
         {
             return $"{x} , {y}";
         }
+
+        public static TilePos operator +(TilePos p1,TilePos p2)
+        {
+            return new TilePos(p1.x + p2.x, p1.y + p2.y);
+        }
+        
     }
 }
