@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 132334026377104473}
   - component: {fileID: 132334026377104466}
   - component: {fileID: -5982677886977119691}
+  - component: {fileID: -4594076782964506412}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -140,6 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca3a64169bd4dd4bb08e07908ae7a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hp: 10
+  maxhp: 10
   _jumpSpeed: 0.5
   _jumpAbortSpeedReduction: 1
   _gravity: 1
@@ -148,12 +151,14 @@ MonoBehaviour:
   groundDeceleration: 15
   _dashSpeed: 0
   _defaultTime: 0
-  _attackMove: 1
-  _maxComboDelay: 0
+  _attackMove: 0.2
+  _maxComboDelay: 0.9
   _lastClickTime: 0
   _clickcount: 0
-  x: 0
-  y: 0
+  attack_x: 1
+  attack_y: 3
+  paring_x: 2
+  paring_y: 2
 --- !u!95 &132334026377104473
 Animator:
   serializedVersion: 4
@@ -203,6 +208,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitLayer:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!114 &-4594076782964506412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132334026377104472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 737126f82bed49b8be3f8d02d81cd330, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitLayer:
     serializedVersion: 2
     m_Bits: 8
 --- !u!1 &132334026709763215

@@ -67,6 +67,11 @@ namespace Blind
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
             _attack.Init(attack_x,attack_y);
             _paring.Init(paring_x, paring_y);
+
+
+            // TEST
+            if (FindObjectOfType<UI_FieldScene>() == null)
+                UIManager.Instance.ShowSceneUI<UI_FieldScene>();
         }
 
         private void Start()
@@ -142,9 +147,12 @@ namespace Blind
         {
             if (InputController.Instance.Wave.Down)
             {
+                if (WaveSense.IsUsing)
+                    return;
+
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
                 waveSense.transform.position = transform.position;
-			    waveSense.StartSpread();
+                waveSense.StartSpread();
             }
         }
         
