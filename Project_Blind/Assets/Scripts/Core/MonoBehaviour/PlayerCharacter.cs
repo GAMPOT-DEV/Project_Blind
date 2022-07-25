@@ -286,6 +286,21 @@ namespace Blind
             _characterController2D.MakePlatformFallthrough();
         }
 
+        public void OnHurt()
+        {
+            _animator.SetBool("Hurt", true);
+            InputController.Instance.ReleaseControl();
+        }
+        public bool CheckForDeed()
+        {
+            return _hp <= 0;
+        }
+
+        public void Deed()
+        {
+            _animator.SetBool("Deed", true);
+        }
+
         public void GetItem()
         {
             _animator.SetTrigger("Item");

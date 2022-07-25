@@ -54,19 +54,8 @@ namespace Blind
 
         }
 
-        private void PlayerMeleeAttack()
+        private void MeleeAttack()
         {
-            
-        }
-
-        private void EnmeyMeleeAttack()
-        {
-            
-        }
-        private void FixedUpdate()
-        {
-            if (!canDamage) return;
-            
             int facing = 1;
             if (sprite.flipX != _isSpriteFlip)
             {
@@ -81,6 +70,7 @@ namespace Blind
                 if (hitobj.tag.Equals("Player"))
                 {
                     hitobj.GetComponent<PlayerCharacter>()._damage.GetDamage(_damage);
+                    hitobj.GetComponent<PlayerCharacter>().OnHurt();
                     canDamage = false;
                 }
                 else
@@ -90,6 +80,21 @@ namespace Blind
                     Debug.Log("맞음");
                 }
             }
+        }
+        private void FixedUpdate()
+        {
+            if (gameObject.GetComponent<PlayerCharacter>() != null)
+            {
+                if (!canDamage) return;
+                
+                MeleeAttack();
+            }
+            else
+            {
+                MeleeAttack();
+            }
+            
+            
         }
     }
 }
