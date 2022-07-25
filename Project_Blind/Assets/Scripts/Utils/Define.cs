@@ -1,16 +1,32 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Define Å¬·¡½ºÀÔ´Ï´Ù. enumµéÀ» °ü¸®ÇÕ´Ï´Ù.
+/// Define í´ë˜ìŠ¤ì…ë‹ˆë‹¤. enumë“¤ì„ ê´€ë¦¬í•©ë‹ˆë‹¤.
 /// </summary>
 public class Define
 {
+    public enum ObjectType
+    {
+        Item,
+        Npc
+    }
+    public enum ObjectState
+    {
+        NonKeyDown,
+        KeyDown,
+        Ing
+    }
+    
     public enum Scene
     {
         Unknown,
         GameScene,
+        í™©í˜„íƒ,
+        í™©í˜„íƒ_dest,
+        MainScene,
+        ê¹€ì¢…í˜„,
     }
 
     public enum Sound
@@ -25,5 +41,17 @@ public class Define
         Click,
         Drag,
         EndDrag,
+    }
+    public enum Language
+    {
+        KOR,
+        ENG,
+        MaxCount
+    }
+
+    public struct Resolution
+    {
+        public int width;
+        public int height;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ namespace Blind
 {
     public class UI_GameScene : UI_Scene
     {
-        // TODO : GameScene¿« ∞Ì¿Ø«— UI
+        // TODO : GameSceneÏùò Í≥†Ïú†Ìïú UI
         public override void Init()
         {
             base.Init();

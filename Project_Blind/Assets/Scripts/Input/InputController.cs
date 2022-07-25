@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Blind
 {
@@ -13,6 +13,12 @@ namespace Blind
         protected bool _DebugMenuIsOpen = false;
         // <키들을 정의하는 공간입니다>
         public InputButton Jump;
+        public InputButton Dash;
+        public InputButton Wave;
+        public InputButton Paring;
+        public InputButton Interaction;
+        public InputButton Attack;
+
         public InputAxis Horizontal;
         public InputAxis Vertical;
         // </키들을 정의하는 공간입니다>
@@ -22,7 +28,12 @@ namespace Blind
             base.Awake();
             // 조작키를 할당합니다.
             Jump = new InputButton(KeyCode.Space,XboxControllerButtons.A);
-            Horizontal = new InputAxis(KeyCode.D,KeyCode.A,XboxControllerAxes.LeftstickHorizontal);
+            Paring = new InputButton(KeyCode.L, XboxControllerButtons.Leftstick);
+            Interaction = new InputButton(KeyCode.F, XboxControllerButtons.X);
+            Attack = new InputButton(KeyCode.K, XboxControllerButtons.RightBumper);
+            Dash = new InputButton(KeyCode.X, XboxControllerButtons.LeftBumper);
+            Wave = new InputButton(KeyCode.C,XboxControllerButtons.B);
+            Horizontal = new InputAxis(KeyCode.D, KeyCode.A, XboxControllerAxes.LeftstickHorizontal);
             Vertical = new InputAxis(KeyCode.W,KeyCode.S,XboxControllerAxes.LeftstickVertical);
         }
 
@@ -35,6 +46,11 @@ namespace Blind
             _HaveControl = true;
             
             Jump.Get(fixedUpdateHappened,inputType);
+            Paring.Get(fixedUpdateHappened, inputType);
+            Interaction.Get(fixedUpdateHappened, inputType);
+            Dash.Get(fixedUpdateHappened, inputType);
+            Attack.Get(fixedUpdateHappened, inputType);
+            Wave.Get(fixedUpdateHappened,inputType);
             Horizontal.Get(inputType);
             Vertical.Get(inputType);
         }
@@ -48,8 +64,13 @@ namespace Blind
             _HaveControl = true;
             
             GainControl(Jump);
+            GainControl(Paring);
+            GainControl(Interaction);
             GainControl(Horizontal);
             GainControl(Vertical);
+            GainControl(Dash);
+            GainControl(Wave);
+            GainControl(Attack);
         }
         
         /// <summary>
@@ -62,8 +83,13 @@ namespace Blind
             _HaveControl = false;
             
             ReleaseControl(Jump,resetValues);
+            ReleaseControl(Paring, resetValues);
+            ReleaseControl(Interaction, resetValues);
             ReleaseControl(Horizontal,resetValues);
             ReleaseControl(Vertical,resetValues);
+            ReleaseControl(Dash,resetValues);
+            ReleaseControl(Wave,resetValues);
+            ReleaseControl(Attack, resetValues);
         }
     }
 }

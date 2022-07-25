@@ -1,17 +1,17 @@
-using Blind;
+ï»¿using Blind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// PoolManager Å¬·¡½ºÀÔ´Ï´Ù. ¿ÀºêÁ§Æ® Ç®¸µÀ» °ü¸®ÇÕ´Ï´Ù.
+/// PoolManager í´ë˜ìŠ¤ì…ë‹ˆë‹¤. ì˜¤ë¸Œì íŠ¸ í’€ë§ì„ ê´€ë¦¬í•©ë‹ˆë‹¤.
 /// </summary>
 
 namespace Blind
 {
     public class PoolManager : Manager<PoolManager>
     {
-        // ¿ÀºêÁ§Æ®µéÀÌ ´ã°ÜÀÖ´Â pool
+        // ì˜¤ë¸Œì íŠ¸ë“¤ì´ ë‹´ê²¨ìˆëŠ” pool
         #region Pool
         class Pool
         {
@@ -22,13 +22,13 @@ namespace Blind
 
             public void Init(GameObject original, int count = 5)
             {
-                // Ç®ÀÌ ´ã°íÀÖ´Â ¿ÀºêÁ§Æ®ÀÇ ¿øº»
+                // í’€ì´ ë‹´ê³ ìˆëŠ” ì˜¤ë¸Œì íŠ¸ì˜ ì›ë³¸
                 Original = original;
 
                 Root = new GameObject().transform;
                 Root.name = $"{original.name}_Root";
 
-                // count ¸¸Å­ ¿ÀºêÁ§Æ®¸¦ »ı¼ºÇÏ°í Ç®¿¡ ³Ö¾îÁØ´Ù.
+                // count ë§Œí¼ ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒì„±í•˜ê³  í’€ì— ë„£ì–´ì¤€ë‹¤.
                 for (int i = 0; i < count; i++)
                     Push(Create());
             }
@@ -40,26 +40,26 @@ namespace Blind
                 return go.GetOrAddComponent<Poolable>();
             }
 
-            // Ç®¿¡ ¿ÀºêÁ§Æ®¸¦ ³Ö¾îÁÖ´Â ÇÔ¼ö.
-            // Ç®¿¡ ÀÖÀ¸¸é ¸Ş¸ğ¸®¿¡¼­¸¸ Á¸ÀçÇÏ°í °ÔÀÓ¿¡¼­´Â º¸ÀÌ¸é ¾ÈµÇ±â ¶§¹®¿¡
-            // ºñÈ°¼ºÈ­ »óÅÂ·Î ¹Ù²ãÁØ´Ù.
+            // í’€ì— ì˜¤ë¸Œì íŠ¸ë¥¼ ë„£ì–´ì£¼ëŠ” í•¨ìˆ˜.
+            // í’€ì— ìˆìœ¼ë©´ ë©”ëª¨ë¦¬ì—ì„œë§Œ ì¡´ì¬í•˜ê³  ê²Œì„ì—ì„œëŠ” ë³´ì´ë©´ ì•ˆë˜ê¸° ë•Œë¬¸ì—
+            // ë¹„í™œì„±í™” ìƒíƒœë¡œ ë°”ê¿”ì¤€ë‹¤.
             public void Push(Poolable poolable)
             {
                 if (poolable == null)
                     return;
 
-                poolable.transform.parent = Root;
+                poolable.transform.SetParent(Root);
                 poolable.gameObject.SetActive(false);
                 poolable.IsUsing = false;
 
                 _poolStack.Push(poolable);
             }
 
-            // Ç®¿¡¼­ ¿ÀºêÁ§Æ®¸¦ ²¨³»´Â ÇÔ¼ö
-            // Ç®¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®µéÀÌ ÀÌ¹Ì ¸ğµÎ »ç¿ëÁßÀÌ¾î¼­ ²¨³¾ ¼ö ¾ø´Ù¸é
-            // ¿ÀºêÁ§Æ®¸¦ »õ·Î ¸¸µé¾îÁØ´Ù.
-            // »õ·Î ¸¸µç ¿ÀºêÁ§Æ®µµ »ç¿ëÀÌ ³¡³ª°í Resource Manager¿¡¼­ Destory¸¦ È£ÃâÇÏ¸é
-            // Push¸¦ ÅëÇØ Ç®¿¡ µé¾î°¡°Ô µÈ´Ù.
+            // í’€ì—ì„œ ì˜¤ë¸Œì íŠ¸ë¥¼ êº¼ë‚´ëŠ” í•¨ìˆ˜
+            // í’€ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸ë“¤ì´ ì´ë¯¸ ëª¨ë‘ ì‚¬ìš©ì¤‘ì´ì–´ì„œ êº¼ë‚¼ ìˆ˜ ì—†ë‹¤ë©´
+            // ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒˆë¡œ ë§Œë“¤ì–´ì¤€ë‹¤.
+            // ìƒˆë¡œ ë§Œë“  ì˜¤ë¸Œì íŠ¸ë„ ì‚¬ìš©ì´ ëë‚˜ê³  Resource Managerì—ì„œ Destoryë¥¼ í˜¸ì¶œí•˜ë©´
+            // Pushë¥¼ í†µí•´ í’€ì— ë“¤ì–´ê°€ê²Œ ëœë‹¤.
             public Poolable Pop(Transform parent)
             {
                 Poolable poolable;
@@ -71,11 +71,12 @@ namespace Blind
 
                 poolable.gameObject.SetActive(true);
 
-                // DontDestroyOnLoad ÇØÁ¦ ¿ëµµ
+                // DontDestroyOnLoad í•´ì œ ìš©ë„
                 if (parent == null)
-                    poolable.transform.parent = SceneController.Instance.CurrentScene.transform;
+                    poolable.transform.SetParent(ResourceManager.Instance.PrefabsRoot.transform);
+                else
+                    poolable.transform.parent = parent;
 
-                poolable.transform.parent = parent;
                 poolable.IsUsing = true;
 
                 return poolable;
@@ -83,7 +84,7 @@ namespace Blind
         }
         #endregion
 
-        // Pool µéÀ» °ü¸®ÇÏ´Â µñ¼Å³Ê¸®
+        // Pool ë“¤ì„ ê´€ë¦¬í•˜ëŠ” ë”•ì…”ë„ˆë¦¬
         Dictionary<string, Pool> _pool = new Dictionary<string, Pool>();
         Transform _root;
 
@@ -97,7 +98,7 @@ namespace Blind
             }
         }
 
-        // Ç®À» »õ·Î ¸¸µé¾îÁÖ´Â ÇÔ¼ö
+        // í’€ì„ ìƒˆë¡œ ë§Œë“¤ì–´ì£¼ëŠ” í•¨ìˆ˜
         public void CreatePool(GameObject original, int count = 5)
         {
             Pool pool = new Pool();
@@ -107,7 +108,7 @@ namespace Blind
             _pool.Add(original.name, pool);
         }
 
-        // ¿ÀºêÁ§Æ®¸¦ Ç®¿¡ Push ÇØÁÖ´Â ÇÔ¼ö
+        // ì˜¤ë¸Œì íŠ¸ë¥¼ í’€ì— Push í•´ì£¼ëŠ” í•¨ìˆ˜
         public void Push(Poolable poolable)
         {
             string name = poolable.gameObject.name;
@@ -120,8 +121,8 @@ namespace Blind
             _pool[name].Push(poolable);
         }
 
-        // Ç®¿¡¼­ popÀ» ÇÏ·Á Çß´Âµ¥ Ç®ÀÌ ¾ø´Ù¸é Ç®À» »õ·Î ¸¸µé¾îÁØ´Ù.
-        // Ç®¿¡¼­ ¿ÀºêÁ§Æ®¸¦ pop ÇØ¼­ parentÀÇ ÀÚ½Ä¿¡ ºÙÀÌ°í ¹İÈ¯ÇØÁØ´Ù. 
+        // í’€ì—ì„œ popì„ í•˜ë ¤ í–ˆëŠ”ë° í’€ì´ ì—†ë‹¤ë©´ í’€ì„ ìƒˆë¡œ ë§Œë“¤ì–´ì¤€ë‹¤.
+        // í’€ì—ì„œ ì˜¤ë¸Œì íŠ¸ë¥¼ pop í•´ì„œ parentì˜ ìì‹ì— ë¶™ì´ê³  ë°˜í™˜í•´ì¤€ë‹¤. 
         public Poolable Pop(GameObject original, Transform parent = null)
         {
             if (_pool.ContainsKey(original.name) == false)
@@ -137,8 +138,8 @@ namespace Blind
             return _pool[name].Original;
         }
 
-        // root ¹Ø¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®µéÀ» ÀüºÎ »èÁ¦ÇÑ´Ù.
-        // ¾ÀÀÌ º¯°æµÇ°Å³ª ÇÒ ¶§ È£ÃâÇÏ¸é µÉ µí?
+        // root ë°‘ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸ë“¤ì„ ì „ë¶€ ì‚­ì œí•œë‹¤.
+        // ì”¬ì´ ë³€ê²½ë˜ê±°ë‚˜ í•  ë•Œ í˜¸ì¶œí•˜ë©´ ë  ë“¯?
         public void Clear()
         {
             foreach (Transform child in _root)

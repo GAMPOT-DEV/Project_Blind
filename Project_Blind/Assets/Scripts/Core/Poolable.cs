@@ -1,9 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Poolable Å¬·¡½ºÀÔ´Ï´Ù. ¿ÀºêÁ§Æ® Ç®¸µÀ» ÇÒ ÇÁ¸®ÆÕ¿¡ ÀÌ ÄÄÆ÷³ÍÆ®¸¦ ºÙ¿©ÁÖ¸é µË´Ï´Ù.
+/// Poolable í´ë˜ìŠ¤ì…ë‹ˆë‹¤. ì˜¤ë¸Œì íŠ¸ í’€ë§ì„ í•  í”„ë¦¬íŒ¹ì— ì´ ì»´í¬ë„ŒíŠ¸ë¥¼ ë¶™ì—¬ì£¼ë©´ ë©ë‹ˆë‹¤.
 /// </summary>
 
 namespace Blind

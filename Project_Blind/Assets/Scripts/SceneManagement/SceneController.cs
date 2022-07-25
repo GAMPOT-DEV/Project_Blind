@@ -31,5 +31,51 @@ namespace Blind
         {
             CurrentScene.Clear();
         }
+
+        public static void TransitionToScene(TransitionPoint transitionPoint)
+        {
+            Instance.StartCoroutine(Instance.Transition(transitionPoint.newSceneName, transitionPoint.transitionDestinationTag, transitionPoint.transitionType));
+        }
+
+        //여기에 씬 이동 전 인벤토리 세이브, 로딩, 게임 세이브 등 작업을 합니다.
+        protected IEnumerator Transition(Define.Scene newSceneName, TransitionDestination.DestinationTag destinationTag, TransitionPoint.TransitionType transitionType = TransitionPoint.TransitionType.DifferentScene)
+        {
+            string sceneName = newSceneName.ToString();
+            yield return SceneManager.LoadSceneAsync(sceneName);
+            //LoadingSceneController.LoadScene(sceneName);
+            TransitionDestination entrance = GetDestination(destinationTag);
+            SetEnteringLocation(entrance);
+            yield return new WaitForSeconds(1);
+        }
+
+        protected TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
+        {
+            TransitionDestination[] entrances = FindObjectsOfType<TransitionDestination>();
+            for (int i = 0; i < entrances.Length; i++)
+            {
+                if (entrances[i].destinationTag == destinationTag)
+                    return entrances[i];
+            }
+            Debug.LogWarning("No Destination Found");
+            return null;
+        }
+
+        // 캐릭터 이동
+        protected void SetEnteringLocation(TransitionDestination entrance)
+        {
+            if (entrance == null)
+            {
+                Debug.LogWarning("entrance가 설정되지 않음");
+                return;
+            }
+            if (entrance.transformingObject != null)
+            {
+                Transform entranceLocation = entrance.transform;
+                Transform enteringTransform = entrance.transformingObject.transform;
+                enteringTransform.position = entranceLocation.position;
+                enteringTransform.rotation = entranceLocation.rotation;
+            }
+        }
     }
 }
+
