@@ -42,6 +42,7 @@ namespace Blind
 
             // Test
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player._damage.GetDamage(1.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player._damage.GetHeal(1.0f), Define.UIEvent.Click);
         }
         private void Update()

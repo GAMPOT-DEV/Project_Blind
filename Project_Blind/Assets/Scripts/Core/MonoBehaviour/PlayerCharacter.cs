@@ -296,8 +296,7 @@ namespace Blind
 
         public void OnHurt()
         {
-            _animator.SetBool("Hurt", true);
-            InputController.Instance.ReleaseControl();
+            if(_hp > 1) _animator.SetBool("Hurt", true);
         }
         public bool CheckForDeed()
         {
@@ -306,9 +305,15 @@ namespace Blind
 
         public void Deed()
         {
-            _animator.SetBool("Deed", true);
+            Debug.Log("ddw");
+            _animator.SetBool("Dead", true);
         }
 
+        IEnumerator DieRespawn()
+        {
+            InputController.Instance.ReleaseControl();
+            
+        }
         public void GetItem()
         {
             _animator.SetTrigger("Item");

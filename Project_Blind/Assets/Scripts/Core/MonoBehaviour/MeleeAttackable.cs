@@ -67,17 +67,33 @@ namespace Blind
             for (int i = 0; i < hitCount; i++)
             {
                 hitobj = ResultObj[i];
+                if(hitobj.tag.Equals("Enemy"))
+                {
+                    hitobj.GetComponent<EnemyCharacter>()._damage.GetDamage(_damage);
+                    canDamage = false;
+                    Debug.Log("맞음");
+                }
+            }
+        }
+
+        private void EnemyMeleeAttack()
+        {
+            int facing = 1;
+            if (sprite.flipX != _isSpriteFlip)
+            {
+                facing = -1;
+            }
+
+            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            int hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
+            for (int i = 0; i < hitCount; i++)
+            {
+                hitobj = ResultObj[i];
                 if (hitobj.tag.Equals("Player"))
                 {
                     hitobj.GetComponent<PlayerCharacter>()._damage.GetDamage(_damage);
                     hitobj.GetComponent<PlayerCharacter>().OnHurt();
                     canDamage = false;
-                }
-                else
-                {
-                    hitobj.GetComponent<EnemyCharacter>()._damage.GetDamage(_damage);
-                    canDamage = false;
-                    Debug.Log("맞음");
                 }
             }
         }
@@ -91,7 +107,7 @@ namespace Blind
             }
             else
             {
-                MeleeAttack();
+                EnemyMeleeAttack();
             }
             
             
