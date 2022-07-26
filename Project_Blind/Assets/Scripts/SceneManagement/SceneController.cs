@@ -42,6 +42,7 @@ namespace Blind
         {
             string sceneName = newSceneName.ToString();
             yield return SceneManager.LoadSceneAsync(sceneName);
+            //LoadingSceneController.LoadScene(sceneName);
             TransitionDestination entrance = GetDestination(destinationTag);
             SetEnteringLocation(entrance);
             yield return new WaitForSeconds(1);

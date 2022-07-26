@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 2084263019677666266}
   - component: {fileID: 2084263019677666269}
   - component: {fileID: 2084263019677666267}
-  - component: {fileID: 2084263019677666264}
   - component: {fileID: 2084263019991464208}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TransitionStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,23 +73,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transitionType: 1
-  NextSceneName: 3
-  transitioningGameObject: {fileID: 0}
   newSceneName: 3
+  transitioningGameObject: {fileID: 0}
   transitionDestinationTag: 1
-  destinationTransform: {fileID: 0}
---- !u!114 &2084263019677666264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084263019677666268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af8dd1155cb0b45f0af7c1df1ff6fd14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &2084263019991464208
 SpriteRenderer:
   m_ObjectHideFlags: 0
