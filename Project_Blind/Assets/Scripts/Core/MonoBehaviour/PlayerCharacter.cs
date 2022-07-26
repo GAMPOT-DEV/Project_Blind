@@ -309,11 +309,6 @@ namespace Blind
             _animator.SetBool("Dead", true);
         }
 
-        IEnumerator DieRespawn()
-        {
-            InputController.Instance.ReleaseControl();
-            
-        }
         public void GetItem()
         {
             _animator.SetTrigger("Item");
