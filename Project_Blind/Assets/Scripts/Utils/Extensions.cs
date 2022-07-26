@@ -1,4 +1,4 @@
-using Blind;
+ï»¿using Blind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Extension Å¬·¡½ºÀÔ´Ï´Ù. ÀÎÀÚ·Î ¿À´Â this µÚ¿¡ . À» Âï¾î¼­ ½±°Ô ÇÔ¼ö¸¦ È£ÃâÇÒ ¼ö ÀÖ½À´Ï´Ù.
+/// Extension í´ë˜ìŠ¤ì…ë‹ˆë‹¤. ì¸ìë¡œ ì˜¤ëŠ” this ë’¤ì— . ì„ ì°ì–´ì„œ ì‰½ê²Œ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
 /// </summary>
 public static class Extension
 {
@@ -15,7 +15,7 @@ public static class Extension
 		return Util.GetOrAddComponent<T>(go);
 	}
 
-	public static void BindEvent(this GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
+	public static void BindEvent(this GameObject go, Action action, Define.UIEvent type = Define.UIEvent.Click)
 	{
 		UI_Base.BindEvent(go, action, type);
 	}
