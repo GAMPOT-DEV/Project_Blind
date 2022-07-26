@@ -31,7 +31,11 @@ namespace Blind
                 _monoBehaviour.MeleeAttack();
                 _monoBehaviour._lastClickTime = Time.time;
                 _monoBehaviour._clickcount++;
-                _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 3);
+                _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
+            }
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
             }
         }
         

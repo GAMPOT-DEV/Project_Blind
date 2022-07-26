@@ -28,6 +28,7 @@ namespace Blind
 
 
         public UnitHP _damage;
+        public float _hp;
         private MeleeAttackable _attack;
         public bool isAttack = false;
 
@@ -149,6 +150,7 @@ namespace Blind
             }
 
             _characterController2D.OnFixedUpdate();
+            _hp = _damage.GetHP();
         }
 
         private float DirectionVector(Vector2 goal) //이동 방향만 지정
