@@ -43,7 +43,8 @@ namespace Blind
         [SerializeField] private int attack_y;
         [SerializeField] private int paring_x;
         [SerializeField] private int paring_y;
-        
+
+        [SerializeField] private Transform _spawnPoint;
         private float _dashTime;
         private float _defaultSpeed;
         private int _dashCount;
@@ -305,8 +306,29 @@ namespace Blind
 
         public void Deed()
         {
-            Debug.Log("ddw");
             _animator.SetBool("Dead", true);
+            StartCoroutine(DieRespawn());
+        }
+
+        IEnumerator DieRespawn()
+        {
+            InputController.Instance.ReleaseControl(true);
+            yield return new WaitForSeconds(1.0f);
+            yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
+            
+            Respawn();
+            yield return new WaitForEndOfFrame();
+            yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
+            InputController.Instance.GainControl();
+        }
+
+        public void Respawn()
+        {
+            RespawnFacing();
+            _damage.GetHeal(maxhp);
+            _animator.SetTrigger("Respawn");
+            _animator.SetBool("Dead", false);
+            gameObject.transform.position = _spawnPoint.position;
         }
 
         public void GetItem()
@@ -342,6 +364,11 @@ namespace Blind
             {
                 _renderer.flipX = true;
             }
+        }
+
+        public void RespawnFacing()
+        {
+            _renderer.flipX = true;
         }
 
         public int GetFacing()
