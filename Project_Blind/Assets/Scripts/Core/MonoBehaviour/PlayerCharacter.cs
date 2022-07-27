@@ -306,14 +306,16 @@ namespace Blind
         public void Deed()
         {
             Debug.Log("ddw");
-            _animator.SetBool("Dead", true);
+            _animator.SetTrigger("Dead");
         }
 
         IEnumerator DieRespawn()
         {
             InputController.Instance.ReleaseControl();
+            yield return new WaitForSeconds(1.0f);
             
         }
+
         public void GetItem()
         {
             _animator.SetTrigger("Item");
