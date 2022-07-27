@@ -36,6 +36,7 @@ namespace Blind
         [SerializeField] private float _defaultTime = 0.1f;
         [SerializeField] public float _attackMove = 1f;
         [SerializeField] public float _maxComboDelay;
+        [SerializeField] public float _hurtMove = 1f;
         public float _lastClickTime;
         public int _clickcount = 0;
 
@@ -299,6 +300,11 @@ namespace Blind
         {
             if(_hp > 1) _animator.SetBool("Hurt", true);
         }
+
+        public void HurtMove(float newMoveVector)
+        {
+            _moveVector.x = newMoveVector;
+        }
         public bool CheckForDeed()
         {
             return _hp <= 0;
@@ -309,7 +315,6 @@ namespace Blind
             _animator.SetBool("Dead", true);
             StartCoroutine(DieRespawn());
         }
-
         IEnumerator DieRespawn()
         {
             InputController.Instance.ReleaseControl(true);
@@ -320,6 +325,11 @@ namespace Blind
             yield return new WaitForEndOfFrame();
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
             InputController.Instance.GainControl();
+        }
+
+        public void DieStopVector(Vector2 stop)
+        {
+            _moveVector = stop;
         }
 
         public void Respawn()
