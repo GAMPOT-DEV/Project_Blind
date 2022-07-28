@@ -60,7 +60,8 @@ namespace Blind
             rigid = GetComponent<Rigidbody2D>();
             state = State.Patrol;
             HP = new UnitHP(_maxHP);
-            patrolDirection = new Vector2(_speed, 0f);
+            patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
+
             playerFinder = GetComponentInChildren<PlayerFinder>();
             playerFinder.setRange(_sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
@@ -205,6 +206,18 @@ namespace Blind
                 patrolDirection = new Vector2(_speed, 0f);
             }
             transform.localScale = thisScale;
+        }
+
+        private int RandomDirection()
+        {
+            int RanNum = Random.Range(0, 100);
+            if (RanNum > 50)
+                return 1;
+            else
+            {
+                Flip();
+                return -1;
+            }
         }
 
         private IEnumerator CoWaitDefalut(float time)
