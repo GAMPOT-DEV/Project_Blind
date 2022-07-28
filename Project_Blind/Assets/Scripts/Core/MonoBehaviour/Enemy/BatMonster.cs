@@ -20,12 +20,13 @@ namespace Blind
         private CharacterController2D _characterController2D;
         private Rigidbody2D rigid;
 
-        [SerializeField] private Vector2 _sensingRange = new Vector2(10f, 5f);
-        [SerializeField] private float _speed = 0.1f;
-        [SerializeField] private float _attackCoolTime = 0.5f;
-        [SerializeField] private float _attackSpeed = 1f;
-        [SerializeField] private Vector2 _attackRange = new Vector2(3f, 5f);
-        [SerializeField] private int _MaxHP = 10;
+        [SerializeField] private Vector2 _sensingRange;
+        [SerializeField] private float _speed;
+        [SerializeField] private float _runSpeed;
+        [SerializeField] private float _attackCoolTime;
+        [SerializeField] private float _attackSpeed;
+        [SerializeField] private Vector2 _attackRange;
+        [SerializeField] private int _MaxHP;
 
         private State state;
         private GameObject player;
@@ -36,14 +37,25 @@ namespace Blind
         public Transform WallCheck;
         private Transform startingPosition;
         private Vector2 patrolDirection;
+        private PlayerFinder playerFinder;
+
+        bool tmp = true;
 
         private void Awake()
         {
+            _sensingRange = new Vector2(10f, 5f);
+            _speed = 0.1f;
+            _attackCoolTime = 0.5f;
+            _attackRange = new Vector2(3f, 5f);
+            _MaxHP = 10;
+
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
             state = State.Patrol;
             HP = new UnitHP(_MaxHP);
             patrolDirection = new Vector2(_speed, 0f);
+            playerFinder = GetComponentInChildren<PlayerFinder>();
+            playerFinder.setRange(_sensingRange);
         }
         private void Start()
         {
@@ -86,11 +98,23 @@ namespace Blind
                     updateDie();
                     break;
             }
+            _characterController2D.OnFixedUpdate();
         }
 
         private void updatePatrol()
         {
-
+            _characterController2D.Move(patrolDirection);
+            //FindTarget(); 
+            if (tmp != playerFinder.FindPlayer())
+            {
+                Debug.Log(playerFinder.FindPlayer());
+                tmp = playerFinder.FindPlayer();
+            }
+            if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
+            {
+                //state = State.Default;
+                Flip();
+            }
         }
 
         private void updateDefault()
@@ -129,6 +153,28 @@ namespace Blind
                 return true;
             else
                 return false;
+        }
+
+        private void Flip()
+        {
+            Vector2 thisScale = transform.localScale;
+            if (patrolDirection.x >= 0)
+            {
+                thisScale.x = -Mathf.Abs(thisScale.x);
+                patrolDirection = new Vector2(-_speed, 0f);
+            }
+            else
+            {
+                thisScale.x = Mathf.Abs(thisScale.x);
+                patrolDirection = new Vector2(_speed, 0f);
+            }
+            transform.localScale = thisScale;
+        }
+
+        private bool FindTarget()
+        {
+            
+            return false;
         }
     }
 }
