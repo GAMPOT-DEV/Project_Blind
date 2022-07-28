@@ -29,6 +29,7 @@ namespace Blind
         [SerializeField] private Vector2 _attackRange;
         [SerializeField] private int _maxHP;
         [SerializeField] private int _damage;
+        [SerializeField] private float _stunTime;
 
         private State state;
         private GameObject player;
@@ -45,9 +46,11 @@ namespace Blind
         private Coroutine Co_default;
         private Coroutine Co_attack;
         private Coroutine Co_attackStandby;
+        private Coroutine Co_stun;
 
         private void Awake()
         {
+            //왜 위에서 초기화하면 적용이 안 되지...? 이유 찾아서 뺄 수 있으면 뺄 것
             _sensingRange = new Vector2(10f, 5f);
             _speed = 0.1f;
             _runSpeed = 0.2f;
@@ -55,6 +58,7 @@ namespace Blind
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(1.5f, 2f);
             _maxHP = 10;
+            _stunTime = 1f;
 
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
@@ -100,6 +104,10 @@ namespace Blind
 
                 case State.Hitted:
                     updateHitted();
+                    break;
+
+                case State.Stun:
+                    updateStun();
                     break;
 
                 case State.Die:
@@ -179,6 +187,12 @@ namespace Blind
 
         }
 
+        private void updateStun()
+        {
+            StopAllCoroutines();
+            Co_stun = StartCoroutine(CoStun());
+        }
+
         private void updateDie()
         {
 
@@ -251,6 +265,20 @@ namespace Blind
             else
                 state = State.Default;
             Co_attack = null;
+        }
+
+        private IEnumerator CoStun()
+        {
+            yield return new WaitForSeconds(_stunTime);
+
+            if (attackSense.Attackable())
+                state = State.AttackStandby;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Patrol;
+
+            Co_stun = null;
         }
     }
 }
