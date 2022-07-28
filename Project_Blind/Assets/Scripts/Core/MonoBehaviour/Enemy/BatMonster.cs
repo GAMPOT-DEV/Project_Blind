@@ -14,6 +14,7 @@ namespace Blind
             Attack,
             AttackStandby,
             Hitted,
+            Stun,
             Die
         }
 
@@ -26,7 +27,8 @@ namespace Blind
         [SerializeField] private float _attackCoolTime;
         [SerializeField] private float _attackSpeed;
         [SerializeField] private Vector2 _attackRange;
-        [SerializeField] private int _MaxHP;
+        [SerializeField] private int _maxHP;
+        [SerializeField] private int _damage;
 
         private State state;
         private GameObject player;
@@ -38,8 +40,11 @@ namespace Blind
         private Transform startingPosition;
         private Vector2 patrolDirection;
         private PlayerFinder playerFinder;
+        private EnemyAttack attackSense;
 
-        bool tmp = true;
+        private Coroutine Co_default;
+        private Coroutine Co_attack;
+        private Coroutine Co_attackStandby;
 
         private void Awake()
         {
@@ -47,26 +52,27 @@ namespace Blind
             _speed = 0.1f;
             _runSpeed = 0.2f;
             _attackCoolTime = 0.5f;
-            _attackRange = new Vector2(3f, 5f);
-            _MaxHP = 10;
+            _attackSpeed = 0.3f;
+            _attackRange = new Vector2(1.5f, 2f);
+            _maxHP = 10;
 
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
             state = State.Patrol;
-            HP = new UnitHP(_MaxHP);
+            HP = new UnitHP(_maxHP);
             patrolDirection = new Vector2(_speed, 0f);
             playerFinder = GetComponentInChildren<PlayerFinder>();
             playerFinder.setRange(_sensingRange);
+            attackSense = GetComponentInChildren<EnemyAttack>();
+            attackSense.setRange(_attackRange);
         }
+
         private void Start()
         {
             startingPosition = gameObject.transform;
             player = GameObject.Find("Player");
-
-            Debug.Log(patrolDirection);
         }
 
-        
         private void FixedUpdate()
         {
             switch (state)
@@ -104,12 +110,6 @@ namespace Blind
 
         private void updatePatrol()
         {
-            //디버그용 
-            //if (tmp != playerFinder.FindPlayer())
-            //{
-            //    Debug.Log(playerFinder.FindPlayer());
-            //    tmp = playerFinder.FindPlayer();
-            //}
             if (playerFinder.FindPlayer())
             {
                 state = State.Chase;
@@ -117,8 +117,8 @@ namespace Blind
             }
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
-                //state = State.Default;
-                Flip();
+                state = State.Default;
+                return;
             }
 
             _characterController2D.Move(patrolDirection);
@@ -126,7 +126,16 @@ namespace Blind
 
         private void updateDefault()
         {
+            if (Co_default == null)
+                Co_default = StartCoroutine(CoWaitDefalut(1f));
 
+            if (playerFinder.FindPlayer())
+            {
+                StopCoroutine(Co_default);
+                Co_default = null;
+                state = State.Chase;
+                return;
+            }
         }
 
         private void updateChase()
@@ -136,17 +145,32 @@ namespace Blind
                 state = State.Patrol;
                 return;
             }
+
+            if (attackSense.Attackable())
+            {
+                state = State.AttackStandby;
+                return;
+            }
+
             _characterController2D.Move(playerFinder.ChasePlayer() * _runSpeed);
         }
-
+        
         private void updateAttack()
         {
-
+            if (Co_attack == null)
+            {
+                Co_attack = StartCoroutine(CoAttack());
+                gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+            }
         }
 
         private void updateAttackStandby()
         {
-
+            if (Co_attackStandby == null)
+            {
+                Co_attackStandby = StartCoroutine(CoAttackStandby(_attackSpeed));
+                gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+            }
         }
 
         private void updateHitted()
@@ -183,10 +207,37 @@ namespace Blind
             transform.localScale = thisScale;
         }
 
-        private bool FindTarget()
+        private IEnumerator CoWaitDefalut(float time)
         {
-            
-            return false;
+            yield return new WaitForSeconds(time);
+            Flip();
+            state = State.Patrol;
+            Co_default = null;
+        }
+
+        private IEnumerator CoAttackStandby(float time)
+        {
+            Debug.Log("공격 준비");
+            yield return new WaitForSeconds(time); //선딜
+            Debug.Log("공격 !");
+            state = State.Attack;
+            Co_attackStandby = null;
+        }
+
+        private IEnumerator CoAttack()
+        {
+            yield return new WaitForSeconds(0.5f); //공격
+            Debug.Log("공격 완료");
+            gameObject.GetComponent<SpriteRenderer>().color = Color.blue; //000FE9 원래 색
+            yield return new WaitForSeconds(0.2f); //후딜
+
+            if (attackSense.Attackable())
+                state = State.AttackStandby;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Default;
+            Co_attack = null;
         }
     }
 }
