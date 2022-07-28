@@ -45,6 +45,7 @@ namespace Blind
         {
             _sensingRange = new Vector2(10f, 5f);
             _speed = 0.1f;
+            _runSpeed = 0.2f;
             _attackCoolTime = 0.5f;
             _attackRange = new Vector2(3f, 5f);
             _MaxHP = 10;
@@ -103,18 +104,24 @@ namespace Blind
 
         private void updatePatrol()
         {
-            _characterController2D.Move(patrolDirection);
-            //FindTarget(); 
-            if (tmp != playerFinder.FindPlayer())
+            //디버그용 
+            //if (tmp != playerFinder.FindPlayer())
+            //{
+            //    Debug.Log(playerFinder.FindPlayer());
+            //    tmp = playerFinder.FindPlayer();
+            //}
+            if (playerFinder.FindPlayer())
             {
-                Debug.Log(playerFinder.FindPlayer());
-                tmp = playerFinder.FindPlayer();
+                state = State.Chase;
+                return;
             }
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
                 //state = State.Default;
                 Flip();
             }
+
+            _characterController2D.Move(patrolDirection);
         }
 
         private void updateDefault()
@@ -124,7 +131,12 @@ namespace Blind
 
         private void updateChase()
         {
-
+            if (playerFinder.MissPlayer())
+            {
+                state = State.Patrol;
+                return;
+            }
+            _characterController2D.Move(playerFinder.ChasePlayer() * _runSpeed);
         }
 
         private void updateAttack()
