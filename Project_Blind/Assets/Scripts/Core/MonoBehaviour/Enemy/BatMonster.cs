@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Blind
 {
+    /// <summary>
+    /// 근거리 몬스터에 관한 클래스입니다.
+    /// </summary>
     public class BatMonster : MonoBehaviour
     {
         private enum State
@@ -65,6 +68,7 @@ namespace Blind
             state = State.Patrol;
             HP = new UnitHP(_maxHP);
             patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
+            _attack.Init((int)_attackRange.x, (int)_attackRange.y);
 
             playerFinder = GetComponentInChildren<PlayerFinder>();
             playerFinder.setRange(_sensingRange);
