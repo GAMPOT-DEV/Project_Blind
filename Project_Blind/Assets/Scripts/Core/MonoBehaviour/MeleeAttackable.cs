@@ -32,6 +32,7 @@ namespace Blind
 
         public void EnableDamage()
         {
+            Debug.Log("실행됨!!");
             canDamage = true;
         }
 
@@ -57,6 +58,7 @@ namespace Blind
         private void MeleeAttack()
         {
             int facing = 1;
+            Debug.Log(sprite + "test");
             if (sprite.flipX != _isSpriteFlip)
             {
                 facing = -1;
@@ -69,7 +71,7 @@ namespace Blind
                 hitobj = ResultObj[i];
                 if(hitobj.tag.Equals("Enemy"))
                 {
-                    hitobj.GetComponent<EnemyCharacter>()._damage.GetDamage(_damage);
+                    hitobj.GetComponent<BatMonster>().HP.GetDamage(_damage);
                     canDamage = false;
                     Debug.Log("맞음");
                 }
@@ -78,10 +80,11 @@ namespace Blind
 
         private void EnemyMeleeAttack()
         {
-            int facing = 1;
+            int facing = -1;
+            Debug.Log(sprite);
             if (sprite.flipX != _isSpriteFlip)
             {
-                facing = -1;
+                facing = 1;
             }
 
             Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
@@ -89,8 +92,10 @@ namespace Blind
             for (int i = 0; i < hitCount; i++)
             {
                 hitobj = ResultObj[i];
+                Debug.Log(hitobj.tag);
                 if (hitobj.tag.Equals("Player"))
                 {
+                    Debug.Log("dd");
                     hitobj.GetComponent<PlayerCharacter>()._damage.GetDamage(_damage);
                     hitobj.GetComponent<PlayerCharacter>().OnHurt();
                     canDamage = false;
@@ -106,7 +111,10 @@ namespace Blind
                 MeleeAttack();
             }
             else
+            
             {
+                if(!canDamage) return;
+                
                 EnemyMeleeAttack();
             }
             

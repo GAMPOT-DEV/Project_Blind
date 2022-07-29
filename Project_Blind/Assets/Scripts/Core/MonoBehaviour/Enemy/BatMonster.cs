@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Blind
 {
     /// <summary>
-    /// ±Ù°Å¸® ¸ó½ºÅÍ¿¡ °üÇÑ Å¬·¡½ºÀÔ´Ï´Ù.
+    /// ï¿½Ù°Å¸ï¿½ ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.
     /// </summary>
     public class BatMonster : MonoBehaviour
     {
@@ -23,6 +23,10 @@ namespace Blind
 
         private CharacterController2D _characterController2D;
         private Rigidbody2D rigid;
+        private SpriteRenderer _sprite;
+
+
+
 
         [SerializeField] private Vector2 _sensingRange;
         [SerializeField] private float _speed;
@@ -33,11 +37,13 @@ namespace Blind
         [SerializeField] private int _maxHP;
         [SerializeField] private int _damage;
         [SerializeField] private float _stunTime;
+        
 
         private State state;
         private GameObject player;
         RaycastHit2D[] rayHit;
         public UnitHP HP;
+        public float _hp;
         private MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
@@ -53,8 +59,10 @@ namespace Blind
 
         private void Awake()
         {
-            //¿Ö À§¿¡¼­ ÃÊ±âÈ­ÇÏ¸é Àû¿ëÀÌ ¾È µÇÁö...? ÀÌÀ¯ Ã£¾Æ¼­ »¬ ¼ö ÀÖÀ¸¸é »¬ °Í
+            //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½...? ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½Æ¼ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
             _sensingRange = new Vector2(10f, 5f);
+            _attack = GetComponent<MeleeAttackable>();
+            _sprite = GetComponent<SpriteRenderer>();
             _speed = 0.1f;
             _runSpeed = 0.2f;
             _attackCoolTime = 0.5f;
@@ -62,13 +70,12 @@ namespace Blind
             _attackRange = new Vector2(1.5f, 2f);
             _maxHP = 10;
             _stunTime = 1f;
-
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
             state = State.Patrol;
             HP = new UnitHP(_maxHP);
             patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
-            _attack.Init((int)_attackRange.x, (int)_attackRange.y);
+            _attack.Init(2, 2);
 
             playerFinder = GetComponentInChildren<PlayerFinder>();
             playerFinder.setRange(_sensingRange);
@@ -119,6 +126,7 @@ namespace Blind
                     break;
             }
             _characterController2D.OnFixedUpdate();
+            _hp = HP.GetHP();
         }
 
         private void updatePatrol()
@@ -217,11 +225,13 @@ namespace Blind
             {
                 thisScale.x = -Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(-_speed, 0f);
+                _sprite.flipX = false;
             }
             else
             {
                 thisScale.x = Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(_speed, 0f);
+                _sprite.flipX = true;
             }
             transform.localScale = thisScale;
         }
@@ -248,20 +258,22 @@ namespace Blind
 
         private IEnumerator CoAttackStandby(float time)
         {
-            Debug.Log("°ø°Ý ÁØºñ");
-            yield return new WaitForSeconds(time); //¼±µô
-            Debug.Log("°ø°Ý !");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½");
+            yield return new WaitForSeconds(time); //ï¿½ï¿½ï¿½ï¿½
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ !");
             state = State.Attack;
             Co_attackStandby = null;
         }
 
         private IEnumerator CoAttack()
         {
-            yield return new WaitForSeconds(0.5f); //°ø°Ý
-            Debug.Log("°ø°Ý ¿Ï·á");
-            gameObject.GetComponent<SpriteRenderer>().color = Color.blue; //000FE9 ¿ø·¡ »ö
-            yield return new WaitForSeconds(0.2f); //ÈÄµô
-
+            yield return new WaitForSeconds(2f); //ï¿½ï¿½ï¿½ï¿½
+            Debug.Log("ê³µê²©!!");
+            _attack.EnableDamage();
+            gameObject.GetComponent<SpriteRenderer>().color = Color.blue; //000FE9 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+            yield return new WaitForSeconds(0.2f); //ï¿½Äµï¿½
+            
+            _attack.DisableDamage();
             if (attackSense.Attackable())
                 state = State.AttackStandby;
             else if (playerFinder.FindPlayer())

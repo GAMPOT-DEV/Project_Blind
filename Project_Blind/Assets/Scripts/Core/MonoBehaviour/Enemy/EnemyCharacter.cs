@@ -54,6 +54,7 @@ namespace Blind
             state = State.Attack;
             _damage = new UnitHP(10);
             _patorlDirection = new Vector2(_speed, 0f);
+            _attack.Init(1,1);
             //_attack = GetComponent<MeleeAttackable>();
             //_attack.Init(10, 10);
         }
