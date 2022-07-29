@@ -26,6 +26,7 @@ namespace Blind
             sprite = GetComponent<SpriteRenderer>();
             if (sprite != null)
             {
+                Debug.Log("DDWDWA");
                 _isSpriteFlip = sprite.flipX;
             }
         }
@@ -57,6 +58,7 @@ namespace Blind
         private void MeleeAttack()
         {
             int facing = 1;
+            Debug.Log(sprite + "test");
             if (sprite.flipX != _isSpriteFlip)
             {
                 facing = -1;
@@ -79,6 +81,7 @@ namespace Blind
         private void EnemyMeleeAttack()
         {
             int facing = 1;
+            Debug.Log(sprite);
             if (sprite.flipX != _isSpriteFlip)
             {
                 facing = -1;
