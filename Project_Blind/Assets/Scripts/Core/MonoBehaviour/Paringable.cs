@@ -52,27 +52,22 @@ namespace Blind
         {
             if (!_isParing) return;
 
-            int facing = 1;
-            if (_sprite.flipX != _isFlip) facing = -1;
+            int facing = -1;
+            if (_sprite.flipX != _isFlip) facing = 1;
             Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
             int hitCount = Physics2D.OverlapArea(pointA, size, _filter, _result);
             for (int i = 0; i < hitCount; i++)
             {
                 _hitObj = _result[i];
+                Debug.Log(_hitObj.tag);
                 if (_hitObj.tag.Equals("Enemy"))
                 {
-                    if (_hitObj.GetComponent<EnemyCharacter>() == null)
-                    {
-                        // 패링했을때 적 오브젝트(화살같은)인 경우
-                    }
-                    else
-                    {
-                        if (_hitObj.GetComponent<EnemyCharacter>().isAttack)
+
+                        if (_hitObj.GetComponent<BatMonster>().isAttack())
                         {
                             gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
                             Debug.Log("패링 성공!");
-                        }   
-                    }
+                        }
                 }
             }
         }
