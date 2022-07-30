@@ -51,11 +51,12 @@ namespace Blind
         private int _dashCount;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
-        private GameObject _enemyObject;
+        [SerializeField] private BatMonster _enemyObject;
         private void Awake()
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
+            _enemyObject = GetComponent<BatMonster>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
             _damage = new UnitHP(maxhp);
