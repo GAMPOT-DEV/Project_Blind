@@ -36,6 +36,7 @@ namespace Blind
         [SerializeField] private float _defaultTime = 0.1f;
         [SerializeField] public float _attackMove = 1f;
         [SerializeField] public float _maxComboDelay;
+        [SerializeField] public float _hurtMove = 1f;
         public float _lastClickTime;
         public int _clickcount = 0;
 
@@ -43,17 +44,19 @@ namespace Blind
         [SerializeField] private int attack_y;
         [SerializeField] private int paring_x;
         [SerializeField] private int paring_y;
-        
+
+        [SerializeField] private Transform _spawnPoint;
         private float _dashTime;
         private float _defaultSpeed;
         private int _dashCount;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
-        private GameObject _enemyObject;
+        [SerializeField] private BatMonster _enemyObject;
         private void Awake()
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
+            _enemyObject = GetComponent<BatMonster>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
             _damage = new UnitHP(maxhp);
@@ -294,6 +297,51 @@ namespace Blind
             _characterController2D.MakePlatformFallthrough();
         }
 
+        public void OnHurt()
+        {
+            if(_hp > 1) _animator.SetBool("Hurt", true);
+        }
+
+        public void HurtMove(float newMoveVector)
+        {
+            _moveVector.x = newMoveVector;
+        }
+        public bool CheckForDeed()
+        {
+            return _hp <= 0;
+        }
+
+        public void Deed()
+        {
+            _animator.SetBool("Dead", true);
+            StartCoroutine(DieRespawn());
+        }
+        IEnumerator DieRespawn()
+        {
+            InputController.Instance.ReleaseControl(true);
+            yield return new WaitForSeconds(1.0f);
+            yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
+            
+            Respawn();
+            yield return new WaitForEndOfFrame();
+            yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
+            InputController.Instance.GainControl();
+        }
+
+        public void DieStopVector(Vector2 stop)
+        {
+            _moveVector = stop;
+        }
+
+        public void Respawn()
+        {
+            RespawnFacing();
+            _damage.GetHeal(maxhp);
+            _animator.SetTrigger("Respawn");
+            _animator.SetBool("Dead", false);
+            gameObject.transform.position = _spawnPoint.position;
+        }
+
         public void GetItem()
         {
             _animator.SetTrigger("Item");
@@ -327,6 +375,11 @@ namespace Blind
             {
                 _renderer.flipX = true;
             }
+        }
+
+        public void RespawnFacing()
+        {
+            _renderer.flipX = true;
         }
 
         public int GetFacing()

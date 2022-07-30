@@ -50,11 +50,15 @@ namespace Blind
                 _visibleTiles.Clear();
                 foreach (var unit in _unitList)
                 {
+                    int x = unit.Range;
                     for (int i = -unit.Range; i < unit.Range; i++)
                     {
                         for (int j = -unit.Range; j < unit.Range; j++)
                         {
-                            _visibleTiles.Add(GetUnitTilePos(unit.transform) + new TilePos(i, j));
+                            if ((i*i) + (j*j) < x * x)
+                            {
+                                _visibleTiles.Add(GetUnitTilePos(unit.transform) + new TilePos(i, j));
+                            }
                         }
                     }
                 }

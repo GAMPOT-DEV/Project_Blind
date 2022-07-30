@@ -32,6 +32,7 @@ namespace Blind
 
         public void EnableDamage()
         {
+            Debug.Log("실행됨!!");
             canDamage = true;
         }
 
@@ -54,20 +55,10 @@ namespace Blind
 
         }
 
-        private void PlayerMeleeAttack()
+        private void MeleeAttack()
         {
-            
-        }
-
-        private void EnmeyMeleeAttack()
-        {
-            
-        }
-        private void FixedUpdate()
-        {
-            if (!canDamage) return;
-            
             int facing = 1;
+            Debug.Log(sprite + "test");
             if (sprite.flipX != _isSpriteFlip)
             {
                 facing = -1;
@@ -78,18 +69,56 @@ namespace Blind
             for (int i = 0; i < hitCount; i++)
             {
                 hitobj = ResultObj[i];
-                if (hitobj.tag.Equals("Player"))
+                if(hitobj.tag.Equals("Enemy"))
                 {
-                    hitobj.GetComponent<PlayerCharacter>()._damage.GetDamage(_damage);
-                    canDamage = false;
-                }
-                else
-                {
-                    hitobj.GetComponent<EnemyCharacter>()._damage.GetDamage(_damage);
+                    hitobj.GetComponent<BatMonster>().HP.GetDamage(_damage);
                     canDamage = false;
                     Debug.Log("맞음");
                 }
             }
+        }
+
+        private void EnemyMeleeAttack()
+        {
+            int facing = -1;
+            Debug.Log(sprite);
+            if (sprite.flipX != _isSpriteFlip)
+            {
+                facing = 1;
+            }
+
+            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            int hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
+            for (int i = 0; i < hitCount; i++)
+            {
+                hitobj = ResultObj[i];
+                Debug.Log(hitobj.tag);
+                if (hitobj.tag.Equals("Player"))
+                {
+                    Debug.Log("dd");
+                    hitobj.GetComponent<PlayerCharacter>()._damage.GetDamage(_damage);
+                    hitobj.GetComponent<PlayerCharacter>().OnHurt();
+                    canDamage = false;
+                }
+            }
+        }
+        private void FixedUpdate()
+        {
+            if (gameObject.GetComponent<PlayerCharacter>() != null)
+            {
+                if (!canDamage) return;
+                
+                MeleeAttack();
+            }
+            else
+            
+            {
+                if(!canDamage) return;
+                
+                EnemyMeleeAttack();
+            }
+            
+            
         }
     }
 }

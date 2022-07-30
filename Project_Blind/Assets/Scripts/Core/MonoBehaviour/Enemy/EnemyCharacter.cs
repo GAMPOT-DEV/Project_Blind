@@ -12,9 +12,9 @@ namespace Blind
             Default,
             Chase,
             Attack,
+            AttackStandby,
             Hitted,
-            Die,
-            Test
+            Die
         }
         private CharacterController2D _characterController2D;
         private Rigidbody2D rigid;
@@ -24,12 +24,15 @@ namespace Blind
         private GameObject _player;
         private State state;
         private float _speed = 0.1f;
+        private float _attackCoolTime = 1f;
         RaycastHit2D[] rayHit;
 
 
         public UnitHP _damage;
+        public float _hp;
         private MeleeAttackable _attack;
         public bool isAttack = false;
+        private bool attackable = true;
 
 
         private float _currentHP = 10f;
@@ -47,10 +50,11 @@ namespace Blind
             rigid = GetComponent<Rigidbody2D>();
             _startingPosition = transform.position;
             _player = GameObject.Find("Player");
-            state = State.Patrol;
-            //state = State.Test;
+            //state = State.Patrol;
+            state = State.Attack;
             _damage = new UnitHP(10);
             _patorlDirection = new Vector2(_speed, 0f);
+            _attack.Init(1,1);
             //_attack = GetComponent<MeleeAttackable>();
             //_attack.Init(10, 10);
         }
@@ -112,6 +116,10 @@ namespace Blind
                     StartCoroutine(AttackEnd());
                     break;
 
+                case State.AttackStandby:
+                    StartCoroutine(AttackCoolDown());
+                    break;
+
                 case State.Hitted:
                     Vector2 hittedVelocity = Vector2.zero;
                     if (DirectionVector(_player.transform.position) > 0) //플레이어가 오른쪽
@@ -149,6 +157,7 @@ namespace Blind
             }
 
             _characterController2D.OnFixedUpdate();
+            _hp = _damage.GetHP();
         }
 
         private float DirectionVector(Vector2 goal) //이동 방향만 지정
@@ -222,7 +231,14 @@ namespace Blind
         {
             yield return new WaitForSeconds(0.7f);
             isAttack = false;
-            state = State.Chase;
+            state = State.AttackStandby;
+        }
+
+        private IEnumerator AttackCoolDown()
+        {
+            yield return new WaitForSeconds(_attackCoolTime);
+            Debug.Log("쿨타임 끝!");
+            state = State.Attack;
         }
     }
 }
