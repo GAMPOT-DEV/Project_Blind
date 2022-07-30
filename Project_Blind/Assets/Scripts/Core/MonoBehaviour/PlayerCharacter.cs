@@ -65,6 +65,7 @@ namespace Blind
             _dashSpeed = 10f;
             _defaultTime = 0.1f;
             _dashCount = 1;
+            
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
             _attack.Init(attack_x,attack_y);
