@@ -126,7 +126,6 @@ GameObject:
   - component: {fileID: 7138595048606892266}
   - component: {fileID: 7138595048606892257}
   - component: {fileID: 7138595048606892256}
-  - component: {fileID: 3414955928378758831}
   - component: {fileID: 218428938864700062}
   m_Layer: 3
   m_Name: Player
@@ -264,12 +263,15 @@ MonoBehaviour:
   _defaultTime: 0
   _attackMove: 0.2
   _maxComboDelay: 0.9
+  _hurtMove: 1
   _lastClickTime: 0
   _clickcount: 0
   attack_x: 0
   attack_y: 0
   paring_x: 0
   paring_y: 0
+  _spawnPoint: {fileID: 0}
+  _enemyObject: {fileID: 0}
 --- !u!95 &7138595048606892266
 Animator:
   serializedVersion: 4
@@ -321,19 +323,6 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 8
---- !u!114 &3414955928378758831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7138595048606892267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 972683b9027243d281efa06cf3279fd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Range: 10
 --- !u!114 &218428938864700062
 MonoBehaviour:
   m_ObjectHideFlags: 0
