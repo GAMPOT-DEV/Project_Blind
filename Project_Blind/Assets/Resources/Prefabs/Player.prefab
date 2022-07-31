@@ -47,8 +47,8 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.551
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FalloffIntensity: 0.671
+  m_Color: {r: 0.7311321, g: 0.87347394, b: 1, a: 1}
   m_Intensity: 0.8
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
@@ -237,7 +237,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.07060051, y: -0.28239965}
-  m_Size: {x: 2.553196, y: 7.3594656}
+  m_Size: {x: 2.5, y: 6}
   m_Direction: 0
 --- !u!114 &7138595047812326861
 MonoBehaviour:
@@ -253,14 +253,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hp: 10
   maxhp: 10
-  _jumpSpeed: 0.5
-  _jumpAbortSpeedReduction: 1
-  _gravity: 1
-  _maxSpeed: 2
+  _jumpSpeed: 0.7
+  _jumpAbortSpeedReduction: 2
+  _gravity: 3
+  _maxSpeed: 4
   groundAcceleration: 15
   groundDeceleration: 15
-  _dashSpeed: 0
-  _defaultTime: 0
+  _dashSpeed: 10
+  _defaultTime: 0.2
   _attackMove: 0.2
   _maxComboDelay: 0.9
   _hurtMove: 1
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7138595048606892267}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06df7acbb0a84e6580986521c086d75c, type: 3}
   m_Name: 
@@ -354,7 +354,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7138595048606892267}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 737126f82bed49b8be3f8d02d81cd330, type: 3}
   m_Name: 
