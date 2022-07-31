@@ -47,9 +47,9 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 1
+  m_FalloffIntensity: 0.551
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.8
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 8d33c247ab75ae9600000000
@@ -98,7 +98,7 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 3
+  m_PointLightInnerRadius: 1
   m_PointLightOuterRadius: 15
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
@@ -126,7 +126,6 @@ GameObject:
   - component: {fileID: 7138595048606892266}
   - component: {fileID: 7138595048606892257}
   - component: {fileID: 7138595048606892256}
-  - component: {fileID: 3414955928378758831}
   - component: {fileID: 218428938864700062}
   m_Layer: 3
   m_Name: Player
@@ -252,8 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca3a64169bd4dd4bb08e07908ae7a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hp: 0
-  maxhp: 0
+  _hp: 10
+  maxhp: 10
   _jumpSpeed: 0.5
   _jumpAbortSpeedReduction: 1
   _gravity: 1
@@ -264,12 +263,39 @@ MonoBehaviour:
   _defaultTime: 0
   _attackMove: 0.2
   _maxComboDelay: 0.9
+  _hurtMove: 1
   _lastClickTime: 0
   _clickcount: 0
   attack_x: 0
   attack_y: 0
   paring_x: 0
   paring_y: 0
+  waveSenseSpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.1389365
+      outSlope: 3.1389365
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.045833334
+    - serializedVersion: 3
+      time: 1.0083313
+      value: 1
+      inSlope: -0.0065817204
+      outSlope: -0.0065817204
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.3553706
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _spawnPoint: {fileID: 0}
+  _enemyObject: {fileID: 0}
 --- !u!95 &7138595048606892266
 Animator:
   serializedVersion: 4
@@ -321,19 +347,6 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 8
---- !u!114 &3414955928378758831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7138595048606892267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 972683b9027243d281efa06cf3279fd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Range: 10
 --- !u!114 &218428938864700062
 MonoBehaviour:
   m_ObjectHideFlags: 0

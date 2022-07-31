@@ -39,7 +39,6 @@ namespace Blind
         private void InitEvents()
         {
             _player._damage.RefreshHpUI += OnHpChanged;
-
             // Test
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player._damage.GetDamage(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
