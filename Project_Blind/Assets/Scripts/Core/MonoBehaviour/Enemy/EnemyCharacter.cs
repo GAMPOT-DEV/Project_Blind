@@ -237,7 +237,6 @@ namespace Blind
         private IEnumerator AttackCoolDown()
         {
             yield return new WaitForSeconds(_attackCoolTime);
-            Debug.Log("쿨타임 끝!");
             state = State.Attack;
         }
     }
