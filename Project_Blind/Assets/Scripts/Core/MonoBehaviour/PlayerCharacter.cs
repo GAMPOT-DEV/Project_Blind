@@ -31,8 +31,8 @@ namespace Blind
         [SerializeField] private float _maxSpeed = 5f;
         [SerializeField] private float groundAcceleration = 100f;
         [SerializeField] private float groundDeceleration = 100f;
-        
-        [SerializeField] private float _dashSpeed = 10f;
+
+        [SerializeField] private float _dashSpeed; // = 10f;
         [SerializeField] private float _defaultTime = 0.1f;
         [SerializeField] public float _attackMove = 1f;
         [SerializeField] public float _maxComboDelay;
@@ -65,8 +65,8 @@ namespace Blind
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
-            _dashSpeed = 10f;
-            _defaultTime = 0.1f;
+            //_dashSpeed = 10f;
+            //_defaultTime = 0.2f;
             _dashCount = 1;
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
