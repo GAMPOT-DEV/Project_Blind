@@ -6,7 +6,6 @@ namespace Blind
     public class HurtSMB: SceneLinkedSMB<PlayerCharacter>
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.HurtMove(_monoBehaviour._hurtMove * (-_monoBehaviour.GetFacing()));
             _monoBehaviour.MeleeAttackComoEnd();
         }
 

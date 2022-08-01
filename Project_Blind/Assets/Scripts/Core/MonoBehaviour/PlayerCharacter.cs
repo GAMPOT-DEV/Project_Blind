@@ -386,6 +386,11 @@ namespace Blind
         {
             return _renderer.flipX ? 1 : -1;
         }
+
+        public int GetEnemyFacing(BatMonster obj)
+        {
+            return obj.ReturnFacing() ? 1 : -1;
+        }
         public void Log() {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
         }

@@ -13,6 +13,7 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
+            _monoBehaviour.GroundedHorizontalMovement(false);
             Debug.Log("paring 실행");
         }
         

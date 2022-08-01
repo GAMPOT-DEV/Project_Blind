@@ -80,6 +80,7 @@ namespace Blind
 
         private void EnemyMeleeAttack()
         {
+            BatMonster gameobject = gameObject.GetComponent<BatMonster>();
             int facing = -1;
             Debug.Log(sprite);
             if (sprite.flipX != _isSpriteFlip)
@@ -96,8 +97,10 @@ namespace Blind
                 if (hitobj.tag.Equals("Player"))
                 {
                     Debug.Log("dd");
-                    hitobj.GetComponent<PlayerCharacter>()._damage.GetDamage(_damage);
-                    hitobj.GetComponent<PlayerCharacter>().OnHurt();
+                    PlayerCharacter _player = hitobj.GetComponent<PlayerCharacter>();
+                    _player._damage.GetDamage(_damage);
+                    _player.OnHurt();
+                    _player.HurtMove(_player._hurtMove * _player.GetEnemyFacing(gameobject));
                     canDamage = false;
                 }
             }
