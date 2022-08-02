@@ -24,7 +24,7 @@ namespace Blind
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.GetComponent<WaveSense>() != null)
+            if (col.gameObject.GetComponent<WaveSense>() != null)
             {
                 GetHit();
             }
