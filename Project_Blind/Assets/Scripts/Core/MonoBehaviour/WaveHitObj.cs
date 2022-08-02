@@ -32,6 +32,8 @@ namespace Blind
 
         private IEnumerator Glow()
         {
+            SoundManager.Instance.Play("PureWaveSound", Define.Sound.Effect);
+
             GetComponent<Light2D>().intensity = 1;
             if (GetComponent<SpriteRenderer>() != null)
             yield return new WaitForSeconds(5f);
