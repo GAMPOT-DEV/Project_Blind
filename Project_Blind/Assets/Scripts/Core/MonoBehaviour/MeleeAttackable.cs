@@ -7,7 +7,7 @@ namespace Blind
     {
         private int x;
         private int y;
-        private int _damage = 0;
+        private int _damage = 1;
         private bool canDamage;
         private Vector2 size;
         private SpriteRenderer sprite = null;
@@ -113,13 +113,12 @@ namespace Blind
             if (gameObject.GetComponent<PlayerCharacter>() != null)
             {
                 if (!canDamage) return;
-                
                 MeleeAttack();
             }
             else
             
             {
-                if(!canDamage) return;
+                if (!canDamage) return;
                 
                 EnemyMeleeAttack();
             }

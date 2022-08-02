@@ -154,6 +154,9 @@ namespace Blind
             {
                 if (WaveSense.IsUsing)
                     return;
+
+                SoundManager.Instance.Play("WaveSound", Define.Sound.Effect);
+
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
                 waveSense.transform.position = transform.position;
                 waveSense.StartSpread(waveSenseSpeed);
