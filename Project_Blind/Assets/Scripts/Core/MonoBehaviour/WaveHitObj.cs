@@ -22,13 +22,6 @@ namespace Blind
             _coroutine =  StartCoroutine(Glow());
         }
 
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.gameObject.GetComponent<WaveSense>() != null)
-            {
-                GetHit();
-            }
-        }
 
         private IEnumerator Glow()
         {
