@@ -58,7 +58,6 @@ namespace Blind
         private void MeleeAttack()
         {
             int facing = 1;
-            Debug.Log(sprite + "test");
             if (sprite.flipX != _isSpriteFlip)
             {
                 facing = -1;

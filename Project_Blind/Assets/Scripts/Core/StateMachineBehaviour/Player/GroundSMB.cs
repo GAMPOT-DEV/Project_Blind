@@ -37,6 +37,11 @@ namespace Blind
             {
                 _monoBehaviour.Deed();
             }
+
+            if (_monoBehaviour.CheckForSkill())
+            {
+                _monoBehaviour.Skill();
+            }
         }
         
     }
