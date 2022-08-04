@@ -57,6 +57,8 @@ namespace Blind
         private Coroutine Co_attackStandby;
         private Coroutine Co_stun;
 
+        // HP UI
+        private UI_UnitHP _unitHPUI = null;
         private void Awake()
         {
             //�� ������ �ʱ�ȭ�ϸ� ������ �� ����...? ���� ã�Ƽ� �� �� ������ �� ��
@@ -73,7 +75,11 @@ namespace Blind
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
             state = State.Patrol;
+
             HP = new UnitHP(_maxHP);
+            // HP UI 생성
+            CreateHpUI();
+
             patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
             _attack.Init(2, 2);
 
@@ -87,6 +93,7 @@ namespace Blind
         {
             startingPosition = gameObject.transform;
             player = GameObject.Find("Player");
+
         }
 
         private void FixedUpdate()
@@ -234,6 +241,7 @@ namespace Blind
                 _sprite.flipX = true;
             }
             transform.localScale = thisScale;
+            _unitHPUI.Reverse();
         }
 
         private int RandomDirection()
@@ -299,6 +307,20 @@ namespace Blind
                 state = State.Patrol;
 
             Co_stun = null;
+        }
+
+        private void CreateHpUI()
+        {
+            // UI매니저로 UI_UnitHP 생성
+            _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
+            // UI에서 UnitHP 참조
+            _unitHPUI.HP = HP;
+            // 유닛 움직이면 같이 움직이도록 Parent 설정
+            _unitHPUI.transform.SetParent(transform);
+            // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
+            _unitHPUI.Owner = gameObject;
+            // 오브젝트의 머리 위에 위치하도록 설정
+            _unitHPUI.SetPosition(transform.position, Vector3.up * 2);
         }
     }
 }

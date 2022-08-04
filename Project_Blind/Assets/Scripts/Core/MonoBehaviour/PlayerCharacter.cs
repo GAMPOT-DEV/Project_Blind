@@ -50,8 +50,6 @@ namespace Blind
         [SerializeField] private int paring_x;
         [SerializeField] private int paring_y;
 
-        [SerializeField] private AnimationCurve waveSenseSpeed;
-
         [SerializeField] private Transform _spawnPoint;
         private float _dashTime;
         private float _defaultSpeed;
@@ -165,9 +163,12 @@ namespace Blind
             {
                 if (WaveSense.IsUsing)
                     return;
+
+                SoundManager.Instance.Play("WaveSound", Define.Sound.Effect);
+
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
                 waveSense.transform.position = transform.position;
-                waveSense.StartSpread(waveSenseSpeed);
+                waveSense.StartSpread();
             }
         }
         

@@ -22,16 +22,11 @@ namespace Blind
             _coroutine =  StartCoroutine(Glow());
         }
 
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.GetComponent<WaveSense>() != null)
-            {
-                GetHit();
-            }
-        }
 
         private IEnumerator Glow()
         {
+            SoundManager.Instance.Play("PureWaveSound", Define.Sound.Effect);
+
             GetComponent<Light2D>().intensity = 1;
             if (GetComponent<SpriteRenderer>() != null)
             yield return new WaitForSeconds(5f);

@@ -11,8 +11,8 @@ namespace Blind
     /// </summary>
     public class WaveSense : MonoBehaviour
     {
-        private float _maxRadious = 20f;
-        [SerializeField] private float period = 1.5f;
+        [SerializeField] private float _maxRadious = 20f;
+        [SerializeField] private AnimationCurve spreadSpeed;
         private float _curTime;
         private CircleCollider2D _collider2D;
         private Coroutine _coroutine = null;
@@ -29,19 +29,24 @@ namespace Blind
             _collider2D.enabled = false;
             _radius = 0;
         }
-
-        private void Update()
+        
+        private void OnTriggerEnter2D(Collider2D col)
         {
+            var waveHitObj = col.gameObject.GetComponent<WaveHitObj>();
+            if (waveHitObj != null)
+            {
+                waveHitObj.GetHit();
+            }
         }
 
-        public void StartSpread(AnimationCurve spreadSpeed)
+        public void StartSpread()
         {
             if(_coroutine != null) return;
-            _coroutine = StartCoroutine(Spread(spreadSpeed));
+            _coroutine = StartCoroutine(Spread());
             _isUsing = true;
         }
 
-        private IEnumerator Spread(AnimationCurve spreadSpeed)
+        private IEnumerator Spread()
         {
             _curTime = 0;
             _collider2D.enabled = true;
