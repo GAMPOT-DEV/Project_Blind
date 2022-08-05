@@ -42,6 +42,8 @@ public class Define
         Click,
         Drag,
         EndDrag,
+        Enter,
+        Exit,
     }
     public enum Language
     {

@@ -9,42 +9,84 @@ namespace Blind
 {
     public class UI_MainScene : UI_Scene
     {
-        const int BUTTON_COUNT = (int)Buttons.Button_Exit + 1;
+        const int BUTTON_COUNT = (int)Images.Image_Exit + 1;
         private Action[] _actions = new Action[BUTTON_COUNT];
         private int _currCursor;
         TransitionPoint _transition;
-        enum Buttons
+
+        [SerializeField] private Sprite _startSprite_Click;
+        [SerializeField] private Sprite _startSprite_NonClick;
+        [SerializeField] private Sprite _settingSprite_Click;
+        [SerializeField] private Sprite _settingSprite_NonClick;
+        [SerializeField] private Sprite _ExitSprite_Click;
+        [SerializeField] private Sprite _ExitSprite_NonClick;
+
+        struct ImageInfo
         {
-            Button_Start,
-            Button_Option,
-            Button_Exit,
+            public int width;
+            public int height;
+            public Sprite sprite;
         }
-        enum Texts
+        struct ImageInfoSet
         {
-            Text_Start,
-            Text_Option,
-            Text_Exit,
+            public ImageInfo click;
+            public ImageInfo nonClick;
         }
+
+        ImageInfoSet[] _imageInfos;
+
+        private ImageInfo _startImage_Click;
+        private ImageInfo _startImage_NonClick;
+        private ImageInfo _settingImage_Click;
+        private ImageInfo _settingImage_NonClick;
+        private ImageInfo _ExitImage_Click;
+        private ImageInfo _ExitImage_NonClick;
+
         enum Images
         {
+            Image_Start,
+            Image_Option,
+            Image_Exit,
             Image_Cursor,
         }
         public override void Init()
         {
             base.Init();
             Debug.Log("Main Scene");
-            Bind<Button>(typeof(Buttons));
-            Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
-            Get<Text>((int)Texts.Text_Start).text = "Start";
-            Get<Text>((int)Texts.Text_Option).text = "Option";
-            Get<Text>((int)Texts.Text_Exit).text = "Exit";
-            Get<Button>((int)Buttons.Button_Start).gameObject.BindEvent(PushStartButton, Define.UIEvent.Click);
-            Get<Button>((int)Buttons.Button_Option).gameObject.BindEvent(PushOptionButton, Define.UIEvent.Click);
-            Get<Button>((int)Buttons.Button_Exit).gameObject.BindEvent(PushExitButton, Define.UIEvent.Click);
+
+            _startImage_Click = new ImageInfo() { width = 302, height = 41, sprite = _startSprite_Click };
+            _startImage_NonClick = new ImageInfo() { width = 236, height = 34, sprite = _startSprite_NonClick };
+
+            _settingImage_Click = new ImageInfo() { width = 259, height = 41, sprite = _settingSprite_Click };
+            _settingImage_NonClick = new ImageInfo() { width = 202, height = 34, sprite = _settingSprite_NonClick };
+
+            _ExitImage_Click = new ImageInfo() { width = 137, height = 48, sprite = _ExitSprite_Click };
+            _ExitImage_NonClick = new ImageInfo() { width = 108, height = 41, sprite = _ExitSprite_NonClick };
+
+            _imageInfos = new ImageInfoSet[BUTTON_COUNT];
+            _imageInfos[(int)Images.Image_Start].click = _startImage_Click;
+            _imageInfos[(int)Images.Image_Start].nonClick = _startImage_NonClick;
+            _imageInfos[(int)Images.Image_Option].click = _settingImage_Click;
+            _imageInfos[(int)Images.Image_Option].nonClick = _settingImage_NonClick;
+            _imageInfos[(int)Images.Image_Exit].click = _ExitImage_Click;
+            _imageInfos[(int)Images.Image_Exit].nonClick = _ExitImage_NonClick;
+
+            Get<Image>((int)Images.Image_Start).gameObject.BindEvent(PushStartButton, Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_Option).gameObject.BindEvent(PushOptionButton, Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_Exit).gameObject.BindEvent(PushExitButton, Define.UIEvent.Click);
+
+            Get<Image>((int)Images.Image_Start).gameObject.BindEvent(() => EnterCursor((int)Images.Image_Start), Define.UIEvent.Enter);
+            Get<Image>((int)Images.Image_Option).gameObject.BindEvent(() => EnterCursor((int)Images.Image_Option), Define.UIEvent.Enter);
+            Get<Image>((int)Images.Image_Exit).gameObject.BindEvent(() => EnterCursor((int)Images.Image_Exit), Define.UIEvent.Enter);
+
+            Get<Image>((int)Images.Image_Start).gameObject.BindEvent(() => ExitCursor((int)Images.Image_Start), Define.UIEvent.Exit);
+            Get<Image>((int)Images.Image_Option).gameObject.BindEvent(() => ExitCursor((int)Images.Image_Option), Define.UIEvent.Exit);
+            Get<Image>((int)Images.Image_Exit).gameObject.BindEvent(() => ExitCursor((int)Images.Image_Exit), Define.UIEvent.Exit);
 
             _currCursor = 0;
-            Get<Image>((int)Images.Image_Cursor).transform.position = Get<Button>(_currCursor).transform.position;
+            Get<Image>(_currCursor).sprite = _startSprite_Click;
+            Get<Image>((int)Images.Image_Cursor).transform.position = Get<Image>(_currCursor).transform.position;
             _actions[0] += PushStartButton;
             _actions[1] += PushOptionButton;
             _actions[2] += PushExitButton;
@@ -72,15 +114,17 @@ namespace Blind
 
             if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
+                ExitCursor(_currCursor);
                 _currCursor = (_currCursor + 1) % BUTTON_COUNT;
-                Get<Image>((int)Images.Image_Cursor).transform.position = Get<Button>(_currCursor).transform.position;
+                EnterCursor(_currCursor);
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
+                ExitCursor(_currCursor);
                 _currCursor = (_currCursor - 1 + BUTTON_COUNT) % BUTTON_COUNT;
-                Get<Image>((int)Images.Image_Cursor).transform.position = Get<Button>(_currCursor).transform.position;
+                EnterCursor(_currCursor);
                 return;
             }
         }
@@ -99,6 +143,22 @@ namespace Blind
         {
             Debug.Log("Push Exit");
             Application.Quit();
+        }
+        private void EnterCursor(int idx)
+        {
+            _currCursor = idx;
+            Get<Image>((int)Images.Image_Cursor).transform.position = Get<Image>(_currCursor).transform.position;
+            Image currImage = Get<Image>(idx);
+            ImageInfo imageInfo = _imageInfos[idx].click;
+            currImage.sprite = imageInfo.sprite;
+            currImage.rectTransform.sizeDelta = new Vector2(imageInfo.width, imageInfo.height);
+        }
+        private void ExitCursor(int idx)
+        {
+            Image currImage = Get<Image>(idx);
+            ImageInfo imageInfo = _imageInfos[idx].nonClick;
+            currImage.sprite = imageInfo.sprite;
+            currImage.rectTransform.sizeDelta = new Vector2(imageInfo.width, imageInfo.height);
         }
     }
 }
