@@ -18,6 +18,8 @@ namespace Blind
         public InputButton Paring;
         public InputButton Interaction;
         public InputButton Attack;
+        public InputButton Skill;
+
 
         public InputAxis Horizontal;
         public InputAxis Vertical;
@@ -35,6 +37,7 @@ namespace Blind
             Wave = new InputButton(KeyCode.C,XboxControllerButtons.B);
             Horizontal = new InputAxis(KeyCode.D, KeyCode.A, XboxControllerAxes.LeftstickHorizontal);
             Vertical = new InputAxis(KeyCode.W,KeyCode.S,XboxControllerAxes.LeftstickVertical);
+            Skill = new InputButton(KeyCode.I, XboxControllerButtons.LeftBumper);
         }
 
         /// <summary>
@@ -53,6 +56,7 @@ namespace Blind
             Wave.Get(fixedUpdateHappened,inputType);
             Horizontal.Get(inputType);
             Vertical.Get(inputType);
+            Skill.Get(fixedUpdateHappened, inputType);
         }
         /// <summary>
         /// 막은 키 입력을 다시 활성화 합니다.
@@ -71,6 +75,7 @@ namespace Blind
             GainControl(Dash);
             GainControl(Wave);
             GainControl(Attack);
+            GainControl(Skill);
         }
         
         /// <summary>
@@ -90,6 +95,7 @@ namespace Blind
             ReleaseControl(Dash,resetValues);
             ReleaseControl(Wave,resetValues);
             ReleaseControl(Attack, resetValues);
+            ReleaseControl(Skill, resetValues);
         }
     }
 }

@@ -160,7 +160,7 @@ namespace Blind
                 name = typeof(T).Name;
 
             //_uiNum = _uiNum + 1;
-            GameObject go = ResourceManager.Instance.Instantiate($"TestKjh/{name}");
+            GameObject go = ResourceManager.Instance.Instantiate($"UI/WorldSpace/{name}");
             T ui = Util.GetOrAddComponent<T>(go);
             _worldSpaceUIs.Add(ui);
 

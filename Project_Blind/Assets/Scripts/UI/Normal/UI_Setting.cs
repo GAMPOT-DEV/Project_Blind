@@ -8,7 +8,7 @@ namespace Blind
     public class UI_Setting : UI_Base
     {
         int tmp = 0;
-        const int SIZE = 3;
+        const int SIZE = 5;
         Define.Resolution[] _resolutions = new Define.Resolution[SIZE];
 
         GameData _gameData = null;
@@ -102,6 +102,12 @@ namespace Blind
 
             _resolutions[2].width = 1920;
             _resolutions[2].height = 1080;
+            
+            _resolutions[3].width = 2560;
+            _resolutions[3].height = 1440;
+            
+            _resolutions[4].width = 3840;
+            _resolutions[4].height = 2160;
 
             UIManager.Instance.Resolution = _resolutions[_gameData.resolutionIndex];
             UIManager.Instance.IsWindowMode = _gameData.windowMode;
