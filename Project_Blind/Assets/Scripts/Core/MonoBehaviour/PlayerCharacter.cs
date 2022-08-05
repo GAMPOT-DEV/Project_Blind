@@ -14,7 +14,7 @@ namespace Blind
     /// </summary>
     public class PlayerCharacter : MonoBehaviour,IGameManagerObj
     {
-        private Vector2 _moveVector;
+        public Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
         public UnitHP _damage;
         [SerializeField] private float _hp;
@@ -32,13 +32,18 @@ namespace Blind
         [SerializeField] private float groundAcceleration = 100f;
         [SerializeField] private float groundDeceleration = 100f;
         
-        [SerializeField] private float _dashSpeed = 10f;
+        [Range(0f, 1f)] public float airborneAccelProportion;
+        [Range(0f, 1f)] public float airborneDecelProportion;
+
+        [SerializeField] private float _dashSpeed; // = 10f;
         [SerializeField] private float _defaultTime = 0.1f;
         [SerializeField] public float _attackMove = 1f;
         [SerializeField] public float _maxComboDelay;
         [SerializeField] public float _hurtMove = 1f;
+        public bool _isHurtCheck;
         public float _lastClickTime;
         public int _clickcount = 0;
+        public bool _isPowerAttackCheck;
 
         [SerializeField] private int attack_x;
         [SerializeField] private int attack_y;
@@ -49,6 +54,7 @@ namespace Blind
         private float _dashTime;
         private float _defaultSpeed;
         private int _dashCount;
+        public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         [SerializeField] private BatMonster _enemyObject;
@@ -63,8 +69,8 @@ namespace Blind
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
-            _dashSpeed = 10f;
-            _defaultTime = 0.1f;
+            //_dashSpeed = 10f;
+            //_defaultTime = 0.2f;
             _dashCount = 1;
             
 
@@ -127,6 +133,11 @@ namespace Blind
             }
         }
 
+        public void StopMove()
+        {
+            
+        }
+
         IEnumerator ReturnDashCount()
         {
             yield return new WaitForSeconds(1f);
@@ -154,6 +165,8 @@ namespace Blind
                 if (WaveSense.IsUsing)
                     return;
 
+                SoundManager.Instance.Play("WaveSound", Define.Sound.Effect);
+
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
                 waveSense.transform.position = transform.position;
                 waveSense.StartSpread();
@@ -178,6 +191,19 @@ namespace Blind
             }
             _moveVector.y -= _gravity * Time.deltaTime;
         }
+        public void AirborneHorizontalMovement()
+        {
+            float desiredSpeed = InputController.Instance.Horizontal.Value * _maxSpeed;
+
+            float acceleration;
+
+            if (InputController.Instance.Horizontal.ReceivingInput)
+                acceleration = airborneAccelProportion;
+            else
+                acceleration = airborneDecelProportion;
+
+            _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
+        }
         public void GroundedVerticalMovement()
         {
             _moveVector.y -= _gravity * Time.deltaTime;
@@ -191,6 +217,7 @@ namespace Blind
         public void CheckForGrounded()
         {
             bool grounded = _characterController2D.IsGrounded;
+            isJump = grounded;
             _animator.SetBool("Grounded",grounded);
         }
 
@@ -268,6 +295,16 @@ namespace Blind
             _animator.SetBool("Attack4", false);
             _clickcount = 0;
         }
+
+        public bool CheckForPowerAttack()
+        {
+            return InputController.Instance.Attack.Held;
+        }
+
+        public bool CheckForUpKey()
+        {
+            return InputController.Instance.Attack.Up;
+        }
         public void AttackableMove(float newMoveVector)
         {
             _moveVector.x = newMoveVector;
@@ -300,7 +337,11 @@ namespace Blind
 
         public void OnHurt()
         {
-            if(_hp > 1) _animator.SetBool("Hurt", true);
+            if (_hp > 1)
+            {
+                _animator.SetTrigger("Hurt");
+                _isHurtCheck = true;
+            }
         }
 
         public void HurtMove(float newMoveVector)
@@ -377,7 +418,18 @@ namespace Blind
                 _renderer.flipX = true;
             }
         }
+        
 
+        public bool CheckForSkill()
+        {
+            return InputController.Instance.Skill.Down;
+        }
+
+        public void Skill()
+        {
+            _animator.SetTrigger("Skill");
+        }
+        
         public void RespawnFacing()
         {
             _renderer.flipX = true;
@@ -386,6 +438,11 @@ namespace Blind
         public int GetFacing()
         {
             return _renderer.flipX ? 1 : -1;
+        }
+
+        public int GetEnemyFacing(BatMonster obj)
+        {
+            return obj.ReturnFacing() ? 1 : -1;
         }
         public void Log() {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");

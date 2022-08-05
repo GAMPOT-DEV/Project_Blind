@@ -44,6 +44,9 @@ namespace Blind
         float timer;
         int waitTime = 1;
 
+        // HP UI
+        private UI_UnitHP _unitHPUI = null;
+
         private void Start()
         {
             _characterController2D = GetComponent<CharacterController2D>();
@@ -52,7 +55,10 @@ namespace Blind
             _player = GameObject.Find("Player");
             //state = State.Patrol;
             state = State.Attack;
+
             _damage = new UnitHP(10);
+            CreateHpUI();
+
             _patorlDirection = new Vector2(_speed, 0f);
             _attack.Init(1,1);
             //_attack = GetComponent<MeleeAttackable>();
@@ -237,8 +243,22 @@ namespace Blind
         private IEnumerator AttackCoolDown()
         {
             yield return new WaitForSeconds(_attackCoolTime);
-            Debug.Log("쿨타임 끝!");
             state = State.Attack;
+        }
+
+        private void CreateHpUI()
+        {
+            Debug.LogWarning("??");
+            // UI매니저로 UI_UnitHP 생성
+            _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
+            // UI에서 UnitHP 참조
+            _unitHPUI.HP = _damage;
+            // 유닛 움직이면 같이 움직이도록 Parent 설정
+            _unitHPUI.transform.SetParent(transform);
+            // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
+            _unitHPUI.Owner = gameObject;
+            // 오브젝트의 머리 위에 위치하도록 설정
+            _unitHPUI.SetPosition(transform.position, Vector3.up * 2);
         }
     }
 }

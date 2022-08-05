@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -21,14 +22,15 @@ namespace Blind
             _coroutine =  StartCoroutine(Glow());
         }
 
+
         private IEnumerator Glow()
         {
+            SoundManager.Instance.Play("PureWaveSound", Define.Sound.Effect);
+
             GetComponent<Light2D>().intensity = 1;
             if (GetComponent<SpriteRenderer>() != null)
-            GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.None; 
             yield return new WaitForSeconds(5f);
             if (GetComponent<SpriteRenderer>() != null)
-            GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
             GetComponent<Light2D>().intensity = 0;
             _coroutine = null;
         }

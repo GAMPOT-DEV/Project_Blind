@@ -30,8 +30,7 @@ namespace Blind
                 _monoBehaviour._clickcount++;
                 _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
             }
-
-            if (_monoBehaviour.CheckForDeed())
+            if(_monoBehaviour.CheckForDeed())
             {
                 _monoBehaviour.Deed();
             }

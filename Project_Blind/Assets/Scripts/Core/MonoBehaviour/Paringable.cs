@@ -12,7 +12,7 @@ namespace Blind
         private Collider2D[] _result = new Collider2D[10];
         private ContactFilter2D _filter;
         private Collider2D _hitObj;
-        private bool _isFlip;
+        private bool _isFlip = false;
         private bool _isParing;
         [SerializeField] private LayerMask _hitLayer;
 
@@ -43,7 +43,7 @@ namespace Blind
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            if (_sprite.flipX) Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
+            if (_isFlip) Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
             else Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x -1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
 
         }

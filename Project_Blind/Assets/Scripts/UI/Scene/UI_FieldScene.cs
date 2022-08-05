@@ -19,6 +19,21 @@ namespace Blind
             Image_TestDamage,
             Image_TestHeal,
         }
+        protected override void Start()
+        {
+            BatMonster monster = FindObjectOfType<BatMonster>();
+            if (monster != null)
+            {
+                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster.HP.GetDamage(1.0f), Define.UIEvent.Click);
+                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster.HP.GetHeal(1.0f), Define.UIEvent.Click);
+            }
+            EnemyCharacter monster2 = FindObjectOfType<EnemyCharacter>();
+            if (monster2 != null)
+            {
+                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster2._damage.GetDamage(1.0f), Define.UIEvent.Click);
+                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster2._damage.GetHeal(1.0f), Define.UIEvent.Click);
+            }
+        }
         public override void Init()
         {
             base.Init();
@@ -39,7 +54,6 @@ namespace Blind
         private void InitEvents()
         {
             _player._damage.RefreshHpUI += OnHpChanged;
-
             // Test
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player._damage.GetDamage(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
