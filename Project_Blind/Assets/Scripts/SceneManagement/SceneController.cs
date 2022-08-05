@@ -11,10 +11,12 @@ namespace Blind
     /// </summary>
     public class SceneController : Manager<SceneController>
     {
+        public bool isLoading;
         public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
         protected override void Awake()
         {
             base.Awake();
+            isLoading = false;
         }
         public void LoadScene(Define.Scene type)
         {
@@ -40,12 +42,19 @@ namespace Blind
         //여기에 씬 이동 전 인벤토리 세이브, 로딩, 게임 세이브 등 작업을 합니다.
         protected IEnumerator Transition(Define.Scene newSceneName, TransitionDestination.DestinationTag destinationTag, TransitionPoint.TransitionType transitionType = TransitionPoint.TransitionType.DifferentScene)
         {
-            string sceneName = newSceneName.ToString();
-            yield return SceneManager.LoadSceneAsync(sceneName);
-            //LoadingSceneController.LoadScene(sceneName);
-            TransitionDestination entrance = GetDestination(destinationTag);
-            SetEnteringLocation(entrance);
-            yield return new WaitForSeconds(1);
+            if (!isLoading)
+            {
+                isLoading = true;
+                yield return UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeScenOut());
+                string sceneName = newSceneName.ToString();
+                //yield return SceneManager.LoadSceneAsync(sceneName);
+                //LoadingSceneController.LoadScene(sceneName);
+                StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName));
+                TransitionDestination entrance = GetDestination(destinationTag);
+                SetEnteringLocation(entrance);
+                yield return new WaitForSeconds(1);
+                isLoading = false;
+            }
         }
 
         protected TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
