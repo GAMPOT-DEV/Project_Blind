@@ -31,7 +31,7 @@ namespace Blind
         [SerializeField] private float _maxSpeed = 5f;
         [SerializeField] private float groundAcceleration = 100f;
         [SerializeField] private float groundDeceleration = 100f;
-        
+
         [Range(0f, 1f)] public float airborneAccelProportion;
         [Range(0f, 1f)] public float airborneDecelProportion;
 
@@ -94,7 +94,7 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
-            _hp = _damage.GetHP();
+            // _hp = _damage.GetHP();
         }
 
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -137,7 +137,7 @@ namespace Blind
 
         public void StopMove()
         {
-            
+
         }
 
         IEnumerator ReturnDashCount()
@@ -221,7 +221,7 @@ namespace Blind
         {
             bool grounded = _characterController2D.IsGrounded;
             isJump = grounded;
-            _animator.SetBool("Grounded",grounded);
+            _animator.SetBool("Grounded", grounded);
         }
 
         public bool CheckForParing()
@@ -380,7 +380,12 @@ namespace Blind
 
         public void Respawn()
         {
+            if (isOnLava)
+            {
+                isOnLava = false;
+            }
             RespawnFacing();
+            _hp = _damage.GetHP();
             _damage.GetHeal(maxhp);
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
@@ -421,7 +426,7 @@ namespace Blind
                 _renderer.flipX = true;
             }
         }
-        
+
 
         public bool CheckForSkill()
         {
@@ -432,7 +437,7 @@ namespace Blind
         {
             _animator.SetTrigger("Skill");
         }
-        
+
         public void RespawnFacing()
         {
             _renderer.flipX = true;
@@ -447,7 +452,8 @@ namespace Blind
         {
             return obj.ReturnFacing() ? 1 : -1;
         }
-        public void Log() {
+        public void Log()
+        {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
         }
 
@@ -466,6 +472,11 @@ namespace Blind
             while (isOnLava)
             {
                 // hp를 깎음
+                if (_hp > 0)
+                {
+                    _hp -= 1.0f;
+                }
+                Debug.Log("피 닳음");
                 yield return new WaitForSeconds(0.5f);
             }
             DebuffOff();
@@ -485,13 +496,6 @@ namespace Blind
             {
                 isOnLava = false;
             }
-            //if (collision.transform.parent !=null)
-            //{
-            //    if(collision.transform.parent.gameObject.name == "Floors")
-            //    {
-            //        isOnLava = false;
-            //    }
-            //}
         }
     }
 }
