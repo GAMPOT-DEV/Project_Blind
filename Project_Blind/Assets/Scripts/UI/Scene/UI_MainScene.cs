@@ -48,6 +48,7 @@ namespace Blind
             Image_Option,
             Image_Exit,
             Image_Cursor,
+            Image_Logo,
         }
         public override void Init()
         {
@@ -76,9 +77,9 @@ namespace Blind
             Get<Image>((int)Images.Image_Option).gameObject.BindEvent(PushOptionButton, Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Exit).gameObject.BindEvent(PushExitButton, Define.UIEvent.Click);
 
-            Get<Image>((int)Images.Image_Start).gameObject.BindEvent(() => EnterCursor((int)Images.Image_Start), Define.UIEvent.Enter);
-            Get<Image>((int)Images.Image_Option).gameObject.BindEvent(() => EnterCursor((int)Images.Image_Option), Define.UIEvent.Enter);
-            Get<Image>((int)Images.Image_Exit).gameObject.BindEvent(() => EnterCursor((int)Images.Image_Exit), Define.UIEvent.Enter);
+            Get<Image>((int)Images.Image_Start).gameObject.BindEvent(() => ChangeCursor((int)Images.Image_Start), Define.UIEvent.Enter);
+            Get<Image>((int)Images.Image_Option).gameObject.BindEvent(() => ChangeCursor((int)Images.Image_Option), Define.UIEvent.Enter);
+            Get<Image>((int)Images.Image_Exit).gameObject.BindEvent(() => ChangeCursor((int)Images.Image_Exit), Define.UIEvent.Enter);
 
             Get<Image>((int)Images.Image_Start).gameObject.BindEvent(() => ExitCursor((int)Images.Image_Start), Define.UIEvent.Exit);
             Get<Image>((int)Images.Image_Option).gameObject.BindEvent(() => ExitCursor((int)Images.Image_Option), Define.UIEvent.Exit);
@@ -90,6 +91,9 @@ namespace Blind
             _actions[0] += PushStartButton;
             _actions[1] += PushOptionButton;
             _actions[2] += PushExitButton;
+
+            Get<Image>((int)Images.Image_Logo).color = new Color(1, 1, 1, 0);
+            StartCoroutine(CoApearLogoImage());
 
             _transition = FindObjectOfType<TransitionPoint>();
         }
@@ -114,35 +118,33 @@ namespace Blind
 
             if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
-                ExitCursor(_currCursor);
-                _currCursor = (_currCursor + 1) % BUTTON_COUNT;
-                EnterCursor(_currCursor);
+                ChangeCursor((_currCursor + 1) % BUTTON_COUNT);
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
-                ExitCursor(_currCursor);
-                _currCursor = (_currCursor - 1 + BUTTON_COUNT) % BUTTON_COUNT;
-                EnterCursor(_currCursor);
+                ChangeCursor((_currCursor - 1 + BUTTON_COUNT) % BUTTON_COUNT);
                 return;
             }
         }
         private void PushStartButton()
         {
-            Debug.Log("Push Start");
+            ChangeCursor((int)Images.Image_Start);
             UIManager.Instance.Clear();
             _transition.TransitionInternal();
         }
         private void PushOptionButton()
         {
-            Debug.Log("Push Option");
+            ChangeCursor((int)Images.Image_Option);
             UIManager.Instance.ShowNormalUI<UI_Setting>();
         }
         private void PushExitButton()
         {
             Debug.Log("Push Exit");
-            Application.Quit();
+            ChangeCursor((int)Images.Image_Exit);
+            //Application.Quit();
+            UIManager.Instance.ShowNormalUI<UI_Clue>();
         }
         private void EnterCursor(int idx)
         {
@@ -159,6 +161,23 @@ namespace Blind
             ImageInfo imageInfo = _imageInfos[idx].nonClick;
             currImage.sprite = imageInfo.sprite;
             currImage.rectTransform.sizeDelta = new Vector2(imageInfo.width, imageInfo.height);
+        }
+        private void ChangeCursor(int nextCursor)
+        {
+            ExitCursor(_currCursor);
+            EnterCursor(nextCursor);
+        }
+        IEnumerator CoApearLogoImage()
+        {
+            float alpha = 0;
+            while (true)
+            {
+                alpha++;
+                if (alpha >= 255)
+                    break;
+                Get<Image>((int)Images.Image_Logo).color = new Color(1, 1, 1, alpha / 255f);
+                yield return new WaitForSeconds(0.01f);
+            }
         }
     }
 }

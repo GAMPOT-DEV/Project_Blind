@@ -40,4 +40,26 @@ namespace Data
         }
     }
     #endregion
+    #region Clue
+    [Serializable]
+    public class Clue
+    {
+        public int id;
+        public string name;
+        public string description;
+        public string iconPath;
+    }
+    [Serializable]
+    public class ClueData : ILoader<int, Clue>
+    {
+        public List<Clue> clues = new List<Clue>();
+        public Dictionary<int, Clue> MakeDict()
+        {
+            Dictionary<int, Clue> dict = new Dictionary<int, Clue>();
+            foreach (Clue clue in clues)
+                dict.Add(clue.id, clue);
+            return dict;
+        }
+    }
+    #endregion
 }
