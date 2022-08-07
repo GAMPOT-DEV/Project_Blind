@@ -143,8 +143,7 @@ namespace Blind
         {
             Debug.Log("Push Exit");
             ChangeCursor((int)Images.Image_Exit);
-            //Application.Quit();
-            UIManager.Instance.ShowNormalUI<UI_Clue>();
+            Application.Quit();
         }
         private void EnterCursor(int idx)
         {

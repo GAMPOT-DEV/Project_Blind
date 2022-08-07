@@ -74,6 +74,23 @@ namespace Blind
             Debug.Log("Save Completed!");
         }
         #endregion
+        public bool GetClueItem(int itemId)
+        {
+            foreach(ClueInfo info in _gameData.clueSlotInfos)
+            {
+                if (info.itemId == itemId)
+                    return false;
+            }
+            ClueInfo newInfo = new ClueInfo() { itemId = itemId, slot = UI_Clue.Size++ };
+            _gameData.clueSlotInfos.Add(newInfo);
+            SaveGameData();
+            return true;
+        }
+        public void ClearClueData()
+        {
+            _gameData.clueSlotInfos.Clear();
+            SaveGameData();
+        }
     }
 }
 

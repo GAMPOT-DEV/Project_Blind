@@ -65,8 +65,11 @@ namespace Blind
         }
         private void PushMainButton()
         {
-            UIManager.Instance.Clear();
-            _transition.TransitionInternal();
+            //UIManager.Instance.Clear();
+            //_transition.TransitionInternal();
+
+            // 임시로 단서 버튼으로 
+            UIManager.Instance.ShowNormalUI<UI_Clue>();
         }
         private void PushCloseButton()
         {
