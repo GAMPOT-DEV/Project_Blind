@@ -7,6 +7,7 @@ namespace Blind
 {
     public class UI_Clue_Item : UI_Base
     {
+        private UI_Clue _owner;
         Dictionary<int, Data.Clue> _cludData;
         public Data.Clue Clue { get; private set; }
         enum Images
@@ -24,9 +25,11 @@ namespace Blind
             Bind<Image>(typeof(Images));
             Bind<Text>(typeof(Texts));
             _cludData = DataManager.Instance.ClueDict;
+            Get<Image>((int)Images.Image_ItemIcon).gameObject.BindEvent(PushItemIcon, Define.UIEvent.Click);
         }
-        public void SetItem(int itemId)
+        public void SetItem(int itemId, UI_Clue owner)
         {
+            _owner = owner;
             ItemId = itemId;
             Data.Clue clue;
             _cludData.TryGetValue(itemId, out clue);
@@ -44,12 +47,12 @@ namespace Blind
         }
         public void PushItemIcon()
         {
-            Debug.Log(gameObject.name);
+            _owner.ShowDetailDesc(Clue.id);
         }
         private void SetText()
         {
             Get<Text>((int)Texts.Text_ClueName).text = Clue.name;
-            Get<Text>((int)Texts.Text_ClueDesc).text = Clue.description;
+            //Get<Text>((int)Texts.Text_ClueDesc).text = Clue.description;
         }
     }
 }
