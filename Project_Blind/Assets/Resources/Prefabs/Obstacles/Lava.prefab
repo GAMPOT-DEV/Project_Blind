@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 4130092069143574497}
   - component: {fileID: 4130092069143574496}
   - component: {fileID: 4130092069143574526}
+  - component: {fileID: 8981667354328750553}
   m_Layer: 6
   m_Name: Lava
-  m_TagString: Floor
+  m_TagString: Lava
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26,9 +27,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4130092069143574498}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -15.01, y: -7.53, z: 0.18013383}
-  m_LocalScale: {x: 10, y: 1, z: 1}
+  m_LocalScale: {x: 84.99021, y: 7.000025, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -138,4 +139,16 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 41146
+  m_InstanceId: -2066
+--- !u!114 &8981667354328750553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4130092069143574498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 768cf5c7ac73649549cb5728e2d0e57f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

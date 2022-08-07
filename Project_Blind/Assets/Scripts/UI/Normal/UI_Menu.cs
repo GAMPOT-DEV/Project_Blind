@@ -31,6 +31,7 @@ namespace Blind
         {
             Bind<Image>(typeof(Images));
             InitEvents();
+            Time.timeScale = 0;
 
             _transition = FindObjectOfType<TransitionPoint>();
         }
@@ -64,11 +65,15 @@ namespace Blind
         }
         private void PushMainButton()
         {
-            UIManager.Instance.Clear();
-            _transition.TransitionInternal();
+            //UIManager.Instance.Clear();
+            //_transition.TransitionInternal();
+
+            // 임시로 단서 버튼으로 
+            UIManager.Instance.ShowNormalUI<UI_Clue>();
         }
         private void PushCloseButton()
         {
+            Time.timeScale = 1;
             UIManager.Instance.CloseNormalUI(this);
         }
         #region Update
@@ -86,7 +91,7 @@ namespace Blind
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                UIManager.Instance.CloseNormalUI(this);
+                PushCloseButton();
                 return;
             }
 

@@ -24,6 +24,16 @@ namespace Blind
         public int resolutionIndex = 2;
         public bool windowMode = false;
         #endregion
+
+        #region Clue
+        public List<ClueInfo> clueSlotInfos = new List<ClueInfo>();
+        #endregion
+    }
+    [Serializable]
+    public class ClueInfo
+    {
+        public int slot;
+        public int itemId;
     }
 }
 
