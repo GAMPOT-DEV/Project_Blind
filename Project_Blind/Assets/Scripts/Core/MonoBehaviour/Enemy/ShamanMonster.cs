@@ -297,6 +297,7 @@ namespace Blind
         private IEnumerator CoAttack()
         {
             GameObject projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
+            projectile.transform.SetParent(transform);
             Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
             projectile.GetComponent<Projectile>().SetProjectile(dir, _damage);
 
