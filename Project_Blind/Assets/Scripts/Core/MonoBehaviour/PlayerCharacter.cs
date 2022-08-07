@@ -19,7 +19,7 @@ namespace Blind
         public UnitHP _damage;
         [SerializeField] private float _hp;
         [SerializeField] private int maxhp;
-        private MeleeAttackable _attack;
+        public MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
         private Paringable _paring;
@@ -43,10 +43,12 @@ namespace Blind
         public bool _isHurtCheck;
         public float _lastClickTime;
         public int _clickcount = 0;
-        public bool _isPowerAttackCheck;
 
         [SerializeField] private int attack_x;
         [SerializeField] private int attack_y;
+        [SerializeField] private int damage;
+        [SerializeField] public int _powerAttackdamage;
+        
         [SerializeField] private int paring_x;
         [SerializeField] private int paring_y;
 
@@ -58,6 +60,7 @@ namespace Blind
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         [SerializeField] private BatMonster _enemyObject;
+        public bool isOnLava;
         private void Awake()
         {
             _moveVector = new Vector2();
@@ -73,8 +76,8 @@ namespace Blind
             //_defaultTime = 0.2f;
             _dashCount = 1;
 
-            ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
-            _attack.Init(attack_x,attack_y);
+            ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
+            _attack.Init(attack_x,attack_y,damage);
             _paring.Init(paring_x, paring_y);
 
 
@@ -109,7 +112,7 @@ namespace Blind
                 _maxSpeed = _defaultSpeed;
                 if (_dashCount == 1)
                 {
-                    if (InputController.Instance.Jump.Down && InputController.Instance.Vertical.Value>-float.Epsilon)
+                    if (InputController.Instance.Jump.Down && InputController.Instance.Vertical.Value>-float.Epsilon && !isOnLava)
                     {
                         _dashCount--;
                         _dashTime = _defaultTime;
@@ -457,6 +460,48 @@ namespace Blind
         }
         public void Log() {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
+        }
+        public void DebuffOn()
+        {
+            Debug.Log("디버프 걸림");
+            isOnLava = true;
+            _defaultSpeed -= 2.0f;
+            _jumpSpeed = 0.3f;
+            StartCoroutine(GetDotDamage());
+
+        }
+
+        IEnumerator GetDotDamage()
+        {
+            while (isOnLava)
+            {
+                // hp를 깎음
+                yield return new WaitForSeconds(0.5f);
+            }
+            DebuffOff();
+        }
+
+        public void DebuffOff()
+        {
+            _defaultSpeed += 2.0f;
+            _jumpSpeed = 0.7f;
+            Debug.Log("디버프 풀림");
+
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("Floor"))
+            {
+                isOnLava = false;
+            }
+            //if (collision.transform.parent !=null)
+            //{
+            //    if(collision.transform.parent.gameObject.name == "Floors")
+            //    {
+            //        isOnLava = false;
+            //    }
+            //}
         }
     }
 }

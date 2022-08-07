@@ -20,8 +20,8 @@ namespace Blind
                 if (_monoBehaviour.isJump)
                 {
                     _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
-                    _monoBehaviour.enableAttack();
                 }
+                _monoBehaviour.enableAttack();
             }
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
@@ -55,7 +55,7 @@ namespace Blind
             {
                 animator.speed = 1.0f;
                 _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
-                _monoBehaviour.enableAttack();
+                _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
             }
 
         }
@@ -63,9 +63,9 @@ namespace Blind
         {
             if (_monoBehaviour._clickcount == 1)
             {
-                Debug.Log("test");
                 _monoBehaviour.MeleeAttackComoEnd();
             }
+            _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
         }
     }
