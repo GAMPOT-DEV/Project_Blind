@@ -67,7 +67,7 @@ namespace Blind
             //_defaultTime = 0.2f;
             _dashCount = 1;
 
-            ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
+            ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
             _attack.Init(attack_x,attack_y);
             _paring.Init(paring_x, paring_y);
 
