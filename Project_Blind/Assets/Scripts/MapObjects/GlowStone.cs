@@ -6,17 +6,24 @@ using UnityEngine.Rendering.Universal;
 namespace Blind
 {
     [RequireComponent(typeof(Light2D))]
-    public class GlowStone : MonoBehaviour
+    public class GlowStone : InteractionAble
     {
         [SerializeField] private AnimationCurve spreadAnimation;
         [SerializeField] private float maxSize = 30f;
 
         private Light2D _light2D;
         private bool _isBright = false;
+        [SerializeField]  private bool _isReady = false;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _light2D = GetComponent<Light2D>();
+        }
+
+        protected override void Init(int x = 5, int y = 5)
+        {
+            base.Init(x, y);
         }
 
         /// <summary>
@@ -24,7 +31,20 @@ namespace Blind
         /// </summary>
         private void Start()
         {
-            Bright();
+
+        }
+
+        private void FixedUpdate()
+        {
+            if (InputController.Instance.Interaction.Down)
+            {
+                if (_isReady)
+                {
+                    if (_ui != null)
+                        _ui.CloseWorldSpaceUI();
+                    DoInteraction();
+                }
+            }
         }
 
         /// <summary>
@@ -48,6 +68,30 @@ namespace Blind
                 _light2D.pointLightOuterRadius = radius;
                 yield return null;
             }
+        }
+
+        protected override void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.GetComponent<PlayerCharacter>() == null)
+                return;
+
+            _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestInteraction>();
+            _ui.SetPosition(transform.position, Vector3.down * 3);
+            _isReady = true;
+        }
+
+        protected override void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.gameObject.GetComponent<PlayerCharacter>() == null)
+                return;
+
+            _ui.CloseWorldSpaceUI();
+            _isReady = false;
+        }
+
+        public override void DoInteraction()
+        {
+            Bright();
         }
     }
 }

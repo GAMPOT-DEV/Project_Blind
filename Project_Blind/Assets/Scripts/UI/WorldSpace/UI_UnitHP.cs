@@ -8,7 +8,7 @@ namespace Blind
     public class UI_UnitHP : UI_WorldSpace
     {
         private UnitHP _unitHP;
-        private CircleCollider2D _colider;
+        private CircleCollider2D _collider;
         private bool _checkPlayer = false;
         private int _mask;
         private PlayerCharacter _player;
@@ -47,10 +47,10 @@ namespace Blind
         }
         private void InitCollider()
         {
-            _colider = Util.GetOrAddComponent<CircleCollider2D>(gameObject);
-            _colider.isTrigger = true;
-            _colider.offset = new Vector3(0, -60f, 0);
-            _colider.radius = 400.0f;
+            _collider = Util.GetOrAddComponent<CircleCollider2D>(gameObject);
+            _collider.isTrigger = true;
+            _collider.offset = new Vector3(0, -60f, 0);
+            _collider.radius = 400.0f;
         }
         private void OnHpChanged(float currHP, float maxHP)
         {

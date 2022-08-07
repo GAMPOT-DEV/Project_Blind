@@ -15,6 +15,7 @@ namespace Blind
     public class DataManager : Manager<DataManager>
     {
         public Dictionary<string, Data.Conversation> ConversationDict { get; private set; } = new Dictionary<string, Data.Conversation>();
+        public Dictionary<int, Data.Clue> ClueDict { get; private set; } = new Dictionary<int, Data.Clue>();
         protected override void Awake()
         {
             base.Awake();
@@ -23,6 +24,7 @@ namespace Blind
         public void Init()
         {
             ConversationDict = LoadJson<Data.ConversationData, string, Data.Conversation>("ConversationData").MakeDict();
+            ClueDict = LoadJson<Data.ClueData, int, Data.Clue>("ClueData").MakeDict();
         }
         Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
         {
@@ -55,6 +57,7 @@ namespace Blind
             {
                 Debug.Log("Data Load Success!");
                 string JsonData = File.ReadAllText(filePath);
+                Debug.Log(JsonData);
                 _gameData = JsonUtility.FromJson<GameData>(JsonData);
             }
             else
@@ -71,6 +74,23 @@ namespace Blind
             Debug.Log("Save Completed!");
         }
         #endregion
+        public bool GetClueItem(int itemId)
+        {
+            foreach(ClueInfo info in _gameData.clueSlotInfos)
+            {
+                if (info.itemId == itemId)
+                    return false;
+            }
+            ClueInfo newInfo = new ClueInfo() { itemId = itemId, slot = UI_Clue.Size++ };
+            _gameData.clueSlotInfos.Add(newInfo);
+            SaveGameData();
+            return true;
+        }
+        public void ClearClueData()
+        {
+            _gameData.clueSlotInfos.Clear();
+            SaveGameData();
+        }
     }
 }
 

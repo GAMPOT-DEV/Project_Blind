@@ -29,7 +29,9 @@ namespace Blind
 		protected virtual void Awake()
 		{
 			_uiNum = UIManager.Instance.UINum;
-			gameObject.GetComponent<Canvas>().sortingOrder = _uiNum;
+			Canvas canvas = GetComponent<Canvas>();
+			if (canvas != null)
+				canvas.sortingOrder = _uiNum;
 			Init();
 		}
 
