@@ -10,6 +10,7 @@ namespace Blind
     {
         [SerializeField] private AnimationCurve spreadAnimation;
         [SerializeField] private float maxSize = 30f;
+        [SerializeField] private float time;
 
         private Light2D _light2D;
         private bool _isBright = false;
@@ -64,7 +65,7 @@ namespace Blind
             while (radius < maxSize)
             {
                 curTime += Time.deltaTime;
-                radius += spreadAnimation.Evaluate(curTime) * maxSize;
+                radius += spreadAnimation.Evaluate(curTime / time) * maxSize;
                 _light2D.pointLightOuterRadius = radius;
                 yield return null;
             }
