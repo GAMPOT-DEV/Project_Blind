@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 675813265789085729}
   - component: {fileID: 1932852369165941798}
   m_Layer: 5
-  m_Name: Image_Main
+  m_Name: Image_Clue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -192,11 +192,11 @@ RectTransform:
   m_Children:
   - {fileID: 5696747143909811667}
   m_Father: {fileID: 4865454552371046745}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 600, y: 0}
+  m_AnchoredPosition: {x: 200, y: 0}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &675813265789085729
@@ -497,8 +497,8 @@ RectTransform:
   - {fileID: 2423451665559493119}
   - {fileID: 7444067970241320362}
   - {fileID: 4761371019790627210}
-  - {fileID: 5968019766512960120}
   - {fileID: 6069973786776746531}
+  - {fileID: 5968019766512960120}
   - {fileID: 1726565029299067560}
   m_Father: {fileID: 7880025411529940494}
   m_RootOrder: 1
@@ -533,18 +533,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3845182524203542928}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 513859371953565681}
   m_Father: {fileID: 4865454552371046745}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 200, y: 0}
+  m_AnchoredPosition: {x: 600, y: 0}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4622347911181806802
@@ -597,7 +597,7 @@ GameObject:
   - component: {fileID: 1614657415865995821}
   - component: {fileID: 5969787425818909757}
   m_Layer: 5
-  m_Name: Text_Main
+  m_Name: Text_Clue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -664,7 +664,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uBA54\uC778"
+  m_Text: "\uB2E8\uC11C"
 --- !u!1 &6636457941101132420
 GameObject:
   m_ObjectHideFlags: 0
