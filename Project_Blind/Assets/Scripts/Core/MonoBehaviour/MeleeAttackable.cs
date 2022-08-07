@@ -16,7 +16,7 @@ namespace Blind
         public LayerMask hitLayer;
         private Collider2D hitobj;
         private bool _isSpriteFlip = false;
-
+        
         public void Awake()
         {
             _attackcontactfilter.layerMask = hitLayer;

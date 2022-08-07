@@ -151,6 +151,7 @@ namespace Blind
             if (InputController.Instance.Vertical.Value >0)
             {
                 if(!(InputController.Instance.Vertical.Value < 0)) { // 아래 버튼을 누르지 않았다면
+                    Debug.Log("Test!");
                     _moveVector.y = _jumpSpeed;
                 }
                 _animator.SetTrigger("Jump");
@@ -171,6 +172,12 @@ namespace Blind
                 waveSense.StartSpread();
             }
         }
+
+        public void StopMoveY()
+        {
+            _moveVector.y = 0;
+        }
+        
         
         public void UpdateJump()
         {
@@ -182,7 +189,7 @@ namespace Blind
         /// <summary>
         /// 중력을 적용합니다.
         /// </summary>
-        public void AirborneVerticalMovement()
+        public void AirborneVerticalMovement(float _gravity)
         {
             if (Mathf.Approximately(_moveVector.y, 0f) )//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
             {
@@ -303,6 +310,11 @@ namespace Blind
         public bool CheckForUpKey()
         {
             return InputController.Instance.Attack.Up;
+        }
+
+        public bool CheckForDownKey()
+        {
+            return InputController.Instance.Attack.Down;
         }
         public void AttackableMove(float newMoveVector)
         {

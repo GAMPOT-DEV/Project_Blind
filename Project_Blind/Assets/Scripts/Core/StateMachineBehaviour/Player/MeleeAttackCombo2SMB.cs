@@ -21,7 +21,7 @@ namespace Blind
             if (!_monoBehaviour.isJump)
             {
                 _monoBehaviour.UpdateJump(); 
-                _monoBehaviour.AirborneVerticalMovement();
+                _monoBehaviour.AirborneVerticalMovement(1f);
                 _monoBehaviour.AirborneHorizontalMovement();
                 _monoBehaviour.CheckForGrounded(); 
             }
