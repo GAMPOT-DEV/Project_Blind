@@ -12,7 +12,7 @@ namespace Blind
     /// <summary>
     /// 플레이어 캐릭터에 관한 클래스입니다.
     /// </summary>
-    public class PlayerCharacter : MonoBehaviour,IGameManagerObj
+    public class PlayerCharacter : MonoBehaviour, IGameManagerObj
     {
         public Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
@@ -27,11 +27,11 @@ namespace Blind
         [SerializeField] private float _jumpSpeed = 3f;
         [SerializeField] private float _jumpAbortSpeedReduction = 100f;
         [SerializeField] private float _gravity = 30f;
-        
+
         [SerializeField] private float _maxSpeed = 5f;
         [SerializeField] private float groundAcceleration = 100f;
         [SerializeField] private float groundDeceleration = 100f;
-        
+
         [Range(0f, 1f)] public float airborneAccelProportion;
         [Range(0f, 1f)] public float airborneDecelProportion;
 
@@ -58,6 +58,8 @@ namespace Blind
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         [SerializeField] private BatMonster _enemyObject;
+
+        public bool isOnLava;
         private void Awake()
         {
             _moveVector = new Vector2();
@@ -74,7 +76,7 @@ namespace Blind
             _dashCount = 1;
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("WaveSense").gameObject);
-            _attack.Init(attack_x,attack_y);
+            _attack.Init(attack_x, attack_y);
             _paring.Init(paring_x, paring_y);
 
 
@@ -92,16 +94,16 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
-            _hp = _damage.GetHP();
+            // _hp = _damage.GetHP();
         }
-        
+
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
         {
             float desiredSpeed = useInput ? InputController.Instance.Horizontal.Value * _maxSpeed * speedScale : 0f;
             float acceleration = useInput && InputController.Instance.Horizontal.ReceivingInput ? groundAcceleration : groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
-        
+
         public void Dash()
         {
             if (_dashTime <= 0)
@@ -109,7 +111,7 @@ namespace Blind
                 _maxSpeed = _defaultSpeed;
                 if (_dashCount == 1)
                 {
-                    if (InputController.Instance.Jump.Down && InputController.Instance.Vertical.Value>-float.Epsilon)
+                    if (InputController.Instance.Jump.Down && InputController.Instance.Vertical.Value > -float.Epsilon && !isOnLava)
                     {
                         _dashCount--;
                         _dashTime = _defaultTime;
@@ -130,11 +132,12 @@ namespace Blind
                 float desiredSpeed = Playerflip * _maxSpeed * 0.1f;
                 _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
             }
+
         }
 
         public void StopMove()
         {
-            
+
         }
 
         IEnumerator ReturnDashCount()
@@ -148,9 +151,10 @@ namespace Blind
         /// </summary>
         public void Jump()
         {
-            if (InputController.Instance.Vertical.Value >0)
+            if (InputController.Instance.Vertical.Value > 0)
             {
-                if(!(InputController.Instance.Vertical.Value < 0)) { // 아래 버튼을 누르지 않았다면
+                if (!(InputController.Instance.Vertical.Value < 0))
+                { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = _jumpSpeed;
                 }
                 _animator.SetTrigger("Jump");
@@ -171,7 +175,7 @@ namespace Blind
                 waveSense.StartSpread();
             }
         }
-        
+
         public void UpdateJump()
         {
             if (!InputController.Instance.Jump.Held && _moveVector.y > 0.0f)
@@ -184,7 +188,7 @@ namespace Blind
         /// </summary>
         public void AirborneVerticalMovement()
         {
-            if (Mathf.Approximately(_moveVector.y, 0f) )//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
+            if (Mathf.Approximately(_moveVector.y, 0f))//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
             {
                 _moveVector.y = 0;
             }
@@ -217,7 +221,7 @@ namespace Blind
         {
             bool grounded = _characterController2D.IsGrounded;
             isJump = grounded;
-            _animator.SetBool("Grounded",grounded);
+            _animator.SetBool("Grounded", grounded);
         }
 
         public bool CheckForParing()
@@ -244,7 +248,7 @@ namespace Blind
             StartCoroutine(Invincibility());
         }
 
-        IEnumerator Invincibility() 
+        IEnumerator Invincibility()
         {
             _damage.Invincibility();
             yield return new WaitForSeconds(0.5f);
@@ -289,7 +293,7 @@ namespace Blind
         public void MeleeAttackComoEnd()
         {
             _animator.SetBool("Attack", false);
-            _animator.SetBool("Attack2" ,false);
+            _animator.SetBool("Attack2", false);
             _animator.SetBool("Attack3", false);
             _animator.SetBool("Attack4", false);
             _clickcount = 0;
@@ -362,7 +366,7 @@ namespace Blind
             InputController.Instance.ReleaseControl(true);
             yield return new WaitForSeconds(1.0f);
             yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
-            
+
             Respawn();
             yield return new WaitForEndOfFrame();
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
@@ -376,7 +380,12 @@ namespace Blind
 
         public void Respawn()
         {
+            if (isOnLava)
+            {
+                isOnLava = false;
+            }
             RespawnFacing();
+            _hp = _damage.GetHP();
             _damage.GetHeal(maxhp);
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
@@ -394,16 +403,16 @@ namespace Blind
 
         public void UnTalk()
         {
-            _animator.SetBool("Talk" , false);
+            _animator.SetBool("Talk", false);
         }
-        
+
         public void UpdateVelocity()
         {
             Vector2 velocity = _characterController2D.Velocity;
-            _animator.SetFloat("RunningSpeed",Mathf.Abs(velocity.x));
-            _animator.SetFloat("VerticalSpeed",velocity.y);
+            _animator.SetFloat("RunningSpeed", Mathf.Abs(velocity.x));
+            _animator.SetFloat("VerticalSpeed", velocity.y);
         }
-        
+
         public void UpdateFacing()
         {
             bool faceLeft = InputController.Instance.Horizontal.Value < 0f;
@@ -412,12 +421,12 @@ namespace Blind
             {
                 _renderer.flipX = false;
             }
-            else if(faceRight)
+            else if (faceRight)
             {
                 _renderer.flipX = true;
             }
         }
-        
+
 
         public bool CheckForSkill()
         {
@@ -428,7 +437,7 @@ namespace Blind
         {
             _animator.SetTrigger("Skill");
         }
-        
+
         public void RespawnFacing()
         {
             _renderer.flipX = true;
@@ -443,8 +452,50 @@ namespace Blind
         {
             return obj.ReturnFacing() ? 1 : -1;
         }
-        public void Log() {
+        public void Log()
+        {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
+        }
+
+        public void DebuffOn()
+        {
+            Debug.Log("디버프 걸림");
+            isOnLava = true;
+            _defaultSpeed -= 2.0f;
+            _jumpSpeed = 0.3f;
+            StartCoroutine(GetDotDamage());
+
+        }
+
+        IEnumerator GetDotDamage()
+        {
+            while (isOnLava)
+            {
+                // hp를 깎음
+                if (_hp > 0)
+                {
+                    _hp -= 1.0f;
+                }
+                Debug.Log("피 닳음");
+                yield return new WaitForSeconds(0.5f);
+            }
+            DebuffOff();
+        }
+
+        public void DebuffOff()
+        {
+            _defaultSpeed += 2.0f;
+            _jumpSpeed = 0.7f;
+            Debug.Log("디버프 풀림");
+
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("Floor"))
+            {
+                isOnLava = false;
+            }
         }
     }
 }
