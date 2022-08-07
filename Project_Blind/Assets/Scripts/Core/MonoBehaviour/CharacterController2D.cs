@@ -64,7 +64,6 @@ namespace Blind
             
             _rigidBody2D.MovePosition(_currentPosition);
             _nextMovement = Vector2.zero;
-            
             CheckCapsuleEndCollisions();
             CheckCapsuleEndCollisions(false);
         }
@@ -94,7 +93,6 @@ namespace Blind
             Vector2 raycastDirection;
             Vector2 raycastStart;
             float raycastDistance;
-
             if (m_Capsule == null)
             {
                 raycastStart = _rigidBody2D.position + Vector2.up;
@@ -196,7 +194,6 @@ namespace Blind
                 else
                 {
                     IsGrounded = relativeVelocity.y <= 0f;
-
                     if (m_Capsule != null)
                     {
                         if (m_GroundColliders[1] != null)

@@ -12,11 +12,13 @@ using UnityEngine.EventSystems;
 
 namespace Blind
 {
-	public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler, IEndDragHandler
+	public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 	{
 		public Action OnClickHandler = null;
 		public Action OnDragHandler = null;
 		public Action OnEndDragHandler = null;
+		public Action OnEnterHandler = null;
+		public Action OnExitHandler = null;
 
 		public void OnPointerClick(PointerEventData eventData)
 		{
@@ -35,6 +37,18 @@ namespace Blind
 			if (OnEndDragHandler != null)
 				OnEndDragHandler.Invoke();
 		}
-	}
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+			if (OnEnterHandler != null)
+				OnEnterHandler.Invoke();
+		}
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+			if (OnExitHandler != null)
+				OnExitHandler.Invoke();
+		}
+    }
 }
 

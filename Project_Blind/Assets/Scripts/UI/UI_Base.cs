@@ -92,6 +92,14 @@ namespace Blind
 					evt.OnEndDragHandler -= action;
 					evt.OnEndDragHandler += action;
 					break;
+				case Define.UIEvent.Enter:
+					evt.OnEnterHandler -= action;
+					evt.OnEnterHandler += action;
+					break;
+				case Define.UIEvent.Exit:
+					evt.OnExitHandler -= action;
+					evt.OnExitHandler += action;
+					break;
 			}
 		}
 	}

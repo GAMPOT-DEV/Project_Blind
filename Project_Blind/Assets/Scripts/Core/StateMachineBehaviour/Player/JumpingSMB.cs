@@ -21,6 +21,19 @@ namespace Blind
             _monoBehaviour.GroundedHorizontalMovement(true);
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.UpdateFacing();
+            if(_monoBehaviour.CheckForParing())
+                _monoBehaviour.Paring();
+            if (_monoBehaviour.CheckForAttack())
+            {
+                _monoBehaviour.MeleeAttack();
+                _monoBehaviour._lastClickTime = Time.time;
+                _monoBehaviour._clickcount++;
+                _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
+            }
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
+            }
         }
     }
 }
