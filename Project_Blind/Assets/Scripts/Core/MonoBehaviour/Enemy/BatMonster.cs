@@ -256,6 +256,10 @@ namespace Blind
             }
         }
 
+        public bool ReturnFacing()
+        {
+            return _sprite.flipX;
+        }
         private IEnumerator CoWaitDefalut(float time)
         {
             yield return new WaitForSeconds(time);
