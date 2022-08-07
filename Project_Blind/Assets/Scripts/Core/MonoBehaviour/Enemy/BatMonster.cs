@@ -4,9 +4,6 @@ using UnityEngine;
 
 namespace Blind
 {
-    /// <summary>
-    /// �ٰŸ� ���Ϳ� ���� Ŭ�����Դϴ�.
-    /// </summary>
     public class BatMonster : MonoBehaviour
     {
         private enum State
@@ -25,9 +22,6 @@ namespace Blind
         private Rigidbody2D rigid;
         private SpriteRenderer _sprite;
 
-
-
-
         [SerializeField] private Vector2 _sensingRange;
         [SerializeField] private float _speed;
         [SerializeField] private float _runSpeed;
@@ -37,7 +31,6 @@ namespace Blind
         [SerializeField] private int _maxHP;
         [SerializeField] private int _damage;
         [SerializeField] private float _stunTime;
-        
 
         private State state;
         private GameObject player;
@@ -51,17 +44,19 @@ namespace Blind
         private Vector2 patrolDirection;
         private PlayerFinder playerFinder;
         private EnemyAttack attackSense;
+        private Transform knockBackRange;
 
         private Coroutine Co_default;
         private Coroutine Co_attack;
         private Coroutine Co_attackStandby;
+        private Coroutine Co_hitted;
         private Coroutine Co_stun;
+        private Coroutine Co_die;
 
         // HP UI
         private UI_UnitHP _unitHPUI = null;
         private void Awake()
         {
-            //�� ������ �ʱ�ȭ�ϸ� ������ �� ����...? ���� ã�Ƽ� �� �� ������ �� ��
             _sensingRange = new Vector2(10f, 5f);
             _attack = GetComponent<MeleeAttackable>();
             _sprite = GetComponent<SpriteRenderer>();
@@ -80,6 +75,7 @@ namespace Blind
             // HP UI 생성
             CreateHpUI();
 
+            _hp = HP.GetHP();
             patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
             _attack.Init(2, 2);
 
@@ -132,8 +128,17 @@ namespace Blind
                     updateDie();
                     break;
             }
+            //움직임
             _characterController2D.OnFixedUpdate();
+            //체력 업데이트
+            if (_hp < HP.GetHP())
+                state = State.Hitted;
             _hp = HP.GetHP();
+            //죽었나
+            if (_hp <= 0)
+                state = State.Die;
+
+            Debug.Log(state);
         }
 
         private void updatePatrol()
@@ -182,7 +187,7 @@ namespace Blind
 
             _characterController2D.Move(playerFinder.ChasePlayer() * _runSpeed);
         }
-        
+
         private void updateAttack()
         {
             if (Co_attack == null)
@@ -204,6 +209,32 @@ namespace Blind
         private void updateHitted()
         {
 
+            if (Co_hitted == null)
+            {
+                StopAllCoroutines();
+                StartCoroutine(CoHitted());
+            }
+
+            Vector2 hittedVelocity = Vector2.zero;
+            if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
+            {
+                hittedVelocity = new Vector2(-0.2f, 0);
+            }
+            else
+            {
+                hittedVelocity = new Vector2(0.2f, 0);
+            }
+
+            _characterController2D.Move(hittedVelocity);
+
+            /*
+            if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else if (attackSense.Attackable())
+                state = State.AttackStandby;
+            else
+                state = State.Patrol;
+            */
         }
 
         private void updateStun()
@@ -214,7 +245,7 @@ namespace Blind
 
         private void updateDie()
         {
-
+            Co_die = StartCoroutine(CoDie());
         }
 
         public bool isAttack()
@@ -260,6 +291,7 @@ namespace Blind
         {
             return _sprite.flipX;
         }
+
         private IEnumerator CoWaitDefalut(float time)
         {
             yield return new WaitForSeconds(time);
@@ -270,21 +302,19 @@ namespace Blind
 
         private IEnumerator CoAttackStandby(float time)
         {
-            Debug.Log("���� �غ�");
-            yield return new WaitForSeconds(time); //����
-            Debug.Log("���� !");
+            yield return new WaitForSeconds(time);
             state = State.Attack;
             Co_attackStandby = null;
         }
 
         private IEnumerator CoAttack()
         {
-            yield return new WaitForSeconds(2f); //����
+            yield return new WaitForSeconds(2f);
             Debug.Log("공격!!");
             _attack.EnableDamage();
-            gameObject.GetComponent<SpriteRenderer>().color = Color.blue; //000FE9 ���� ��
-            yield return new WaitForSeconds(0.2f); //�ĵ�
-            
+            gameObject.GetComponent<SpriteRenderer>().color = Color.blue; //000FE9
+            yield return new WaitForSeconds(0.2f);
+
             _attack.DisableDamage();
             if (attackSense.Attackable())
                 state = State.AttackStandby;
@@ -309,13 +339,40 @@ namespace Blind
             Co_stun = null;
         }
 
+        private IEnumerator CoDie()
+        {
+            yield return new WaitForSeconds(1);
+            while (_sprite.color.a > 0)
+            {
+                var color = _sprite.color;
+                color.a -= (.25f * Time.deltaTime);
+
+                _sprite.color = color;
+                yield return null;
+            }
+            Destroy(gameObject);
+        }
+
+        private IEnumerator CoHitted()
+        {
+            yield return null;
+            if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else if (attackSense.Attackable())
+                state = State.AttackStandby;
+            else
+                state = State.Patrol;
+
+            Co_hitted = null;
+        }
+
         private void CreateHpUI()
         {
             // UI매니저로 UI_UnitHP 생성
             _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
             // UI에서 UnitHP 참조
             _unitHPUI.HP = HP;
-            // 유닛 움직이면 같이 움직이도록 Parent 설정
+            // 유닛 움직이면 같이 움직이도록  Parent 설정
             _unitHPUI.transform.SetParent(transform);
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;

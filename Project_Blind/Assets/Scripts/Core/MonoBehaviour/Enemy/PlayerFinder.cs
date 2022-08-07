@@ -23,6 +23,11 @@ public class PlayerFinder : MonoBehaviour
         return direction;
     }
 
+    public Transform PlayerPosition()
+    {
+        return player;
+    }
+
     public bool FindPlayer()
     {
         return playerInRange;
