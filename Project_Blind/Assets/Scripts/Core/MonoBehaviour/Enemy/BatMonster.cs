@@ -6,19 +6,6 @@ namespace Blind
 {
     public class BatMonster : EnemyCharacter
     {
-        private enum State
-        {
-            Patrol,
-            Default,
-            Chase,
-            Attack,
-            AttackStandby,
-            Hitted,
-            Stun,
-            Die
-        }
-
-        private State state;
         private Transform knockBackRange;
 
         private Coroutine Co_default;
@@ -31,8 +18,7 @@ namespace Blind
         private void Awake()
         {
             _sensingRange = new Vector2(10f, 5f);
-            _attack = GetComponent<MeleeAttackable>();
-            _sprite = GetComponent<SpriteRenderer>();
+            
             _speed = 0.1f ;
             _runSpeed = 0.07f;
             _attackCoolTime = 0.5f;
@@ -40,22 +26,10 @@ namespace Blind
             _attackRange = new Vector2(1.5f, 2f);
             _maxHP = 10;
             _stunTime = 1f;
-            _characterController2D = GetComponent<CharacterController2D>();
-            rigid = GetComponent<Rigidbody2D>();
-            state = State.Patrol;
-
-            HP = new UnitHP(_maxHP);
-            // HP UI 생성
-            CreateHpUI();
-
-            _hp = HP.GetHP();
-            patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
+            
             _attack.Init(2, 2);
 
-            playerFinder = GetComponentInChildren<PlayerFinder>();
-            playerFinder.setRange(_sensingRange);
-            attackSense = GetComponentInChildren<EnemyAttack>();
-            attackSense.setRange(_attackRange);
+            base.Init();
         }
 
         private void Start()
@@ -110,8 +84,6 @@ namespace Blind
             //죽었나
             if (_hp <= 0)
                 state = State.Die;
-
-            Debug.Log(state);
         }
 
         private void updatePatrol()
@@ -227,18 +199,6 @@ namespace Blind
                 return true;
             else
                 return false;
-        }
-
-        private int RandomDirection()
-        {
-            int RanNum = Random.Range(0, 100);
-            if (RanNum > 50)
-                return 1;
-            else
-            {
-                Flip();
-                return -1;
-            }
         }
 
         public bool ReturnFacing()

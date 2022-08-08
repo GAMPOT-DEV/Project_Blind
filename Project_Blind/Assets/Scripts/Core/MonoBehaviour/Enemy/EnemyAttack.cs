@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyAttack : MonoBehaviour
 {
     private bool attackable;
+    private float _avoidRange = 9f;
 
     public void setRange(Vector2 range)
     {

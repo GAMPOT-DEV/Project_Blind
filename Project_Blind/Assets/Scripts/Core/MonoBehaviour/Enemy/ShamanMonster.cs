@@ -6,20 +6,6 @@ namespace Blind
 {
     public class ShamanMonster : EnemyCharacter
     {
-        private enum State
-        {
-            Patrol,
-            Default,
-            Chase,
-            Attack,
-            AttackStandby,
-            Hitted,
-            Avoid,
-            Stun,
-            Die
-        }
-
-        private State state;
         public GameObject Circle;
 
         private Coroutine Co_default;
@@ -30,29 +16,17 @@ namespace Blind
         private Coroutine Co_avoid;
 
         private void Awake()
-        {
+        { 
             _sensingRange = new Vector2(16f, 15f);
-            _attack = GetComponent<MeleeAttackable>();
-            _sprite = GetComponent<SpriteRenderer>();
-            _speed = 0.1f;
-            _runSpeed = 0.2f;
+            _speed = 0.07f;
+            _runSpeed = 0.07f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(14f, 15f);
             _maxHP = 10;
             _stunTime = 1f;
-            _characterController2D = GetComponent<CharacterController2D>();
-            rigid = GetComponent<Rigidbody2D>();
-            state = State.Patrol;
-            HP = new UnitHP(_maxHP);
-            CreateHpUI();
-            patrolDirection = new Vector2(RandomDirection() * _speed, 0f); //버그 고친 후 수정할 것
-            _attack.Init(2, 2);
 
-            playerFinder = GetComponentInChildren<PlayerFinder>();
-            playerFinder.setRange(_sensingRange);
-            attackSense = GetComponentInChildren<EnemyAttack>();
-            attackSense.setRange(_attackRange);
+            base.Init();
         }
 
         private void Start()
@@ -237,18 +211,6 @@ namespace Blind
                 return true;
             else
                 return false;
-        }
-
-        private int RandomDirection()
-        {
-            int RanNum = Random.Range(0, 100);
-            if (RanNum > 50)
-                return 1;
-            else
-            {
-                Flip();
-                return -1;
-            }
         }
 
         private IEnumerator CoWaitDefalut(float time)
