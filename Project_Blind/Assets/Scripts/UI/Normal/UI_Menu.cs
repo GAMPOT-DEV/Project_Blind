@@ -13,14 +13,15 @@ namespace Blind
         {
             Image_Bag,
             Image_Talisman,
+            Image_Clue,
             Image_Setting,
-            Image_Main,
+            
 
             Image_Close,
             Image_Cursor,
         }
         #endregion
-        const int MENU_SIZE = (int)Images.Image_Main + 1;
+        const int MENU_SIZE = (int)Images.Image_Setting + 1;
         private Action[] _actions = new Action[MENU_SIZE];
 
         private int _currCursor;
@@ -39,14 +40,15 @@ namespace Blind
         {
             Get<Image>((int)Images.Image_Bag).gameObject.BindEvent(PushBagButton, Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Talisman).gameObject.BindEvent(PushTalismanButton, Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_Clue).gameObject.BindEvent(PushClueButton, Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Setting).gameObject.BindEvent(PushSettingButton, Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_Main).gameObject.BindEvent(PushMainButton, Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Close).gameObject.BindEvent(PushCloseButton, Define.UIEvent.Click);
 
             _actions[(int)Images.Image_Bag] += PushBagButton;
             _actions[(int)Images.Image_Talisman] += PushTalismanButton;
+            _actions[(int)Images.Image_Clue] += PushClueButton;
             _actions[(int)Images.Image_Setting] += PushSettingButton;
-            _actions[(int)Images.Image_Main] += PushMainButton;
+            
 
             _currCursor = (int)Images.Image_Bag;
             Get<Image>((int)Images.Image_Cursor).transform.position = Get<Image>(_currCursor).transform.position;
@@ -63,12 +65,8 @@ namespace Blind
         {
             UIManager.Instance.ShowNormalUI<UI_Setting>();
         }
-        private void PushMainButton()
+        private void PushClueButton()
         {
-            //UIManager.Instance.Clear();
-            //_transition.TransitionInternal();
-
-            // 임시로 단서 버튼으로 
             UIManager.Instance.ShowNormalUI<UI_Clue>();
         }
         private void PushCloseButton()
