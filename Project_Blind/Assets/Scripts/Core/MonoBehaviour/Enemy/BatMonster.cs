@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class BatMonster : MonoBehaviour
+    public class BatMonster : EnemyCharacter
     {
         private enum State
         {
@@ -18,32 +18,7 @@ namespace Blind
             Die
         }
 
-        private CharacterController2D _characterController2D;
-        private Rigidbody2D rigid;
-        private SpriteRenderer _sprite;
-
-        [SerializeField] private Vector2 _sensingRange;
-        [SerializeField] private float _speed;
-        [SerializeField] private float _runSpeed;
-        [SerializeField] private float _attackCoolTime;
-        [SerializeField] private float _attackSpeed;
-        [SerializeField] private Vector2 _attackRange;
-        [SerializeField] private int _maxHP;
-        [SerializeField] private int _damage;
-        [SerializeField] private float _stunTime;
-
         private State state;
-        private GameObject player;
-        RaycastHit2D[] rayHit;
-        public UnitHP HP;
-        public float _hp;
-        private MeleeAttackable _attack;
-        public LayerMask WallLayer;
-        public Transform WallCheck;
-        private Transform startingPosition;
-        private Vector2 patrolDirection;
-        private PlayerFinder playerFinder;
-        private EnemyAttack attackSense;
         private Transform knockBackRange;
 
         private Coroutine Co_default;
@@ -52,16 +27,14 @@ namespace Blind
         private Coroutine Co_hitted;
         private Coroutine Co_stun;
         private Coroutine Co_die;
-
-        // HP UI
-        private UI_UnitHP _unitHPUI = null;
+        
         private void Awake()
         {
             _sensingRange = new Vector2(10f, 5f);
             _attack = GetComponent<MeleeAttackable>();
             _sprite = GetComponent<SpriteRenderer>();
-            _speed = 0.1f;
-            _runSpeed = 0.2f;
+            _speed = 0.1f ;
+            _runSpeed = 0.07f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(1.5f, 2f);
@@ -256,25 +229,6 @@ namespace Blind
                 return false;
         }
 
-        private void Flip()
-        {
-            Vector2 thisScale = transform.localScale;
-            if (patrolDirection.x >= 0)
-            {
-                thisScale.x = -Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(-_speed, 0f);
-                _sprite.flipX = false;
-            }
-            else
-            {
-                thisScale.x = Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(_speed, 0f);
-                _sprite.flipX = true;
-            }
-            transform.localScale = thisScale;
-            _unitHPUI.Reverse();
-        }
-
         private int RandomDirection()
         {
             int RanNum = Random.Range(0, 100);
@@ -364,20 +318,6 @@ namespace Blind
                 state = State.Patrol;
 
             Co_hitted = null;
-        }
-
-        private void CreateHpUI()
-        {
-            // UI매니저로 UI_UnitHP 생성
-            _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
-            // UI에서 UnitHP 참조
-            _unitHPUI.HP = HP;
-            // 유닛 움직이면 같이 움직이도록  Parent 설정
-            _unitHPUI.transform.SetParent(transform);
-            // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
-            _unitHPUI.Owner = gameObject;
-            // 오브젝트의 머리 위에 위치하도록 설정
-            _unitHPUI.SetPosition(transform.position, Vector3.up * 2);
         }
     }
 }

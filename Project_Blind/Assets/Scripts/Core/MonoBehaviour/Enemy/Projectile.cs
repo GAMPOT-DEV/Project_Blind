@@ -23,7 +23,7 @@ namespace Blind {
                 if (collision.CompareTag("Enemy"))
                 {
                     EnemyCharacter enemy = collision.gameObject.GetComponent<EnemyCharacter>();
-                    enemy._damage.GetDamage(_damage);
+                    enemy.HP.GetDamage(_damage);
                 }
                 else if (collision.gameObject.layer == 6)
                 {

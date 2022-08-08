@@ -16,37 +16,37 @@ namespace Blind
             Hitted,
             Die
         }
-        private CharacterController2D _characterController2D;
-        private Rigidbody2D rigid;
-        private float _recognitionRange = 5f;
-        private Vector2 _patorlDirection;
-        private Vector2 _startingPosition;
-        private GameObject _player;
-        private State state;
-        private float _speed = 0.1f;
-        private float _attackCoolTime = 1f;
+
+        protected CharacterController2D _characterController2D;
+        protected Rigidbody2D rigid;
+        protected SpriteRenderer _sprite;
+
+        [SerializeField] protected Vector2 _sensingRange;
+        [SerializeField] protected float _speed;
+        [SerializeField] protected float _runSpeed;
+        [SerializeField] protected float _attackCoolTime;
+        [SerializeField] protected float _attackSpeed;
+        [SerializeField] protected Vector2 _attackRange;
+        [SerializeField] protected int _maxHP;
+        [SerializeField] protected int _damage;
+        [SerializeField] protected float _stunTime;
+
+        protected GameObject player;
         RaycastHit2D[] rayHit;
-
-
-        public UnitHP _damage;
+        public UnitHP HP;
         public float _hp;
-        private MeleeAttackable _attack;
-        public bool isAttack = false;
-        private bool attackable = true;
-
-
-        private float _currentHP = 10f;
-
-        public LayerMask layerMask;
+        protected MeleeAttackable _attack;
+        public LayerMask WallLayer;
         public Transform WallCheck;
-        //Start 위치를 기준으로 투명벽을 그때그때 생성하는 것으로 변경 예정
-
-        float timer;
-        int waitTime = 1;
+        protected Transform startingPosition;
+        protected Vector2 patrolDirection;
+        protected PlayerFinder playerFinder;
+        protected EnemyAttack attackSense;
 
         // HP UI
-        private UI_UnitHP _unitHPUI = null;
+        protected UI_UnitHP _unitHPUI = null;
 
+        /*
         private void Start()
         {
             _characterController2D = GetComponent<CharacterController2D>();
@@ -148,18 +148,6 @@ namespace Blind
                 case State.Die:
                     break;
 
-                    /* Return 필요없을 것 같아서 일단 보류
-                case State.Return:
-                    float direction = DirectionVector(_startingPosition);
-                    if (direction == 0)
-                    {
-                        state = State.Patrol;
-                        break;
-                    }
-                    _characterController2D.Move(new Vector2(direction, 0f));
-                    FindTarget();
-                    break;
-                    */
             }
 
             _characterController2D.OnFixedUpdate();
@@ -182,13 +170,6 @@ namespace Blind
 
         private bool FindTarget() //Player를 발견했을 때
         {
-            /*
-            if (Vector2.Distance(transform.position, _player.transform.position) < _recognitionRange)
-            {
-                state = State.Chase;
-                return true;
-            }
-            */
             for(int i=0; i < rayHit.Length; i++)
             {
                 if (rayHit[i].collider.tag == "Player")
@@ -211,22 +192,6 @@ namespace Blind
             return false;
         }
 
-        private void Flip()
-        {
-            Vector2 thisScale = transform.localScale;
-            if (_patorlDirection.x >= 0)
-            {
-                thisScale.x = -Mathf.Abs(thisScale.x);
-                _patorlDirection = new Vector2(-_speed, 0f);
-            }
-            else
-            {
-                thisScale.x = Mathf.Abs(thisScale.x);
-                _patorlDirection = new Vector2(_speed, 0f);
-            }
-            transform.localScale = thisScale;
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Player"))
@@ -244,21 +209,40 @@ namespace Blind
         {
             yield return new WaitForSeconds(_attackCoolTime);
             state = State.Attack;
-        }
+        } */
 
-        private void CreateHpUI()
+        protected void CreateHpUI()
         {
             Debug.LogWarning("??");
             // UI매니저로 UI_UnitHP 생성
             _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
             // UI에서 UnitHP 참조
-            _unitHPUI.HP = _damage;
+            _unitHPUI.HP = HP;
             // 유닛 움직이면 같이 움직이도록 Parent 설정
             _unitHPUI.transform.SetParent(transform);
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;
             // 오브젝트의 머리 위에 위치하도록 설정
             _unitHPUI.SetPosition(transform.position, Vector3.up * 2);
+        }
+
+        protected void Flip()
+        {
+            Vector2 thisScale = transform.localScale;
+            if (patrolDirection.x >= 0)
+            {
+                thisScale.x = -Mathf.Abs(thisScale.x);
+                patrolDirection = new Vector2(-_speed, 0f);
+                _sprite.flipX = false;
+            }
+            else
+            {
+                thisScale.x = Mathf.Abs(thisScale.x);
+                patrolDirection = new Vector2(_speed, 0f);
+                _sprite.flipX = true;
+            }
+            transform.localScale = thisScale;
+            _unitHPUI.Reverse();
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class ShamanMonster : MonoBehaviour
+    public class ShamanMonster : EnemyCharacter
     {
         private enum State
         {
@@ -19,32 +19,7 @@ namespace Blind
             Die
         }
 
-        private CharacterController2D _characterController2D;
-        private Rigidbody2D rigid;
-        private SpriteRenderer _sprite;
-
-        [SerializeField] private Vector2 _sensingRange;
-        [SerializeField] private float _speed;
-        [SerializeField] private float _runSpeed;
-        [SerializeField] private float _attackCoolTime;
-        [SerializeField] private float _attackSpeed;
-        [SerializeField] private Vector2 _attackRange;
-        [SerializeField] private int _maxHP;
-        [SerializeField] private int _damage;
-        [SerializeField] private float _stunTime;
-
         private State state;
-        private GameObject player;
-        RaycastHit2D[] rayHit;
-        public UnitHP HP;
-        public float _hp;
-        private MeleeAttackable _attack;
-        public LayerMask WallLayer;
-        public Transform WallCheck;
-        private Transform startingPosition;
-        private Vector2 patrolDirection;
-        private PlayerFinder playerFinder;
-        private EnemyAttack attackSense;
         public GameObject Circle;
 
         private Coroutine Co_default;
@@ -56,20 +31,21 @@ namespace Blind
 
         private void Awake()
         {
-            _sensingRange = new Vector2(15f, 15f);
+            _sensingRange = new Vector2(16f, 15f);
             _attack = GetComponent<MeleeAttackable>();
             _sprite = GetComponent<SpriteRenderer>();
             _speed = 0.1f;
             _runSpeed = 0.2f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
-            _attackRange = new Vector2(5f, 15f);
+            _attackRange = new Vector2(14f, 15f);
             _maxHP = 10;
             _stunTime = 1f;
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
             state = State.Patrol;
             HP = new UnitHP(_maxHP);
+            CreateHpUI();
             patrolDirection = new Vector2(RandomDirection() * _speed, 0f); //버그 고친 후 수정할 것
             _attack.Init(2, 2);
 
@@ -131,14 +107,23 @@ namespace Blind
             if (_hp < HP.GetHP())
                 //state = State.Hitted;
             _hp = HP.GetHP();
+            Debug.Log(state);
         }
 
         private void updatePatrol()
         {
             if (playerFinder.FindPlayer())
             {
-                state = State.Chase;
-                return;
+                if (playerFinder.AvoidOrChase() < 0)
+                {
+                    state = State.Chase;
+                    return;
+                }
+                else
+                {
+                    state = State.Avoid;
+                    return;
+                }
             }
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
@@ -226,8 +211,13 @@ namespace Blind
         {
             _characterController2D.Move(-playerFinder.ChasePlayer() * _runSpeed);
 
-            if(Co_avoid == null)
+            if (Co_avoid == null)
                 Co_avoid = StartCoroutine(CoAvoid());
+
+            if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
+            {
+                Flip();
+            }
         }
 
         private void updateStun()
@@ -247,24 +237,6 @@ namespace Blind
                 return true;
             else
                 return false;
-        }
-
-        private void Flip()
-        {
-            Vector2 thisScale = transform.localScale;
-            if (patrolDirection.x >= 0)
-            {
-                thisScale.x = -Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(-_speed, 0f);
-                _sprite.flipX = false;
-            }
-            else
-            {
-                thisScale.x = Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(_speed, 0f);
-                _sprite.flipX = true;
-            }
-            transform.localScale = thisScale;
         }
 
         private int RandomDirection()
@@ -348,13 +320,12 @@ namespace Blind
         private IEnumerator CoAvoid()
         {
             yield return new WaitForSeconds(3);
-        }
-
-        private void createProjectile()
-        {
-            GameObject projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
-            projectile.GetComponent<Rigidbody2D>().velocity = transform.right * -transform.localScale.x * 10f;
-            //projectile.transform.localScale = new Vector2
+            if (attackSense.Attackable())
+                state = State.Attack;
+            else if (playerFinder.FindPlayer() && playerFinder.AvoidOrChase() < 0)
+                state = State.Chase;
+            else
+                state = State.Patrol;
         }
     }
 }

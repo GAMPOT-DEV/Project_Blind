@@ -7,6 +7,8 @@ public class PlayerFinder : MonoBehaviour
     private bool playerInRange = false;
     private GameObject edge;
     private Transform player;
+    private float avoidDis = 5.5f;
+    private float chaseDis = 10.5f;
 
     public void setRange(Vector2 range)
     {
@@ -63,7 +65,6 @@ public class PlayerFinder : MonoBehaviour
         if (collision.tag == "Player")
         {
             playerInRange = false;
-            player = null;
         }
         if (collision.gameObject.layer == 7)
             edge = null;
@@ -78,5 +79,16 @@ public class PlayerFinder : MonoBehaviour
             return false;
         else
             return true;
+    }
+
+    public int AvoidOrChase()
+    {
+        Vector2 position = GetComponentInParent<Transform>().position;
+        //if (Mathf.Abs(player.position.x - position.x) < avoidDis)
+        if (Vector2.Distance(player.position, position) < avoidDis)
+            return 1;
+        else if (Mathf.Abs(player.position.x - position.x) > chaseDis)
+            return -1;
+        else return 0;
     }
 }
