@@ -35,8 +35,6 @@ namespace Blind
         private void Start()
         {
             startingPosition = gameObject.transform;
-            player = GameObject.Find("Player");
-
         }
 
         private void FixedUpdate()
@@ -199,11 +197,6 @@ namespace Blind
                 return true;
             else
                 return false;
-        }
-
-        public bool ReturnFacing()
-        {
-            return _sprite.flipX;
         }
 
         private IEnumerator CoWaitDefalut(float time)

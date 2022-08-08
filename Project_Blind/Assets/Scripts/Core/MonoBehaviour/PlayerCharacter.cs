@@ -448,7 +448,7 @@ namespace Blind
             return _renderer.flipX ? 1 : -1;
         }
 
-        public int GetEnemyFacing(BatMonster obj)
+        public int GetEnemyFacing(EnemyCharacter obj)
         {
             return obj.ReturnFacing() ? 1 : -1;
         }

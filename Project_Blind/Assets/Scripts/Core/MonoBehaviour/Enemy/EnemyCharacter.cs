@@ -110,5 +110,10 @@ namespace Blind
                 return -1;
             }
         }
+
+        public bool ReturnFacing()
+        {
+            return _sprite.flipX;
+        }
     }
 }
