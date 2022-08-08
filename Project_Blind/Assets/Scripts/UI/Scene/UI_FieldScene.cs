@@ -21,13 +21,6 @@ namespace Blind
         }
         protected override void Start()
         {
-            /*
-            BatMonster monster = FindObjectOfType<BatMonster>();
-            if (monster != null)
-            {
-                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster.HP.GetDamage(1.0f), Define.UIEvent.Click);
-                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster.HP.GetHeal(1.0f), Define.UIEvent.Click);
-            }*/
             EnemyCharacter monster = FindObjectOfType<EnemyCharacter>();
             if (monster != null)
             {

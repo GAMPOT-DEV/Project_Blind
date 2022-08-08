@@ -76,7 +76,7 @@ namespace Blind
                 hitobj = ResultObj[i];
                 if(hitobj.tag.Equals("Enemy"))
                 {
-                    hitobj.GetComponent<BatMonster>().HP.GetDamage(_damage);
+                    hitobj.GetComponent<EnemyCharacter>().HP.GetDamage(_damage);
                     canDamage = false;
                     Debug.Log("맞음");
                 }
@@ -85,7 +85,7 @@ namespace Blind
 
         private void EnemyMeleeAttack()
         {
-            BatMonster gameobject = gameObject.GetComponent<BatMonster>();
+            EnemyCharacter gameobject = gameObject.GetComponent<EnemyCharacter>();
             int facing = -1;
             Debug.Log(sprite);
             if (sprite.flipX != _isSpriteFlip)
@@ -110,6 +110,7 @@ namespace Blind
                 }
             }
         }
+
         private void FixedUpdate()
         {
             if (gameObject.GetComponent<PlayerCharacter>() != null)
@@ -117,6 +118,7 @@ namespace Blind
                 if (!canDamage) return;
                 MeleeAttack();
             }
+
             else
             
             {
