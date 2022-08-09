@@ -43,7 +43,7 @@ namespace Blind
                 return;
             }
 
-            Instance.FaderCanvasGroup.alpha = 1f;
+            Instance.FaderCanvasGroup.alpha = 0f;
             
             DontDestroyOnLoad(gameObject);
         }

@@ -1,0 +1,98 @@
+using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Rendering.Universal;
+
+namespace Blind
+{
+    [RequireComponent(typeof(Light2D))]
+    public class GlowStone : InteractionAble
+    {
+        [SerializeField] private AnimationCurve spreadAnimation;
+        [SerializeField] private float maxSize = 30f;
+        [SerializeField] private float time;
+
+        private Light2D _light2D;
+        private bool _isBright = false;
+        [SerializeField]  private bool _isReady = false;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _light2D = GetComponent<Light2D>();
+        }
+
+        protected override void Init(int x = 5, int y = 5)
+        {
+            base.Init(x, y);
+        }
+
+        /// <summary>
+        /// 테스트
+        /// </summary>
+        private void Start()
+        {
+
+        }
+
+        private void FixedUpdate()
+        {
+            if (InputController.Instance.Interaction.Down)
+            {
+                if (_isReady)
+                {
+                    if (_ui != null)
+                        _ui.CloseWorldSpaceUI();
+                    DoInteraction();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 이 함수 호출하면 켜집니다.
+        /// </summary>
+        public void Bright()
+        {
+            if (_isBright) return;
+            StartCoroutine(_Bright());
+            _isBright = true;
+        }
+
+        public IEnumerator _Bright()
+        {
+            var curTime = 0f;
+            var radius = 0f;
+            while (radius < maxSize)
+            {
+                curTime += Time.deltaTime;
+                radius += spreadAnimation.Evaluate(curTime / time) * maxSize;
+                _light2D.pointLightOuterRadius = radius;
+                yield return null;
+            }
+        }
+
+        protected override void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.GetComponent<PlayerCharacter>() == null)
+                return;
+
+            _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestInteraction>();
+            _ui.SetPosition(transform.position, Vector3.down * 3);
+            _isReady = true;
+        }
+
+        protected override void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.gameObject.GetComponent<PlayerCharacter>() == null)
+                return;
+
+            _ui.CloseWorldSpaceUI();
+            _isReady = false;
+        }
+
+        public override void DoInteraction()
+        {
+            Bright();
+        }
+    }
+}
