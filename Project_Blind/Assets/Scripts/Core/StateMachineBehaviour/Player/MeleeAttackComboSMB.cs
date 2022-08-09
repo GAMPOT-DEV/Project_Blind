@@ -30,12 +30,22 @@ namespace Blind
                 _monoBehaviour._clickcount++;
                 _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
             }
+            
             if (_monoBehaviour.CheckForAttackTime())
                 _monoBehaviour._clickcount = 0; 
             if (_monoBehaviour._clickcount == 0)
                 _monoBehaviour.MeleeAttackComoEnd();
             if (_monoBehaviour._clickcount >= 2)
                 _monoBehaviour.MeleeAttackCombo1();
+            if (_monoBehaviour.CheckForPowerAttack())
+            {
+                animator.speed = 0.5f;
+            }
+
+            if (_monoBehaviour.CheckForUpKey())
+            {
+                animator.speed = 1.0f;
+            }
 
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
