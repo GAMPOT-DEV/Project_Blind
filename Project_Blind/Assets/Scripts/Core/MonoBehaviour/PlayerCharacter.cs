@@ -16,8 +16,7 @@ namespace Blind
     {
         public Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
-        public UnitHP _damage;
-        [SerializeField] private float _hp;
+        public UnitHP HpCenter;
         [SerializeField] private int maxhp;
         public MeleeAttackable _attack;
         private Animator _animator;
@@ -68,7 +67,7 @@ namespace Blind
             _enemyObject = GetComponent<BatMonster>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
-            _damage = new UnitHP(maxhp);
+            HpCenter = new UnitHP(maxhp);
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
@@ -96,7 +95,6 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
-            _hp = _damage.GetHP();
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -135,12 +133,6 @@ namespace Blind
                 _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
             }
         }
-
-        public void StopMove()
-        {
-            
-        }
-
         IEnumerator ReturnDashCount()
         {
             yield return new WaitForSeconds(1f);
@@ -257,9 +249,9 @@ namespace Blind
 
         IEnumerator Invincibility() 
         {
-            _damage.Invincibility();
+            HpCenter.Invincibility();
             yield return new WaitForSeconds(0.5f);
-            _damage.unInvicibility();
+            HpCenter.unInvicibility();
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
         }
 
@@ -352,7 +344,7 @@ namespace Blind
 
         public void OnHurt()
         {
-            if (_hp > 1)
+            if (HpCenter.GetHP() > 1)
             {
                 _animator.SetTrigger("Hurt");
                 _isHurtCheck = true;
@@ -365,7 +357,7 @@ namespace Blind
         }
         public bool CheckForDeed()
         {
-            return _hp <= 0;
+            return HpCenter.GetHP()<= 0;
         }
 
         public void Deed()
@@ -393,7 +385,7 @@ namespace Blind
         public void Respawn()
         {
             RespawnFacing();
-            _damage.GetHeal(maxhp);
+            HpCenter.ResetHp();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
             gameObject.transform.position = _spawnPoint.position;
