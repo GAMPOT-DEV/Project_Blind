@@ -55,7 +55,6 @@ namespace Blind
             {
                 animator.speed = 1.0f;
                 _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
-                _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
             }
 
         }
@@ -65,7 +64,6 @@ namespace Blind
             {
                 _monoBehaviour.MeleeAttackComoEnd();
             }
-            _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
         }
     }

@@ -154,7 +154,6 @@ namespace Blind
             if (InputController.Instance.Vertical.Value >0)
             {
                 if(!(InputController.Instance.Vertical.Value < 0)) { // 아래 버튼을 누르지 않았다면
-                    Debug.Log("Test!");
                     _moveVector.y = _jumpSpeed;
                 }
                 _animator.SetTrigger("Jump");

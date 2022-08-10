@@ -35,7 +35,6 @@ namespace Blind
             this.y = y;
             this._damage = _damage;
             _defultdamage = _damage;
-            size = new Vector2(x, y);
         }
 
         public void EnableDamage()
@@ -79,14 +78,12 @@ namespace Blind
             {
                 facing = 1;
             }
-            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y - 1 );
             Vector2 pointB = new Vector2(pointA.x + x, pointA.y + y);
             int hitCount = Physics2D.OverlapArea(pointA, pointB, _attackcontactfilter, ResultObj);
-            Debug.Log(hitCount);
             for (int i = 0; i < hitCount; i++)
             {
                 hitobj = ResultObj[i];
-                Debug.Log(hitobj.name);
                 if(hitobj.tag.Equals("Enemy"))
                 {
                     hitobj.GetComponent<BatMonster>().HP.GetDamage(_damage);
