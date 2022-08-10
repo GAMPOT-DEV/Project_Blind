@@ -469,6 +469,7 @@ namespace Blind
             while (isOnLava)
             {
                 // hp를 깎음
+                _damage.GetDamage(1f);
                 yield return new WaitForSeconds(0.5f);
             }
             DebuffOff();
