@@ -70,8 +70,6 @@ namespace Blind
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            int facing = -1;
-            if (sprite.flipX) facing = 1;
             Gizmos.DrawLine(hitbox, new Vector2(size.x, hitbox.y));
             Gizmos.DrawLine(hitbox, new Vector2(hitbox.x, size.y));
             Gizmos.DrawLine(new Vector2(size.x,hitbox.y), size);
