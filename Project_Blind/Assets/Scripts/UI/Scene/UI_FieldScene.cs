@@ -41,8 +41,8 @@ namespace Blind
             Bind<Image>(typeof(Images));
 
             _player = FindObjectOfType<PlayerCharacter>();
-            _hp = _player._damage.GetHP();
-            _maxHp = _player._damage.GetMaxHP();
+            _hp = _player.HpCenter.GetHP();
+            _maxHp = _player.HpCenter.GetMaxHP();
 
             InitTexts();
             InitEvents();
@@ -53,11 +53,11 @@ namespace Blind
         }
         private void InitEvents()
         {
-            _player._damage.RefreshHpUI += OnHpChanged;
+            _player.HpCenter.RefreshHpUI += OnHpChanged;
             // Test
-            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player._damage.GetDamage(1.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.HpCenter.GetDamage(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player._damage.GetHeal(1.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.HpCenter.GetHeal(1.0f), Define.UIEvent.Click);
         }
         private void Update()
         {

@@ -64,5 +64,10 @@ namespace Blind
             isInvincibility = false;
             Debug.Log("무적 풀림");
         }
+
+        public void ResetHp()
+        {
+            _health = _maxHealth;
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Blind
 
         private Light2D _light2D;
         private bool _isBright = false;
-        [SerializeField]  private bool _isReady = false;
+        [SerializeField] private bool _isReady = false;
 
         protected override void Awake()
         {
@@ -93,6 +93,16 @@ namespace Blind
         public override void DoInteraction()
         {
             Bright();
+            ActivateInvisibleFloor();
+        }
+
+        private void ActivateInvisibleFloor()
+        {
+            GameObject[] floors = GameObject.FindGameObjectsWithTag("InvisibleFloor");
+            for (int i = 0; i < floors.Length; i++)
+            {
+                floors[i].GetComponent<InvisibleFloor>().SetVisible();
+            }
         }
     }
 }

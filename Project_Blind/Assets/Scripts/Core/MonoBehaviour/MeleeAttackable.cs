@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using UnityEditor;
 using UnityEngine;
 
 namespace Blind
@@ -17,6 +19,8 @@ namespace Blind
         public LayerMask hitLayer;
         private Collider2D hitobj;
         private bool _isSpriteFlip = false;
+
+        private Vector2 hitbox;
         
         public void Awake()
         {
@@ -66,8 +70,12 @@ namespace Blind
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            if (sprite.flipX) Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
-            else Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x -1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
+            int facing = -1;
+            if (sprite.flipX) facing = 1;
+            Gizmos.DrawLine(hitbox, new Vector2(size.x, hitbox.y));
+            Gizmos.DrawLine(hitbox, new Vector2(hitbox.x, size.y));
+            Gizmos.DrawLine(new Vector2(size.x,hitbox.y), size);
+            Gizmos.DrawLine(size, new Vector2(hitbox.x, size.y));
 
         }
 
@@ -78,14 +86,18 @@ namespace Blind
             {
                 facing = 1;
             }
-            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y - 1 );
-            Vector2 pointB = new Vector2(pointA.x + x, pointA.y + y);
-            int hitCount = Physics2D.OverlapArea(pointA, pointB, _attackcontactfilter, ResultObj);
+            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y + 2);
+            hitbox = pointA;
+            if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
+            else size = new Vector2(pointA.x - x, pointA.y - y);
+            int hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
             for (int i = 0; i < hitCount; i++)
             {
                 hitobj = ResultObj[i];
+                Debug.Log(hitobj.name);
                 if(hitobj.tag.Equals("Enemy"))
                 {
+                    Debug.Log(_damage);
                     hitobj.GetComponent<BatMonster>().HP.GetDamage(_damage);
                     canDamage = false;
                     Debug.Log("맞음");
@@ -103,6 +115,9 @@ namespace Blind
             }
 
             Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
+            else size = new Vector2(pointA.x - x, pointA.y - y);
+            
             int hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
             for (int i = 0; i < hitCount; i++)
             {
@@ -110,7 +125,7 @@ namespace Blind
                 if (hitobj.tag.Equals("Player"))
                 {
                     PlayerCharacter _player = hitobj.GetComponent<PlayerCharacter>();
-                    _player._damage.GetDamage(_damage);
+                    _player.HpCenter.GetDamage(_damage);
                     _player.OnHurt();
                     _player.HurtMove(_player._hurtMove * _player.GetEnemyFacing(gameobject));
                     canDamage = false;
