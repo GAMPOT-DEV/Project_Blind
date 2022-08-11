@@ -76,7 +76,7 @@ namespace Blind
             Debug.Log("Save Completed!");
         }
         #endregion
-        public bool GetClueItem(int itemId)
+        public bool AddClueItem(int itemId)
         {
             ClueInfo clue = null;
             _gameData.ClueInfoById.TryGetValue(itemId, out clue);

@@ -112,7 +112,7 @@ namespace Blind
         private void PushTestImage(int id)
         {
             // 게임데이터에 아이템을 추가를 시도한다.
-            bool result = DataManager.Instance.GetClueItem(id);
+            bool result = DataManager.Instance.AddClueItem(id);
             // 만약 성공한다면 슬롯을 하나 더 만들어주고 UI를 새로고침해준다.
             if (result == true)
             {
