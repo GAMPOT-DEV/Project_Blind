@@ -32,6 +32,8 @@ namespace Blind
         {
             Bind<Image>(typeof(Images));
             Bind<Text>(typeof(Texts));
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
             infos = DataManager.Instance.GameData.clueSlotInfos;
             _cludData = DataManager.Instance.ClueDict;
@@ -70,10 +72,6 @@ namespace Blind
             Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(7), Define.UIEvent.Click);
 
             Get<Image>((int)Images.Image_TestClearClue).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
-        }
-        private void Update()
-        {
-            HandleUIKeyInput();
         }
         private void HandleUIKeyInput()
         {
@@ -114,6 +112,7 @@ namespace Blind
         }
         private void PushCloseButton()
         {
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.CloseNormalUI(this);
         }
         private void PushTestImage(int id)

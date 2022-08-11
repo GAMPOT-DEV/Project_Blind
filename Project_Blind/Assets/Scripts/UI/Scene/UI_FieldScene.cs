@@ -40,6 +40,9 @@ namespace Blind
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
 
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
+
             _player = FindObjectOfType<PlayerCharacter>();
             _hp = _player.HpCenter.GetHP();
             _maxHp = _player.HpCenter.GetMaxHP();
@@ -58,10 +61,6 @@ namespace Blind
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.HpCenter.GetDamage(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.HpCenter.GetHeal(1.0f), Define.UIEvent.Click);
-        }
-        private void Update()
-        {
-            HandleUIKeyInput();
         }
         private void HandleUIKeyInput()
         {
