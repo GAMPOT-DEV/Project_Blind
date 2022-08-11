@@ -26,7 +26,6 @@ namespace Blind
         Dictionary<int, Data.Clue> _cludData;
         public static int Size { get; set; }
         public List<UI_Clue_Item> Items { get; } = new List<UI_Clue_Item>();
-        List<ClueInfo> infos;
         GameObject grid;
         public override void Init()
         {
@@ -35,19 +34,17 @@ namespace Blind
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
-            infos = DataManager.Instance.GameData.clueSlotInfos;
             _cludData = DataManager.Instance.ClueDict;
 
             Items.Clear();
 
             // 일단 아이템 슬롯들을 전부 날려준 뒤
-            //GameObject grid = transform.Find("Background").transform.Find("ItemGrid").gameObject;
             grid = GetComponentInChildren<GridLayoutGroup>().gameObject;
             foreach (Transform child in grid.transform)
                 Destroy(child.gameObject);
 
             // SIZE만큼 슬롯들을 만들어서 Items에서 관리하도록 한다.
-            Size = DataManager.Instance.GameData.clueSlotInfos.Count;
+            Size = DataManager.Instance.GameData.clueInfos.Count;
             for (int i = 0; i < Size; i++)
             {
                 GameObject go = ResourceManager.Instance.Instantiate("UI/Normal/UI_Clue_Item", grid.transform);
@@ -90,20 +87,17 @@ namespace Blind
         // 현재 가지고 있는 단서들의 정보를 이용해서 UI를 갱신해준다.
         public void RefreshUI()
         {
-            Size = DataManager.Instance.GameData.clueSlotInfos.Count;
+            Size = DataManager.Instance.GameData.clueInfos.Count;
             grid.GetComponent<RectTransform>().sizeDelta = new Vector2(750f, 220f * (float)Size);
             for(int i = 0; i < Size; i++)
             {
                 int itemId = -1;
-                foreach(ClueInfo info in infos)
-                {
-                    // 아이템의 슬롯 정보가 현재 슬롯과 같을 때
-                    if (i == info.slot)
-                    {
-                        itemId = info.itemId;
-                        break;
-                    }
-                }
+
+                ClueInfo info = null;
+                DataManager.Instance.GameData.ClueInfoBySlot.TryGetValue(i, out info);
+                if (info != null)
+                    itemId = info.itemId;
+
                 // 각각의 슬롯에 아이템 ID를 넘겨줘서 갱신한다.
                 // 위에서 찾지 못하면 ID = -1이고 ID가 -1인 아이템은 없기 때문에 
                 // 자동으로 null로 할당된다.
