@@ -65,6 +65,8 @@ namespace Blind
                 Debug.Log("New Data Created!");
                 _gameData = new GameData();
             }
+
+            _gameData.MakeClueDict();
         }
         public void SaveGameData()
         {
@@ -74,21 +76,31 @@ namespace Blind
             Debug.Log("Save Completed!");
         }
         #endregion
-        public bool GetClueItem(int itemId)
+        public bool AddClueItem(int itemId)
         {
-            foreach(ClueInfo info in _gameData.clueSlotInfos)
-            {
-                if (info.itemId == itemId)
-                    return false;
-            }
-            ClueInfo newInfo = new ClueInfo() { itemId = itemId, slot = UI_Clue.Size++ };
-            _gameData.clueSlotInfos.Add(newInfo);
+            ClueInfo clue = null;
+            _gameData.ClueInfoById.TryGetValue(itemId, out clue);
+            if (clue != null)
+                return false;
+
+            clue = new ClueInfo() { itemId = itemId, slot = UI_Clue.Size++ };
+            _gameData.AddClueItem(clue);
             SaveGameData();
             return true;
         }
+        public void DeleteClueItem(int itemId)
+        {
+            ClueInfo clue = null;
+            _gameData.ClueInfoById.TryGetValue(itemId, out clue);
+            if (clue == null)
+                return;
+
+            _gameData.DeleteClueItem(clue);
+            SaveGameData();
+        }
         public void ClearClueData()
         {
-            _gameData.clueSlotInfos.Clear();
+            _gameData.ClearClueData();
             SaveGameData();
         }
     }

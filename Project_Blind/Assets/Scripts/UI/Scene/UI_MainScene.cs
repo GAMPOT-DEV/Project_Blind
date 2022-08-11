@@ -56,6 +56,9 @@ namespace Blind
             Debug.Log("Main Scene");
             Bind<Image>(typeof(Images));
 
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleKeyInput;
+
             _startImage_Click = new ImageInfo() { width = 302, height = 41, sprite = _startSprite_Click };
             _startImage_NonClick = new ImageInfo() { width = 236, height = 34, sprite = _startSprite_NonClick };
 
@@ -96,10 +99,6 @@ namespace Blind
             StartCoroutine(CoApearLogoImage());
 
             _transition = FindObjectOfType<TransitionPoint>();
-        }
-        private void Update()
-        {
-            HandleKeyInput();
         }
         private void HandleKeyInput()
         {
