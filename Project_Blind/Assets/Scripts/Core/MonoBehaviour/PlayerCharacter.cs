@@ -147,7 +147,6 @@ namespace Blind
             if (InputController.Instance.Vertical.Value >0)
             {
                 if(!(InputController.Instance.Vertical.Value < 0)) { // 아래 버튼을 누르지 않았다면
-                    Debug.Log("Test!");
                     _moveVector.y = _jumpSpeed;
                 }
                 _animator.SetTrigger("Jump");
@@ -307,11 +306,6 @@ namespace Blind
         {
             return InputController.Instance.Attack.Up;
         }
-
-        public bool CheckForDownKey()
-        {
-            return InputController.Instance.Attack.Down;
-        }
         public void AttackableMove(float newMoveVector)
         {
             _moveVector.x = newMoveVector;
@@ -395,6 +389,18 @@ namespace Blind
         {
             _animator.SetTrigger("Item");
         }
+
+        public bool CheckForItemT()
+        {
+            return InputController.Instance.ItemT.Down;
+        }
+
+        public void ThrowItem()
+        {
+            var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
+            bullet.transform.position = transform.position;
+            bullet.GetFacing(_renderer.flipX);
+        }
         public void Talk()
         {
             _animator.SetBool("Talk", true);
@@ -469,7 +475,7 @@ namespace Blind
             while (isOnLava)
             {
                 // hp를 깎음
-                _damage.GetDamage(1f);
+                HpCenter.GetDamage(1f);
                 yield return new WaitForSeconds(0.5f);
             }
             DebuffOff();
