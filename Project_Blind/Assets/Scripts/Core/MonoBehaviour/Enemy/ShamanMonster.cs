@@ -79,13 +79,13 @@ namespace Blind
             }
             //움직임
             _characterController2D.OnFixedUpdate();
-            //체력 업데이트
-            if(tmp != state)
+            if (HP.GetHP() <= 0)
+                state = State.Die;
+            if (tmp != state)
             {
                 tmp = state;
                 Debug.Log(state);
-            }
-            
+            }       
         }
 
         private void updatePatrol()
@@ -143,7 +143,6 @@ namespace Blind
             if (Co_attack == null)
             {
                 Co_attack = StartCoroutine(CoAttack());
-                gameObject.GetComponent<SpriteRenderer>().color = Color.red;
             }
         }
 
@@ -152,7 +151,6 @@ namespace Blind
             if (Co_attackStandby == null)
             {
                 Co_attackStandby = StartCoroutine(CoAttackStandby(_attackSpeed));
-                gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
             }
         }
 
@@ -185,12 +183,12 @@ namespace Blind
             _characterController2D.Move(-playerFinder.ChasePlayer() * _runSpeed);
             if (Co_avoid == null)
             {
-                Flip();
                 Co_avoid = StartCoroutine(CoAvoid());
             }
 
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
+                StopCoroutine(Co_avoid);
                 Flip();
                 state = State.AttackStandby;
             }
@@ -233,12 +231,10 @@ namespace Blind
         private IEnumerator CoAttack()
         {
             GameObject projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
-            projectile.transform.SetParent(transform);
             Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
             projectile.GetComponent<Projectile>().SetProjectile(dir, _damage);
 
             yield return new WaitForSeconds(2f);
-            gameObject.GetComponent<SpriteRenderer>().color = Color.blue; //000FE9
             yield return new WaitForSeconds(0.2f);
 
             _attack.DisableDamage();
@@ -290,6 +286,7 @@ namespace Blind
 
         private IEnumerator CoAvoid()
         {
+            Flip();
             yield return new WaitForSeconds(1);
             Flip();
             if (attackSense.Attackable())
@@ -298,6 +295,7 @@ namespace Blind
                 state = State.Chase;
             else
                 state = State.Default;
+            Co_avoid = null;
         }
     }
 }
