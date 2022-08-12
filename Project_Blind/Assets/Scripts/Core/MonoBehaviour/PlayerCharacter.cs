@@ -58,13 +58,14 @@ namespace Blind
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
-        [SerializeField] private BatMonster _enemyObject;
+        [SerializeField] private EnemyCharacter _enemyObject;
+
         public bool isOnLava;
         private void Awake()
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
-            _enemyObject = GetComponent<BatMonster>();
+            _enemyObject = GetComponent<EnemyCharacter>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
             HpCenter = new UnitHP(maxhp);
@@ -453,7 +454,7 @@ namespace Blind
             return _renderer.flipX ? 1 : -1;
         }
 
-        public int GetEnemyFacing(BatMonster obj)
+        public int GetEnemyFacing(EnemyCharacter obj)
         {
             return obj.ReturnFacing() ? 1 : -1;
         }

@@ -68,9 +68,15 @@ namespace Blind
                 {
                     if (_hitObj.GetComponent<BatMonster>().isAttack())
                     {
-                            gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
-                            Debug.Log("패링 성공!"); 
+                        gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
+                        Debug.Log("패링 성공!");
                     }
+                }
+                else if (_hitObj.gameObject.layer == 10) //10: projectile
+                {
+                    gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
+                    _hitObj.GetComponent<Projectile>().Paring();
+                    Debug.Log("패링 성공!");
                 }
             }
         }
