@@ -38,6 +38,11 @@ namespace Blind
                 _monoBehaviour.Deed();
             }
 
+            if (_monoBehaviour.CheckForItemT())
+            {
+                _monoBehaviour.ThrowItem();
+            }
+
             if (_monoBehaviour.CheckForSkill())
             {
                 _monoBehaviour.Skill();

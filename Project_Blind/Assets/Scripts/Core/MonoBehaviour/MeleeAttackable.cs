@@ -70,8 +70,6 @@ namespace Blind
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            int facing = -1;
-            if (sprite.flipX) facing = 1;
             Gizmos.DrawLine(hitbox, new Vector2(size.x, hitbox.y));
             Gizmos.DrawLine(hitbox, new Vector2(hitbox.x, size.y));
             Gizmos.DrawLine(new Vector2(size.x,hitbox.y), size);
@@ -97,8 +95,8 @@ namespace Blind
                 Debug.Log(hitobj.name);
                 if(hitobj.tag.Equals("Enemy"))
                 {
-                    Debug.Log(_damage);
-                    hitobj.GetComponent<BatMonster>().HP.GetDamage(_damage);
+                    hitobj.GetComponent<EnemyCharacter>().HP.GetDamage(_damage);
+                    hitobj.GetComponent<EnemyCharacter>().hitted(facing);
                     canDamage = false;
                     Debug.Log("맞음");
                 }
@@ -107,7 +105,7 @@ namespace Blind
 
         private void EnemyMeleeAttack()
         {
-            BatMonster gameobject = gameObject.GetComponent<BatMonster>();
+            EnemyCharacter gameobject = gameObject.GetComponent<EnemyCharacter>();
             int facing = -1;
             if (sprite.flipX != _isSpriteFlip)
             {
@@ -132,6 +130,7 @@ namespace Blind
                 }
             }
         }
+
         private void FixedUpdate()
         {
             if (gameObject.GetComponent<PlayerCharacter>() != null)
@@ -139,6 +138,7 @@ namespace Blind
                 if (!canDamage) return;
                 MeleeAttack();
             }
+
             else
             {
                 if (!canDamage) return;

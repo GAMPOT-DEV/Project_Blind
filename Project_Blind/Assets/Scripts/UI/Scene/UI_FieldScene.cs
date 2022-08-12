@@ -21,17 +21,11 @@ namespace Blind
         }
         protected override void Start()
         {
-            BatMonster monster = FindObjectOfType<BatMonster>();
+            EnemyCharacter monster = FindObjectOfType<EnemyCharacter>();
             if (monster != null)
             {
                 Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster.HP.GetDamage(1.0f), Define.UIEvent.Click);
                 Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster.HP.GetHeal(1.0f), Define.UIEvent.Click);
-            }
-            EnemyCharacter monster2 = FindObjectOfType<EnemyCharacter>();
-            if (monster2 != null)
-            {
-                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster2._damage.GetDamage(1.0f), Define.UIEvent.Click);
-                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster2._damage.GetHeal(1.0f), Define.UIEvent.Click);
             }
         }
         public override void Init()
@@ -39,6 +33,9 @@ namespace Blind
             base.Init();
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
+
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
             _player = FindObjectOfType<PlayerCharacter>();
             _hp = _player.HpCenter.GetHP();
@@ -58,10 +55,6 @@ namespace Blind
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.HpCenter.GetDamage(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.HpCenter.GetHeal(1.0f), Define.UIEvent.Click);
-        }
-        private void Update()
-        {
-            HandleUIKeyInput();
         }
         private void HandleUIKeyInput()
         {
