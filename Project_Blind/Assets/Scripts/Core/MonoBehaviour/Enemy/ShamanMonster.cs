@@ -19,12 +19,12 @@ namespace Blind
 
         private void Awake()
         { 
-            _sensingRange = new Vector2(16f, 15f);
+            _sensingRange = new Vector2(8f, 5f);
             _speed = 0.07f;
             _runSpeed = 0.1f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
-            _attackRange = new Vector2(14f, 15f);
+            _attackRange = new Vector2(6f, 5f);
             _maxHP = 10;
             _stunTime = 1f;
 

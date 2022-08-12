@@ -76,7 +76,7 @@ namespace Blind
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;
             // 오브젝트의 머리 위에 위치하도록 설정
-            _unitHPUI.SetPosition(transform.position, Vector3.up * 2);
+            _unitHPUI.SetPosition(transform.position, Vector3.up * 4);
         }
 
         protected void Flip()
@@ -86,13 +86,13 @@ namespace Blind
             {
                 thisScale.x = -Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(-_speed, 0f);
-                _sprite.flipX = false;
+                //_sprite.flipX = false;
             }
             else
             {
                 thisScale.x = Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(_speed, 0f);
-                _sprite.flipX = true;
+                //_sprite.flipX = true;
             }
             transform.localScale = thisScale;
             _unitHPUI.Reverse();
@@ -112,8 +112,10 @@ namespace Blind
 
         public bool ReturnFacing()
         {
-            //True일 때 오른쪽
-            return _sprite.flipX;
+            //return _sprite.flipX;
+            if (transform.localScale.x > 0)
+                return true;
+            else return false;
         }
 
         public void hitted(int dir)
