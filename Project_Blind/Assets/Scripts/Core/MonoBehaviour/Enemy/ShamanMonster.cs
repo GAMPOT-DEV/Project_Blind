@@ -15,11 +15,13 @@ namespace Blind
         private Coroutine Co_die;
         private Coroutine Co_avoid;
 
+        State tmp = State.Die;
+
         private void Awake()
         { 
             _sensingRange = new Vector2(16f, 15f);
             _speed = 0.07f;
-            _runSpeed = 0.07f;
+            _runSpeed = 0.1f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(14f, 15f);
@@ -75,29 +77,23 @@ namespace Blind
                     updateDie();
                     break;
             }
-            //¿òÁ÷ÀÓ
+            //ì›€ì§ì„
             _characterController2D.OnFixedUpdate();
-            //Ã¼·Â ¾÷µ¥ÀÌÆ®
-            if (_hp < HP.GetHP())
-                //state = State.Hitted;
-            _hp = HP.GetHP();
-            Debug.Log(state);
+            //ì²´ë ¥ ì—…ë°ì´íŠ¸
+            if(tmp != state)
+            {
+                tmp = state;
+                Debug.Log(state);
+            }
+            
         }
 
         private void updatePatrol()
         {
             if (playerFinder.FindPlayer())
             {
-                if (playerFinder.AvoidOrChase() < 0)
-                {
-                    state = State.Chase;
-                    return;
-                }
-                else
-                {
-                    state = State.Avoid;
-                    return;
-                }
+                state = State.Chase;
+                return;
             }
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
@@ -132,7 +128,10 @@ namespace Blind
 
             if (attackSense.Attackable())
             {
-                state = State.AttackStandby;
+                //if (attackSense.isAvoid())
+                    //state = State.Avoid;
+                //else
+                    state = State.AttackStandby;
                 return;
             }
 
@@ -160,7 +159,7 @@ namespace Blind
         private void updateHitted()
         {
             Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊ
+            if (playerFinder.ChasePlayer().x > 0) //í”Œë ˆì´ì–´ê°€ ì˜¤ë¥¸ìª½
             {
                 hittedVelocity = new Vector2(-200, 400);
             }
@@ -171,7 +170,7 @@ namespace Blind
 
             rigid.AddForce(hittedVelocity);
 
-            if (_hp <= 0)
+            if (HP.GetHP() <= 0)
                 state = State.Die;
             else if (attackSense.Attackable())
                 state = State.AttackStandby;
@@ -184,13 +183,16 @@ namespace Blind
         private void updateAvoid()
         {
             _characterController2D.Move(-playerFinder.ChasePlayer() * _runSpeed);
-
             if (Co_avoid == null)
+            {
+                Flip();
                 Co_avoid = StartCoroutine(CoAvoid());
+            }
 
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
                 Flip();
+                state = State.AttackStandby;
             }
         }
 
@@ -240,12 +242,19 @@ namespace Blind
             yield return new WaitForSeconds(0.2f);
 
             _attack.DisableDamage();
+
             if (attackSense.Attackable())
-                state = State.AttackStandby;
+            {
+                if (attackSense.isAvoid())
+                    state = State.Avoid;
+                else
+                    state = State.AttackStandby;
+            }
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
                 state = State.Default;
+
             Co_attack = null;
         }
 
@@ -281,13 +290,14 @@ namespace Blind
 
         private IEnumerator CoAvoid()
         {
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(1);
+            Flip();
             if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer() && playerFinder.AvoidOrChase() < 0)
+                state = State.AttackStandby;
+            else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
-                state = State.Patrol;
+                state = State.Default;
         }
     }
 }

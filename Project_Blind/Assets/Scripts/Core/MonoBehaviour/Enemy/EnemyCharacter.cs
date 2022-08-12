@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +16,8 @@ namespace Blind
             Hitted,
             Stun,
             Avoid,
-            Die
+            Die,
+            Test
         }
 
         protected State state;
@@ -36,7 +37,6 @@ namespace Blind
 
         protected GameObject player;
         public UnitHP HP;
-        public float _hp;
         protected MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
@@ -50,19 +50,18 @@ namespace Blind
 
         protected void Init()
         {
-            patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
             _attack = GetComponent<MeleeAttackable>();
             _sprite = GetComponent<SpriteRenderer>();
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
             HP = new UnitHP(_maxHP);
             CreateHpUI();
-            _hp = HP.GetHP();
             playerFinder = GetComponentInChildren<PlayerFinder>();
             playerFinder.setRange(_sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
             attackSense.setRange(_attackRange);
             state = State.Patrol;
+            patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
         }
 
         protected void CreateHpUI()
@@ -113,7 +112,21 @@ namespace Blind
 
         public bool ReturnFacing()
         {
+            //True일 때 오른쪽
             return _sprite.flipX;
+        }
+
+        public void hitted(int dir)
+        {
+            Debug.Log("Enemy Hitted !");
+            _characterController2D.Move(new Vector2(dir, 0));
+            StartCoroutine(CoHitted());
+        }
+
+        private IEnumerator CoHitted()
+        {
+            yield return new WaitForSeconds(0.1f);
+            state = State.Test;
         }
     }
 }

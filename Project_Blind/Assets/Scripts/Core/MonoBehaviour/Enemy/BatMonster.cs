@@ -26,8 +26,6 @@ namespace Blind
             _attackRange = new Vector2(1.5f, 2f);
             _maxHP = 10;
             _stunTime = 1f;
-            
-            _attack.Init(2, 2);
 
             base.Init();
         }
@@ -35,6 +33,7 @@ namespace Blind
         private void Start()
         {
             startingPosition = gameObject.transform;
+            _attack.Init(2, 2);
         }
 
         private void FixedUpdate()
@@ -76,11 +75,7 @@ namespace Blind
             //움직임
             _characterController2D.OnFixedUpdate();
             //체력 업데이트
-            if (_hp < HP.GetHP())
-                state = State.Hitted;
-            _hp = HP.GetHP();
-            //죽었나
-            if (_hp <= 0)
+            if (HP.GetHP() <= 0)
                 state = State.Die;
         }
 
