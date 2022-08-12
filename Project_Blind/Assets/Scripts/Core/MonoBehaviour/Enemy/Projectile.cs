@@ -9,10 +9,10 @@ namespace Blind {
         private Vector2 dir;
         private bool isParing = false;
 
-        public void SetProjectile(Vector2 dir, int damage)
+        public void SetProjectile(Vector2 dir, int damage, float speed)
         {
             this.dir = dir;
-            gameObject.GetComponent<Rigidbody2D>().velocity = this.dir;
+            gameObject.GetComponent<Rigidbody2D>().velocity = this.dir.normalized * speed;
             StartCoroutine(CoDestroy());
         }
 

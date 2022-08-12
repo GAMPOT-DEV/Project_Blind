@@ -15,7 +15,7 @@ namespace Blind
         private Coroutine Co_die;
         private Coroutine Co_avoid;
 
-        State tmp = State.Die;
+        [SerializeField] private float _projectileSpeed = 10;
 
         private void Awake()
         { 
@@ -81,11 +81,11 @@ namespace Blind
             _characterController2D.OnFixedUpdate();
             if (HP.GetHP() <= 0)
                 state = State.Die;
-            if (tmp != state)
-            {
-                tmp = state;
-                Debug.Log(state);
-            }       
+            //if (tmp != state)
+            //{
+            //    tmp = state;
+            //    Debug.Log(state);
+            //}       
         }
 
         private void updatePatrol()
@@ -232,7 +232,7 @@ namespace Blind
         {
             GameObject projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
-            projectile.GetComponent<Projectile>().SetProjectile(dir, _damage);
+            projectile.GetComponent<Projectile>().SetProjectile(dir, _damage, _projectileSpeed);
 
             yield return new WaitForSeconds(2f);
             yield return new WaitForSeconds(0.2f);
