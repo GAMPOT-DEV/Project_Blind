@@ -13,6 +13,8 @@ namespace Blind {
         {
             this.dir = dir;
             gameObject.GetComponent<Rigidbody2D>().velocity = this.dir.normalized * speed;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.Rotate(new Vector3(0, 0, angle));
             StartCoroutine(CoDestroy());
         }
 
