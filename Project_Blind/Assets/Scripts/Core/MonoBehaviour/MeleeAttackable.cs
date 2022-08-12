@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace Blind
@@ -77,6 +77,7 @@ namespace Blind
                 if(hitobj.tag.Equals("Enemy"))
                 {
                     hitobj.GetComponent<EnemyCharacter>().HP.GetDamage(_damage);
+                    hitobj.GetComponent<EnemyCharacter>().hitted(facing);
                     canDamage = false;
                     Debug.Log("맞음");
                 }
