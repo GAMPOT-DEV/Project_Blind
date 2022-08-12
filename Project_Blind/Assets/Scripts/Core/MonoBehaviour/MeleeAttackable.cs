@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+using System.Security.Cryptography;
+using UnityEditor;
 using UnityEngine;
 
 namespace Blind
@@ -8,6 +10,7 @@ namespace Blind
         private int x;
         private int y;
         private int _damage = 1;
+        private int _defultdamage;
         private bool canDamage;
         private Vector2 size;
         private SpriteRenderer sprite = null;
@@ -17,6 +20,8 @@ namespace Blind
         private Collider2D hitobj;
         private bool _isSpriteFlip = false;
 
+        private Vector2 hitbox;
+        
         public void Awake()
         {
             _attackcontactfilter.layerMask = hitLayer;
@@ -33,18 +38,27 @@ namespace Blind
             this.x = x;
             this.y = y;
             this._damage = _damage;
-            size = new Vector2(x, y);
+            _defultdamage = _damage;
         }
 
         public void EnableDamage()
         {
-            Debug.Log("실행됨!!");
             canDamage = true;
         }
 
         public void DisableDamage()
         {
             canDamage = false;
+        }
+
+        public void DamageReset(int damage)
+        {
+            _damage = damage;
+        }
+
+        public void DefultDamage()
+        {
+            _damage = _defultdamage;
         }
 
         public void AttackRangeReset(int x, int y)
@@ -56,24 +70,29 @@ namespace Blind
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            if (_isSpriteFlip) Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
-            else Gizmos.DrawWireCube(new Vector3(gameObject.transform.position.x -1, gameObject.transform.position.y , gameObject.transform.position.z), new Vector3(x,y,0));
+            Gizmos.DrawLine(hitbox, new Vector2(size.x, hitbox.y));
+            Gizmos.DrawLine(hitbox, new Vector2(hitbox.x, size.y));
+            Gizmos.DrawLine(new Vector2(size.x,hitbox.y), size);
+            Gizmos.DrawLine(size, new Vector2(hitbox.x, size.y));
 
         }
 
         private void MeleeAttack()
         {
-            int facing = 1;
-            if (sprite.flipX != _isSpriteFlip)
+            int facing = -1;
+            if (sprite.flipX)
             {
-                facing = -1;
+                facing = 1;
             }
-
-            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y + 2);
+            hitbox = pointA;
+            if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
+            else size = new Vector2(pointA.x - x, pointA.y - y);
             int hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
             for (int i = 0; i < hitCount; i++)
             {
                 hitobj = ResultObj[i];
+                Debug.Log(hitobj.name);
                 if(hitobj.tag.Equals("Enemy"))
                 {
                     hitobj.GetComponent<EnemyCharacter>().HP.GetDamage(_damage);
@@ -88,23 +107,23 @@ namespace Blind
         {
             EnemyCharacter gameobject = gameObject.GetComponent<EnemyCharacter>();
             int facing = -1;
-            Debug.Log(sprite);
             if (sprite.flipX != _isSpriteFlip)
             {
                 facing = 1;
             }
 
             Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
+            else size = new Vector2(pointA.x - x, pointA.y - y);
+            
             int hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
             for (int i = 0; i < hitCount; i++)
             {
                 hitobj = ResultObj[i];
-                Debug.Log(hitobj.tag);
                 if (hitobj.tag.Equals("Player"))
                 {
-                    Debug.Log("dd");
                     PlayerCharacter _player = hitobj.GetComponent<PlayerCharacter>();
-                    _player._damage.GetDamage(_damage);
+                    _player.HpCenter.GetDamage(_damage);
                     _player.OnHurt();
                     _player.HurtMove(_player._hurtMove * _player.GetEnemyFacing(gameobject));
                     canDamage = false;
@@ -121,7 +140,6 @@ namespace Blind
             }
 
             else
-            
             {
                 if (!canDamage) return;
                 

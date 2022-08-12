@@ -14,7 +14,7 @@ namespace Blind
 
         private Light2D _light2D;
         private bool _isBright = false;
-        [SerializeField]  private bool _isReady = false;
+        [SerializeField] private bool _isReady = false;
 
         protected override void Awake()
         {
@@ -34,20 +34,6 @@ namespace Blind
         {
 
         }
-
-        private void FixedUpdate()
-        {
-            if (InputController.Instance.Interaction.Down)
-            {
-                if (_isReady)
-                {
-                    if (_ui != null)
-                        _ui.CloseWorldSpaceUI();
-                    DoInteraction();
-                }
-            }
-        }
-
         /// <summary>
         /// 이 함수 호출하면 켜집니다.
         /// </summary>
@@ -76,6 +62,9 @@ namespace Blind
             if (collision.gameObject.GetComponent<PlayerCharacter>() == null)
                 return;
 
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleKeyInput;
+
             _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestInteraction>();
             _ui.SetPosition(transform.position, Vector3.down * 3);
             _isReady = true;
@@ -86,13 +75,41 @@ namespace Blind
             if (collision.gameObject.GetComponent<PlayerCharacter>() == null)
                 return;
 
-            _ui.CloseWorldSpaceUI();
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+
+            if (_ui != null)
+                _ui.CloseWorldSpaceUI();
             _isReady = false;
         }
 
         public override void DoInteraction()
         {
             Bright();
+            ActivateInvisibleFloor();
+        }
+
+        private void HandleKeyInput()
+        {
+            if (InputController.Instance.Interaction.Down)
+            {
+                if (_isReady)
+                {
+                    if (_ui != null)
+                        _ui.CloseWorldSpaceUI();
+                    DoInteraction();
+
+                    UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+                }
+            }
+        }
+
+        private void ActivateInvisibleFloor()
+        {
+            GameObject[] floors = GameObject.FindGameObjectsWithTag("InvisibleFloor");
+            for (int i = 0; i < floors.Length; i++)
+            {
+                floors[i].GetComponent<InvisibleFloor>().SetVisible();
+            }
         }
     }
 }

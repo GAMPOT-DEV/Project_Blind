@@ -13,7 +13,7 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
-            _monoBehaviour.AirborneVerticalMovement();
+            _monoBehaviour.AirborneVerticalMovement(3f);
             _monoBehaviour.GroundedHorizontalMovement(false);
             if(_monoBehaviour._isHurtCheck)
                 animator.Play("Hurt",-1,0);
