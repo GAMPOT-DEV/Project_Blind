@@ -58,14 +58,13 @@ namespace Blind
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
-        [SerializeField] private EnemyCharacter _enemyObject;
+        public bool _isInvincibility;
 
         public bool isOnLava;
         private void Awake()
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
-            _enemyObject = GetComponent<EnemyCharacter>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
             HpCenter = new UnitHP(maxhp);
@@ -247,11 +246,13 @@ namespace Blind
             StartCoroutine(Invincibility());
         }
 
-        IEnumerator Invincibility() 
+        IEnumerator Invincibility()
         {
+            _isInvincibility = true;
             HpCenter.Invincibility();
             yield return new WaitForSeconds(0.5f);
             HpCenter.unInvicibility();
+            _isInvincibility = false;
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
         }
 
@@ -394,6 +395,11 @@ namespace Blind
         public bool CheckForItemT()
         {
             return InputController.Instance.ItemT.Down;
+        }
+
+        public void ItemT()
+        {
+            _animator.SetTrigger("ItemT");
         }
 
         public void ThrowItem()

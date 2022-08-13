@@ -57,4 +57,11 @@ public class Define
         public int width;
         public int height;
     }
+    public enum AttackType
+    {
+        NonAttack,
+        ParingImpossibleAttack,
+        BaseAttack,
+        PowerAttack
+    }
 }
