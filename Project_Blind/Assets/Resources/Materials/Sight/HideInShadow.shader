@@ -7,12 +7,11 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
         _NormalMap("Normal Map", 2D) = "bump" {}
         _ShowInShadow("ShowInShadow",Float) = 0 
         
-        _OutlineTex("Outline Texture", 2D) = "white" {}
-		_OutlineColor("Outline Color", Color) = (1,1,1,1)
-		_OutlineWidth("Outline Width", Range(1.0,10.0)) = 1.1
+        _OutlineColor("Outline Color", Color) = (1,1,1,1)
+        _OutlineWidth ("OutlineWidth", Range(0, 1)) = 1
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
-        [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
+        [HideInInspector] _Color("Tint", Color) = (1,1,1,0)
         [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
         [HideInInspector] _Flip("Flip", Vector) = (1,1,1,1)
         [HideInInspector] _AlphaTex("External Alpha", 2D) = "white" {}
@@ -113,7 +112,7 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
                 }
                 else
                 {
-                    return main;
+                    return half4(0,0,0,0);
                 }
             }
             ENDHLSL
@@ -224,7 +223,88 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
             }
             ENDHLSL
         }
-    }
+        Pass{
+          CGPROGRAM
 
+          #include "UnityCG.cginc"
+
+          #pragma vertex vert
+          #pragma fragment frag
+
+          sampler2D _MainTex;
+          float4 _MainTex_ST;
+          float4 _MainTex_TexelSize;
+
+          fixed4 _Color;
+          fixed4 _OutlineColor;
+          float _OutlineWidth;
+          
+          float _ShowInShadow;
+
+          struct appdata{
+            float4 vertex : POSITION;
+            float2 uv : TEXCOORD0;
+            fixed4 color : COLOR;
+          };
+
+          struct v2f{
+            float4 position : SV_POSITION;
+            float2 uv : TEXCOORD0;
+            float3 worldPos : TEXCOORD1;
+            fixed4 color : COLOR;
+          };
+
+          v2f vert(appdata v){
+            v2f o;
+            o.position = UnityObjectToClipPos(v.vertex);
+            o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+            o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+            o.color = v.color;
+            return o;
+          }
+
+          float2 uvPerWorldUnit(float2 uv, float2 space){
+            float2 uvPerPixelX = abs(ddx(uv));
+            float2 uvPerPixelY = abs(ddy(uv));
+            float unitsPerPixelX = length(ddx(space));
+            float unitsPerPixelY = length(ddy(space));
+            float2 uvPerUnitX = uvPerPixelX / unitsPerPixelX;
+            float2 uvPerUnitY = uvPerPixelY / unitsPerPixelY;
+            return (uvPerUnitX + uvPerUnitY);
+          }
+
+          fixed4 frag(v2f i) : SV_TARGET{
+              if(_ShowInShadow == 1)
+              {
+                fixed4 col = tex2D(_MainTex, i.uv);
+                col *= i.color;
+
+
+                float2 sampleDistance = uvPerWorldUnit(i.uv, i.worldPos.xy) * _OutlineWidth;
+
+                //sample directions
+                #define DIV_SQRT_2 0.70710678118
+                float2 directions[8] = {float2(1, 0), float2(0, 1), float2(-1, 0), float2(0, -1),
+                  float2(DIV_SQRT_2, DIV_SQRT_2), float2(-DIV_SQRT_2, DIV_SQRT_2),
+                  float2(-DIV_SQRT_2, -DIV_SQRT_2), float2(DIV_SQRT_2, -DIV_SQRT_2)};
+
+                //generate border
+                float maxAlpha = 0;
+                for(uint index = 0; index<8; index++){
+                  float2 sampleUV = i.uv + directions[index] * sampleDistance;
+                  maxAlpha = max(maxAlpha, tex2D(_MainTex, sampleUV).a);
+                }
+
+                //apply border
+                col.rgb = lerp(_OutlineColor.rgb, col.rgb, col.a);
+                col.a = max(col.a, maxAlpha);
+
+                return col;
+              }
+              else return fixed4(0,0,0,0);
+          }
+          ENDCG
+        }
+    }
     Fallback "Sprites/Default"
 }
