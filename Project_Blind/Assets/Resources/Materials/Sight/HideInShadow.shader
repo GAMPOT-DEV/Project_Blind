@@ -5,6 +5,11 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
+        _ShowInShadow("ShowInShadow",Float) = 0 
+        
+        _OutlineTex("Outline Texture", 2D) = "white" {}
+		_OutlineColor("Outline Color", Color) = (1,1,1,1)
+		_OutlineWidth("Outline Width", Range(1.0,10.0)) = 1.1
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
@@ -60,7 +65,10 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
             SAMPLER(sampler_MainTex);
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
+            TEXTURE2D(_NormalMap);
+            SAMPLER(sampler_NormalMap);
             half4 _MainTex_ST;
+            float _ShowInShadow;
 
             #if USE_SHAPE_LIGHT_TYPE_0
             SHAPE_LIGHT(0)
@@ -91,14 +99,22 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
                 return o;
             }
 
+            //추가파일
             #include "CombinedShapeLightSharedHidden.hlsl"
-
+            
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
                 half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
 
-                return CombinedShapeLightShared(main, mask, i.lightingUV);
+                if(_ShowInShadow == 0)
+                {
+                    return CombinedShapeLightShared(main, mask, i.lightingUV);
+                }
+                else
+                {
+                    return main;
+                }
             }
             ENDHLSL
         }
