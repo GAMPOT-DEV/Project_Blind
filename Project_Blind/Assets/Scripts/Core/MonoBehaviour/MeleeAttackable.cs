@@ -123,9 +123,12 @@ namespace Blind
                 if (hitobj.tag.Equals("Player"))
                 {
                     PlayerCharacter _player = hitobj.GetComponent<PlayerCharacter>();
-                    _player.HpCenter.GetDamage(_damage);
-                    _player.OnHurt();
-                    _player.HurtMove(_player._hurtMove * _player.GetEnemyFacing(gameobject));
+                    if (!_player._isInvincibility)
+                    {
+                        _player.HpCenter.GetDamage(_damage);
+                        _player.OnHurt();
+                        _player.HurtMove(_player._hurtMove * _player.GetEnemyFacing(gameobject));
+                    }
                     canDamage = false;
                 }
             }

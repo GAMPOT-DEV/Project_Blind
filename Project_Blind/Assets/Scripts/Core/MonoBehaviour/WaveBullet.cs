@@ -9,6 +9,7 @@ namespace Blind
         [SerializeField] private AnimationCurve spreadAnimation;
         [SerializeField] private float maxsize = 30f;
         [SerializeField] private float time;
+        [SerializeField] private float _coolTime;
 
         private Light2D _light2D;
         
@@ -55,7 +56,7 @@ namespace Blind
         public void Bright()
         {
             StartCoroutine(_Bright());
-            
+            StartCoroutine(_ExitBright());
         }
 
         public IEnumerator _Bright()
@@ -69,6 +70,22 @@ namespace Blind
                 _light2D.pointLightOuterRadius = radius;
                 yield return null;
             }
+        }
+
+        public IEnumerator _ExitBright()
+        {
+            yield return new WaitForSeconds(_coolTime);
+            
+            var curTime = 0f;
+            var radius = maxsize;
+            while (radius > 0)
+            {
+                curTime += Time.deltaTime;
+                radius -= spreadAnimation.Evaluate(curTime / time) * maxsize;
+                _light2D.pointLightOuterRadius = radius;
+                yield return null;
+            }
+            Destroy(gameObject);
         }
 
         public void ActivateInvisibleFloor()
