@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ namespace Blind
 {
     public class EnemyCharacter : MonoBehaviour
     {
-        private enum State
+        protected enum State
         {
             Patrol,
             Default,
@@ -14,251 +14,121 @@ namespace Blind
             Attack,
             AttackStandby,
             Hitted,
-            Die
+            Stun,
+            Avoid,
+            Die,
+            Test
         }
-        private CharacterController2D _characterController2D;
-        private Rigidbody2D rigid;
-        private float _recognitionRange = 5f;
-        private Vector2 _patorlDirection;
-        private Vector2 _startingPosition;
-        private GameObject _player;
-        private State state;
-        private float _speed = 0.1f;
-        private float _attackCoolTime = 1f;
-        RaycastHit2D[] rayHit;
 
+        protected State state;
+        protected CharacterController2D _characterController2D;
+        protected Rigidbody2D rigid;
+        protected SpriteRenderer _sprite;
 
-        public UnitHP _damage;
-        public float _hp;
-        private MeleeAttackable _attack;
-        public bool isAttack = false;
-        private bool attackable = true;
+        [SerializeField] protected Vector2 _sensingRange;
+        [SerializeField] protected float _speed;
+        [SerializeField] protected float _runSpeed;
+        [SerializeField] protected float _attackCoolTime;
+        [SerializeField] protected float _attackSpeed;
+        [SerializeField] protected Vector2 _attackRange;
+        [SerializeField] protected int _maxHP;
+        [SerializeField] protected int _damage;
+        [SerializeField] protected float _stunTime;
 
-
-        private float _currentHP = 10f;
-
-        public LayerMask layerMask;
+        protected GameObject player;
+        public UnitHP HP;
+        protected MeleeAttackable _attack;
+        public LayerMask WallLayer;
         public Transform WallCheck;
-        //Start 위치를 기준으로 투명벽을 그때그때 생성하는 것으로 변경 예정
-
-        float timer;
-        int waitTime = 1;
+        protected Transform startingPosition;
+        protected Vector2 patrolDirection;
+        protected PlayerFinder playerFinder;
+        protected EnemyAttack attackSense;
 
         // HP UI
-        private UI_UnitHP _unitHPUI = null;
+        protected UI_UnitHP _unitHPUI = null;
 
-        private void Start()
+        protected void Init()
         {
+            _attack = GetComponent<MeleeAttackable>();
+            _sprite = GetComponent<SpriteRenderer>();
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
-            _startingPosition = transform.position;
-            _player = GameObject.Find("Player");
-            //state = State.Patrol;
-            state = State.Attack;
-
-            _damage = new UnitHP(10);
+            HP = new UnitHP(_maxHP);
             CreateHpUI();
-
-            _patorlDirection = new Vector2(_speed, 0f);
-            _attack.Init(1,1);
-            //_attack = GetComponent<MeleeAttackable>();
-            //_attack.Init(10, 10);
+            playerFinder = GetComponentInChildren<PlayerFinder>();
+            playerFinder.setRange(_sensingRange);
+            attackSense = GetComponentInChildren<EnemyAttack>();
+            attackSense.setRange(_attackRange);
+            state = State.Patrol;
+            patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
         }
 
-        // Update is called once per frame
-        private void FixedUpdate()
-        {
-            rayHit = Physics2D.RaycastAll(gameObject.transform.position, _patorlDirection, 50);
-            Debug.DrawRay(gameObject.transform.position, _patorlDirection * 50, new Color(1, 0, 0));
-            
-
-            switch (state)
-            {
-                case State.Patrol:
-                    _characterController2D.Move(_patorlDirection);
-                    FindTarget();
-                    if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, layerMask))
-                    {
-                        timer = 0f;
-                        state = State.Default;
-                        //Flip();
-                    }
-
-                    break;
-
-                case State.Default:
-                    //잠시 가만히 서있는 모션으로 대기 (애니메이션 두 번 정도)
-                    _characterController2D.Move(Vector2.zero);
-
-                    timer += Time.deltaTime;
-                    if (timer > waitTime)
-                    {
-                        Flip();
-                        state = State.Patrol;
-                    }
-
-                    break;
-
-                case State.Chase:
-                    _characterController2D.Move(new Vector2(DirectionVector(_player.transform.position), 0f));
-                    //MissTarget();
-                    if (MissTarget())
-                    {
-                        state = State.Patrol;
-                    }
-                    else if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, layerMask))
-                    {
-                        state = State.Default;
-                    }
-                    else if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, 3))
-                    {
-                        state = State.Attack;
-                    }
-                    break;
-
-                case State.Attack:
-                    Debug.Log("Enemy Attack !");
-                    isAttack = true;
-                    StartCoroutine(AttackEnd());
-                    break;
-
-                case State.AttackStandby:
-                    StartCoroutine(AttackCoolDown());
-                    break;
-
-                case State.Hitted:
-                    Vector2 hittedVelocity = Vector2.zero;
-                    if (DirectionVector(_player.transform.position) > 0) //플레이어가 오른쪽
-                    {
-                        hittedVelocity = new Vector2(-200, 400);
-                    }
-                    else
-                    {
-                        hittedVelocity = new Vector2(200, 400);
-                    }
-
-                    rigid.AddForce(hittedVelocity);
-
-
-                    timer = 0;
-                    state = State.Chase;
-
-                    break;
-
-                case State.Die:
-                    break;
-
-                    /* Return 필요없을 것 같아서 일단 보류
-                case State.Return:
-                    float direction = DirectionVector(_startingPosition);
-                    if (direction == 0)
-                    {
-                        state = State.Patrol;
-                        break;
-                    }
-                    _characterController2D.Move(new Vector2(direction, 0f));
-                    FindTarget();
-                    break;
-                    */
-            }
-
-            _characterController2D.OnFixedUpdate();
-            _hp = _damage.GetHP();
-        }
-
-        private float DirectionVector(Vector2 goal) //이동 방향만 지정
-        {
-            if (goal.x - transform.position.x > 0)
-                return _speed * 2;
-            else if (goal.x - transform.position.x < 0)
-                return -_speed * 2;
-            else if (Mathf.Abs(goal.x - transform.position.x) < 0.5f)
-            {
-                Debug.Log(Mathf.Abs(goal.x - transform.position.x));
-                return 0;
-            }
-            return 0;
-        }
-
-        private bool FindTarget() //Player를 발견했을 때
-        {
-            /*
-            if (Vector2.Distance(transform.position, _player.transform.position) < _recognitionRange)
-            {
-                state = State.Chase;
-                return true;
-            }
-            */
-            for(int i=0; i < rayHit.Length; i++)
-            {
-                if (rayHit[i].collider.tag == "Player")
-                {
-                    state = State.Chase;
-                    Debug.Log(i + " Player " + state);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool MissTarget() //Player가 추적 범위 밖으로 나갔을 때 -> 원위치로 되돌아옴
-        {
-            if (Vector2.Distance(transform.position, _player.transform.position) > _recognitionRange)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private void Flip()
-        {
-            Vector2 thisScale = transform.localScale;
-            if (_patorlDirection.x >= 0)
-            {
-                thisScale.x = -Mathf.Abs(thisScale.x);
-                _patorlDirection = new Vector2(-_speed, 0f);
-            }
-            else
-            {
-                thisScale.x = Mathf.Abs(thisScale.x);
-                _patorlDirection = new Vector2(_speed, 0f);
-            }
-            transform.localScale = thisScale;
-        }
-
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.CompareTag("Player"))
-                state = State.Hitted;
-        }
-
-        private IEnumerator AttackEnd()
-        {
-            yield return new WaitForSeconds(0.7f);
-            isAttack = false;
-            state = State.AttackStandby;
-        }
-
-        private IEnumerator AttackCoolDown()
-        {
-            yield return new WaitForSeconds(_attackCoolTime);
-            state = State.Attack;
-        }
-
-        private void CreateHpUI()
+        protected void CreateHpUI()
         {
             Debug.LogWarning("??");
             // UI매니저로 UI_UnitHP 생성
             _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
             // UI에서 UnitHP 참조
-            _unitHPUI.HP = _damage;
+            _unitHPUI.HP = HP;
             // 유닛 움직이면 같이 움직이도록 Parent 설정
             _unitHPUI.transform.SetParent(transform);
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;
             // 오브젝트의 머리 위에 위치하도록 설정
-            _unitHPUI.SetPosition(transform.position, Vector3.up * 2);
+            _unitHPUI.SetPosition(transform.position, Vector3.up * 4);
+        }
+
+        protected void Flip()
+        {
+            Vector2 thisScale = transform.localScale;
+            if (patrolDirection.x >= 0)
+            {
+                thisScale.x = -Mathf.Abs(thisScale.x);
+                patrolDirection = new Vector2(-_speed, 0f);
+                //_sprite.flipX = false;
+            }
+            else
+            {
+                thisScale.x = Mathf.Abs(thisScale.x);
+                patrolDirection = new Vector2(_speed, 0f);
+                //_sprite.flipX = true;
+            }
+            transform.localScale = thisScale;
+            _unitHPUI.Reverse();
+        }
+
+        protected int RandomDirection()
+        {
+            int RanNum = Random.Range(0, 100);
+            if (RanNum > 50)
+                return 1;
+            else
+            {
+                Flip();
+                return -1;
+            }
+        }
+
+        public bool ReturnFacing()
+        {
+            //return _sprite.flipX;
+            if (transform.localScale.x > 0)
+                return true;
+            else return false;
+        }
+
+        public void hitted(int dir)
+        {
+            Debug.Log("Enemy Hitted !");
+            _characterController2D.Move(new Vector2(dir, 0));
+            StartCoroutine(CoHitted());
+        }
+
+        private IEnumerator CoHitted()
+        {
+            yield return new WaitForSeconds(0.1f);
+            state = State.Test;
         }
     }
 }

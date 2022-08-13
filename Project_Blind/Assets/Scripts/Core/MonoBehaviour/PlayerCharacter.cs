@@ -16,8 +16,7 @@ namespace Blind
     {
         public Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
-        public UnitHP _damage;
-        [SerializeField] private float _hp;
+        public UnitHP HpCenter;
         [SerializeField] private int maxhp;
         public MeleeAttackable _attack;
         private Animator _animator;
@@ -59,22 +58,24 @@ namespace Blind
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
-        [SerializeField] private BatMonster _enemyObject;
+        [SerializeField] private EnemyCharacter _enemyObject;
+
         public bool isOnLava;
         private void Awake()
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
-            _enemyObject = GetComponent<BatMonster>();
+            _enemyObject = GetComponent<EnemyCharacter>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
-            _damage = new UnitHP(maxhp);
+            HpCenter = new UnitHP(maxhp);
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
             _dashCount = 1;
+            
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
             _attack.Init(attack_x,attack_y,damage);
@@ -95,7 +96,6 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
-            _hp = _damage.GetHP();
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -134,12 +134,6 @@ namespace Blind
                 _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
             }
         }
-
-        public void StopMove()
-        {
-            
-        }
-
         IEnumerator ReturnDashCount()
         {
             yield return new WaitForSeconds(1f);
@@ -154,7 +148,6 @@ namespace Blind
             if (InputController.Instance.Vertical.Value >0)
             {
                 if(!(InputController.Instance.Vertical.Value < 0)) { // 아래 버튼을 누르지 않았다면
-                    Debug.Log("Test!");
                     _moveVector.y = _jumpSpeed;
                 }
                 _animator.SetTrigger("Jump");
@@ -256,9 +249,9 @@ namespace Blind
 
         IEnumerator Invincibility() 
         {
-            _damage.Invincibility();
+            HpCenter.Invincibility();
             yield return new WaitForSeconds(0.5f);
-            _damage.unInvicibility();
+            HpCenter.unInvicibility();
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
         }
 
@@ -314,11 +307,6 @@ namespace Blind
         {
             return InputController.Instance.Attack.Up;
         }
-
-        public bool CheckForDownKey()
-        {
-            return InputController.Instance.Attack.Down;
-        }
         public void AttackableMove(float newMoveVector)
         {
             _moveVector.x = newMoveVector;
@@ -351,7 +339,7 @@ namespace Blind
 
         public void OnHurt()
         {
-            if (_hp > 1)
+            if (HpCenter.GetHP() > 1)
             {
                 _animator.SetTrigger("Hurt");
                 _isHurtCheck = true;
@@ -364,7 +352,7 @@ namespace Blind
         }
         public bool CheckForDeed()
         {
-            return _hp <= 0;
+            return HpCenter.GetHP()<= 0;
         }
 
         public void Deed()
@@ -392,7 +380,7 @@ namespace Blind
         public void Respawn()
         {
             RespawnFacing();
-            _damage.GetHeal(maxhp);
+            HpCenter.ResetHp();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
             gameObject.transform.position = _spawnPoint.position;
@@ -401,6 +389,18 @@ namespace Blind
         public void GetItem()
         {
             _animator.SetTrigger("Item");
+        }
+
+        public bool CheckForItemT()
+        {
+            return InputController.Instance.ItemT.Down;
+        }
+
+        public void ThrowItem()
+        {
+            var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
+            bullet.transform.position = transform.position;
+            bullet.GetFacing(_renderer.flipX);
         }
         public void Talk()
         {
@@ -454,7 +454,7 @@ namespace Blind
             return _renderer.flipX ? 1 : -1;
         }
 
-        public int GetEnemyFacing(BatMonster obj)
+        public int GetEnemyFacing(EnemyCharacter obj)
         {
             return obj.ReturnFacing() ? 1 : -1;
         }
@@ -476,6 +476,7 @@ namespace Blind
             while (isOnLava)
             {
                 // hp를 깎음
+                HpCenter.GetDamage(1f);
                 yield return new WaitForSeconds(0.5f);
             }
             DebuffOff();
