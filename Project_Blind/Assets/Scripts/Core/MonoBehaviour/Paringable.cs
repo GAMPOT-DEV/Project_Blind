@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace Blind
@@ -53,7 +54,7 @@ namespace Blind
         public void FixedUpdate()
         {
             if (!_isParing) return;
-
+            
             int facing = -1;
             if (_sprite.flipX != _isFlip) facing = 1;
             Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);

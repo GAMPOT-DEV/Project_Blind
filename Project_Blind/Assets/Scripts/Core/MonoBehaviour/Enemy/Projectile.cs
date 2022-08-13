@@ -36,7 +36,7 @@ namespace Blind {
                 if (collision.name == "Player")
                 {
                     PlayerCharacter player = collision.gameObject.GetComponent<PlayerCharacter>();
-                    player._damage.GetDamage(_damage);
+                    player.HpCenter.GetDamage(_damage);
                     player.OnHurt();
                     int facing = dir.x >= 0 ? 1 : -1;
                     player.HurtMove(player._hurtMove * facing);
