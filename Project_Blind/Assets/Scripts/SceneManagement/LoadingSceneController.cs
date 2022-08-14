@@ -41,13 +41,12 @@ namespace Blind
                     if (timer >= 1.0f)
                     {
                         op.allowSceneActivation = true;
-                        yield return UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeSceneIn());
-                        Debug.Log("dfasd");
                         yield break;
                     }
 
                 }
             }
+            //UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeSceneIn());
         }
     }
 }
