@@ -8,7 +8,7 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
         _ShowInShadow("ShowInShadow",Float) = 0 
         
         _OutlineColor("Outline Color", Color) = (1,1,1,1)
-        _OutlineWidth ("OutlineWidth", Range(0, 1)) = 1
+        _Outline ("OutlineWidth", Range(0, 1)) = 1
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,0)
@@ -112,7 +112,7 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
                 }
                 else
                 {
-                    return half4(0,0,0,0);
+                    return main;
                 }
             }
             ENDHLSL
@@ -223,88 +223,74 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
             }
             ENDHLSL
         }
-        Pass{
-          CGPROGRAM
+        // 외곽선 그리기
+		Pass
+		{
+			Blend SrcAlpha OneMinusSrcAlpha
+			ZWrite Off
 
-          #include "UnityCG.cginc"
+			CGPROGRAM
 
-          #pragma vertex vert
-          #pragma fragment frag
+			#pragma vertex vert
+			#pragma fragment frag
 
-          sampler2D _MainTex;
-          float4 _MainTex_ST;
-          float4 _MainTex_TexelSize;
+			half _Outline;
+			half4 _OutlineColor;
+			float _ShowInShadow;
 
-          fixed4 _Color;
-          fixed4 _OutlineColor;
-          float _OutlineWidth;
-          
-          float _ShowInShadow;
+			struct vertexInput
+			{
+				float4 vertex: POSITION;
+			};
 
-          struct appdata{
-            float4 vertex : POSITION;
-            float2 uv : TEXCOORD0;
-            fixed4 color : COLOR;
-          };
+			struct vertexOutput
+			{
+				float4 pos: SV_POSITION;
+			};
 
-          struct v2f{
-            float4 position : SV_POSITION;
-            float2 uv : TEXCOORD0;
-            float3 worldPos : TEXCOORD1;
-            fixed4 color : COLOR;
-          };
+			float4 CreateOutline(float4 vertPos, float Outline)
+			{
+				// 행렬 중에 크기를 조절하는 부분만 값을 넣는다.
+				// 밑의 부가 설명 사진 참고.
+				float4x4 scaleMat;
+				scaleMat[0][0] = 1.0f + Outline;
+				scaleMat[0][1] = 0.0f;
+				scaleMat[0][2] = 0.0f;
+				scaleMat[0][3] = 0.0f;
+				scaleMat[1][0] = 0.0f;
+				scaleMat[1][1] = 1.0f + Outline;
+				scaleMat[1][2] = 0.0f;
+				scaleMat[1][3] = 0.0f;
+				scaleMat[2][0] = 0.0f;
+				scaleMat[2][1] = 0.0f;
+				scaleMat[2][2] = 1.0f + Outline;
+				scaleMat[2][3] = 0.0f;
+				scaleMat[3][0] = 0.0f;
+				scaleMat[3][1] = 0.0f;
+				scaleMat[3][2] = 0.0f;
+				scaleMat[3][3] = 1.0f;
+				
+				return mul(scaleMat, vertPos);
+			}
 
-          v2f vert(appdata v){
-            v2f o;
-            o.position = UnityObjectToClipPos(v.vertex);
-            o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-            o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-            o.color = v.color;
-            return o;
-          }
+			vertexOutput vert(vertexInput v)
+			{
+				vertexOutput o;
 
-          float2 uvPerWorldUnit(float2 uv, float2 space){
-            float2 uvPerPixelX = abs(ddx(uv));
-            float2 uvPerPixelY = abs(ddy(uv));
-            float unitsPerPixelX = length(ddx(space));
-            float unitsPerPixelY = length(ddy(space));
-            float2 uvPerUnitX = uvPerPixelX / unitsPerPixelX;
-            float2 uvPerUnitY = uvPerPixelY / unitsPerPixelY;
-            return (uvPerUnitX + uvPerUnitY);
-          }
+				if(_ShowInShadow == 1)
+				{
+					o.pos = UnityObjectToClipPos(CreateOutline(v.vertex, _Outline));
+					return o;
+				}
+				return o;
+			}
 
-          fixed4 frag(v2f i) : SV_TARGET{
-              if(_ShowInShadow == 1)
-              {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                col *= i.color;
-
-
-                float2 sampleDistance = uvPerWorldUnit(i.uv, i.worldPos.xy) * _OutlineWidth;
-
-                //sample directions
-                #define DIV_SQRT_2 0.70710678118
-                float2 directions[8] = {float2(1, 0), float2(0, 1), float2(-1, 0), float2(0, -1),
-                  float2(DIV_SQRT_2, DIV_SQRT_2), float2(-DIV_SQRT_2, DIV_SQRT_2),
-                  float2(-DIV_SQRT_2, -DIV_SQRT_2), float2(DIV_SQRT_2, -DIV_SQRT_2)};
-
-                //generate border
-                float maxAlpha = 0;
-                for(uint index = 0; index<8; index++){
-                  float2 sampleUV = i.uv + directions[index] * sampleDistance;
-                  maxAlpha = max(maxAlpha, tex2D(_MainTex, sampleUV).a);
-                }
-
-                //apply border
-                col.rgb = lerp(_OutlineColor.rgb, col.rgb, col.a);
-                col.a = max(col.a, maxAlpha);
-
-                return col;
-              }
-              else return fixed4(0,0,0,0);
-          }
-          ENDCG
-        }
+			half4 frag(vertexOutput i) : COLOR
+			{
+				return _OutlineColor;
+			}
+			ENDCG
+		}
     }
     Fallback "Sprites/Default"
 }
