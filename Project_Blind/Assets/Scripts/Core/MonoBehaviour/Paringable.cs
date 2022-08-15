@@ -69,7 +69,13 @@ namespace Blind
                 {
                     if (_hitObj.GetComponent<BatMonster>().isAttack())
                     {
-                        gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
+                        PlayerCharacter _player = gameObject.GetComponent<PlayerCharacter>();
+                        _player.PlayerInvincibility();
+                        if (_player.currentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
+                            _player.currentWaveGauge += _player.paringWaveGauge;
+                        else
+                            _player.currentWaveGauge = _player.maxWaveGauge;
+                        _isParing = false;
                         Debug.Log("패링 성공!");
                     }
                 }
@@ -77,6 +83,7 @@ namespace Blind
                 {
                     gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
                     _hitObj.GetComponent<Projectile>().Paring();
+                    _isParing = false;
                     Debug.Log("패링 성공!");
                 }
             }
