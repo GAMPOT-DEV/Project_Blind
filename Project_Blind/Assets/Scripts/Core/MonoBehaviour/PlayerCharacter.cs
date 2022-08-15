@@ -60,6 +60,12 @@ namespace Blind
         private GameObject _waveSense;
         public bool _isInvincibility;
 
+        public int maxWaveGauge;
+        public float currentWaveGauge;
+        
+        public float attackWaveGauge;
+        public float paringWaveGauge;
+
         public bool isOnLava;
         private void Awake()
         {
@@ -155,11 +161,12 @@ namespace Blind
 
         public void WaveSensePress()
         {
-            if (InputController.Instance.Wave.Down)
+            if (InputController.Instance.Wave.Down && currentWaveGauge>=1)
             {
                 if (WaveSense.IsUsing)
                     return;
 
+                currentWaveGauge -= 1f;
                 SoundManager.Instance.Play("WaveSound", Define.Sound.Effect);
 
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
