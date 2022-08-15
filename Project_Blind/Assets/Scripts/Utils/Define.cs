@@ -27,7 +27,8 @@ public class Define
         황현택_dest,
         MainScene,
         김종현,
-        TestFogOfWar
+        TestFogOfWar,
+        여기원,
     }
 
     public enum Sound
