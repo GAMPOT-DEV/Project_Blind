@@ -7,9 +7,12 @@ namespace Blind
 {
     public class UI_FieldScene : UI_Scene
     {
-        float _hp;
-        float _maxHp;
-        PlayerCharacter _player = null;
+        private const int GAUGE_SIZE = 3;
+
+        private float _hp;
+        private float _maxHp;
+        private PlayerCharacter _player = null;
+        private Image[] _waveGauges = new Image[GAUGE_SIZE];
         enum Texts
         {
             Text_HP,
@@ -18,6 +21,10 @@ namespace Blind
         {
             Image_TestDamage,
             Image_TestHeal,
+
+            Image_WaveGauge1,
+            Image_WaveGauge2,
+            Image_WaveGauge3,
         }
         protected override void Start()
         {
@@ -41,6 +48,11 @@ namespace Blind
             _hp = _player.HpCenter.GetHP();
             _maxHp = _player.HpCenter.GetMaxHP();
 
+            _waveGauges[0] = Get<Image>((int)Images.Image_WaveGauge1);
+            _waveGauges[1] = Get<Image>((int)Images.Image_WaveGauge2);
+            _waveGauges[2] = Get<Image>((int)Images.Image_WaveGauge3);
+            OnWaveGaugeChanged(_player.CurrentWaveGauge);
+
             InitTexts();
             InitEvents();
         }
@@ -51,6 +63,7 @@ namespace Blind
         private void InitEvents()
         {
             _player.HpCenter.RefreshHpUI += OnHpChanged;
+            _player.OnWaveGaugeChanged += OnWaveGaugeChanged;
             // Test
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.HpCenter.GetDamage(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
@@ -80,6 +93,19 @@ namespace Blind
             _hp = hp;
             _maxHp = maxHp;
             Get<Text>((int)Texts.Text_HP).text = $"{_hp}/{_maxHp}";
+        }
+        private void OnWaveGaugeChanged(float gauge)
+        {
+            int cnt = (int)gauge;
+            // 게이지 만큼 채운다
+            for(int i = 0; i < cnt; i++)
+            {
+                _waveGauges[i].color = new Color(0, 0, 1, 1);
+            }
+            for(int i = cnt; i < GAUGE_SIZE; i++)
+            {
+                _waveGauges[i].color = new Color(1, 1, 1, 1);
+            }
         }
     }
 }
