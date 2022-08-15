@@ -71,10 +71,10 @@ namespace Blind
                     {
                         PlayerCharacter _player = gameObject.GetComponent<PlayerCharacter>();
                         _player.PlayerInvincibility();
-                        if (_player.currentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
-                            _player.currentWaveGauge += _player.paringWaveGauge;
+                        if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
+                            _player.CurrentWaveGauge += _player.paringWaveGauge;
                         else
-                            _player.currentWaveGauge = _player.maxWaveGauge;
+                            _player.CurrentWaveGauge = _player.maxWaveGauge;
                         _isParing = false;
                         Debug.Log("패링 성공!");
                     }
