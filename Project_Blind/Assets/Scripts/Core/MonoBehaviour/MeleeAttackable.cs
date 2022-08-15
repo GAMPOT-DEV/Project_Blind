@@ -79,6 +79,7 @@ namespace Blind
 
         private void MeleeAttack()
         {
+            PlayerCharacter _player = gameObject.GetComponent<PlayerCharacter>();
             int facing = -1;
             if (sprite.flipX)
             {
@@ -97,7 +98,10 @@ namespace Blind
                 {
                     hitobj.GetComponent<EnemyCharacter>().HP.GetDamage(_damage);
                     hitobj.GetComponent<EnemyCharacter>().hitted(facing);
-                    canDamage = false;
+                    if (_player.currentWaveGauge + _player.attackWaveGauge < _player.maxWaveGauge)
+                        _player.currentWaveGauge += _player.attackWaveGauge;
+                    else _player.currentWaveGauge = _player.maxWaveGauge;
+                        canDamage = false;
                     Debug.Log("맞음");
                 }
             }
