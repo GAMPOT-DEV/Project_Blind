@@ -61,7 +61,7 @@ namespace Blind
         public bool _isInvincibility;
 
         public int maxWaveGauge;
-        private float _currentWaveGauge = 3f;
+        [SerializeField] private float _currentWaveGauge = 3f;
         public float CurrentWaveGauge
         {
             get { return _currentWaveGauge; }
