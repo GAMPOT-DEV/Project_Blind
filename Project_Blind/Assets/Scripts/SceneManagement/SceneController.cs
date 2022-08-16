@@ -47,12 +47,12 @@ namespace Blind
                 isLoading = true;
                 yield return UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeScenOut());
                 string sceneName = newSceneName.ToString();
-                //yield return SceneManager.LoadSceneAsync(sceneName);
-                //LoadingSceneController.LoadScene(sceneName);
-                StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName));
+                yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName));
+                yield return new WaitForSeconds(0.5f); //씬 로딩이 90퍼에서 100퍼까지 되길 기다리는 시간
                 TransitionDestination entrance = GetDestination(destinationTag);
                 SetEnteringLocation(entrance);
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.5f); // 카메라 움직임을 기다리는 시간
+                UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeSceneIn());
                 isLoading = false;
             }
         }
@@ -62,6 +62,7 @@ namespace Blind
             TransitionDestination[] entrances = FindObjectsOfType<TransitionDestination>();
             for (int i = 0; i < entrances.Length; i++)
             {
+                Debug.Log(entrances[i].name);
                 if (entrances[i].destinationTag == destinationTag)
                     return entrances[i];
             }
@@ -70,7 +71,7 @@ namespace Blind
         }
 
         // 캐릭터 이동
-        protected void SetEnteringLocation(TransitionDestination entrance)
+        public static void SetEnteringLocation(TransitionDestination entrance)
         {
             if (entrance == null)
             {
@@ -83,6 +84,10 @@ namespace Blind
                 Transform enteringTransform = entrance.transformingObject.transform;
                 enteringTransform.position = entranceLocation.position;
                 enteringTransform.rotation = entranceLocation.rotation;
+            }
+            else
+            {
+                Debug.Log("entrance object가 null임");
             }
         }
     }

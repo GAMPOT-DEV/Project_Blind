@@ -11,9 +11,12 @@ namespace Blind
     public class WaveHitObj : MonoBehaviour
     {
         private Coroutine _coroutine = null;
+        private SpriteRenderer _renderer;
+        private Material _material;
         public void Awake()
         {
-            GetComponent<Light2D>().intensity = 0;
+            _renderer = GetComponent<SpriteRenderer>();
+            _material = _renderer.material;
         }
 
         public void GetHit()
@@ -26,12 +29,9 @@ namespace Blind
         private IEnumerator Glow()
         {
             SoundManager.Instance.Play("PureWaveSound1", Define.Sound.Effect);
-
-            GetComponent<Light2D>().intensity = 1;
-            if (GetComponent<SpriteRenderer>() != null)
+            _material.SetFloat("_ShowInShadow",1);            
             yield return new WaitForSeconds(5f);
-            if (GetComponent<SpriteRenderer>() != null)
-            GetComponent<Light2D>().intensity = 0;
+            _material.SetFloat("_ShowInShadow",0);            
             _coroutine = null;
         }
     }

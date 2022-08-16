@@ -61,12 +61,24 @@ namespace Blind
         public bool _isInvincibility;
 
         public int maxWaveGauge;
-        public float currentWaveGauge;
+        private float _currentWaveGauge = 3f;
+        public float CurrentWaveGauge
+        {
+            get { return _currentWaveGauge; }
+            set
+            {
+                _currentWaveGauge = value;
+                if (OnWaveGaugeChanged != null)
+                    OnWaveGaugeChanged.Invoke(_currentWaveGauge);
+            }
+        }
         
         public float attackWaveGauge;
         public float paringWaveGauge;
 
         public bool isOnLava;
+
+        public Action<float> OnWaveGaugeChanged;
         private void Awake()
         {
             _moveVector = new Vector2();
@@ -161,12 +173,12 @@ namespace Blind
 
         public void WaveSensePress()
         {
-            if (InputController.Instance.Wave.Down && currentWaveGauge>=1)
+            if (InputController.Instance.Wave.Down && _currentWaveGauge >= 1)
             {
                 if (WaveSense.IsUsing)
                     return;
 
-                currentWaveGauge -= 1f;
+                CurrentWaveGauge = _currentWaveGauge - 1f;
                 SoundManager.Instance.Play("WaveSound", Define.Sound.Effect);
 
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();

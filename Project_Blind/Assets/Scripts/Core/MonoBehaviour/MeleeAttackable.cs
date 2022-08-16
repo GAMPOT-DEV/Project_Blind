@@ -98,9 +98,9 @@ namespace Blind
                 {
                     hitobj.GetComponent<EnemyCharacter>().HP.GetDamage(_damage);
                     hitobj.GetComponent<EnemyCharacter>().hitted(facing);
-                    if (_player.currentWaveGauge + _player.attackWaveGauge < _player.maxWaveGauge)
-                        _player.currentWaveGauge += _player.attackWaveGauge;
-                    else _player.currentWaveGauge = _player.maxWaveGauge;
+                    if (_player.CurrentWaveGauge + _player.attackWaveGauge < _player.maxWaveGauge)
+                        _player.CurrentWaveGauge += _player.attackWaveGauge;
+                    else _player.CurrentWaveGauge = _player.maxWaveGauge;
                         canDamage = false;
                     Debug.Log("맞음");
                 }
