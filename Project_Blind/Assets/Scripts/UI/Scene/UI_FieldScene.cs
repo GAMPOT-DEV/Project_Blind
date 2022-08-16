@@ -12,7 +12,7 @@ namespace Blind
         private float _hp;
         private float _maxHp;
         private PlayerCharacter _player = null;
-        private Image[] _waveGauges = new Image[GAUGE_SIZE];
+        private Slider[] _waveGauges = new Slider[GAUGE_SIZE];
         enum Texts
         {
             Text_HP,
@@ -21,10 +21,12 @@ namespace Blind
         {
             Image_TestDamage,
             Image_TestHeal,
-
-            Image_WaveGauge1,
-            Image_WaveGauge2,
-            Image_WaveGauge3,
+        }
+        enum Sliders
+        {
+            Slider_WaveGauge1,
+            Slider_WaveGauge2,
+            Slider_WaveGauge3,
         }
         protected override void Start()
         {
@@ -40,6 +42,7 @@ namespace Blind
             base.Init();
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
+            Bind<Slider>(typeof(Sliders));
 
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
@@ -48,9 +51,9 @@ namespace Blind
             _hp = _player.HpCenter.GetHP();
             _maxHp = _player.HpCenter.GetMaxHP();
 
-            _waveGauges[0] = Get<Image>((int)Images.Image_WaveGauge1);
-            _waveGauges[1] = Get<Image>((int)Images.Image_WaveGauge2);
-            _waveGauges[2] = Get<Image>((int)Images.Image_WaveGauge3);
+            _waveGauges[0] = Get<Slider>((int)Sliders.Slider_WaveGauge1);
+            _waveGauges[1] = Get<Slider>((int)Sliders.Slider_WaveGauge2);
+            _waveGauges[2] = Get<Slider>((int)Sliders.Slider_WaveGauge3);
             OnWaveGaugeChanged(_player.CurrentWaveGauge);
 
             InitTexts();
@@ -94,18 +97,18 @@ namespace Blind
             _maxHp = maxHp;
             Get<Text>((int)Texts.Text_HP).text = $"{_hp}/{_maxHp}";
         }
-        private void OnWaveGaugeChanged(float gauge)
+        private void OnWaveGaugeChanged(int gauge)
         {
-            int cnt = (int)gauge;
-            // 게이지 만큼 채운다
-            for(int i = 0; i < cnt; i++)
+            int idx = 0;
+            while (gauge >= 10)
             {
-                _waveGauges[i].color = new Color(0, 0, 1, 1);
+                _waveGauges[idx++].value = 1.0f;
+                gauge -= 10;
             }
-            for(int i = cnt; i < GAUGE_SIZE; i++)
-            {
-                _waveGauges[i].color = new Color(1, 1, 1, 1);
-            }
+            if (idx >= GAUGE_SIZE) return;
+            _waveGauges[idx].value = (float)gauge / 10.0f;
+            for (int i = idx + 1; i < GAUGE_SIZE; i++)
+                _waveGauges[i].value = 0f;
         }
     }
 }
