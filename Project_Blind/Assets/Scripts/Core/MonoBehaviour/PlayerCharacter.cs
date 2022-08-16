@@ -58,13 +58,32 @@ namespace Blind
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
-        [SerializeField] private BatMonster _enemyObject;
+        public bool _isInvincibility;
+
+        public int maxWaveGauge;
+        [SerializeField] private int _currentWaveGauge = 30;
+        public int CurrentWaveGauge
+        {
+            get { return _currentWaveGauge; }
+            set
+            {
+                _currentWaveGauge = value;
+                if (_currentWaveGauge < 0) _currentWaveGauge = 0;
+                if (OnWaveGaugeChanged != null)
+                    OnWaveGaugeChanged.Invoke(_currentWaveGauge);
+            }
+        }
+        
+        public int attackWaveGauge;
+        public int paringWaveGauge;
+
         public bool isOnLava;
+
+        public Action<int> OnWaveGaugeChanged;
         private void Awake()
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
-            _enemyObject = GetComponent<BatMonster>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
             HpCenter = new UnitHP(maxhp);
@@ -155,11 +174,12 @@ namespace Blind
 
         public void WaveSensePress()
         {
-            if (InputController.Instance.Wave.Down)
+            if (InputController.Instance.Wave.Down && _currentWaveGauge >= 10)
             {
                 if (WaveSense.IsUsing)
                     return;
 
+                CurrentWaveGauge -= 10;
                 SoundManager.Instance.Play("WaveSound", Define.Sound.Effect);
 
                 var waveSense = ResourceManager.Instance.Instantiate("WaveSense").GetComponent<WaveSense>();
@@ -246,11 +266,13 @@ namespace Blind
             StartCoroutine(Invincibility());
         }
 
-        IEnumerator Invincibility() 
+        IEnumerator Invincibility()
         {
+            _isInvincibility = true;
             HpCenter.Invincibility();
             yield return new WaitForSeconds(0.5f);
             HpCenter.unInvicibility();
+            _isInvincibility = false;
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
         }
 
@@ -395,6 +417,11 @@ namespace Blind
             return InputController.Instance.ItemT.Down;
         }
 
+        public void ItemT()
+        {
+            _animator.SetTrigger("ItemT");
+        }
+
         public void ThrowItem()
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
@@ -453,7 +480,7 @@ namespace Blind
             return _renderer.flipX ? 1 : -1;
         }
 
-        public int GetEnemyFacing(BatMonster obj)
+        public int GetEnemyFacing(EnemyCharacter obj)
         {
             return obj.ReturnFacing() ? 1 : -1;
         }

@@ -66,16 +66,15 @@ namespace Blind
             Bind<Image>(typeof(Images));
             Bind<Slider>(typeof(Sliders));
 
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleKeyInput;
+
             _gameData = DataManager.Instance.GameData;
 
             InitResolution();
             InitTexts();
             InitSliders();
             InitEvents();
-        }
-        private void Update()
-        {
-            HandleKeyInput();
         }
         private void HandleKeyInput()
         {
@@ -172,6 +171,7 @@ namespace Blind
         {
             SoundManager.Instance.StopBGM();
             DataManager.Instance.SaveGameData();
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
             UIManager.Instance.CloseNormalUI(this);
         }
         #endregion

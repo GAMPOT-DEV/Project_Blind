@@ -40,7 +40,7 @@ namespace Blind
 
             if (_monoBehaviour.CheckForItemT())
             {
-                _monoBehaviour.ThrowItem();
+                _monoBehaviour.ItemT();
             }
 
             if (_monoBehaviour.CheckForSkill())

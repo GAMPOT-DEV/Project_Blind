@@ -23,6 +23,11 @@ public class PlayerFinder : MonoBehaviour
         return direction;
     }
 
+    public Transform PlayerPosition()
+    {
+        return player;
+    }
+
     public bool FindPlayer()
     {
         return playerInRange;
@@ -58,7 +63,6 @@ public class PlayerFinder : MonoBehaviour
         if (collision.tag == "Player")
         {
             playerInRange = false;
-            player = null;
         }
         if (collision.gameObject.layer == 7)
             edge = null;

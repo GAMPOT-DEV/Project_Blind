@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace Blind
@@ -53,7 +54,7 @@ namespace Blind
         public void FixedUpdate()
         {
             if (!_isParing) return;
-
+            
             int facing = -1;
             if (_sprite.flipX != _isFlip) facing = 1;
             Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
@@ -68,9 +69,21 @@ namespace Blind
                 {
                     if (_hitObj.GetComponent<BatMonster>().isAttack())
                     {
-                            gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
-                            Debug.Log("패링 성공!"); 
+                        PlayerCharacter _player = gameObject.GetComponent<PlayerCharacter>();
+                        _player.PlayerInvincibility();
+                        if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
+                            _player.CurrentWaveGauge += _player.paringWaveGauge;
+                        else
+                            _player.CurrentWaveGauge = _player.maxWaveGauge;
+                        
+                        _isParing = false;
                     }
+                }
+                else if (_hitObj.tag.Equals("Untagged")) //10: projectile
+                {
+                    gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
+                    _hitObj.GetComponent<Projectile>().Paring();
+                    _isParing = false;
                 }
             }
         }

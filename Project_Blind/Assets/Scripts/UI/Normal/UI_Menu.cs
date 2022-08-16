@@ -31,6 +31,10 @@ namespace Blind
         public override void Init()
         {
             Bind<Image>(typeof(Images));
+
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
+
             InitEvents();
             Time.timeScale = 0;
 
@@ -72,13 +76,10 @@ namespace Blind
         private void PushCloseButton()
         {
             Time.timeScale = 1;
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.CloseNormalUI(this);
         }
         #region Update
-        private void Update()
-        {
-            HandleUIKeyInput();
-        }
         private void HandleUIKeyInput()
         {
             if (!Input.anyKey)

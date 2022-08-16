@@ -79,6 +79,7 @@ namespace Blind
 
         private void MeleeAttack()
         {
+            PlayerCharacter _player = gameObject.GetComponent<PlayerCharacter>();
             int facing = -1;
             if (sprite.flipX)
             {
@@ -95,9 +96,12 @@ namespace Blind
                 Debug.Log(hitobj.name);
                 if(hitobj.tag.Equals("Enemy"))
                 {
-                    Debug.Log(_damage);
-                    hitobj.GetComponent<BatMonster>().HP.GetDamage(_damage);
-                    canDamage = false;
+                    hitobj.GetComponent<EnemyCharacter>().HP.GetDamage(_damage);
+                    hitobj.GetComponent<EnemyCharacter>().hitted(facing);
+                    if (_player.CurrentWaveGauge + _player.attackWaveGauge < _player.maxWaveGauge)
+                        _player.CurrentWaveGauge += _player.attackWaveGauge;
+                    else _player.CurrentWaveGauge = _player.maxWaveGauge;
+                        canDamage = false;
                     Debug.Log("맞음");
                 }
             }
@@ -105,7 +109,7 @@ namespace Blind
 
         private void EnemyMeleeAttack()
         {
-            BatMonster gameobject = gameObject.GetComponent<BatMonster>();
+            EnemyCharacter gameobject = gameObject.GetComponent<EnemyCharacter>();
             int facing = -1;
             if (sprite.flipX != _isSpriteFlip)
             {
@@ -123,13 +127,17 @@ namespace Blind
                 if (hitobj.tag.Equals("Player"))
                 {
                     PlayerCharacter _player = hitobj.GetComponent<PlayerCharacter>();
-                    _player.HpCenter.GetDamage(_damage);
-                    _player.OnHurt();
-                    _player.HurtMove(_player._hurtMove * _player.GetEnemyFacing(gameobject));
+                    if (!_player._isInvincibility)
+                    {
+                        _player.HpCenter.GetDamage(_damage);
+                        _player.OnHurt();
+                        _player.HurtMove(_player._hurtMove * _player.GetEnemyFacing(gameobject));
+                    }
                     canDamage = false;
                 }
             }
         }
+
         private void FixedUpdate()
         {
             if (gameObject.GetComponent<PlayerCharacter>() != null)
@@ -137,6 +145,7 @@ namespace Blind
                 if (!canDamage) return;
                 MeleeAttack();
             }
+
             else
             {
                 if (!canDamage) return;

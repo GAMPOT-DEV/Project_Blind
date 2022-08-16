@@ -27,7 +27,8 @@ public class Define
         황현택_dest,
         MainScene,
         김종현,
-        TestFogOfWar
+        TestFogOfWar,
+        여기원,
     }
 
     public enum Sound
@@ -56,5 +57,12 @@ public class Define
     {
         public int width;
         public int height;
+    }
+    public enum AttackType
+    {
+        NonAttack,
+        ParingImpossibleAttack,
+        BaseAttack,
+        PowerAttack
     }
 }

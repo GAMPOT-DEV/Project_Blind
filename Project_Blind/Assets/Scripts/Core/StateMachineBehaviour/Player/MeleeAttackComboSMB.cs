@@ -11,7 +11,7 @@ namespace Blind
         }
 
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            if (_monoBehaviour.CheckForPowerAttack())
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10)
             {
                 animator.speed = 0.1f;
             }
@@ -51,12 +51,13 @@ namespace Blind
                 _monoBehaviour.MeleeAttackCombo1();
             
 
-            if (_monoBehaviour.CheckForUpKey())
+            if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10)
             {
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
                 _monoBehaviour.enableAttack();
                 _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
+                _monoBehaviour.CurrentWaveGauge -= 10;
             }
 
         }
