@@ -33,7 +33,7 @@ namespace Blind {
                 }
             }
             else {
-                if (collision.name == "Player")
+                if (collision.tag.Equals("Player"))
                 {
                     PlayerCharacter player = collision.gameObject.GetComponent<PlayerCharacter>();
                     player.HpCenter.GetDamage(_damage);
