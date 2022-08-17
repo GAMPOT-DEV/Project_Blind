@@ -75,16 +75,15 @@ namespace Blind
                             _player.CurrentWaveGauge += _player.paringWaveGauge;
                         else
                             _player.CurrentWaveGauge = _player.maxWaveGauge;
+                        
                         _isParing = false;
-                        Debug.Log("패링 성공!");
                     }
                 }
-                else if (_hitObj.gameObject.layer == 10) //10: projectile
+                else if (_hitObj.tag.Equals("Untagged")) //10: projectile
                 {
                     gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
                     _hitObj.GetComponent<Projectile>().Paring();
                     _isParing = false;
-                    Debug.Log("패링 성공!");
                 }
             }
         }
