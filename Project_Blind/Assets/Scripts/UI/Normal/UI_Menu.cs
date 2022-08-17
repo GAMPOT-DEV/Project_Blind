@@ -8,6 +8,9 @@ namespace Blind
 {
     public class UI_Menu : UI_Base
     {
+        [SerializeField] private GameObject _settingUI;
+        [SerializeField] private GameObject _clueUI;
+        private GameObject _currActiveUI = null;
         #region Enums
         enum Images
         {
@@ -39,6 +42,9 @@ namespace Blind
             Time.timeScale = 0;
 
             _transition = FindObjectOfType<TransitionPoint>();
+
+            _settingUI.SetActive(false);
+            _clueUI.SetActive(false);
         }
         private void InitEvents()
         {
@@ -57,24 +63,40 @@ namespace Blind
             _currCursor = (int)Images.Image_Bag;
             Get<Image>((int)Images.Image_Cursor).transform.position = Get<Image>(_currCursor).transform.position;
         }
+        private void PushButton(int num)
+        {
+            DataManager.Instance.SaveGameData();
+            _currCursor = num;
+            Get<Image>((int)Images.Image_Cursor).transform.position = Get<Image>(_currCursor).transform.position;
+            ClearCurrActiveSetting();
+        }
         private void PushBagButton()
         {
+            PushButton((int)Images.Image_Bag);
             Debug.Log("PushBagButton");
         }
         private void PushTalismanButton()
         {
+            PushButton((int)Images.Image_Talisman);
             Debug.Log("PushTalismanButton");
-        }
-        private void PushSettingButton()
-        {
-            UIManager.Instance.ShowNormalUI<UI_Setting>();
         }
         private void PushClueButton()
         {
-            UIManager.Instance.ShowNormalUI<UI_Clue>();
+            //UIManager.Instance.ShowNormalUI<UI_Clue>();
+            PushButton((int)Images.Image_Clue);
+            _clueUI.SetActive(true);
+            _currActiveUI = _clueUI;
+        }
+        private void PushSettingButton()
+        {
+            //UIManager.Instance.ShowNormalUI<UI_Setting>();
+            PushButton((int)Images.Image_Setting);
+            _settingUI.SetActive(true);
+            _currActiveUI = _settingUI;
         }
         private void PushCloseButton()
         {
+            DataManager.Instance.SaveGameData();
             Time.timeScale = 1;
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.CloseNormalUI(this);
@@ -115,5 +137,17 @@ namespace Blind
             }
         }
         #endregion
+        private void ClearCurrActiveSetting()
+        {
+            if (_currActiveUI != null)
+            {
+                if (_currActiveUI == _settingUI)
+                {
+                    _currActiveUI.GetComponent<UI_Setting>().CloseUI();
+                }
+                _currActiveUI.SetActive(false);
+                _currActiveUI = null;
+            }
+        }
     }
 }
