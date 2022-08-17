@@ -9,7 +9,6 @@ namespace Blind
     {
         enum Images
         {
-            Image_Close,
             Image_TestGetClue1,
             Image_TestGetClue2,
             Image_TestGetClue3,
@@ -31,8 +30,6 @@ namespace Blind
         {
             Bind<Image>(typeof(Images));
             Bind<Text>(typeof(Texts));
-            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
-            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
             _cludData = DataManager.Instance.ClueDict;
 
@@ -55,7 +52,6 @@ namespace Blind
             // UI를 데이터 정보에 맞게 갱신해준다.
             RefreshUI();
 
-            Get<Image>((int)Images.Image_Close).gameObject.BindEvent(PushCloseButton, Define.UIEvent.Click);
             TestInit();
         }
         void TestInit()
@@ -69,20 +65,6 @@ namespace Blind
             Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(7), Define.UIEvent.Click);
 
             Get<Image>((int)Images.Image_TestClearClue).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
-        }
-        private void HandleUIKeyInput()
-        {
-            if (!Input.anyKey)
-                return;
-
-            if (_uiNum != UIManager.Instance.UINum)
-                return;
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                PushCloseButton();
-                return;
-            }
         }
         // 현재 가지고 있는 단서들의 정보를 이용해서 UI를 갱신해준다.
         public void RefreshUI()
@@ -103,11 +85,6 @@ namespace Blind
                 // 자동으로 null로 할당된다.
                 Items[i].SetItem(itemId, this);
             }
-        }
-        private void PushCloseButton()
-        {
-            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
-            UIManager.Instance.CloseNormalUI(this);
         }
         private void PushTestImage(int id)
         {
