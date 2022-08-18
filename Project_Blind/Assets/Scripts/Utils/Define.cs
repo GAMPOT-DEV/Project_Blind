@@ -23,12 +23,15 @@ public class Define
     {
         Unknown,
         GameScene,
-        황현택,
-        황현택_dest,
         MainScene,
         김종현,
         TestFogOfWar,
-        여기원,
+        심연,
+        절외부,
+        숲,
+        마을,
+        고목,
+        동굴,
     }
 
     public enum Sound
