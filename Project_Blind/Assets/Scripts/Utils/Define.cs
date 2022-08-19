@@ -32,6 +32,8 @@ public class Define
         마을,
         고목,
         동굴,
+        장산범입구,
+        장산범방,
     }
 
     public enum Sound
