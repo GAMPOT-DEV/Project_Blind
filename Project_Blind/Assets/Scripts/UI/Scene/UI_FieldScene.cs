@@ -9,10 +9,12 @@ namespace Blind
     {
         private const int GAUGE_SIZE = 3;
 
+        private int _currWaveGauge;
         private float _hp;
         private float _maxHp;
         private PlayerCharacter _player = null;
         private Slider[] _waveGauges = new Slider[GAUGE_SIZE];
+        
         enum Texts
         {
             Text_HP,
@@ -27,6 +29,7 @@ namespace Blind
             Slider_WaveGauge1,
             Slider_WaveGauge2,
             Slider_WaveGauge3,
+            Slider_HP,
         }
         protected override void Start()
         {
@@ -71,6 +74,7 @@ namespace Blind
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.HpCenter.GetDamage(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.HpCenter.GetHeal(1.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(TestWaveGauge, Define.UIEvent.Click);
         }
         private void HandleUIKeyInput()
         {
@@ -96,9 +100,11 @@ namespace Blind
             _hp = hp;
             _maxHp = maxHp;
             Get<Text>((int)Texts.Text_HP).text = $"{_hp}/{_maxHp}";
+            Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
         }
         private void OnWaveGaugeChanged(int gauge)
         {
+            _currWaveGauge = gauge;
             int idx = 0;
             while (gauge >= 10)
             {
@@ -109,6 +115,10 @@ namespace Blind
             _waveGauges[idx].value = (float)gauge / 10.0f;
             for (int i = idx + 1; i < GAUGE_SIZE; i++)
                 _waveGauges[i].value = 0f;
+        }
+        private void TestWaveGauge()
+        {
+            _player.CurrentWaveGauge += 1;
         }
     }
 }

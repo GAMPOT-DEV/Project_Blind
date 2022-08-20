@@ -7,7 +7,6 @@ namespace Blind
 {
     public class UI_Setting : UI_Base
     {
-        int tmp = 0;
         int _currCursor;
         const int SIZE = 5;
         const int BUTTON_CNT = 3;
@@ -123,7 +122,7 @@ namespace Blind
             _imageInfos[(int)Images.Button_KeyBinds].nonClick = _Button_KeyBinds_NonClicked;
             _imageInfos[(int)Images.Button_KeyBinds].click = _Button_KeyBinds_Clicked;
 
-            _currCursor = 0;
+            _currCursor = (int)Images.Button_Graphics;
 
             Get<Image>((int)Images.Button_Graphics).gameObject.BindEvent(() => ChangeCursor((int)Images.Button_Graphics));
             Get<Image>((int)Images.Button_Audio).gameObject.BindEvent(() => ChangeCursor((int)Images.Button_Audio));
@@ -132,6 +131,15 @@ namespace Blind
             GraphicsSetting.SetActive(false);
             AudioSetting.SetActive(false);
             KeyBindsSetting.SetActive(false);
+
+            ChangeCursor((int)Images.Button_Graphics);
+        }
+        private void OnEnable()
+        {
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleKeyInput;
+
+            ChangeCursor((int)Images.Button_Graphics);
         }
         private void HandleKeyInput()
         {
@@ -144,6 +152,18 @@ namespace Blind
             if (Input.GetKeyDown(KeyCode.Escape) && _type == Type.Main)
             {
                 PushCloseButton();
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                ChangeCursor((_currCursor + 1) % BUTTON_CNT);
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                ChangeCursor((_currCursor - 1 + BUTTON_CNT) % BUTTON_CNT);
                 return;
             }
         }
@@ -204,7 +224,7 @@ namespace Blind
         private void PushCloseButton()
         {
             //SoundManager.Instance.StopBGM();
-            //DataManager.Instance.SaveGameData();
+            DataManager.Instance.SaveGameData();
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;
             UIManager.Instance.CloseNormalUI(this);
         }
