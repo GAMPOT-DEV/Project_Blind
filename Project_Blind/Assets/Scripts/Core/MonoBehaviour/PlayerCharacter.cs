@@ -65,6 +65,7 @@ namespace Blind
             {
                 _currentWaveGauge = value;
                 if (_currentWaveGauge < 0) _currentWaveGauge = 0;
+                if (_currentWaveGauge > 30) _currentWaveGauge = 30;
                 if (OnWaveGaugeChanged != null)
                     OnWaveGaugeChanged.Invoke(_currentWaveGauge);
             }

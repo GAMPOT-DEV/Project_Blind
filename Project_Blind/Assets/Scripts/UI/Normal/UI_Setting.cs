@@ -7,59 +7,83 @@ namespace Blind
 {
     public class UI_Setting : UI_Base
     {
-        int tmp = 0;
+        int _currCursor;
         const int SIZE = 5;
+        const int BUTTON_CNT = 3;
         Define.Resolution[] _resolutions = new Define.Resolution[SIZE];
 
+        [SerializeField] private GameObject GraphicsSetting;
+        [SerializeField] private GameObject AudioSetting;
+        [SerializeField] private GameObject KeyBindsSetting;
+        private GameObject _currActiveSetting = null;
+        private GameObject[] _settings = new GameObject[BUTTON_CNT];
+
+        [SerializeField] private Sprite Button_On;
+        [SerializeField] private Sprite Button_Off;
+
+        [SerializeField] private Sprite Button_Graphics_NonClicked;
+        [SerializeField] private Sprite Button_Graphics_Clicked;
+        [SerializeField] private Sprite Button_Audio_NonClicked;
+        [SerializeField] private Sprite Button_Audio_Clicked;
+        [SerializeField] private Sprite Button_KeyBinds_NonClicked;
+        [SerializeField] private Sprite Button_KeyBinds_Clicked;
+
+        [SerializeField] private Type _type;
+
         GameData _gameData = null;
+
+        public enum Type
+        {
+            Main,
+            Menu
+        }
         #region Enums
         enum Texts
         {
-            Text_Setting,
-            Text_Audio,
-            Text_MasterVolume,
-            Text_BgmVolume,
-            Text_EffectVolume,
-
-            Text_Effect,
-            Text_Vibration,
-            Text_Vibration_OnOff,
-            Text_MotionEffect,
-
-            Text_KeySetting,
-            Text_KeySettingButton,
-
-            Text_Screen,
-            Text_ScreenSize,
-            Text_ScreenSizeValue,
-            Text_ScreenMode,
-            Text_ScreenMode_OnOff,
+            Text_ScreenSizeValue
         }
         enum Images
         {
-            Button_Close,
+            Button_Graphics,
+            Button_Audio,
+            Button_KeyBinds,
 
-            Button_Vibration,
+            Button_Resolution_LeftArrow,
+            Button_Resolution_RightArrow,
 
-            Button_KeySetting,
-
-            Button_ChangeScreenSize_Left,
-            Button_ChangeScreenSize_Right,
-            Button_ScreenMode,
-
-            // Test
-            TestBgm,
-            TestEffect,
+            Button_WindowModeOnOff,
+            Button_ScreenVibrationOnOff,
         }
         enum Sliders
         {
-            Slider_MasterVolume,
-            Slider_BgmVolume,
-            Slider_EffectVolume,
+            Slider_MotionEffect,
 
-            Slider_MotionEffect
+            Slider_MasterVolume,
+            Slider_SoundEffect,
+            Slider_Bgm,
         }
         #endregion
+
+        struct ImageInfo
+        {
+            public int width;
+            public int height;
+            public Sprite sprite;
+        }
+        struct ImageInfoSet
+        {
+            public ImageInfo click;
+            public ImageInfo nonClick;
+        }
+
+        private ImageInfo _Button_Graphics_NonClicked;
+        private ImageInfo _Button_Graphics_Clicked;
+        private ImageInfo _Button_Audio_NonClicked;
+        private ImageInfo _Button_Audio_Clicked;
+        private ImageInfo _Button_KeyBinds_NonClicked;
+        private ImageInfo _Button_KeyBinds_Clicked;
+
+        ImageInfoSet[] _imageInfos;
         public override void Init()
         {
             Bind<Text>(typeof(Texts));
@@ -75,6 +99,47 @@ namespace Blind
             InitTexts();
             InitSliders();
             InitEvents();
+
+            _settings[(int)Images.Button_Graphics] = GraphicsSetting;
+            _settings[(int)Images.Button_Audio] = AudioSetting;
+            _settings[(int)Images.Button_KeyBinds] = KeyBindsSetting;
+
+            _Button_Graphics_NonClicked = new ImageInfo() { width = 132, height = 51, sprite = Button_Graphics_NonClicked };
+            _Button_Graphics_Clicked = new ImageInfo() { width = 773, height = 71, sprite = Button_Graphics_Clicked };
+
+            _Button_Audio_NonClicked = new ImageInfo() { width = 138, height = 50, sprite = Button_Audio_NonClicked };
+            _Button_Audio_Clicked = new ImageInfo() { width = 773, height = 70, sprite = Button_Audio_Clicked };
+
+            _Button_KeyBinds_NonClicked = new ImageInfo() { width = 130, height = 50, sprite = Button_KeyBinds_NonClicked };
+            _Button_KeyBinds_Clicked = new ImageInfo() { width = 773, height = 71, sprite = Button_KeyBinds_Clicked };
+
+            _imageInfos = new ImageInfoSet[BUTTON_CNT];
+
+            _imageInfos[(int)Images.Button_Graphics].nonClick = _Button_Graphics_NonClicked;
+            _imageInfos[(int)Images.Button_Graphics].click = _Button_Graphics_Clicked;
+            _imageInfos[(int)Images.Button_Audio].nonClick = _Button_Audio_NonClicked;
+            _imageInfos[(int)Images.Button_Audio].click = _Button_Audio_Clicked;
+            _imageInfos[(int)Images.Button_KeyBinds].nonClick = _Button_KeyBinds_NonClicked;
+            _imageInfos[(int)Images.Button_KeyBinds].click = _Button_KeyBinds_Clicked;
+
+            _currCursor = (int)Images.Button_Graphics;
+
+            Get<Image>((int)Images.Button_Graphics).gameObject.BindEvent(() => ChangeCursor((int)Images.Button_Graphics));
+            Get<Image>((int)Images.Button_Audio).gameObject.BindEvent(() => ChangeCursor((int)Images.Button_Audio));
+            Get<Image>((int)Images.Button_KeyBinds).gameObject.BindEvent(() => ChangeCursor((int)Images.Button_KeyBinds));
+
+            GraphicsSetting.SetActive(false);
+            AudioSetting.SetActive(false);
+            KeyBindsSetting.SetActive(false);
+
+            ChangeCursor((int)Images.Button_Graphics);
+        }
+        private void OnEnable()
+        {
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleKeyInput;
+
+            ChangeCursor((int)Images.Button_Graphics);
         }
         private void HandleKeyInput()
         {
@@ -84,9 +149,21 @@ namespace Blind
             if (_uiNum != UIManager.Instance.UINum)
                 return;
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && _type == Type.Main)
             {
                 PushCloseButton();
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                ChangeCursor((_currCursor + 1) % BUTTON_CNT);
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                ChangeCursor((_currCursor - 1 + BUTTON_CNT) % BUTTON_CNT);
                 return;
             }
         }
@@ -113,37 +190,18 @@ namespace Blind
         }
         private void InitTexts()
         {
-            // 사운드 관련
-            Get<Text>((int)Texts.Text_Setting).text = "설정";
-            Get<Text>((int)Texts.Text_Audio).text = "오디오";
-            Get<Text>((int)Texts.Text_MasterVolume).text = "음량";
-            Get<Text>((int)Texts.Text_BgmVolume).text = "음악";
-            Get<Text>((int)Texts.Text_EffectVolume).text = "효과음";
-            // 이펙트 관련 TODO
-            Get<Text>((int)Texts.Text_Effect).text = "이펙트";
-            Get<Text>((int)Texts.Text_Vibration).text = "화면 전체 진동";
-            Get<Text>((int)Texts.Text_Vibration_OnOff).text = _gameData.vibration ? "On" : "Off";
-            Get<Text>((int)Texts.Text_MotionEffect).text = "모션 이펙트";
-            // 키셋팅 관련 TODO
-            Get<Text>((int)Texts.Text_KeySetting).text = "키셋팅";
-            Get<Text>((int)Texts.Text_KeySettingButton).text = "키보드 설정";
-            // 해상도 관련 TODO
-            Get<Text>((int)Texts.Text_Screen).text = "해상도";
-            Get<Text>((int)Texts.Text_ScreenSize).text = "해상도";
             Get<Text>((int)Texts.Text_ScreenSizeValue).text =
                $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
-            Get<Text>((int)Texts.Text_ScreenMode).text = "창모드";
-            Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _gameData.windowMode ? "On" : "Off";
         }
         private void InitSliders()
         {
             // 사운드 관련
             Get<Slider>((int)Sliders.Slider_MasterVolume).value = _gameData.mastetVolume;
-            Get<Slider>((int)Sliders.Slider_BgmVolume).value = _gameData.bgmVolume;
-            Get<Slider>((int)Sliders.Slider_EffectVolume).value = _gameData.effectVolume;
+            Get<Slider>((int)Sliders.Slider_Bgm).value = _gameData.bgmVolume;
+            Get<Slider>((int)Sliders.Slider_SoundEffect).value = _gameData.effectVolume;
             Get<Slider>((int)Sliders.Slider_MasterVolume).onValueChanged.AddListener(delegate { ChangeMasterVolume(); });
-            Get<Slider>((int)Sliders.Slider_BgmVolume).onValueChanged.AddListener(delegate { ChangeVolume(Define.Sound.Bgm); });
-            Get<Slider>((int)Sliders.Slider_EffectVolume).onValueChanged.AddListener(delegate { ChangeVolume(Define.Sound.Effect); });
+            Get<Slider>((int)Sliders.Slider_Bgm).onValueChanged.AddListener(delegate { ChangeVolume(Define.Sound.Bgm); });
+            Get<Slider>((int)Sliders.Slider_SoundEffect).onValueChanged.AddListener(delegate { ChangeVolume(Define.Sound.Effect); });
             // 이펙트 관련 TODO
             Get<Slider>((int)Sliders.Slider_MotionEffect).value = _gameData.motionEffect;
             Get<Slider>((int)Sliders.Slider_MotionEffect).onValueChanged.AddListener(delegate { ChangeMotionEffect(); });
@@ -153,46 +211,29 @@ namespace Blind
         private void InitEvents()
         {
             // 사운드 관련
-            Get<Image>((int)Images.Button_Close).gameObject.BindEvent(PushCloseButton, Define.UIEvent.Click);
-            Get<Image>((int)Images.TestBgm).gameObject.BindEvent(PushTestBgmButton, Define.UIEvent.Click);
-            Get<Image>((int)Images.TestEffect).gameObject.BindEvent(PushTestEffectButton, Define.UIEvent.Click);
             // 이펙트 관련 TODO
-            Get<Image>((int)Images.Button_Vibration).gameObject.BindEvent(PushVibrationOnOffButton, Define.UIEvent.Click);
+            Get<Image>((int)Images.Button_ScreenVibrationOnOff).gameObject.BindEvent(PushVibrationOnOffButton, Define.UIEvent.Click);
             // 키셋팅 관련 TODO
-            Get<Image>((int)Images.Button_KeySetting).gameObject.BindEvent(PushKeySettingButton, Define.UIEvent.Click);
             // 해상도 관련 TODO
-            Get<Image>((int)Images.Button_ChangeScreenSize_Right).gameObject.BindEvent(PushRightButton, Define.UIEvent.Click);
-            Get<Image>((int)Images.Button_ChangeScreenSize_Left).gameObject.BindEvent(PushLeftButton, Define.UIEvent.Click);
-            Get<Image>((int)Images.Button_ScreenMode).gameObject.BindEvent(PushWindowModeButton, Define.UIEvent.Click);
+            Get<Image>((int)Images.Button_Resolution_RightArrow).gameObject.BindEvent(PushRightButton, Define.UIEvent.Click);
+            Get<Image>((int)Images.Button_Resolution_LeftArrow).gameObject.BindEvent(PushLeftButton, Define.UIEvent.Click);
+            Get<Image>((int)Images.Button_WindowModeOnOff).gameObject.BindEvent(PushWindowModeButton, Define.UIEvent.Click);
         }
         #endregion
         #region UI Event
         private void PushCloseButton()
         {
-            SoundManager.Instance.StopBGM();
+            //SoundManager.Instance.StopBGM();
             DataManager.Instance.SaveGameData();
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;
             UIManager.Instance.CloseNormalUI(this);
         }
         #endregion
+        public void CloseUI()
+        {
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+        }
         #region Sound Event
-        private void PushTestBgmButton()
-        {
-            if (tmp == 0)
-            {
-                SoundManager.Instance.Play("Bgm1", Define.Sound.Bgm);
-                tmp = 1;
-            }
-            else
-            {
-                SoundManager.Instance.StopBGM();
-                tmp = 0;
-            }
-        }
-        private void PushTestEffectButton()
-        {
-            SoundManager.Instance.Play("TestSound", Define.Sound.Effect);
-        }
         private void ChangeMasterVolume()
         {
             SoundManager.Instance.ChangeMasterVolume(Get<Slider>((int)Sliders.Slider_MasterVolume).value);
@@ -202,10 +243,10 @@ namespace Blind
             switch (sound)
             {
                 case Define.Sound.Bgm:
-                    SoundManager.Instance.ChangeVolume(Define.Sound.Bgm, Get<Slider>((int)Sliders.Slider_BgmVolume).value);
+                    SoundManager.Instance.ChangeVolume(Define.Sound.Bgm, Get<Slider>((int)Sliders.Slider_Bgm).value);
                     break;
                 case Define.Sound.Effect:
-                    SoundManager.Instance.ChangeVolume(Define.Sound.Effect, Get<Slider>((int)Sliders.Slider_EffectVolume).value);
+                    SoundManager.Instance.ChangeVolume(Define.Sound.Effect, Get<Slider>((int)Sliders.Slider_SoundEffect).value);
                     break;
             }
         }
@@ -215,13 +256,13 @@ namespace Blind
         {
             if (_gameData.vibration)
             {
-                Get<Text>((int)Texts.Text_Vibration_OnOff).text = "Off";
+                Get<Image>((int)Images.Button_ScreenVibrationOnOff).sprite = Button_Off;
                 _gameData.vibration = false;
                 //DataManager.Instance.GameData.vibration = false;
             }
             else
             {
-                Get<Text>((int)Texts.Text_Vibration_OnOff).text = "On";
+                Get<Image>((int)Images.Button_ScreenVibrationOnOff).sprite = Button_On;
                 _gameData.vibration = true;
                 //DataManager.Instance.GameData.vibration = true;
             }
@@ -257,16 +298,48 @@ namespace Blind
             if (_gameData.windowMode)
             {
                 _gameData.windowMode = false;
-                Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _gameData.windowMode ? "On" : "Off";
+                Get<Image>((int)Images.Button_WindowModeOnOff).sprite = Button_Off;
                 UIManager.Instance.IsWindowMode = _gameData.windowMode;
             }
             else
             {
                 _gameData.windowMode = true;
-                Get<Text>((int)Texts.Text_ScreenMode_OnOff).text = _gameData.windowMode ? "On" : "Off";
+                Get<Image>((int)Images.Button_WindowModeOnOff).sprite = Button_On;
                 UIManager.Instance.IsWindowMode = _gameData.windowMode;
             }
         }
         #endregion
+        private void ClearCurrActiveSetting()
+        {
+            if (_currActiveSetting != null)
+            {
+                _currActiveSetting.SetActive(false);
+                _currActiveSetting = null;
+            }
+        }
+        private void EnterCursor(int idx)
+        {
+            _currCursor = idx;
+            Image currImage = Get<Image>(idx);
+            ImageInfo imageInfo = _imageInfos[idx].click;
+            currImage.sprite = imageInfo.sprite;
+            currImage.rectTransform.sizeDelta = new Vector2(imageInfo.width, imageInfo.height);
+
+            ClearCurrActiveSetting();
+            _settings[idx].SetActive(true);
+            _currActiveSetting = _settings[idx];
+        }
+        private void ExitCursor(int idx)
+        {
+            Image currImage = Get<Image>(idx);
+            ImageInfo imageInfo = _imageInfos[idx].nonClick;
+            currImage.sprite = imageInfo.sprite;
+            currImage.rectTransform.sizeDelta = new Vector2(imageInfo.width, imageInfo.height);
+        }
+        private void ChangeCursor(int nextCursor)
+        {
+            ExitCursor(_currCursor);
+            EnterCursor(nextCursor);
+        }
     }
 }
