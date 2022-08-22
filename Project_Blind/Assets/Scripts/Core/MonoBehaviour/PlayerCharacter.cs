@@ -1,12 +1,7 @@
-﻿using System;
+﻿using Spine.Unity;
+using System;
 using System.Collections;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-
 namespace Blind
 {
     /// <summary>
@@ -17,6 +12,7 @@ namespace Blind
         public Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
         public UnitHP HpCenter;
+        private ISkeletonComponent skeletonmecanim;
         [SerializeField] private int maxhp;
         public MeleeAttackable _attack;
         private Animator _animator;
@@ -69,6 +65,7 @@ namespace Blind
             {
                 _currentWaveGauge = value;
                 if (_currentWaveGauge < 0) _currentWaveGauge = 0;
+                if (_currentWaveGauge > 30) _currentWaveGauge = 30;
                 if (OnWaveGaugeChanged != null)
                     OnWaveGaugeChanged.Invoke(_currentWaveGauge);
             }
@@ -84,6 +81,7 @@ namespace Blind
         {
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
+            skeletonmecanim = GetComponent<SkeletonMecanim>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
             HpCenter = new UnitHP(maxhp);
@@ -125,32 +123,38 @@ namespace Blind
         
         public void Dash()
         {
-            if (_dashTime <= 0)
-            {
-                _maxSpeed = _defaultSpeed;
-                if (_dashCount == 1)
-                {
-                    if (InputController.Instance.Jump.Down && InputController.Instance.Vertical.Value>-float.Epsilon && !isOnLava)
-                    {
-                        _dashCount--;
-                        _dashTime = _defaultTime;
-                        StartCoroutine(ReturnDashCount());
-                    }
-                }
 
+            _dashTime -= Time.deltaTime;
+            _maxSpeed = _dashSpeed;
+            int Playerflip;
+            if (_renderer != null)
+            {
+                if (_renderer.flipX) Playerflip = 1;
+                else Playerflip = -1;
             }
             else
             {
-                _dashTime -= Time.deltaTime;
-                _maxSpeed = _dashSpeed;
-                int Playerflip;
-
-                if (_renderer.flipX) Playerflip = 1;
+                if (skeletonmecanim.Skeleton.FlipX) Playerflip = 1;
                 else Playerflip = -1;
-
-                float desiredSpeed = Playerflip * _maxSpeed * 0.1f;
-                _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
             }
+            float desiredSpeed = Playerflip * _maxSpeed * 0.1f; 
+            _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
+            _dashTime = _defaultTime;
+            _maxSpeed = _defaultSpeed;
+        }
+
+        public void DashCoolTime()
+        {
+            StartCoroutine(ReturnDashCount());
+        }
+        public bool CheckForDash()
+        {
+            return InputController.Instance.Dash.Down && InputController.Instance.Vertical.Value>-float.Epsilon && !isOnLava;
+        }
+
+        public void Dashs()
+        {
+            _animator.SetTrigger("Dash");
         }
         IEnumerator ReturnDashCount()
         {
@@ -451,11 +455,13 @@ namespace Blind
             bool faceRight = InputController.Instance.Horizontal.Value > 0f;
             if (faceLeft)
             {
-                _renderer.flipX = false;
+                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = false;
+                else _renderer.flipX = false;
             }
             else if(faceRight)
             {
-                _renderer.flipX = true;
+                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
+                else _renderer.flipX = true;
             }
         }
         
@@ -529,6 +535,12 @@ namespace Blind
             //        isOnLava = false;
             //    }
             //}
+        }
+
+        public void  Key()
+        {
+            
+            
         }
     }
 }

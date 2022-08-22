@@ -8,13 +8,12 @@ namespace Blind
     public class JumpingSMB : SceneLinkedSMB<PlayerCharacter>
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.CheckForGrounded();
+            
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
             _monoBehaviour.CheckForGrounded();
-            _monoBehaviour.Dash();
             _monoBehaviour.WaveSensePress();
             _monoBehaviour.UpdateJump();
             _monoBehaviour.AirborneVerticalMovement(3f);
@@ -23,6 +22,10 @@ namespace Blind
             _monoBehaviour.UpdateFacing();
             if(_monoBehaviour.CheckForParing())
                 _monoBehaviour.Paring();
+            if (_monoBehaviour.CheckForDash())
+            {
+                _monoBehaviour.Dashs();
+            }
             if (_monoBehaviour.CheckForAttack())
             {
                 _monoBehaviour.MeleeAttack();

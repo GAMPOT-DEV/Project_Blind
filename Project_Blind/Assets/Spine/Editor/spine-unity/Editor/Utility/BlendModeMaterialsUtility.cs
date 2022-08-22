@@ -130,7 +130,7 @@ namespace Spine.Unity.Editor {
 		}
 
 		protected static bool UpdateBlendmodeMaterialsRequiredState (SkeletonDataAsset skeletonDataAsset, SkeletonData skeletonData) {
-				return skeletonDataAsset.blendModeMaterials.UpdateBlendmodeMaterialsRequiredState(skeletonData);
+			return skeletonDataAsset.blendModeMaterials.UpdateBlendmodeMaterialsRequiredState(skeletonData);
 		}
 
 		protected static void TransferSettingsFromModifierAsset (BlendModeMaterialsAsset modifierAsset,
