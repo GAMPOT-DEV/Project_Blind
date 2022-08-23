@@ -65,19 +65,14 @@ namespace Blind
             for (int i = 0; i < hitCount; i++)
             {
                 _hitObj = _result[i];
-                if (_hitObj.tag.Equals("Enemy"))
+                if (_hitObj.GetComponent<BatMonster>() != null)
                 {
-                    if (_hitObj.GetComponent<BatMonster>().isAttack())
-                    {
-                        PlayerCharacter _player = gameObject.GetComponent<PlayerCharacter>();
-                        _player.PlayerInvincibility();
-                        if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
-                            _player.CurrentWaveGauge += _player.paringWaveGauge;
-                        else
-                            _player.CurrentWaveGauge = _player.maxWaveGauge;
-                        
-                        _isParing = false;
-                    }
+                    ParingEffect<BatMonster>.Initialise(_hitObj.GetComponent<BatMonster>());
+                    BatMonsterParing batMonsterparing = _hitObj.gameObject.AddComponent<BatMonsterParing>();
+                    batMonsterparing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
+                    batMonsterparing.EnemyDibuff();
+                    _isParing = false;
+                    Destroy(batMonsterparing);
                 }
                 else if (_hitObj.tag.Equals("Untagged")) //10: projectile
                 {

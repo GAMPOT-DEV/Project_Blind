@@ -31,15 +31,15 @@ namespace Blind
             base.Awake();
             // 조작키를 할당합니다.
             Jump = new InputButton(KeyCode.Space,XboxControllerButtons.A);
-            Paring = new InputButton(KeyCode.L, XboxControllerButtons.Leftstick);
-            Interaction = new InputButton(KeyCode.F, XboxControllerButtons.X);
-            Attack = new InputButton(KeyCode.K, XboxControllerButtons.RightBumper);
-            Dash = new InputButton(KeyCode.X, XboxControllerButtons.LeftBumper);
-            Wave = new InputButton(KeyCode.C,XboxControllerButtons.B);
+            Paring = new InputButton(KeyCode.K, XboxControllerButtons.Leftstick);
+            Interaction = new InputButton(KeyCode.N, XboxControllerButtons.X);
+            Attack = new InputButton(KeyCode.J, XboxControllerButtons.RightBumper);
+            Dash = new InputButton(KeyCode.Space, XboxControllerButtons.LeftBumper);
+            Wave = new InputButton(KeyCode.LeftControl,XboxControllerButtons.B);
             Horizontal = new InputAxis(KeyCode.D, KeyCode.A, XboxControllerAxes.LeftstickHorizontal);
             Vertical = new InputAxis(KeyCode.W,KeyCode.S,XboxControllerAxes.LeftstickVertical);
             Skill = new InputButton(KeyCode.I, XboxControllerButtons.LeftBumper);
-            ItemT = new InputButton(KeyCode.E, XboxControllerButtons.Y);
+            ItemT = new InputButton(KeyCode.Q, XboxControllerButtons.Y);
         }
 
         /// <summary>
@@ -102,5 +102,37 @@ namespace Blind
             ReleaseControl(Skill, resetValues);
             ReleaseControl(ItemT, resetValues);
         }
+
+        public void ReKetSet(string key, KeyCode keycode)
+        {
+            switch (key)
+            {
+                case "Jump":
+                    Jump = new InputButton(keycode, XboxControllerButtons.A);
+                    break;
+                case "Attack":
+                    Attack = new InputButton(keycode, XboxControllerButtons.RightBumper);
+                    break;
+                case "Paring":
+                    Paring = new InputButton(keycode, XboxControllerButtons.Leftstick);
+                    break;
+                case "Interaction":
+                    Interaction = new InputButton(keycode, XboxControllerButtons.X);
+                    break;
+                case "Dash":
+                    Dash = new InputButton(keycode, XboxControllerButtons.LeftBumper);
+                    break;
+                case "Wave":
+                    Wave = new InputButton(keycode, XboxControllerButtons.B);
+                    break;
+                case "Skill":
+                    Skill = new InputButton(keycode, XboxControllerButtons.LeftBumper);
+                    break;
+                case "ItemT":
+                    ItemT = new InputButton(keycode, XboxControllerButtons.Y);
+                    break;
+            }
+        }
     }
+    
 }

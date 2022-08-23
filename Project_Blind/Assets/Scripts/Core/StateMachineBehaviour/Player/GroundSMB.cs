@@ -14,9 +14,13 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
+            _monoBehaviour.Key();
             _monoBehaviour.CheckForGrounded();
             _monoBehaviour.Jump();
-            _monoBehaviour.Dash();
+            if (_monoBehaviour.CheckForDash())
+            {
+                _monoBehaviour.Dashs();
+            }
             _monoBehaviour.WaveSensePress();
             _monoBehaviour.GroundedVerticalMovement();
             _monoBehaviour.GroundedHorizontalMovement(true);
