@@ -12,7 +12,7 @@ namespace Blind
         [SerializeField] private float _coolTime;
 
         private Light2D _light2D;
-        
+
         private Rigidbody2D rigid;
         private bool facing;
         [SerializeField] private int speed;
