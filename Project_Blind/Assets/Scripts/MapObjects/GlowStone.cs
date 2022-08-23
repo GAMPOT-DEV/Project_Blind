@@ -21,19 +21,7 @@ namespace Blind
             base.Awake();
             _light2D = GetComponent<Light2D>();
         }
-
-        protected override void Init(int x = 5, int y = 5)
-        {
-            base.Init(x, y);
-        }
-
-        /// <summary>
-        /// 테스트
-        /// </summary>
-        private void Start()
-        {
-
-        }
+        
         /// <summary>
         /// 이 함수 호출하면 켜집니다.
         /// </summary>
