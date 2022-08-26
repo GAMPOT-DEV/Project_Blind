@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace Blind
@@ -64,6 +65,7 @@ namespace Blind
             
             _rigidBody2D.MovePosition(_currentPosition);
             _nextMovement = Vector2.zero;
+            
             CheckCapsuleEndCollisions();
             CheckCapsuleEndCollisions(false);
         }
@@ -86,6 +88,11 @@ namespace Blind
         public void Move(Vector2 movement)
         {
             _nextMovement += movement;
+        }
+
+        public void Dash(Vector2 movement)
+        {
+            _rigidBody2D.velocity = movement;
         }
 
          public void CheckCapsuleEndCollisions(bool bottom = true)
