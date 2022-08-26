@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Blind.Boss
 {
-    public class BossPattern2: BossAttackPattern<Boss>
+    public class BossPattern2: BossAttackPattern<FirstBossEnemy>
     {
         public override void AttackPattern()
         {
