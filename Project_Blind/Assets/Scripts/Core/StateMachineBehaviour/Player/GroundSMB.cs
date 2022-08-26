@@ -19,10 +19,9 @@ namespace Blind
             _monoBehaviour.Jump();
             if (_monoBehaviour.CheckForDash())
             {
-                _monoBehaviour.Dashs();
+                _monoBehaviour.DashStart();
             }
             _monoBehaviour.WaveSensePress();
-            _monoBehaviour.GroundedVerticalMovement();
             _monoBehaviour.GroundedHorizontalMovement(true);
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.UpdateFacing();
