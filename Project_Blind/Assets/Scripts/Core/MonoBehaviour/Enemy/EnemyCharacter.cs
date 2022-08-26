@@ -6,21 +6,6 @@ namespace Blind
 {
     public class EnemyCharacter : MonoBehaviour
     {
-        protected enum State
-        {
-            Patrol,
-            Default,
-            Chase,
-            Attack,
-            AttackStandby,
-            Hitted,
-            Stun,
-            Avoid,
-            Die,
-            Test
-        }
-
-        protected State state;
         protected CharacterController2D _characterController2D;
         protected Rigidbody2D rigid;
         protected SpriteRenderer _sprite;
@@ -36,7 +21,7 @@ namespace Blind
         [SerializeField] protected float _stunTime;
 
         protected GameObject player;
-        public UnitHP HP;
+        public UnitHP HP { get; private set; }
         protected MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
@@ -57,11 +42,6 @@ namespace Blind
             HP = new UnitHP(_maxHP);
             CreateHpUI();
             playerFinder = GetComponentInChildren<PlayerFinder>();
-            playerFinder.setRange(_sensingRange);
-            attackSense = GetComponentInChildren<EnemyAttack>();
-            attackSense.setRange(_attackRange);
-            state = State.Patrol;
-            patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
         }
 
         protected void CreateHpUI()
@@ -79,37 +59,6 @@ namespace Blind
             _unitHPUI.SetPosition(transform.position, Vector3.up * 4);
         }
 
-        protected void Flip()
-        {
-            Vector2 thisScale = transform.localScale;
-            if (patrolDirection.x >= 0)
-            {
-                thisScale.x = -Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(-_speed, 0f);
-                //_sprite.flipX = false;
-            }
-            else
-            {
-                thisScale.x = Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(_speed, 0f);
-                //_sprite.flipX = true;
-            }
-            transform.localScale = thisScale;
-            _unitHPUI.Reverse();
-        }
-
-        protected int RandomDirection()
-        {
-            int RanNum = Random.Range(0, 100);
-            if (RanNum > 50)
-                return 1;
-            else
-            {
-                Flip();
-                return -1;
-            }
-        }
-
         public bool ReturnFacing()
         {
             //return _sprite.flipX;
@@ -125,10 +74,9 @@ namespace Blind
             StartCoroutine(CoHitted());
         }
 
-        private IEnumerator CoHitted()
+        protected virtual IEnumerator CoHitted()
         {
-            yield return new WaitForSeconds(0.1f);
-            state = State.Test;
+            return null;
         }
     }
 }
