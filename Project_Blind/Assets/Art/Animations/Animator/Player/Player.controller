@@ -33,7 +33,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Dash
-  m_Speed: 1
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8626775992744333520}
@@ -41,7 +41,8 @@ AnimatorState:
   - {fileID: -6267731627541189950}
   - {fileID: -7224905296322889850}
   - {fileID: -3660972261247430019}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -6692470696904621416}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -349,6 +350,18 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-6692470696904621416
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 007d2728b499436f8d7af05c58508855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!74 &-6559330789219593854
 AnimationClip:
   m_ObjectHideFlags: 0
@@ -3115,7 +3128,7 @@ AnimatorStateMachine:
     m_Position: {x: -110, y: 420, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4949549522403400522}
-    m_Position: {x: 1950, y: -240, z: 0}
+    m_Position: {x: 1950, y: -230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8087494111013884225}
     m_Position: {x: 690, y: -430, z: 0}
