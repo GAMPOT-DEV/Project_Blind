@@ -20,6 +20,7 @@ namespace Blind
         [SerializeField] private Sprite _setting_Clicked;
         [SerializeField] private Sprite _setting_NonClicked;
         private GameObject _currActiveUI = null;
+
         #region Enums
         enum Images
         {
@@ -58,7 +59,7 @@ namespace Blind
             InitEvents();
             Time.timeScale = 0;
 
-            _transition = FindObjectOfType<TransitionPoint>();
+            _transition = GameObject.Find("TransitionStart_Main").GetComponent<TransitionPoint>();
 
             _settingUI.SetActive(false);
             _clueUI.SetActive(false);
@@ -166,6 +167,15 @@ namespace Blind
             {
                 //Get<Image>((int)Images.Image_Cursor).transform.position = Get<Image>(_currCursor).transform.position;
                 PushButton((_currCursor - 1 + MENU_SIZE) % MENU_SIZE);
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                if (_transition != null)
+                {
+                    UIManager.Instance.ShowPopupUI<UI_GoMainPopup>();
+                }
                 return;
             }
         }

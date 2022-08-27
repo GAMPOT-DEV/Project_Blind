@@ -24,7 +24,7 @@ namespace Blind
                 _monoBehaviour.Paring();
             if (_monoBehaviour.CheckForDash())
             {
-                _monoBehaviour.Dashs();
+                _monoBehaviour.DashStart();
             }
             if (_monoBehaviour.CheckForAttack())
             {

@@ -1,6 +1,8 @@
 ﻿using Spine.Unity;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 namespace Blind
 {
@@ -30,7 +32,7 @@ namespace Blind
         [Range(0f, 1f)] public float airborneAccelProportion;
         [Range(0f, 1f)] public float airborneDecelProportion;
 
-        [SerializeField] private float _dashSpeed; // = 10f;
+        [SerializeField] public float _dashSpeed; // = 10f;
         [SerializeField] private float _defaultTime = 0.1f;
         [SerializeField] public float _attackMove = 1f;
         [SerializeField] public float _maxComboDelay;
@@ -50,6 +52,7 @@ namespace Blind
         [SerializeField] private Transform _spawnPoint;
         private float _dashTime;
         private float _defaultSpeed;
+        private bool _candash = true;
         private int _dashCount;
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
@@ -120,46 +123,29 @@ namespace Blind
             float acceleration = useInput && InputController.Instance.Horizontal.ReceivingInput ? groundAcceleration : groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
-        
-        public void Dash()
-        {
 
-            _dashTime -= Time.deltaTime;
-            _maxSpeed = _dashSpeed;
-            int Playerflip;
-            if (_renderer != null)
-            {
-                if (_renderer.flipX) Playerflip = 1;
-                else Playerflip = -1;
-            }
-            else
-            {
-                if (skeletonmecanim.Skeleton.FlipX) Playerflip = 1;
-                else Playerflip = -1;
-            }
-            float desiredSpeed = Playerflip * _maxSpeed * 0.1f; 
-            _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 0.5f);
-            _dashTime = _defaultTime;
-            _maxSpeed = _defaultSpeed;
+        public void DashStart()
+        {
+            StartCoroutine(Dash());
         }
-
-        public void DashCoolTime()
+        public IEnumerator Dash()
         {
-            StartCoroutine(ReturnDashCount());
+            _animator.SetTrigger("Dash");
+            _candash = false;
+            float originalGravity = _gravity;
+            float desiredSpeed = GetFacing() * _dashSpeed * 0.1f;
+            Debug.Log(desiredSpeed);
+            _moveVector.x = desiredSpeed;
+            _moveVector.y = 0;
+            yield return new WaitForSeconds(_defaultTime);
+            _gravity = originalGravity;
+            yield return new WaitForSeconds(1f);
+            _candash = true;
+
         }
         public bool CheckForDash()
         {
-            return InputController.Instance.Dash.Down && InputController.Instance.Vertical.Value>-float.Epsilon && !isOnLava;
-        }
-
-        public void Dashs()
-        {
-            _animator.SetTrigger("Dash");
-        }
-        IEnumerator ReturnDashCount()
-        {
-            yield return new WaitForSeconds(1f);
-            _dashCount = 1;
+            return InputController.Instance.Dash.Down && InputController.Instance.Vertical.Value>-float.Epsilon && !isOnLava && _candash;
         }
 
         /// <summary>
@@ -445,7 +431,7 @@ namespace Blind
         public void UpdateVelocity()
         {
             Vector2 velocity = _characterController2D.Velocity;
-            _animator.SetFloat("RunningSpeed",Mathf.Abs(velocity.x));
+            _animator.SetFloat("RunningSpeed", Math.Abs(velocity.x));
             _animator.SetFloat("VerticalSpeed",velocity.y);
         }
         
