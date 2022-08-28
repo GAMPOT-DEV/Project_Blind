@@ -135,8 +135,17 @@ namespace Blind
             float originalGravity = _gravity;
             float desiredSpeed = GetFacing() * _dashSpeed * 0.1f;
             Debug.Log(desiredSpeed);
-            _moveVector.x = desiredSpeed;
-            _moveVector.y = 0;
+            if (_characterController2D.IsGrounded && _moveVector.x == 0)
+            {
+                _moveVector.x = desiredSpeed * 2;
+                _moveVector.y = 0;
+            }
+            else
+            {
+                _moveVector.x = desiredSpeed;
+                _moveVector.y = 0;
+            }
+
             yield return new WaitForSeconds(_defaultTime);
             _gravity = originalGravity;
             yield return new WaitForSeconds(1f);
@@ -464,12 +473,14 @@ namespace Blind
         
         public void RespawnFacing()
         {
-            _renderer.flipX = true;
+            if (_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
+            else _renderer.flipX = true;
         }
 
         public int GetFacing()
         {
-            return _renderer.flipX ? 1 : -1;
+            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? 1 : -1;
+            else return _renderer.flipX ? 1 : -1;
         }
 
         public int GetEnemyFacing(EnemyCharacter obj)
