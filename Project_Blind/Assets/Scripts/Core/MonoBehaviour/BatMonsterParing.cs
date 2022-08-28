@@ -19,7 +19,14 @@ namespace Blind
 
         public override void EnemyDibuff()
         {
-            
+            if (_gameobject.StunGauge ==10)
+            {
+                
+            }
+            else
+            {
+                // 
+            }
         }
     }
 }

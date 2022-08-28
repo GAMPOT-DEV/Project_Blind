@@ -15,6 +15,10 @@ namespace Blind
         private Coroutine Co_stun;
         private Coroutine Co_die;
         
+        public int StunGauge;
+        public int maxStunGauge;
+
+        public bool isPowerAttack;
         private void Awake()
         {
             _sensingRange = new Vector2(10f, 5f);
