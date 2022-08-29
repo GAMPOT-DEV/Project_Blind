@@ -96,7 +96,7 @@ namespace Blind
                 }
             }
 
-            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y + 2);
+            Vector2 pointA = new Vector2(_player._playerposition.x + facing, _player._playerposition.y + 2);
             hitbox = pointA;
             if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
             else size = new Vector2(pointA.x - x, pointA.y - y);

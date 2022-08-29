@@ -8,6 +8,8 @@ namespace Blind
     {
         private IBossPhase Phase;
         [SerializeField] private List<BossAttackPattern<FirstBossEnemy>> _patternList = new List<BossAttackPattern<FirstBossEnemy>>();
+        public Transform _floorStart;
+        public Transform _floorEnd;
         private BossAttackPattern<FirstBossEnemy> _pattern;
 
         private void Awake()
@@ -15,10 +17,13 @@ namespace Blind
             Init();
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
+            ChangePattern(2);
+            StartPattern();
         }
         public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)
         {
             _pattern = pattern;
+            _pattern.Initialise(gameObject.GetComponent<FirstBossEnemy>());
         }
 
         public void StartPattern()

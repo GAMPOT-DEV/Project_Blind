@@ -71,7 +71,7 @@ namespace Blind
             {
                 if (_sprite.flipX != _isFlip) facing = 1;
             }
-            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            Vector2 pointA = new Vector2(gameObject.GetComponent<PlayerCharacter>()._playerposition.x + facing, gameObject.GetComponent<PlayerCharacter>()._playerposition.y);
             hitbox = pointA;
             if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
             else size = new Vector2(pointA.x - x, pointA.y - y);
