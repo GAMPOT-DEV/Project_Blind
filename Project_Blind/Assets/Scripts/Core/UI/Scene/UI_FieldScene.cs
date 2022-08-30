@@ -36,8 +36,8 @@ namespace Blind
             EnemyCharacter monster = FindObjectOfType<EnemyCharacter>();
             if (monster != null)
             {
-                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster.HP.GetDamage(1.0f), Define.UIEvent.Click);
-                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster.HP.GetHeal(1.0f), Define.UIEvent.Click);
+                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster.Hp.GetDamage(1.0f), Define.UIEvent.Click);
+                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster.Hp.GetHeal(1.0f), Define.UIEvent.Click);
             }
         }
         public override void Init()

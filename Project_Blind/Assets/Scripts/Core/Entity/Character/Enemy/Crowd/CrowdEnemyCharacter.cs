@@ -64,7 +64,7 @@ namespace Blind
             }
             _characterController2D.OnFixedUpdate();
             //체력 업데이트
-            if (HP.GetHP() <= 0)
+            if (Hp.GetHP() <= 0)
                 state = State.Die;
         }
 
@@ -111,9 +111,9 @@ namespace Blind
             return;
         }
 
-        protected void Init()
+        protected void Awake()
         {
-            base.Init(); 
+            base.Awake(); 
             state = State.Patrol;
             playerFinder.setRange(_sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
