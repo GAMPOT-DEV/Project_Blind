@@ -14,7 +14,6 @@ namespace Blind.Boss
         }
         public override void AttackPattern()
         {
-            Debug.Log("dd");
             Init();
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
             int range = RandomRange();
@@ -31,8 +30,6 @@ namespace Blind.Boss
                 bossHand.transform.position = _floorEnd.position;
                 bossHand.GetTransform(_floorEnd,_floorStart);
             }
-
-            bossHand.isMove = true;
         }
         
         private int RandomRange()

@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace Blind
 {
+    class MyClass
+    {
+        private KeyCode A;
+        private KeyCode B;
+        private string name;
+        
+    }
     /// <summary>
     /// 입력을 받는 매니저입니다.
     /// 키 입력을 할당하고 어떤 키가 어떤 상태인지 확인할 수 있습니다.
@@ -30,6 +37,10 @@ namespace Blind
         public InputButton Attack;
         public InputButton Skill;
         public InputButton ItemT;
+        public InputButton DownJump;
+        public InputButton LeftMove;
+        public InputButton RightMove;
+        public InputButton ChangeSlot;
 
 
         public InputAxis Horizontal;
@@ -40,7 +51,10 @@ namespace Blind
         {
             base.Awake();
             // 조작키를 할당합니다.
-            Jump = new InputButton(KeyCode.Space,XboxControllerButtons.A);
+            Jump = new InputButton(KeyCode.W,XboxControllerButtons.A);
+            DownJump = new InputButton(KeyCode.S, XboxControllerButtons.B);
+            LeftMove = new InputButton(KeyCode.A, XboxControllerButtons.A);
+            RightMove = new InputButton(KeyCode.D, XboxControllerButtons.X);
             Paring = new InputButton(KeyCode.K, XboxControllerButtons.Leftstick);
             Interaction = new InputButton(KeyCode.N, XboxControllerButtons.X);
             Attack = new InputButton(KeyCode.J, XboxControllerButtons.RightBumper);
@@ -49,6 +63,7 @@ namespace Blind
             Horizontal = new InputAxis(KeyCode.D, KeyCode.A, XboxControllerAxes.LeftstickHorizontal);
             Vertical = new InputAxis(KeyCode.W,KeyCode.S,XboxControllerAxes.LeftstickVertical);
             Skill = new InputButton(KeyCode.I, XboxControllerButtons.LeftBumper);
+            ChangeSlot = new InputButton(KeyCode.E, XboxControllerButtons.X);
             ItemT = new InputButton(KeyCode.Q, XboxControllerButtons.Y);
         }
 
@@ -61,6 +76,9 @@ namespace Blind
             _HaveControl = true;
             
             Jump.Get(fixedUpdateHappened,inputType);
+            DownJump.Get(fixedUpdateHappened, inputType);
+            LeftMove.Get(fixedUpdateHappened, inputType);
+            RightMove.Get(fixedUpdateHappened, inputType);
             Paring.Get(fixedUpdateHappened, inputType);
             Interaction.Get(fixedUpdateHappened, inputType);
             Dash.Get(fixedUpdateHappened, inputType);
@@ -70,6 +88,7 @@ namespace Blind
             Vertical.Get(inputType);
             Skill.Get(fixedUpdateHappened, inputType);
             ItemT.Get(fixedUpdateHappened, inputType);
+            ChangeSlot.Get(fixedUpdateHappened, inputType);
         }
         /// <summary>
         /// 막은 키 입력을 다시 활성화 합니다.
@@ -81,6 +100,9 @@ namespace Blind
             _HaveControl = true;
             
             GainControl(Jump);
+            GainControl(DownJump);
+            GainControl(LeftMove);
+            GainControl(RightMove);
             GainControl(Paring);
             GainControl(Interaction);
             GainControl(Horizontal);
@@ -90,6 +112,7 @@ namespace Blind
             GainControl(Attack);
             GainControl(Skill);
             GainControl(ItemT);
+            GainControl(ChangeSlot);
         }
         
         /// <summary>
@@ -102,6 +125,9 @@ namespace Blind
             _HaveControl = false;
             
             ReleaseControl(Jump,resetValues);
+            ReleaseControl(DownJump, resetValues);
+            ReleaseControl(LeftMove, resetValues);
+            ReleaseControl(RightMove, resetValues);
             ReleaseControl(Paring, resetValues);
             ReleaseControl(Interaction, resetValues);
             ReleaseControl(Horizontal,resetValues);
@@ -111,6 +137,7 @@ namespace Blind
             ReleaseControl(Attack, resetValues);
             ReleaseControl(Skill, resetValues);
             ReleaseControl(ItemT, resetValues);
+            ReleaseControl(ChangeSlot, resetValues);
         }
 
         public void ReKetSet(string key, KeyCode keycode)
