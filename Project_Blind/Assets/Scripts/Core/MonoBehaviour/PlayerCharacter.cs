@@ -20,6 +20,7 @@ namespace Blind
         private Animator _animator;
         private SpriteRenderer _renderer;
         private Paringable _paring;
+        public Vector2 _playerposition;
 
         [SerializeField] private float _jumpSpeed = 3f;
         [SerializeField] private float _jumpAbortSpeedReduction = 100f;
@@ -115,6 +116,7 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
+            _playerposition = new Vector2(transform.position.x, transform.position.y + 4f);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -424,8 +426,9 @@ namespace Blind
         public void ThrowItem()
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
-            bullet.transform.position = transform.position;
-            bullet.GetFacing(_renderer.flipX);
+            bullet.transform.position = _playerposition;
+            if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
+            else bullet.GetFacing(_renderer.flipX);
         }
         public void Talk()
         {
