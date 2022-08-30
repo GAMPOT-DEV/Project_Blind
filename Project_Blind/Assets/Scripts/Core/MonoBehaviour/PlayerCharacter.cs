@@ -121,8 +121,24 @@ namespace Blind
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
         {
-            float desiredSpeed = useInput ? InputController.Instance.Horizontal.Value * _maxSpeed * speedScale : 0f;
-            float acceleration = useInput && InputController.Instance.Horizontal.ReceivingInput ? groundAcceleration : groundDeceleration;
+            int flip = 0;
+            bool isInputCheck;
+            if (InputController.Instance.LeftMove.Held)
+            {
+                flip = -1;
+            }
+            else if (InputController.Instance.RightMove.Held)
+            {
+                flip = 1;
+            }
+            
+            if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
+                flip = 0;
+
+            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = false;
+            else isInputCheck = true;
+            float desiredSpeed = useInput ? flip * _maxSpeed * speedScale : 0f;
+            float acceleration = useInput && isInputCheck ? groundAcceleration : groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
 
@@ -156,7 +172,7 @@ namespace Blind
         }
         public bool CheckForDash()
         {
-            return InputController.Instance.Dash.Down && InputController.Instance.Vertical.Value>-float.Epsilon && !isOnLava && _candash;
+            return InputController.Instance.Dash.Down && !InputController.Instance.DownJump.Held && !isOnLava && _candash;
         }
 
         /// <summary>
@@ -164,9 +180,9 @@ namespace Blind
         /// </summary>
         public void Jump()
         {
-            if (InputController.Instance.Vertical.Value >0)
+            if (InputController.Instance.Jump.Down)
             {
-                if(!(InputController.Instance.Vertical.Value < 0)) { // 아래 버튼을 누르지 않았다면
+                if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = _jumpSpeed;
                 }
                 _animator.SetTrigger("Jump");
@@ -348,7 +364,7 @@ namespace Blind
         /// </summary>
         public bool CheckForFallInput()
         {
-            return InputController.Instance.Vertical.Value < -float.Epsilon && InputController.Instance.Jump.Down;
+            return InputController.Instance.DownJump.Held&& InputController.Instance.Dash.Down;
         }
 
         /// <summary>
@@ -449,10 +465,11 @@ namespace Blind
         
         public void UpdateFacing()
         {
-            bool faceLeft = InputController.Instance.Horizontal.Value < 0f;
-            bool faceRight = InputController.Instance.Horizontal.Value > 0f;
+            bool faceLeft = InputController.Instance.LeftMove.Held;
+            bool faceRight = InputController.Instance.RightMove.Held;
             if (faceLeft)
             {
+                if(faceRight) return;
                 if(_renderer == null) skeletonmecanim.Skeleton.FlipX = false;
                 else _renderer.flipX = false;
             }

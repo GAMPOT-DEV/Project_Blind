@@ -164,7 +164,7 @@ namespace Blind
         {
             yield return new WaitForSeconds(time);
             Flip();
-            state = State.Patrol;
+            state = State.Patrol; 
             Co_default = null;
         }
 

@@ -7,6 +7,7 @@ namespace Blind
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             _monoBehaviour.MeleeAttackComoEnd();
+            _monoBehaviour.GroundedHorizontalMovement(false);
             _monoBehaviour._isHurtCheck = false;
             animator.speed = 2f;
         }

@@ -88,11 +88,15 @@ namespace Blind
                     _isParing = false;
                     Destroy(batMonsterparing);
                 }
-                else if (_hitObj.tag.Equals("Untagged")) //10: projectile
+                else if(_hitObj.GetComponent<BossHand>() != null)
                 {
-                    gameObject.GetComponent<PlayerCharacter>().PlayerInvincibility();
-                    _hitObj.GetComponent<Projectile>().Paring();
+                    Debug.Log("sdw");
+                    ParingEffect<BossHand>.Initialise(_hitObj.GetComponent<BossHand>());
+                    BossHandParing bossHandParing = _hitObj.gameObject.AddComponent<BossHandParing>();
+                    bossHandParing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
+                    bossHandParing.EnemyDibuff();
                     _isParing = false;
+                    Destroy(bossHandParing);
                 }
             }
         }
