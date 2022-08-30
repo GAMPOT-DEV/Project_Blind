@@ -6,11 +6,16 @@ namespace Blind
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
         {
-            _monoBehaviour.Dash();
+            animator.speed = 2.5f;
+        }
+        public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
+            AnimatorControllerPlayable controller)
+        {
+            _monoBehaviour.GroundedHorizontalMovement(false);
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            _monoBehaviour.DashCoolTime();
+            animator.speed = 1f;
         }
     }
 }
