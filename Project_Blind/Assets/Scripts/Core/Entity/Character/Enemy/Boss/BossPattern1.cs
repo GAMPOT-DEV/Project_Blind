@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Blind.Boss
+namespace Blind
 {
     public class BossPattern1 : BossAttackPattern<FirstBossEnemy>
     {
