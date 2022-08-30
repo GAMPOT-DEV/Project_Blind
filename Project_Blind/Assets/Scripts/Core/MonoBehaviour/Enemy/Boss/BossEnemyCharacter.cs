@@ -22,20 +22,20 @@ namespace Blind
 
         protected virtual void FixedUpdate()
         {
-            switch (state)
-            {
-                case State.Phase:
-                    updatePhase();
-                    break;
-                case State.Hitted:
-                    updateHitted();
-                    break;
-                case State.Stun:
-                    updateStun();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            // switch (state)
+            // {
+            //     case State.Phase:
+            //         updatePhase();
+            //         break;
+            //     case State.Hitted:
+            //         updateHitted();
+            //         break;
+            //     case State.Stun:
+            //         updateStun();
+            //         break;
+            //     default:
+            //         throw new ArgumentOutOfRangeException();
+            // }
         }
 
         protected virtual void updatePhase()

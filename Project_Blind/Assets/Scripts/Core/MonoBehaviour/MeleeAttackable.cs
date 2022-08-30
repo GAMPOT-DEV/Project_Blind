@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
+using Spine.Unity;
 
 namespace Blind
 {
@@ -14,6 +15,7 @@ namespace Blind
         private bool canDamage;
         private Vector2 size;
         private SpriteRenderer sprite = null;
+        private ISkeletonComponent _skeletonComponent;
         private Collider2D[] ResultObj = new Collider2D[10];
         private ContactFilter2D _attackcontactfilter;
         public LayerMask hitLayer;
@@ -27,6 +29,7 @@ namespace Blind
             _attackcontactfilter.layerMask = hitLayer;
             _attackcontactfilter.useLayerMask = true;
             sprite = GetComponent<SpriteRenderer>();
+            _skeletonComponent = GetComponent<SkeletonMecanim>();
             if (sprite != null)
             {
                 _isSpriteFlip = sprite.flipX;
@@ -81,11 +84,19 @@ namespace Blind
         {
             PlayerCharacter _player = gameObject.GetComponent<PlayerCharacter>();
             int facing = -1;
-            if (sprite.flipX)
+            if (sprite == null)
             {
-                facing = 1;
+                if (_skeletonComponent.Skeleton.FlipX) facing = 1;
             }
-            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y + 2);
+            else
+            {
+                if (sprite.flipX)
+                {
+                    facing = 1;
+                }
+            }
+
+            Vector2 pointA = new Vector2(_player._playerposition.x + facing, _player._playerposition.y + 2);
             hitbox = pointA;
             if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
             else size = new Vector2(pointA.x - x, pointA.y - y);

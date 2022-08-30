@@ -6,7 +6,7 @@ namespace Blind.Boss
     {
         public override void AttackPattern()
         {
-            Debug.Log("pattern1");
+            
         }
     }
 }

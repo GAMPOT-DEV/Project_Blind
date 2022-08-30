@@ -20,6 +20,7 @@ namespace Blind
         private Animator _animator;
         private SpriteRenderer _renderer;
         private Paringable _paring;
+        public Vector2 _playerposition;
 
         [SerializeField] private float _jumpSpeed = 3f;
         [SerializeField] private float _jumpAbortSpeedReduction = 100f;
@@ -115,6 +116,7 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
+            _playerposition = new Vector2(transform.position.x, transform.position.y + 4f);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -135,8 +137,17 @@ namespace Blind
             float originalGravity = _gravity;
             float desiredSpeed = GetFacing() * _dashSpeed * 0.1f;
             Debug.Log(desiredSpeed);
-            _moveVector.x = desiredSpeed;
-            _moveVector.y = 0;
+            if (_characterController2D.IsGrounded && _moveVector.x == 0)
+            {
+                _moveVector.x = desiredSpeed * 2;
+                _moveVector.y = 0;
+            }
+            else
+            {
+                _moveVector.x = desiredSpeed;
+                _moveVector.y = 0;
+            }
+
             yield return new WaitForSeconds(_defaultTime);
             _gravity = originalGravity;
             yield return new WaitForSeconds(1f);
@@ -415,8 +426,9 @@ namespace Blind
         public void ThrowItem()
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
-            bullet.transform.position = transform.position;
-            bullet.GetFacing(_renderer.flipX);
+            bullet.transform.position = _playerposition;
+            if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
+            else bullet.GetFacing(_renderer.flipX);
         }
         public void Talk()
         {
@@ -464,12 +476,14 @@ namespace Blind
         
         public void RespawnFacing()
         {
-            _renderer.flipX = true;
+            if (_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
+            else _renderer.flipX = true;
         }
 
         public int GetFacing()
         {
-            return _renderer.flipX ? 1 : -1;
+            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? 1 : -1;
+            else return _renderer.flipX ? 1 : -1;
         }
 
         public int GetEnemyFacing(EnemyCharacter obj)

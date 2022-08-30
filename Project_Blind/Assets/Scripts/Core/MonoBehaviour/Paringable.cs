@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using Spine.Unity;
 using UnityEngine;
 
 namespace Blind
@@ -10,6 +11,7 @@ namespace Blind
         private int y;
         private Vector2 size;
         private SpriteRenderer _sprite;
+        private ISkeletonComponent _skeletonComponent;
         private Collider2D[] _result = new Collider2D[10];
         private ContactFilter2D _filter;
         private Collider2D _hitObj;
@@ -23,11 +25,16 @@ namespace Blind
             this.x = x;
             this.y = y;
             _sprite = GetComponent<SpriteRenderer>();
+            _skeletonComponent = GetComponent<SkeletonMecanim>();
             _filter.layerMask = _hitLayer;
             _filter.useLayerMask = true;
             if (_sprite != null)
             {
                 _isFlip = _sprite.flipX;
+            }
+            else
+            {
+                _isFlip = _skeletonComponent.Skeleton.FlipX;
             }
         }
 
@@ -56,8 +63,15 @@ namespace Blind
             if (!_isParing) return;
             
             int facing = -1;
-            if (_sprite.flipX != _isFlip) facing = 1;
-            Vector2 pointA = new Vector2(transform.position.x + facing, transform.position.y);
+            if (_sprite == null)
+            {
+                if (_skeletonComponent.Skeleton.FlipX != _isFlip) facing = 1;
+            }
+            else
+            {
+                if (_sprite.flipX != _isFlip) facing = 1;
+            }
+            Vector2 pointA = new Vector2(gameObject.GetComponent<PlayerCharacter>()._playerposition.x + facing, gameObject.GetComponent<PlayerCharacter>()._playerposition.y);
             hitbox = pointA;
             if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
             else size = new Vector2(pointA.x - x, pointA.y - y);
