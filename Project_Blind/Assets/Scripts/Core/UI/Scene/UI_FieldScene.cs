@@ -51,8 +51,8 @@ namespace Blind
             UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
             _player = FindObjectOfType<PlayerCharacter>();
-            _hp = _player.HpCenter.GetHP();
-            _maxHp = _player.HpCenter.GetMaxHP();
+            _hp = _player.Hp.GetHP();
+            _maxHp = _player.Hp.GetMaxHP();
 
             _waveGauges[0] = Get<Slider>((int)Sliders.Slider_WaveGauge1);
             _waveGauges[1] = Get<Slider>((int)Sliders.Slider_WaveGauge2);
@@ -68,12 +68,11 @@ namespace Blind
         }
         private void InitEvents()
         {
-            _player.HpCenter.RefreshHpUI += OnHpChanged;
+            _player.Hp.RefreshHpUI += OnHpChanged;
             _player.OnWaveGaugeChanged += OnWaveGaugeChanged;
             // Test
-            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.HpCenter.GetDamage(1.0f), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.OnHurt(), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.HpCenter.GetHeal(1.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.Hitted(1.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.Hp.GetHeal(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(TestWaveGauge, Define.UIEvent.Click);
         }
         private void HandleUIKeyInput()

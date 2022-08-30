@@ -6,7 +6,7 @@ namespace Blind
     {
         public override void OnCheckForParing(PlayerCharacter _player)
         {
-            _player.PlayerInvincibility();
+            _player.CharacterInvincible();
             _player.CurrentWaveGauge += _player.paringWaveGauge;
         }
 

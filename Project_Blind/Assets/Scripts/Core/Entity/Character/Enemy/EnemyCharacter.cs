@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class EnemyCharacter : MonoBehaviour
+    public class EnemyCharacter : Character
     {
         protected CharacterController2D _characterController2D;
         protected Rigidbody2D rigid;
@@ -70,13 +70,23 @@ namespace Blind
         public void hitted(int dir)
         {
             Debug.Log("Enemy Hitted !");
-            _characterController2D.Move(new Vector2(dir, 0));
             StartCoroutine(CoHitted());
         }
 
         protected virtual IEnumerator CoHitted()
         {
             return null;
+        }
+
+        protected override void onHurt()
+        {
+            return;
+        }
+
+        protected override void HurtMove(Facing enemyFacing)
+        {
+            _characterController2D.Move(new Vector2((float)enemyFacing*1, 0));
+            return;
         }
     }
 }

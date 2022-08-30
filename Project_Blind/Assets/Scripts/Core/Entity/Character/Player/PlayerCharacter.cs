@@ -9,11 +9,10 @@ namespace Blind
     /// <summary>
     /// 플레이어 캐릭터에 관한 클래스입니다.
     /// </summary>
-    public class PlayerCharacter : MonoBehaviour,IGameManagerObj
+    public class PlayerCharacter : Character,IGameManagerObj
     {
         public Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
-        public UnitHP HpCenter;
         private ISkeletonComponent skeletonmecanim;
         [SerializeField] private int maxhp;
         public MeleeAttackable _attack;
@@ -81,14 +80,15 @@ namespace Blind
         public bool isOnLava;
 
         public Action<int> OnWaveGaugeChanged;
-        private void Awake()
+
+        public override void Awake()
         {
+            base.Awake();
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             skeletonmecanim = GetComponent<SkeletonMecanim>();
             _attack = GetComponent<MeleeAttackable>();
             _paring = GetComponent<Paringable>();
-            HpCenter = new UnitHP(maxhp);
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             _defaultSpeed = _maxSpeed;
@@ -278,20 +278,7 @@ namespace Blind
         {
             _paring.DisableParing();
         }
-        public void PlayerInvincibility()
-        {
-            StartCoroutine(Invincibility());
-        }
 
-        IEnumerator Invincibility()
-        {
-            _isInvincibility = true;
-            HpCenter.Invincibility();
-            yield return new WaitForSeconds(0.5f);
-            HpCenter.unInvicibility();
-            _isInvincibility = false;
-            // 나중에 데미지관련 class만들어서 무적 넣을 예정
-        }
 
         public bool CheckForAttack()
         {
@@ -375,22 +362,15 @@ namespace Blind
             _characterController2D.MakePlatformFallthrough();
         }
 
-        public void OnHurt()
+        protected override void onHurt()
         {
-            if (HpCenter.GetHP() > 1)
-            {
-                _animator.SetTrigger("Hurt");
-                _isHurtCheck = true;
-            }
+            _animator.SetTrigger("Hurt");
+            _isHurtCheck = true;
         }
 
-        public void HurtMove(float newMoveVector)
+        protected override void HurtMove(Facing enemyFacing)
         {
-            _moveVector.x = newMoveVector;
-        }
-        public bool CheckForDeed()
-        {
-            return HpCenter.GetHP()<= 0;
+            _moveVector.x = _hurtMove * (float)enemyFacing;
         }
 
         public void Deed()
@@ -418,7 +398,7 @@ namespace Blind
         public void Respawn()
         {
             RespawnFacing();
-            HpCenter.ResetHp();
+            Hp.ResetHp();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
             gameObject.transform.position = _spawnPoint.position;
@@ -503,10 +483,6 @@ namespace Blind
             else return _renderer.flipX ? 1 : -1;
         }
 
-        public int GetEnemyFacing(EnemyCharacter obj)
-        {
-            return obj.ReturnFacing() ? 1 : -1;
-        }
         public void Log() {
             Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
         }
@@ -525,7 +501,7 @@ namespace Blind
             while (isOnLava)
             {
                 // hp를 깎음
-                HpCenter.GetDamage(1f);
+                Hp.GetDamage(1f);
                 yield return new WaitForSeconds(0.5f);
             }
             DebuffOff();
