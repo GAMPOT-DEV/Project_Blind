@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 
 namespace Blind
@@ -12,7 +13,9 @@ namespace Blind
     {
         private Coroutine _coroutine = null;
         private SpriteRenderer _renderer;
+        private MeshRenderer render;
         private Material _material;
+        [SerializeField] private List<Material> meta = new List<Material>();
         public void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
