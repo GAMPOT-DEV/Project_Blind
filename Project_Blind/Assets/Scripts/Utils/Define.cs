@@ -70,4 +70,19 @@ public class Define
         BaseAttack,
         PowerAttack
     }
+    public enum KeyAction
+    {
+        RightMove,
+        LeftMove,
+        Jump,
+        JumpDown,
+        Dash,
+        Attack,
+        Skill,
+        UseItem,
+        ChangeSlot,
+        Reflect,
+        Wave,
+        Interaction,
+    }
 }
