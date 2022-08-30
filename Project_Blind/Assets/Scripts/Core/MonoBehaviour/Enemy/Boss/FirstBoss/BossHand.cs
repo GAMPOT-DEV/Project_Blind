@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace Blind
@@ -10,10 +11,12 @@ namespace Blind
         private BoxCollider2D _collider;
         public Transform StartTransform;
         public Transform EndTransform;
+        private Vector2 TargetPostion;
         private bool isRight;
         private int speed = 2;
         private int facing;
-        public bool isMove;
+        private bool isStop;
+        private bool isParing = false;
         public void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
@@ -22,8 +25,27 @@ namespace Blind
 
         public void FixedUpdate()
         {
-            transform.position = Vector2.MoveTowards(transform.position, EndTransform.position, 0.5f);
-            if(transform.position.x == EndTransform.position.x) Destroy(gameObject);
+            if (!isStop)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, EndTransform.position, 0.5f);
+                if (transform.position.x == EndTransform.position.x) Destroy(gameObject);
+            }
+            else
+            {
+                if (!isParing)
+                {
+                    TargetPostion = new Vector2(transform.position.x + (2f * -facing), transform.position.y);
+                    isParing = true;
+                }
+                transform.position = Vector2.MoveTowards(transform.position,
+                    TargetPostion, 0.1f);
+
+                if (transform.position.x == TargetPostion.x)
+                {
+                    Destroy(gameObject);
+                    isStop = false;
+                }
+            }
         }
 
         public void GetFacing(int facing)
@@ -56,7 +78,6 @@ namespace Blind
         {
             if (col.gameObject.tag.Equals("Player"))
             {
-                Debug.Log("DD");
                 PlayerCharacter _player = col.gameObject.GetComponent<PlayerCharacter>();
                 if (!_player._isInvincibility)
                 {
@@ -67,6 +88,11 @@ namespace Blind
                     StartCoroutine(ResetTrigger());
                 }
             }
+        }
+
+        public void Paring()
+        {
+            isStop = true;
         }
     }
 }
