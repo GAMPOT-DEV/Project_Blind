@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
-namespace Blind.Boss
+namespace Blind
 {
     public class BossPattern3: BossAttackPattern<FirstBossEnemy>
+
     {
         public override void AttackPattern()
         {
