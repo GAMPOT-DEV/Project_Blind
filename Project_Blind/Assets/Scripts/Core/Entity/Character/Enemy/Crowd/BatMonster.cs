@@ -19,8 +19,9 @@ namespace Blind
         public int maxStunGauge;
 
         public bool isPowerAttack;
-        private void Awake()
+        protected void Awake()
         {
+            base.Awake();
             _sensingRange = new Vector2(10f, 5f);
             
             _speed = 0.1f ;
@@ -28,10 +29,8 @@ namespace Blind
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(1.5f, 2f);
-            _maxHP = 10;
             _stunTime = 1f;
 
-            base.Init();
         }
 
         private void Start()

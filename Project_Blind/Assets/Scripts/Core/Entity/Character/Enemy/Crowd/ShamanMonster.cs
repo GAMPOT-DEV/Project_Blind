@@ -17,18 +17,16 @@ namespace Blind
 
         [SerializeField] private float _projectileSpeed = 10;
 
-        private void Awake()
+        protected void Awake()
         { 
+            base.Awake();
             _sensingRange = new Vector2(8f, 5f);
             _speed = 0.07f;
             _runSpeed = 0.1f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(6f, 5f);
-            _maxHP = 10;
             _stunTime = 1f;
-
-            base.Init();
         }
 
         private void Start()
@@ -122,7 +120,7 @@ namespace Blind
 
             rigid.AddForce(hittedVelocity);
 
-            if (HP.GetHP() <= 0)
+            if (Hp.GetHP() <= 0)
                 state = State.Die;
             else if (attackSense.Attackable())
                 state = State.AttackStandby;

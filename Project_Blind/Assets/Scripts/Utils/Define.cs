@@ -71,3 +71,11 @@ public class Define
         PowerAttack
     }
 }
+
+namespace Blind {
+    public enum Facing
+    {
+        Right = 1,
+        Left = -1
+    }
+}

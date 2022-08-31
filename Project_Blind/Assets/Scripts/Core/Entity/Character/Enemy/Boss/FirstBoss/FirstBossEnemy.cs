@@ -14,7 +14,7 @@ namespace Blind
 
         private void Awake()
         {
-            Init();
+            base.Awake();
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
             ChangePattern(2);

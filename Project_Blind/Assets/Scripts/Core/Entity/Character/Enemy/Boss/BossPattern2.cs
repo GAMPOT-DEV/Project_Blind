@@ -17,7 +17,6 @@ namespace Blind
             Init();
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
             int range = RandomRange();
-            bossHand.GetFacing(range);
             if (range == 0)
             {
                 bossHand.transform.position = _floorStart.position;
