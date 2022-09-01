@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Blind
@@ -18,7 +17,7 @@ namespace Blind
         [SerializeField] private float _projectileSpeed = 10;
 
         protected void Awake()
-        { 
+        {
             base.Awake();
             _sensingRange = new Vector2(8f, 5f);
             _speed = 0.07f;
@@ -47,6 +46,7 @@ namespace Blind
                 state = State.Chase;
                 return;
             }
+
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
                 state = State.Default;
@@ -66,7 +66,6 @@ namespace Blind
                 StopCoroutine(Co_default);
                 Co_default = null;
                 state = State.Chase;
-                return;
             }
         }
 
@@ -81,9 +80,9 @@ namespace Blind
             if (attackSense.Attackable())
             {
                 //if (attackSense.isAvoid())
-                    //state = State.Avoid;
+                //state = State.Avoid;
                 //else
-                    state = State.AttackStandby;
+                state = State.AttackStandby;
                 return;
             }
 
@@ -92,31 +91,21 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            if (Co_attack == null)
-            {
-                Co_attack = StartCoroutine(CoAttack());
-            }
+            if (Co_attack == null) Co_attack = StartCoroutine(CoAttack());
         }
 
         protected override void updateAttackStandby()
         {
-            if (Co_attackStandby == null)
-            {
-                Co_attackStandby = StartCoroutine(CoAttackStandby(_attackSpeed));
-            }
+            if (Co_attackStandby == null) Co_attackStandby = StartCoroutine(CoAttackStandby(_attackSpeed));
         }
 
         protected override void updateHitted()
         {
-            Vector2 hittedVelocity = Vector2.zero;
+            var hittedVelocity = Vector2.zero;
             if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
-            {
                 hittedVelocity = new Vector2(-200, 400);
-            }
             else
-            {
                 hittedVelocity = new Vector2(200, 400);
-            }
 
             rigid.AddForce(hittedVelocity);
 
@@ -133,10 +122,7 @@ namespace Blind
         protected override void updateAvoid()
         {
             _characterController2D.Move(-playerFinder.ChasePlayer() * _runSpeed);
-            if (Co_avoid == null)
-            {
-                Co_avoid = StartCoroutine(CoAvoid());
-            }
+            if (Co_avoid == null) Co_avoid = StartCoroutine(CoAvoid());
 
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
@@ -161,8 +147,7 @@ namespace Blind
         {
             if (state == State.Attack)
                 return true;
-            else
-                return false;
+            return false;
         }
 
         private IEnumerator CoWaitDefalut(float time)
@@ -182,7 +167,7 @@ namespace Blind
 
         private IEnumerator CoAttack()
         {
-            GameObject projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
+            var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
             projectile.GetComponent<Projectile>().SetProjectile(dir, _damage, _projectileSpeed);
 
@@ -199,9 +184,13 @@ namespace Blind
                     state = State.AttackStandby;
             }
             else if (playerFinder.FindPlayer())
+            {
                 state = State.Chase;
+            }
             else
+            {
                 state = State.Default;
+            }
 
             Co_attack = null;
         }
@@ -227,12 +216,13 @@ namespace Blind
             {
                 var color = _sprite.color;
                 //color.a is 0 to 1. So .5*time.deltaTime will take 2 seconds to fade out
-                color.a -= (.25f * Time.deltaTime);
+                color.a -= .25f * Time.deltaTime;
 
                 _sprite.color = color;
                 //wait for a frame
                 yield return null;
             }
+
             Destroy(gameObject);
         }
 

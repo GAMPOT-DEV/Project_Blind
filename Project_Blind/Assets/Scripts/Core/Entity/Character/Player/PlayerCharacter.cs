@@ -14,7 +14,6 @@ namespace Blind
         public Vector2 _moveVector;
         private PlayerCharacterController2D _characterController2D;
         private ISkeletonComponent skeletonmecanim;
-        [SerializeField] private int maxhp;
         public MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
