@@ -15,7 +15,7 @@ namespace Blind
 
         private bool _firstFrameHappened;
         private bool _lastFrameHappened;
-        
+
         /// <summary>
         /// 모든 상태머신들을 초기화합니다.
         /// </summary>

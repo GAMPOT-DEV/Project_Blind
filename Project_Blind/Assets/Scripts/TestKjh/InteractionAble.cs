@@ -26,7 +26,7 @@ namespace Blind
             _collider.isTrigger = true;
             _collider.size = new Vector2(x, y);
         }
-        void Awake()
+        protected virtual void Awake()
         {
             Init();
         }

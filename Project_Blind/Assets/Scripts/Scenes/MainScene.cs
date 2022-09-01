@@ -11,6 +11,8 @@ namespace Blind
             base.Init();
             SceneType = Define.Scene.MainScene;
             UIManager.Instance.ShowSceneUI<UI_MainScene>();
+
+            DataManager.Instance.LoadGameData();
         }
         public override void Clear()
         {

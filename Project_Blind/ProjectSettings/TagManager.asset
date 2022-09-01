@@ -7,6 +7,8 @@ TagManager:
   - Floor
   - Enemy
   - Background
+  - Lava
+  - InvisibleFloor
   layers:
   - Default
   - TransparentFX
@@ -18,12 +20,12 @@ TagManager:
   - Wall
   - FieldOfWar
   - Background
-  - 
-  - 
+  - Projectile
+  - Lava
   - UnitsJumping
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - Boss
   - 
   - 
   - 
@@ -52,4 +54,10 @@ TagManager:
     locked: 0
   - name: Secondary
     uniqueID: 3105953885
+    locked: 0
+  - name: MapObjects
+    uniqueID: 3121054711
+    locked: 0
+  - name: FX
+    uniqueID: 2993151065
     locked: 0

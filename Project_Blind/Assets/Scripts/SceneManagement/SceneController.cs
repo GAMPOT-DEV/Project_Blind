@@ -11,10 +11,12 @@ namespace Blind
     /// </summary>
     public class SceneController : Manager<SceneController>
     {
+        public bool isLoading;
         public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
         protected override void Awake()
         {
             base.Awake();
+            isLoading = false;
         }
         public void LoadScene(Define.Scene type)
         {
@@ -40,12 +42,19 @@ namespace Blind
         //여기에 씬 이동 전 인벤토리 세이브, 로딩, 게임 세이브 등 작업을 합니다.
         protected IEnumerator Transition(Define.Scene newSceneName, TransitionDestination.DestinationTag destinationTag, TransitionPoint.TransitionType transitionType = TransitionPoint.TransitionType.DifferentScene)
         {
-            string sceneName = newSceneName.ToString();
-            yield return SceneManager.LoadSceneAsync(sceneName);
-            //LoadingSceneController.LoadScene(sceneName);
-            TransitionDestination entrance = GetDestination(destinationTag);
-            SetEnteringLocation(entrance);
-            yield return new WaitForSeconds(1);
+            if (!isLoading)
+            {
+                isLoading = true;
+                yield return UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeScenOut());
+                string sceneName = newSceneName.ToString();
+                yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName));
+                yield return new WaitForSeconds(0.5f); //씬 로딩이 90퍼에서 100퍼까지 되길 기다리는 시간
+                TransitionDestination entrance = GetDestination(destinationTag);
+                SetEnteringLocation(entrance);
+                yield return new WaitForSeconds(0.5f); // 카메라 움직임을 기다리는 시간
+                UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeSceneIn());
+                isLoading = false;
+            }
         }
 
         protected TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
@@ -53,6 +62,7 @@ namespace Blind
             TransitionDestination[] entrances = FindObjectsOfType<TransitionDestination>();
             for (int i = 0; i < entrances.Length; i++)
             {
+                Debug.Log(entrances[i].name);
                 if (entrances[i].destinationTag == destinationTag)
                     return entrances[i];
             }
@@ -61,7 +71,7 @@ namespace Blind
         }
 
         // 캐릭터 이동
-        protected void SetEnteringLocation(TransitionDestination entrance)
+        public static void SetEnteringLocation(TransitionDestination entrance)
         {
             if (entrance == null)
             {
@@ -74,6 +84,10 @@ namespace Blind
                 Transform enteringTransform = entrance.transformingObject.transform;
                 enteringTransform.position = entranceLocation.position;
                 enteringTransform.rotation = entranceLocation.rotation;
+            }
+            else
+            {
+                Debug.Log("entrance object가 null임");
             }
         }
     }

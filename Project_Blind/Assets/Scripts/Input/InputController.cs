@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Blind
 {
@@ -8,6 +9,15 @@ namespace Blind
     /// </summary>
     public class InputController : InputComponent<InputController>
     {
+        // 초기 키 저장하는 딕셔너리
+        public Dictionary<Define.KeyAction, KeyCode> InitialKeyActions
+        {
+            get;
+            private set;
+        } = new Dictionary<Define.KeyAction, KeyCode>();
+
+        public Dictionary<Define.KeyAction, KeyCode> CurrKeyActions = new Dictionary<Define.KeyAction, KeyCode>();
+
         protected bool _HaveControl = true;
 
         protected bool _DebugMenuIsOpen = false;
@@ -18,6 +28,13 @@ namespace Blind
         public InputButton Paring;
         public InputButton Interaction;
         public InputButton Attack;
+        public InputButton Skill;
+        public InputButton ItemT;
+        public InputButton DownJump;
+        public InputButton LeftMove;
+        public InputButton RightMove;
+        public InputButton ChangeSlot;
+
 
         public InputAxis Horizontal;
         public InputAxis Vertical;
@@ -27,14 +44,20 @@ namespace Blind
         {
             base.Awake();
             // 조작키를 할당합니다.
-            Jump = new InputButton(KeyCode.Space,XboxControllerButtons.A);
-            Paring = new InputButton(KeyCode.L, XboxControllerButtons.Leftstick);
-            Interaction = new InputButton(KeyCode.F, XboxControllerButtons.X);
-            Attack = new InputButton(KeyCode.K, XboxControllerButtons.RightBumper);
-            Dash = new InputButton(KeyCode.X, XboxControllerButtons.LeftBumper);
-            Wave = new InputButton(KeyCode.C,XboxControllerButtons.B);
+            Jump = new InputButton(KeyCode.W,XboxControllerButtons.A);
+            DownJump = new InputButton(KeyCode.S, XboxControllerButtons.B);
+            LeftMove = new InputButton(KeyCode.A, XboxControllerButtons.A);
+            RightMove = new InputButton(KeyCode.D, XboxControllerButtons.X);
+            Paring = new InputButton(KeyCode.K, XboxControllerButtons.Leftstick);
+            Interaction = new InputButton(KeyCode.N, XboxControllerButtons.X);
+            Attack = new InputButton(KeyCode.J, XboxControllerButtons.RightBumper);
+            Dash = new InputButton(KeyCode.Space, XboxControllerButtons.LeftBumper);
+            Wave = new InputButton(KeyCode.LeftControl,XboxControllerButtons.B);
             Horizontal = new InputAxis(KeyCode.D, KeyCode.A, XboxControllerAxes.LeftstickHorizontal);
             Vertical = new InputAxis(KeyCode.W,KeyCode.S,XboxControllerAxes.LeftstickVertical);
+            Skill = new InputButton(KeyCode.I, XboxControllerButtons.LeftBumper);
+            ChangeSlot = new InputButton(KeyCode.E, XboxControllerButtons.X);
+            ItemT = new InputButton(KeyCode.Q, XboxControllerButtons.Y);
         }
 
         /// <summary>
@@ -46,6 +69,9 @@ namespace Blind
             _HaveControl = true;
             
             Jump.Get(fixedUpdateHappened,inputType);
+            DownJump.Get(fixedUpdateHappened, inputType);
+            LeftMove.Get(fixedUpdateHappened, inputType);
+            RightMove.Get(fixedUpdateHappened, inputType);
             Paring.Get(fixedUpdateHappened, inputType);
             Interaction.Get(fixedUpdateHappened, inputType);
             Dash.Get(fixedUpdateHappened, inputType);
@@ -53,6 +79,9 @@ namespace Blind
             Wave.Get(fixedUpdateHappened,inputType);
             Horizontal.Get(inputType);
             Vertical.Get(inputType);
+            Skill.Get(fixedUpdateHappened, inputType);
+            ItemT.Get(fixedUpdateHappened, inputType);
+            ChangeSlot.Get(fixedUpdateHappened, inputType);
         }
         /// <summary>
         /// 막은 키 입력을 다시 활성화 합니다.
@@ -64,6 +93,9 @@ namespace Blind
             _HaveControl = true;
             
             GainControl(Jump);
+            GainControl(DownJump);
+            GainControl(LeftMove);
+            GainControl(RightMove);
             GainControl(Paring);
             GainControl(Interaction);
             GainControl(Horizontal);
@@ -71,6 +103,9 @@ namespace Blind
             GainControl(Dash);
             GainControl(Wave);
             GainControl(Attack);
+            GainControl(Skill);
+            GainControl(ItemT);
+            GainControl(ChangeSlot);
         }
         
         /// <summary>
@@ -83,6 +118,9 @@ namespace Blind
             _HaveControl = false;
             
             ReleaseControl(Jump,resetValues);
+            ReleaseControl(DownJump, resetValues);
+            ReleaseControl(LeftMove, resetValues);
+            ReleaseControl(RightMove, resetValues);
             ReleaseControl(Paring, resetValues);
             ReleaseControl(Interaction, resetValues);
             ReleaseControl(Horizontal,resetValues);
@@ -90,6 +128,41 @@ namespace Blind
             ReleaseControl(Dash,resetValues);
             ReleaseControl(Wave,resetValues);
             ReleaseControl(Attack, resetValues);
+            ReleaseControl(Skill, resetValues);
+            ReleaseControl(ItemT, resetValues);
+            ReleaseControl(ChangeSlot, resetValues);
+        }
+
+        public void ReKetSet(string key, KeyCode keycode)
+        {
+            switch (key)
+            {
+                case "Jump":
+                    Jump = new InputButton(keycode, XboxControllerButtons.A);
+                    break;
+                case "Attack":
+                    Attack = new InputButton(keycode, XboxControllerButtons.RightBumper);
+                    break;
+                case "Paring":
+                    Paring = new InputButton(keycode, XboxControllerButtons.Leftstick);
+                    break;
+                case "Interaction":
+                    Interaction = new InputButton(keycode, XboxControllerButtons.X);
+                    break;
+                case "Dash":
+                    Dash = new InputButton(keycode, XboxControllerButtons.LeftBumper);
+                    break;
+                case "Wave":
+                    Wave = new InputButton(keycode, XboxControllerButtons.B);
+                    break;
+                case "Skill":
+                    Skill = new InputButton(keycode, XboxControllerButtons.LeftBumper);
+                    break;
+                case "ItemT":
+                    ItemT = new InputButton(keycode, XboxControllerButtons.Y);
+                    break;
+            }
         }
     }
+    
 }

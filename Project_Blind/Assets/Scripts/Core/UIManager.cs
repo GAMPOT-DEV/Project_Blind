@@ -1,4 +1,5 @@
 ﻿using Blind;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,6 +30,22 @@ namespace Blind
 
         int _deviceWidth = Screen.width;
         int _deviceHeight = Screen.height;
+
+        public Action KeyInputEvents = null;
+        private void Update()
+        {
+            BroadCastKeyInputEvents();
+        }
+        private void BroadCastKeyInputEvents()
+        {
+            if (KeyInputEvents == null)
+                return;
+
+            if (Input.anyKey == false)
+                return;
+
+            KeyInputEvents.Invoke();
+        }
         public Define.Resolution Resolution
         {
             get
@@ -160,7 +177,7 @@ namespace Blind
                 name = typeof(T).Name;
 
             //_uiNum = _uiNum + 1;
-            GameObject go = ResourceManager.Instance.Instantiate($"TestKjh/{name}");
+            GameObject go = ResourceManager.Instance.Instantiate($"UI/WorldSpace/{name}");
             T ui = Util.GetOrAddComponent<T>(go);
             _worldSpaceUIs.Add(ui);
 
@@ -258,6 +275,7 @@ namespace Blind
             CloseAllPopupUI();
             CloseAllWorldSpaceUI();
             CloseAllNormalUI();
+            KeyInputEvents = null;
             SceneUI = null;
         }
     }

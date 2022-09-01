@@ -22,7 +22,7 @@ namespace Blind
                 RefreshHpUI.Invoke(_health, _maxHealth);
         }
 
-        public UnitHP(int maxHealth) {
+        public UnitHP(float maxHealth) {
             _maxHealth = maxHealth;
             _health = _maxHealth;
 
@@ -63,6 +63,11 @@ namespace Blind
         {
             isInvincibility = false;
             Debug.Log("무적 풀림");
+        }
+
+        public void ResetHp()
+        {
+            _health = _maxHealth;
         }
     }
 }

@@ -23,10 +23,17 @@ public class Define
     {
         Unknown,
         GameScene,
-        황현택,
-        황현택_dest,
         MainScene,
         김종현,
+        TestFogOfWar,
+        심연,
+        절외부,
+        숲,
+        마을,
+        고목,
+        동굴,
+        장산범입구,
+        장산범방,
     }
 
     public enum Sound
@@ -41,6 +48,8 @@ public class Define
         Click,
         Drag,
         EndDrag,
+        Enter,
+        Exit,
     }
     public enum Language
     {
@@ -53,5 +62,24 @@ public class Define
     {
         public int width;
         public int height;
+    }
+    public enum AttackType
+    {
+        NonAttack,
+        ParingImpossibleAttack,
+        BaseAttack,
+        PowerAttack
+    }
+    public enum KeyAction
+    {
+
+    }
+}
+
+namespace Blind {
+    public enum Facing
+    {
+        Right = 1,
+        Left = -1
     }
 }
