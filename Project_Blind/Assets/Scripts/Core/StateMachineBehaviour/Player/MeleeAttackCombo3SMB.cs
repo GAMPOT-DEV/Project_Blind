@@ -5,15 +5,17 @@ namespace Blind
 {
     public class MeleeAttackCombo3SMB : SceneLinkedSMB<PlayerCharacter>
     {
+        private bool isPowerAttach;
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             _monoBehaviour.StopMoveY();
         }
 
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10)
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge >= 10)
             {
-                animator.speed = 0.1f;
+                animator.speed = 0.06f;
+                isPowerAttach = true;
             }
             else
             {
@@ -53,20 +55,24 @@ namespace Blind
                 _monoBehaviour.MeleeAttackCombo3();
             if(_monoBehaviour._clickcount == 0)
                 _monoBehaviour.MeleeAttackComoEnd();
-            
-            if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10)
+            if (isPowerAttach)
             {
-                animator.speed = 1.0f;
-                _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
-                _monoBehaviour.enableAttack();
-                _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
-                _monoBehaviour.CurrentWaveGauge -= 10;
+                if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge >= 10)
+                {
+                    animator.speed = 1.0f;
+                    _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
+                    _monoBehaviour.enableAttack();
+                    _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
+                    _monoBehaviour.CurrentWaveGauge -= 10;
+                    isPowerAttach = false;
+                }
             }
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if(_monoBehaviour._clickcount == 3)
                 _monoBehaviour.MeleeAttackComoEnd();
+            if (animator.speed == 0.06f) animator.speed = 1.0f;
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
         }

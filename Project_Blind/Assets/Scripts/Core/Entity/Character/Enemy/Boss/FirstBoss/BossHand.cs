@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Security.Cryptography;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Blind
 {
@@ -17,6 +18,7 @@ namespace Blind
         private Facing facing;
         private bool isStop;
         private bool isParing = false;
+        private bool isCameraShakeStop = false;
         public void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
@@ -28,7 +30,11 @@ namespace Blind
             if (!isStop)
             {
                 transform.position = Vector2.MoveTowards(transform.position, EndTransform.position, 0.5f);
-                if (transform.position.x == EndTransform.position.x) Destroy(gameObject);
+                if (transform.position.x == EndTransform.position.x)
+                {
+                    isCameraShakeStop = true;
+                    Destroy(gameObject);
+                }
             }
             else
             {
@@ -44,6 +50,7 @@ namespace Blind
                 {
                     Destroy(gameObject);
                     isStop = false;
+                    isCameraShakeStop = true;
                 }
             }
         }
@@ -87,6 +94,7 @@ namespace Blind
                 }
             }
         }
+        
 
         public void Paring()
         {

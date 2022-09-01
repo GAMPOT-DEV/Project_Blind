@@ -3,13 +3,6 @@ using UnityEngine;
 
 namespace Blind
 {
-    class MyClass
-    {
-        private KeyCode A;
-        private KeyCode B;
-        private string name;
-        
-    }
     /// <summary>
     /// 입력을 받는 매니저입니다.
     /// 키 입력을 할당하고 어떤 키가 어떤 상태인지 확인할 수 있습니다.
