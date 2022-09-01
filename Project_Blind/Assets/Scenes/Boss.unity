@@ -153,13 +153,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc96fc356e874c55b9e7cd80f0dc19c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHp: 0
   _sensingRange: {x: 0, y: 0}
   _speed: 0
   _runSpeed: 0
   _attackCoolTime: 0
   _attackSpeed: 0
   _attackRange: {x: 0, y: 0}
-  _maxHP: 0
   _damage: 0
   _stunTime: 0
   WallLayer:
@@ -215,7 +215,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.0047169924, b: 0.0047169924, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -233,7 +233,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75521383}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.02, y: -3.61, z: 0}
+  m_LocalPosition: {x: -1.96, y: -1.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -242,7 +242,7 @@ Transform:
   - {fileID: 354324652}
   - {fileID: 167538456}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &106299648
 PrefabInstance:
@@ -622,15 +622,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2176902310378890848, guid: 74622ba9c4b4a45448c1092384ff07ec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.888811
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2176902310378890848, guid: 74622ba9c4b4a45448c1092384ff07ec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.017075
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2176902310378890848, guid: 74622ba9c4b4a45448c1092384ff07ec, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.21164776
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2176902310378890848, guid: 74622ba9c4b4a45448c1092384ff07ec, type: 3}
       propertyPath: m_LocalRotation.w
@@ -663,6 +663,10 @@ PrefabInstance:
     - target: {fileID: 2324475547580092848, guid: 74622ba9c4b4a45448c1092384ff07ec, type: 3}
       propertyPath: m_Name
       value: Pattern4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5921972313138647892, guid: 74622ba9c4b4a45448c1092384ff07ec, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74622ba9c4b4a45448c1092384ff07ec, type: 3}
@@ -1609,8 +1613,8 @@ MonoBehaviour:
   - {x: 0.5, y: 0.5, z: 0}
   - {x: 0.5, y: -0.49999952, z: 0}
   m_ShapePathHash: 0
-  m_Mesh: {fileID: 2071774088}
-  m_InstanceId: 42776
+  m_Mesh: {fileID: 1880277935}
+  m_InstanceId: 31282
 --- !u!1 &1023719589
 GameObject:
   m_ObjectHideFlags: 0
@@ -1758,7 +1762,7 @@ Transform:
   m_Children:
   - {fileID: 1850591567}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1349575902
 GameObject:
@@ -1820,7 +1824,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1481200029
 PrefabInstance:
@@ -2367,6 +2371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca3a64169bd4dd4bb08e07908ae7a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHp: 0
   _moveVector: {x: 0, y: 0}
   maxhp: 10
   _attack: {fileID: 0}
@@ -2469,7 +2474,7 @@ MonoBehaviour:
   _hitLayer:
     serializedVersion: 2
     m_Bits: 0
---- !u!43 &2071774088
+--- !u!43 &1880277935
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2754,6 +2759,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8157876191047730946, guid: 3430f6696b9a4494eb3a7a052df60316, type: 3}
+      propertyPath: maxHp
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8157876191047730946, guid: 3430f6696b9a4494eb3a7a052df60316, type: 3}
       propertyPath: _spawnPoint
       value: 
