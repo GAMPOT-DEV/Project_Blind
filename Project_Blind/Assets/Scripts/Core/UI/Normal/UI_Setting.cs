@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ namespace Blind
         const int SIZE = 5;
         const int BUTTON_CNT = 3;
         Define.Resolution[] _resolutions = new Define.Resolution[SIZE];
+
+        private bool _isInputKeyChange = false;
 
         [SerializeField] private GameObject GraphicsSetting;
         [SerializeField] private GameObject AudioSetting;
@@ -30,8 +33,11 @@ namespace Blind
 
         [SerializeField] private Type _type;
 
+        [SerializeField] private GameObject testKeyChange;
+
         GameData _gameData = null;
 
+        private Texts _currKeyText = Texts.Unknown;
         public enum Type
         {
             Main,
@@ -40,7 +46,22 @@ namespace Blind
         #region Enums
         enum Texts
         {
-            Text_ScreenSizeValue
+            Unknown,
+
+            Text_ScreenSizeValue,
+
+            Text_AfterChange_RightMove,
+            Text_AfterChange_LeftMove,
+            Text_AfterChange_Jump,
+            Text_AfterChange_JumpDown,
+            Text_AfterChange_Dash,
+            Text_AfterChange_Attack,
+            Text_AfterChange_Skill,
+            Text_AfterChange_UseItem,
+            Text_AfterChange_ChangeSlot,
+            Text_AfterChange_Reflect,
+            Text_AfterChange_Wave,
+            Text_AfterChange_Interaction
         }
         enum Images
         {
@@ -53,6 +74,7 @@ namespace Blind
 
             Button_WindowModeOnOff,
             Button_ScreenVibrationOnOff,
+
         }
         enum Sliders
         {
@@ -133,6 +155,21 @@ namespace Blind
             KeyBindsSetting.SetActive(false);
 
             ChangeCursor((int)Images.Button_Graphics);
+
+            Get<Text>((int)Texts.Text_AfterChange_RightMove).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_RightMove));
+            Get<Text>((int)Texts.Text_AfterChange_LeftMove).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_LeftMove));
+            Get<Text>((int)Texts.Text_AfterChange_Jump).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Jump));
+            Get<Text>((int)Texts.Text_AfterChange_JumpDown).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_JumpDown));
+            Get<Text>((int)Texts.Text_AfterChange_Dash).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Dash));
+            Get<Text>((int)Texts.Text_AfterChange_Attack).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Attack));
+            Get<Text>((int)Texts.Text_AfterChange_Skill).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Skill));
+            Get<Text>((int)Texts.Text_AfterChange_UseItem).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_UseItem));
+            Get<Text>((int)Texts.Text_AfterChange_ChangeSlot).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_ChangeSlot));
+            Get<Text>((int)Texts.Text_AfterChange_Reflect).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Reflect));
+            Get<Text>((int)Texts.Text_AfterChange_Wave).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Wave));
+            Get<Text>((int)Texts.Text_AfterChange_Interaction).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Interaction));
+
+            testKeyChange.SetActive(false);
         }
         private void OnEnable()
         {
@@ -148,6 +185,8 @@ namespace Blind
 
             if (_uiNum != UIManager.Instance.UINum)
                 return;
+
+            if (_isInputKeyChange) return;
 
             if (Input.GetKeyDown(KeyCode.Escape) && _type == Type.Main)
             {
@@ -226,6 +265,7 @@ namespace Blind
             //SoundManager.Instance.StopBGM();
             DataManager.Instance.SaveGameData();
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+            UIManager.Instance.KeyInputEvents -= HandleKeyChangeInput;
             UIManager.Instance.CloseNormalUI(this);
         }
         #endregion
@@ -270,12 +310,6 @@ namespace Blind
         private void ChangeMotionEffect()
         {
             _gameData.motionEffect = Get<Slider>((int)Sliders.Slider_MotionEffect).value;
-        }
-        #endregion
-        #region KeySetting Event
-        private void PushKeySettingButton()
-        {
-            Debug.Log("Push KeySetting Button");
         }
         #endregion
         #region ScreenEvent
@@ -341,5 +375,38 @@ namespace Blind
             ExitCursor(_currCursor);
             EnterCursor(nextCursor);
         }
+
+        private void PushChangeKeyButton(Texts type)
+        {
+            _isInputKeyChange = true;
+            UIManager.Instance.KeyInputEvents -= HandleKeyChangeInput;
+            UIManager.Instance.KeyInputEvents += HandleKeyChangeInput;
+
+            testKeyChange.SetActive(true);
+
+            _currKeyText = type;
+            // 텍스트가 눌리면 입력을 받는다. TODO
+            // 입력을 한번 받으면 그만 받게한다 TODO
+
+        }
+
+        private void HandleKeyChangeInput()
+        {
+            if (Input.anyKeyDown)
+            {
+                foreach(KeyCode k in Enum.GetValues(typeof(KeyCode)))
+                {
+                    if (Input.GetKeyDown(k))
+                    {
+                        Debug.Log(Enum.GetName(typeof(KeyCode), (int)k));
+                        Get<Text>((int)_currKeyText).text = Enum.GetName(typeof(KeyCode), (int)k);
+                        UIManager.Instance.KeyInputEvents -= HandleKeyChangeInput;
+                        _isInputKeyChange = false;
+                        testKeyChange.SetActive(false);
+                    }
+                }
+            }
+        }
+
     }
 }

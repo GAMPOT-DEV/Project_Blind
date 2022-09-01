@@ -70,6 +70,10 @@ public class Define
         BaseAttack,
         PowerAttack
     }
+    public enum KeyAction
+    {
+
+    }
 }
 
 namespace Blind {
