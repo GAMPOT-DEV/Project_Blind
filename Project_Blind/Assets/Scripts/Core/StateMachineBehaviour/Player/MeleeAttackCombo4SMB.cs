@@ -5,6 +5,7 @@ namespace Blind
 {
     public class MeleeAttackCombo4SMB: SceneLinkedSMB<PlayerCharacter>
     {
+        private bool isPowerAttack;
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             _monoBehaviour.enableAttack();
             _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
@@ -12,9 +13,10 @@ namespace Blind
 
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge>10)
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge>=10)
             {
-                animator.speed = 0.1f;
+                animator.speed = 0.06f;
+                isPowerAttack = true;
             }
             else
             {
@@ -38,18 +40,26 @@ namespace Blind
                 _monoBehaviour.UpdateFacing();
             }
             else _monoBehaviour.GroundedHorizontalMovement(false);
-            
-            if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10)
+
+            if (isPowerAttack)
             {
-                animator.speed = 1.0f;
-                _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
-                _monoBehaviour.enableAttack();
-                _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
-                _monoBehaviour.CurrentWaveGauge -= 10;
+                if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge >= 10)
+                {
+                    animator.speed = 1.0f;
+                    _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
+                    _monoBehaviour.enableAttack();
+                    _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
+                    _monoBehaviour.CurrentWaveGauge -= 10;
+                    isPowerAttack = false;
+                }
             }
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            if (animator.speed == 0.06f)
+            {
+                animator.speed = 1.0f;
+            }
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
             _monoBehaviour.MeleeAttackComoEnd();

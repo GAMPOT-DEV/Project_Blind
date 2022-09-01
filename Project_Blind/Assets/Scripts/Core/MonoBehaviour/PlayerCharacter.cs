@@ -56,6 +56,7 @@ namespace Blind
         private bool _candash = true;
         private int _dashCount;
         public bool isJump;
+        private int flip;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         public bool _isInvincibility;
@@ -131,12 +132,12 @@ namespace Blind
             {
                 flip = 1;
             }
-            
+
             if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
                 flip = 0;
 
-            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = false;
-            else isInputCheck = true;
+            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = true;
+            else isInputCheck = false;
             float desiredSpeed = useInput ? flip * _maxSpeed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? groundAcceleration : groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
