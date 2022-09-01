@@ -51,10 +51,9 @@ GameObject:
   - component: {fileID: 3758395228494642314}
   - component: {fileID: 3758395228494642421}
   - component: {fileID: 3758395228494642420}
-  - component: {fileID: 620436838901214144}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bat Monster
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -264,7 +263,7 @@ MonoBehaviour:
   WallLayer:
     serializedVersion: 2
     m_Bits: 128
-  WallCheck: {fileID: 0}
+  WallCheck: {fileID: 3758395228340987582}
   StunGauge: 0
   maxStunGauge: 0
   isPowerAttack: 0
@@ -374,24 +373,6 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 8
---- !u!114 &620436838901214144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3758395228494642423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c8717e10b272bf42b05d363ac2679a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skeletonGraphic: {fileID: 0}
-  customMaterialOverrides:
-  - overrideEnabled: 0
-    originalTexture: {fileID: 0}
-    replacementMaterial: {fileID: 2100000, guid: 76485883649374f84a09870d7f053003, type: 2}
-  customTextureOverrides: []
 --- !u!1 &3758395228640963974
 GameObject:
   m_ObjectHideFlags: 0
