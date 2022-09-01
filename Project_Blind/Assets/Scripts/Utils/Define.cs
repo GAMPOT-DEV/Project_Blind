@@ -70,19 +70,12 @@ public class Define
         BaseAttack,
         PowerAttack
     }
-    public enum KeyAction
+}
+
+namespace Blind {
+    public enum Facing
     {
-        RightMove,
-        LeftMove,
-        Jump,
-        JumpDown,
-        Dash,
-        Attack,
-        Skill,
-        UseItem,
-        ChangeSlot,
-        Reflect,
-        Wave,
-        Interaction,
+        Right = 1,
+        Left = -1
     }
 }

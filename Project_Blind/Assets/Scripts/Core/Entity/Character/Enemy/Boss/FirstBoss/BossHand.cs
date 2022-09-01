@@ -14,7 +14,7 @@ namespace Blind
         private Vector2 TargetPostion;
         private bool isRight;
         private int speed = 2;
-        private int facing;
+        private Facing facing;
         private bool isStop;
         private bool isParing = false;
         public void Awake()
@@ -34,7 +34,7 @@ namespace Blind
             {
                 if (!isParing)
                 {
-                    TargetPostion = new Vector2(transform.position.x + (2f * -facing), transform.position.y);
+                    TargetPostion = new Vector2(transform.position.x + (2f * (float)facing), transform.position.y);
                     isParing = true;
                 }
                 transform.position = Vector2.MoveTowards(transform.position,
@@ -48,17 +48,17 @@ namespace Blind
             }
         }
 
-        public void GetFacing(int facing)
+        public void GetFacing(bool facing)
         {
-            if (facing == 0)
+            if (facing)
             {
                 sprite.flipX = false;
-                this.facing = 1;
+                this.facing = Facing.Right;
             }
             else
             {
                 sprite.flipX = true;
-                this.facing = -1;
+                this.facing = Facing.Left;
             }
         }
 
@@ -82,9 +82,7 @@ namespace Blind
                 if (!_player._isInvincibility)
                 {
                     _collider.isTrigger = true;
-                    _player.HpCenter.GetDamage(5f);
-                    _player.OnHurt();
-                    _player.HurtMove(_player._hurtMove * facing);
+                    _player.HittedWithKnockBack(new AttackInfo(5f,facing));
                     StartCoroutine(ResetTrigger());
                 }
             }

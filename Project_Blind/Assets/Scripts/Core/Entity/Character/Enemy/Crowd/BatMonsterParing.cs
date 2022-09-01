@@ -9,7 +9,7 @@ namespace Blind
             Debug.Log(_gameobject.name);
             if (_gameobject.isAttack())
             {
-                _player.PlayerInvincibility();
+                _player.CharacterInvincible();
                 if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
                     _player.CurrentWaveGauge += _player.paringWaveGauge;
                 else

@@ -22,7 +22,7 @@ namespace Blind
                 RefreshHpUI.Invoke(_health, _maxHealth);
         }
 
-        public UnitHP(int maxHealth) {
+        public UnitHP(float maxHealth) {
             _maxHealth = maxHealth;
             _health = _maxHealth;
 
