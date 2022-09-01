@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Blind
 {
@@ -15,6 +16,15 @@ namespace Blind
     /// </summary>
     public class InputController : InputComponent<InputController>
     {
+        // 초기 키 저장하는 딕셔너리
+        public Dictionary<Define.KeyAction, KeyCode> InitialKeyActions
+        {
+            get;
+            private set;
+        } = new Dictionary<Define.KeyAction, KeyCode>();
+
+        public Dictionary<Define.KeyAction, KeyCode> CurrKeyActions = new Dictionary<Define.KeyAction, KeyCode>();
+
         protected bool _HaveControl = true;
 
         protected bool _DebugMenuIsOpen = false;
