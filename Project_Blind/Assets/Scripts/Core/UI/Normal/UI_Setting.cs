@@ -34,6 +34,10 @@ namespace Blind
         [SerializeField] private Type _type;
 
         [SerializeField] private GameObject testKeyChange;
+        [SerializeField] private GameObject parentUI;
+
+        private Dictionary<Define.KeyAction, KeyCode> newKeyDict;
+        private Dictionary<Texts, Define.KeyAction> Enum2KeyAction = new Dictionary<Texts, Define.KeyAction>();
 
         GameData _gameData = null;
 
@@ -49,6 +53,19 @@ namespace Blind
             Unknown,
 
             Text_ScreenSizeValue,
+
+            Text_BeforeChange_RightMove,
+            Text_BeforeChange_LeftMove,
+            Text_BeforeChange_Jump,
+            Text_BeforeChange_JumpDown,
+            Text_BeforeChange_Dash,
+            Text_BeforeChange_Attack,
+            Text_BeforeChange_Skill,
+            Text_BeforeChange_UseItem,
+            Text_BeforeChange_ChangeSlot,
+            Text_BeforeChange_Reflect,
+            Text_BeforeChange_Wave,
+            Text_BeforeChange_Interaction,
 
             Text_AfterChange_RightMove,
             Text_AfterChange_LeftMove,
@@ -75,6 +92,8 @@ namespace Blind
             Button_WindowModeOnOff,
             Button_ScreenVibrationOnOff,
 
+            Button_Refresh,
+            Button_Save,
         }
         enum Sliders
         {
@@ -169,7 +188,25 @@ namespace Blind
             Get<Text>((int)Texts.Text_AfterChange_Wave).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Wave));
             Get<Text>((int)Texts.Text_AfterChange_Interaction).gameObject.BindEvent(() => PushChangeKeyButton(Texts.Text_AfterChange_Interaction));
 
+            Get<Image>((int)Images.Button_Refresh).gameObject.BindEvent(InitKeySetting);
+            Get<Image>((int)Images.Button_Save).gameObject.BindEvent(SaveKeySetting);
+
+            Enum2KeyAction.Add(Texts.Text_AfterChange_RightMove, Define.KeyAction.RightMove);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_LeftMove, Define.KeyAction.LeftMove);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_Jump, Define.KeyAction.Jump);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_JumpDown, Define.KeyAction.DownJump);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_Dash, Define.KeyAction.Dash);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_Attack, Define.KeyAction.Attack);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_Skill, Define.KeyAction.Skill);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_UseItem, Define.KeyAction.ItemT);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_ChangeSlot, Define.KeyAction.ChangeSlot);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_Reflect, Define.KeyAction.Paring);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_Wave, Define.KeyAction.Wave);
+            Enum2KeyAction.Add(Texts.Text_AfterChange_Interaction, Define.KeyAction.Interaction);
+
             testKeyChange.SetActive(false);
+
+            InitBeforeChangeTexts();
         }
         private void OnEnable()
         {
@@ -362,6 +399,10 @@ namespace Blind
             ClearCurrActiveSetting();
             _settings[idx].SetActive(true);
             _currActiveSetting = _settings[idx];
+            if (_currActiveSetting == KeyBindsSetting)
+            {
+                RefreshKeyBindUI();
+            }
         }
         private void ExitCursor(int idx)
         {
@@ -378,11 +419,11 @@ namespace Blind
 
         private void PushChangeKeyButton(Texts type)
         {
-            _isInputKeyChange = true;
+
             UIManager.Instance.KeyInputEvents -= HandleKeyChangeInput;
             UIManager.Instance.KeyInputEvents += HandleKeyChangeInput;
 
-            testKeyChange.SetActive(true);
+            ControllInput(true);
 
             _currKeyText = type;
             // 텍스트가 눌리면 입력을 받는다. TODO
@@ -398,15 +439,114 @@ namespace Blind
                 {
                     if (Input.GetKeyDown(k))
                     {
-                        Debug.Log(Enum.GetName(typeof(KeyCode), (int)k));
+                        foreach(KeyCode key in newKeyDict.Values)
+                        {
+                            if (key == k)
+                            {
+                                UIManager.Instance.KeyInputEvents -= HandleKeyChangeInput;
+                                ControllInput(false);
+                                return;
+                            }
+                        }
+
+                        Define.KeyAction action = Enum2KeyAction[_currKeyText];
+
+                        newKeyDict[action] = k;
                         Get<Text>((int)_currKeyText).text = Enum.GetName(typeof(KeyCode), (int)k);
+
                         UIManager.Instance.KeyInputEvents -= HandleKeyChangeInput;
-                        _isInputKeyChange = false;
-                        testKeyChange.SetActive(false);
+                        ControllInput(false);
                     }
                 }
             }
         }
 
+        private void ControllInput(bool changeNow)
+        {
+            _isInputKeyChange = changeNow;
+            testKeyChange.SetActive(changeNow);
+            if (parentUI == null) return;
+            parentUI.GetComponent<UI_Menu>().CanInput = !changeNow;
+        }
+
+        private void InitBeforeChangeTexts()
+        {
+            Dictionary<Define.KeyAction, KeyCode> dict = InputController.Instance.CurrKeyActions;
+            foreach(Define.KeyAction action in dict.Keys)
+            {
+                KeyCode key = dict[action];
+                string keyText = Enum.GetName(typeof(KeyCode), dict[action]);
+                switch (action)
+                {
+                    case Define.KeyAction.RightMove:
+                        Get<Text>((int)Texts.Text_BeforeChange_RightMove).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_RightMove).text = keyText;
+                        break;
+                    case Define.KeyAction.LeftMove:
+                        Get<Text>((int)Texts.Text_BeforeChange_LeftMove).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_LeftMove).text = keyText;
+                        break;
+                    case Define.KeyAction.Jump:
+                        Get<Text>((int)Texts.Text_BeforeChange_Jump).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_Jump).text = keyText;
+                        break;
+                    case Define.KeyAction.DownJump:
+                        Get<Text>((int)Texts.Text_BeforeChange_JumpDown).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_JumpDown).text = keyText;
+                        break;
+                    case Define.KeyAction.Dash:
+                        Get<Text>((int)Texts.Text_BeforeChange_Dash).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_Dash).text = keyText;
+                        break;
+                    case Define.KeyAction.Attack:
+                        Get<Text>((int)Texts.Text_BeforeChange_Attack).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_Attack).text = keyText;
+                        break;
+                    case Define.KeyAction.Skill:
+                        Get<Text>((int)Texts.Text_BeforeChange_Skill).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_Skill).text = keyText;
+                        break;
+                    case Define.KeyAction.ItemT:
+                        Get<Text>((int)Texts.Text_BeforeChange_UseItem).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_UseItem).text = keyText;
+                        break;
+                    case Define.KeyAction.ChangeSlot:
+                        Get<Text>((int)Texts.Text_BeforeChange_ChangeSlot).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_ChangeSlot).text = keyText;
+                        break;
+                    case Define.KeyAction.Paring:
+                        Get<Text>((int)Texts.Text_BeforeChange_Reflect).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_Reflect).text = keyText;
+                        break;
+                    case Define.KeyAction.Wave:
+                        Get<Text>((int)Texts.Text_BeforeChange_Wave).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_Wave).text = keyText;
+                        break;
+                    case Define.KeyAction.Interaction:
+                        Get<Text>((int)Texts.Text_BeforeChange_Interaction).text = keyText;
+                        Get<Text>((int)Texts.Text_AfterChange_Interaction).text = keyText;
+                        break;
+                }
+            }
+        }
+
+        private void RefreshKeyBindUI()
+        {
+            InitBeforeChangeTexts();
+            newKeyDict = new Dictionary<Define.KeyAction, KeyCode>(InputController.Instance.CurrKeyActions);
+        }
+
+        private void InitKeySetting()
+        {
+            InputController.Instance.CurrKeyActions = new Dictionary<Define.KeyAction, KeyCode>(InputController.Instance.InitialKeyActions);
+            RefreshKeyBindUI();
+            //InputController.Instance.ReKetSet();
+        }
+        private void SaveKeySetting()
+        {
+            InputController.Instance.CurrKeyActions = newKeyDict;
+            RefreshKeyBindUI();
+            //InputController.Instance.ReKetSet();
+        }
     }
 }
