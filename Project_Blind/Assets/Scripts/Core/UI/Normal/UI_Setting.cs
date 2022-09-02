@@ -540,13 +540,13 @@ namespace Blind
         {
             InputController.Instance.CurrKeyActions = new Dictionary<Define.KeyAction, KeyCode>(InputController.Instance.InitialKeyActions);
             RefreshKeyBindUI();
-            //InputController.Instance.ReKetSet();
+            InputController.Instance.ReKetSet();
         }
         private void SaveKeySetting()
         {
             InputController.Instance.CurrKeyActions = newKeyDict;
             RefreshKeyBindUI();
-            //InputController.Instance.ReKetSet();
+            InputController.Instance.ReKetSet();
         }
     }
 }

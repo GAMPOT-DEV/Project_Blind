@@ -156,30 +156,40 @@ namespace Blind
                 switch (action)
                 {
                     case Define.KeyAction.Jump:
-                        // 이렇게?
                         Jump = new InputButton(key, XboxControllerButtons.A);
                         break;
                     case Define.KeyAction.DownJump:
+                        DownJump = new InputButton(key, XboxControllerButtons.B);
                         break;
                     case Define.KeyAction.LeftMove:
+                        LeftMove = new InputButton(key, XboxControllerButtons.A);
                         break;
                     case Define.KeyAction.RightMove:
+                        RightMove = new InputButton(key, XboxControllerButtons.X);
                         break;
                     case Define.KeyAction.Paring:
+                        Paring = new InputButton(key, XboxControllerButtons.Leftstick);
                         break;
                     case Define.KeyAction.Interaction:
+                        Interaction = new InputButton(key, XboxControllerButtons.X);
                         break;
                     case Define.KeyAction.Attack:
+                        Attack = new InputButton(key, XboxControllerButtons.RightBumper);
                         break;
                     case Define.KeyAction.Dash:
+                        Dash = new InputButton(key, XboxControllerButtons.LeftBumper);
                         break;
                     case Define.KeyAction.Wave:
+                        Wave = new InputButton(key, XboxControllerButtons.B);
                         break;
                     case Define.KeyAction.Skill:
+                        Skill = new InputButton(key, XboxControllerButtons.LeftBumper);
                         break;
                     case Define.KeyAction.ChangeSlot:
+                        ChangeSlot = new InputButton(key, XboxControllerButtons.X);
                         break;
                     case Define.KeyAction.ItemT:
+                        ItemT = new InputButton(key, XboxControllerButtons.Y);
                         break;
                 }
             }
