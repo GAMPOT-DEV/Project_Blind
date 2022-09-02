@@ -70,4 +70,16 @@ public class Define
         BaseAttack,
         PowerAttack
     }
+    public enum KeyAction
+    {
+
+    }
+}
+
+namespace Blind {
+    public enum Facing
+    {
+        Right = 1,
+        Left = -1
+    }
 }

@@ -158,11 +158,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b5285bb28742954fbcc71e3462b5020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hp: 0
-  isAttack: 0
-  layerMask:
+  maxHp: 10
+  _sensingRange: {x: 0, y: 0}
+  _speed: 0
+  _runSpeed: 0
+  _attackCoolTime: 0
+  _attackSpeed: 0
+  _attackRange: {x: 0, y: 0}
+  _maxHP: 0
+  _damage: 0
+  _stunTime: 0
+  WallLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   WallCheck: {fileID: 1679402497856284347}
 --- !u!114 &5180659260102421671
 MonoBehaviour:
@@ -176,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64c83f67d634474b896a07754de28b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meta: []
 --- !u!95 &507291986
 Animator:
   serializedVersion: 4
