@@ -8,23 +8,23 @@ namespace Blind
     public class GroundSMB : SceneLinkedSMB<PlayerCharacter>
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.Log();
-            _monoBehaviour.CheckForGrounded();
+            
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
-            _monoBehaviour.Key();
             _monoBehaviour.CheckForGrounded();
+            _monoBehaviour.WaveSensePress();
             _monoBehaviour.Jump();
+            _monoBehaviour.GroundedHorizontalMovement(_monoBehaviour._isGroundHorizontalMovement);
+            _monoBehaviour.UpdateVelocity();
+            _monoBehaviour.UpdateFacing();
+            
             if (_monoBehaviour.CheckForDash())
             {
                 _monoBehaviour.DashStart();
             }
-            _monoBehaviour.WaveSensePress();
-            _monoBehaviour.GroundedHorizontalMovement(true);
-            _monoBehaviour.UpdateVelocity();
-            _monoBehaviour.UpdateFacing();
+            
             if (_monoBehaviour.CheckForFallInput())
                 _monoBehaviour.MakePlatformFallthrough();
             if(_monoBehaviour.CheckForParing())

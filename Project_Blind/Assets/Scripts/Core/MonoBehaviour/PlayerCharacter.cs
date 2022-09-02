@@ -58,6 +58,7 @@ namespace Blind
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         public bool _isInvincibility;
+        public bool _isGroundHorizontalMovement = true;
 
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
@@ -132,13 +133,22 @@ namespace Blind
         {
             _animator.SetTrigger("Dash");
             _candash = false;
-            float originalGravity = _gravity;
             float desiredSpeed = GetFacing() * _dashSpeed * 0.1f;
-            Debug.Log(desiredSpeed);
-            _moveVector.x = desiredSpeed;
-            _moveVector.y = 0;
+            _isGroundHorizontalMovement = false;
+            if (_characterController2D.IsGrounded && _moveVector.x == 0)
+            {
+                _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed * 2, 5f);
+                _moveVector.y = 0;
+            }
+            else
+            {
+                _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, 1f);
+                _moveVector.y = 0;
+            }
+
+            Debug.Log(_moveVector.x);
             yield return new WaitForSeconds(_defaultTime);
-            _gravity = originalGravity;
+            _isGroundHorizontalMovement = true;
             yield return new WaitForSeconds(1f);
             _candash = true;
 
@@ -201,28 +211,6 @@ namespace Blind
                 _moveVector.y = 0;
             }
             _moveVector.y -= _gravity * Time.deltaTime;
-        }
-        public void AirborneHorizontalMovement()
-        {
-            float desiredSpeed = InputController.Instance.Horizontal.Value * _maxSpeed;
-
-            float acceleration;
-
-            if (InputController.Instance.Horizontal.ReceivingInput)
-                acceleration = airborneAccelProportion;
-            else
-                acceleration = airborneDecelProportion;
-
-            _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
-        }
-        public void GroundedVerticalMovement()
-        {
-            _moveVector.y -= _gravity * Time.deltaTime;
-
-            if (_moveVector.y < -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier)
-            {
-                _moveVector.y = -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier;
-            }
         }
 
         public void CheckForGrounded()

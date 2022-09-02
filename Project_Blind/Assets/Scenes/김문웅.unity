@@ -587,6 +587,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7138595047812326861, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
+      propertyPath: _jumpSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138595047812326861, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
       propertyPath: _attackMove
       value: 0.1
       objectReference: {fileID: 0}
@@ -618,6 +622,14 @@ PrefabInstance:
       propertyPath: groundedLayerMask.m_Bits
       value: 64
       objectReference: {fileID: 0}
+    - target: {fileID: 7138595048606892263, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138595048606892263, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
+      propertyPath: m_GravityScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7138595048606892266, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
       propertyPath: m_Controller
       value: 
@@ -636,17 +648,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
---- !u!114 &173849290 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7138595047812326861, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
-  m_PrefabInstance: {fileID: 173849289}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eca3a64169bd4dd4bb08e07908ae7a53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &198215491
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,6 +1427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8fa32dc51d4ed3a0c5e3c0f7d7afe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pattern: {fileID: 0}
   _patternList:
   - {fileID: 335063330}
   - {fileID: 3451752373011573886, guid: 4aaf8bb3b7ced2041b7b743666a9589c, type: 3}
@@ -2447,7 +2449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040acca4651b34056892c0620e34ed5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 173849290}
+  Player: {fileID: 1850591569}
 --- !u!4 &1023719591
 Transform:
   m_ObjectHideFlags: 0
@@ -4459,7 +4461,7 @@ MonoBehaviour:
   _moveVector: {x: 0, y: 0}
   maxhp: 10
   _attack: {fileID: 0}
-  _jumpSpeed: 3
+  _jumpSpeed: 1
   _jumpAbortSpeedReduction: 100
   _gravity: 30
   _maxSpeed: 5
@@ -4484,6 +4486,7 @@ MonoBehaviour:
   _spawnPoint: {fileID: 0}
   isJump: 0
   _isInvincibility: 0
+  _isGroundHorizontalMovement: 1
   maxWaveGauge: 0
   _currentWaveGauge: 30
   attackWaveGauge: 0
