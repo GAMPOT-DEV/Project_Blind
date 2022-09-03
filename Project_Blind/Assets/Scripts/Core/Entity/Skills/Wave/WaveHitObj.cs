@@ -12,13 +12,14 @@ namespace Blind
     public class WaveHitObj : MonoBehaviour
     {
         private Coroutine _coroutine = null;
-        private SpriteRenderer _renderer;
-        private MeshRenderer render;
+        private Renderer _renderer;
         private Material _material;
         [SerializeField] private List<Material> meta = new List<Material>();
+        private static readonly int ShowInShadow = Shader.PropertyToID("_ShowInShadow");
+
         public void Awake()
         {
-            _renderer = GetComponent<SpriteRenderer>();
+            _renderer = GetComponent<Renderer>();
             _material = _renderer.material;
         }
 
@@ -32,9 +33,9 @@ namespace Blind
         private IEnumerator Glow()
         {
             SoundManager.Instance.Play("PureWaveSound1", Define.Sound.Effect);
-            _material.SetFloat("_ShowInShadow",1);            
+            _material.SetFloat(ShowInShadow,1);            
             yield return new WaitForSeconds(5f);
-            _material.SetFloat("_ShowInShadow",0);            
+            _material.SetFloat(ShowInShadow,0);            
             _coroutine = null;
         }
     }
