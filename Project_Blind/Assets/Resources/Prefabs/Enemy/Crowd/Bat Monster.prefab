@@ -93,7 +93,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: 33e71d9d71a4b09498708826b6610611, type: 2}
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -251,15 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a95a58fc3c1409148a304641924e0be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 10
-  _sensingRange: {x: 0, y: 0}
-  _speed: 0
-  _runSpeed: 0
-  _attackCoolTime: 0
-  _attackSpeed: 0
-  _attackRange: {x: 0, y: 0}
-  _damage: 0
-  _stunTime: 0
+  Data: {fileID: 11400000, guid: ddbd3f51f221c4b57a1b05be7c80325d, type: 2}
   WallLayer:
     serializedVersion: 2
     m_Bits: 128
