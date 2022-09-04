@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d2213c103d47fd8f7fabb90679706c, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  _jumpSpeed: 3
-  _jumpAbortSpeedReduction: 100
-  _gravity: 30
-  _maxSpeed: 5
+  maxHp: 10
+  jumpSpeed: 1
+  jumpAbortSpeedReduction: 10
+  gravity: 3
+  maxSpeed: 5
   groundAcceleration: 100
   groundDeceleration: 100
   airborneAccelProportion: 0
   airborneDecelProportion: 0
-  _dashSpeed: 0
-  _defaultTime: 0.1
-  _attackMove: 1
-  _maxComboDelay: 0
-  _hurtMove: 1
+  dashSpeed: 16
+  defaultTime: 0.1
+  attackMove: 1
+  maxComboDelay: 0
+  hurtMove: 1
+  attack_x: 0
+  attack_y: 0
+  damage: 0
+  powerAttackdamage: 0
+  paring_x: 0
+  paring_y: 0

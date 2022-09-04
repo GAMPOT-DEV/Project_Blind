@@ -50,6 +50,7 @@ namespace Blind
             {
                 _monoBehaviour.Skill();
             }
+            
         }
         
     }

@@ -9,6 +9,7 @@ namespace Blind
         [SerializeField] private GameObject rangeObject;
         private BoxCollider2D _collider;
         private Transform RealAttackPostion;
+        private Vector2 currentPostion;
         private bool isAttackStart;
 
         private void Init()
@@ -49,13 +50,17 @@ namespace Blind
                 Vector2 postion = Return_RandomPosion();
                 if (n == RealAttack)
                 {
+                    Debug.Log("DD");
+
                     RealAttackPostion.position = postion;
+                    Debug.Log(RealAttackPostion.position);
                 }
                 var wave = ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense 1").GetComponent<WaveSense>();
                 wave.transform.position = postion;
                 wave.StartSpread();
                 n++;
             }
+            Debug.Log(RealAttackPostion.position);
             StartCoroutine(StartAttack());
         }
 
@@ -65,8 +70,9 @@ namespace Blind
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
 
             bossHand.transform.position = RealAttackPostion.position;
-            Transform currentPlayerPostion = player.transform;
-            bossHand.GetTransform(RealAttackPostion, currentPlayerPostion);
+            currentPostion = player.transform.position;
+            Debug.Log(RealAttackPostion.position + " " + currentPostion);
+            bossHand.GetTransform(RealAttackPostion.position, currentPostion);
         }
 
         private int RandomRange(int end = 5)

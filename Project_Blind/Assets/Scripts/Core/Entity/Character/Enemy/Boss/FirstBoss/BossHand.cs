@@ -11,7 +11,7 @@ namespace Blind
         private SpriteRenderer sprite;
         private BoxCollider2D _collider;
         public Transform StartTransform;
-        public Transform EndTransform;
+        public Vector2 EndTransform;
         private Vector2 TargetPostion;
         private bool isRight;
         private int speed = 2;
@@ -29,8 +29,8 @@ namespace Blind
         {
             if (!isStop)
             {
-                transform.position = Vector2.MoveTowards(transform.position, EndTransform.position, 0.5f);
-                if (transform.position.x == EndTransform.position.x)
+                transform.position = Vector2.MoveTowards(transform.position, EndTransform, 0.5f);
+                if (transform.position.x == EndTransform.x)
                 {
                     isCameraShakeStop = true;
                     Destroy(gameObject);
@@ -60,18 +60,18 @@ namespace Blind
             if (facing)
             {
                 sprite.flipX = false;
-                this.facing = Facing.Right;
+                this.facing = Facing.Left;
             }
             else
             {
                 sprite.flipX = true;
-                this.facing = Facing.Left;
+                this.facing = Facing.Right;
             }
         }
 
-        public void GetTransform(Transform left, Transform right)
+        public void GetTransform(Vector2 left, Vector2 right)
         {
-            transform.position = left.position;
+            transform.position = left;
             EndTransform = right;
         }
 
