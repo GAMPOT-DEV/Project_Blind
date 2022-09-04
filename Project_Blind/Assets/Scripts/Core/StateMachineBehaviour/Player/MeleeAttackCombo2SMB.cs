@@ -15,7 +15,7 @@ namespace Blind
             if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10) animator.speed = 0.1f;
             else
             {
-                if(_monoBehaviour.isJump) _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
+                if(_monoBehaviour.isJump) _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
         }
@@ -49,9 +49,9 @@ namespace Blind
             if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10)
             {
                 animator.speed = 1.0f;
-                _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
+                _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
                 _monoBehaviour.enableAttack();
-                _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
+                _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
             }
         }
