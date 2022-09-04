@@ -229,28 +229,6 @@ namespace Blind
             }
             _moveVector.y -= _gravity * Time.deltaTime;
         }
-        public void AirborneHorizontalMovement()
-        {
-            float desiredSpeed = InputController.Instance.Horizontal.Value * _maxSpeed;
-
-            float acceleration;
-
-            if (InputController.Instance.Horizontal.ReceivingInput)
-                acceleration = airborneAccelProportion;
-            else
-                acceleration = airborneDecelProportion;
-
-            _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
-        }
-        public void GroundedVerticalMovement()
-        {
-            _moveVector.y -= _gravity * Time.deltaTime;
-
-            if (_moveVector.y < -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier)
-            {
-                _moveVector.y = -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier;
-            }
-        }
 
         public void CheckForGrounded()
         {

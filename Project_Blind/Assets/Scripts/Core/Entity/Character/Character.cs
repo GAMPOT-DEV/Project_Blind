@@ -18,7 +18,7 @@ namespace Blind
         public void Hitted(float damage)
         {
             Hp.GetDamage(damage);
-            if (Hp.GetHP() < 1)
+            if (Hp.GetHP() > 1)
             {
                 onHurt();
             }
