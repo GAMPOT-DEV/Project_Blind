@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Blind.ScriptableObjects
 {
     [ CreateAssetMenu( fileName = "Player", menuName = "ScriptableObject/Player" )]
-    public class PlayerCharacter : ScriptableObject
+    public class PlayerCharacter : Character
     {
         [SerializeField] public float jumpSpeed = 1f;
         [SerializeField] public float jumpAbortSpeedReduction = 100f;

@@ -21,8 +21,7 @@ namespace Blind
         private SpriteRenderer _renderer;
         private Paringable _paring;
         public Vector2 _playerposition;
-
-        [FormerlySerializedAs("playerData")] [SerializeField] public Blind.ScriptableObjects.PlayerCharacter Data;
+        public ScriptableObjects.PlayerCharacter Data;
 
         [SerializeField] private Transform _spawnPoint;
         public bool _isHurtCheck;
@@ -59,9 +58,9 @@ namespace Blind
 
         public Action<int> OnWaveGaugeChanged;
 
-        public override void Awake()
+        public void Awake()
         {
-            base.Awake();
+            base.Awake(Data);
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             skeletonmecanim = GetComponent<SkeletonMecanim>();
