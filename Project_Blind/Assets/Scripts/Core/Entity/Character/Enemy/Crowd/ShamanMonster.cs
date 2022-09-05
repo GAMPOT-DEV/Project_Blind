@@ -19,13 +19,15 @@ namespace Blind
         protected void Awake()
         {
             base.Awake();
-            _sensingRange = new Vector2(8f, 5f);
+            /*
+            sensingRange = new Vector2(8f, 5f);
             _speed = 0.07f;
             _runSpeed = 0.1f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(6f, 5f);
             _stunTime = 1f;
+            */
         }
 
         private void Start()
@@ -69,7 +71,7 @@ namespace Blind
                 return;
             }
 
-            _characterController2D.Move(playerFinder.ChasePlayer() * _runSpeed);
+            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected override void updateAttack()
@@ -79,7 +81,7 @@ namespace Blind
 
         protected override void updateAttackStandby()
         {
-            if (Co_attackStandby == null) Co_attackStandby = StartCoroutine(CoAttackStandby(_attackSpeed));
+            if (Co_attackStandby == null) Co_attackStandby = StartCoroutine(CoAttackStandby(Data.attackSpeed));
         }
 
         protected override void updateHitted()
@@ -104,7 +106,7 @@ namespace Blind
 
         protected override void updateAvoid()
         {
-            _characterController2D.Move(-playerFinder.ChasePlayer() * _runSpeed);
+            _characterController2D.Move(-playerFinder.ChasePlayer() * Data.runSpeed);
             if (Co_avoid == null) Co_avoid = StartCoroutine(CoAvoid());
 
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
@@ -152,7 +154,7 @@ namespace Blind
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
-            projectile.GetComponent<Projectile>().SetProjectile(dir, _damage, _projectileSpeed);
+            projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, _projectileSpeed);
 
             yield return new WaitForSeconds(2f);
             yield return new WaitForSeconds(0.2f);
@@ -180,7 +182,7 @@ namespace Blind
 
         private IEnumerator CoStun()
         {
-            yield return new WaitForSeconds(_stunTime);
+            yield return new WaitForSeconds(Data.stunTime);
 
             if (attackSense.Attackable())
                 state = State.AttackStandby;
