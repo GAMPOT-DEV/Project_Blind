@@ -251,34 +251,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca3a64169bd4dd4bb08e07908ae7a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 10
   _moveVector: {x: 0, y: 0}
-  maxhp: 10
   _attack: {fileID: 0}
   _playerposition: {x: 0, y: 0}
-  _jumpSpeed: 0.7
-  _jumpAbortSpeedReduction: 2
-  _gravity: 3
-  _maxSpeed: 4
-  groundAcceleration: 15
-  groundDeceleration: 15
-  airborneAccelProportion: 0
-  airborneDecelProportion: 0
-  _dashSpeed: 10
-  _defaultTime: 0.2
-  _attackMove: 0.2
-  _maxComboDelay: 0.9
-  _hurtMove: 1
+  Data: {fileID: 11400000, guid: f27aeab61d3e149938bb36b2cce95a11, type: 2}
+  _spawnPoint: {fileID: 0}
   _isHurtCheck: 0
   _lastClickTime: 0
   _clickcount: 0
-  attack_x: 0
-  attack_y: 0
-  damage: 0
-  _powerAttackdamage: 0
-  paring_x: 0
-  paring_y: 0
-  _spawnPoint: {fileID: 0}
   isJump: 0
   _isInvincibility: 0
   maxWaveGauge: 0
