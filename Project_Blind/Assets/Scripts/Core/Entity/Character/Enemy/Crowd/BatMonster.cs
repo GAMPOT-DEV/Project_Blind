@@ -22,13 +22,13 @@ namespace Blind
         protected void Awake()
         {
             base.Awake();
-            _sensingRange = new Vector2(10f, 5f);
+            _sensingRange = new Vector2(12f, 8f);
             
             _speed = 0.1f ;
             _runSpeed = 0.07f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
-            _attackRange = new Vector2(1.5f, 2f);
+            _attackRange = new Vector2(9f, 8f);
             _stunTime = 1f;
 
         }
@@ -44,32 +44,17 @@ namespace Blind
             base.FixedUpdate();
         }
 
-        protected override void updatePatrol()
-        {
-            if (playerFinder.FindPlayer())
-            {
-                state = State.Chase;
-                return;
-            }
-            if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
-            {
-                state = State.Default;
-                return;
-            }
-
-            _characterController2D.Move(patrolDirection);
-        }
-
         protected override void updateDefault()
         {
             if (Co_default == null)
-                Co_default = StartCoroutine(CoWaitDefalut(1f));
+                Co_default = StartCoroutine(CoWaitDefalut(2f));
 
             if (playerFinder.FindPlayer())
             {
                 StopCoroutine(Co_default);
                 Co_default = null;
                 state = State.Chase;
+                animChange("Default", "Chase");
                 return;
             }
         }
@@ -79,6 +64,7 @@ namespace Blind
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
+                animChange("Chase", "Patrol");
                 return;
             }
 
@@ -129,15 +115,6 @@ namespace Blind
             }
 
             _characterController2D.Move(hittedVelocity);
-
-            /*
-            if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else if (attackSense.Attackable())
-                state = State.AttackStandby;
-            else
-                state = State.Patrol;
-            */
         }
 
         protected override void updateStun()
@@ -151,20 +128,13 @@ namespace Blind
             Co_die = StartCoroutine(CoDie());
         }
 
-        public bool isAttack()
-        {
-            if (state == State.Attack)
-                return true;
-            else
-                return false;
-        }
-
         private IEnumerator CoWaitDefalut(float time)
         {
             yield return new WaitForSeconds(time);
             Flip();
             state = State.Patrol; 
             Co_default = null;
+            animChange("Default", "Patrol");
         }
 
         private IEnumerator CoAttackStandby(float time)

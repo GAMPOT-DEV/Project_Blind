@@ -22,6 +22,10 @@ namespace Blind
         }
 
         protected State state;
+        protected float _patrolTime = 3f;
+        protected Animator _anim;
+
+        private Coroutine co_patrol;
 
         protected virtual void FixedUpdate()
         {
@@ -70,7 +74,27 @@ namespace Blind
 
         protected virtual void updatePatrol()
         {
-            throw new NotImplementedException();
+            if (playerFinder.FindPlayer())
+            {
+                state = State.Chase;
+                StopCoroutine(co_patrol);
+                co_patrol = null;
+                animChange("Patrol", "Chase");
+                return;
+            }
+            if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
+            {
+                state = State.Default;
+                StopCoroutine(co_patrol);
+                co_patrol = null;
+                animChange("Patrol", "Default");
+                return;
+            }
+
+            _characterController2D.Move(patrolDirection);
+
+            if (co_patrol == null)
+                co_patrol = StartCoroutine(CoPatrol(_patrolTime));
         }
         
         protected virtual void updateDefault()
@@ -117,6 +141,7 @@ namespace Blind
             state = State.Patrol;
             playerFinder.setRange(_sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
+            _anim = GetComponent<Animator>();
             attackSense.setRange(_attackRange);
             patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
         }
@@ -152,10 +177,32 @@ namespace Blind
             _unitHPUI.Reverse();
         }
 
+        public bool isAttack()
+        {
+            if (state == State.Attack)
+                return true;
+            else
+                return false;
+        }
+
         protected override IEnumerator CoHitted()
         {
             yield return new WaitForSeconds(0.1f);
             state = State.Test;
+        }
+
+        protected IEnumerator CoPatrol(float patrolTime)
+        {
+            yield return new WaitForSeconds(patrolTime);
+            state = State.Default;
+            co_patrol = null;
+            animChange("Patrol", "Default");
+        }
+
+        protected void animChange(string before, string after)
+        {
+            _anim.SetBool(before, false);
+            _anim.SetBool(after, true);
         }
     }
 }

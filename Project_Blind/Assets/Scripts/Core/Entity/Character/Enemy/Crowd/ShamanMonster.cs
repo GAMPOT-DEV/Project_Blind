@@ -39,23 +39,6 @@ namespace Blind
             base.FixedUpdate();
         }
 
-        protected override void updatePatrol()
-        {
-            if (playerFinder.FindPlayer())
-            {
-                state = State.Chase;
-                return;
-            }
-
-            if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
-            {
-                state = State.Default;
-                return;
-            }
-
-            _characterController2D.Move(patrolDirection);
-        }
-
         protected override void updateDefault()
         {
             if (Co_default == null)
