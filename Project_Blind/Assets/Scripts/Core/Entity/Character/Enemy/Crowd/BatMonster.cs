@@ -22,14 +22,14 @@ namespace Blind
         protected void Awake()
         {
             base.Awake();
-            _sensingRange = new Vector2(12f, 8f);
-            
-            _speed = 0.1f ;
-            _runSpeed = 0.07f;
-            _attackCoolTime = 0.5f;
-            _attackSpeed = 0.3f;
-            _attackRange = new Vector2(9f, 8f);
-            _stunTime = 1f;
+
+            Data.sensingRange = new Vector2(12f, 8f);
+            Data.speed = 0.1f ;
+            Data.runSpeed = 0.07f;
+            Data.attackCoolTime = 0.5f;
+            Data.attackSpeed = 0.3f;
+            Data.attackRange = new Vector2(9f, 8f);
+            Data.stunTime = 1f;
 
         }
 
@@ -74,7 +74,7 @@ namespace Blind
                 return;
             }
 
-            _characterController2D.Move(playerFinder.ChasePlayer() * _runSpeed);
+            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected override void updateAttack()
@@ -90,7 +90,7 @@ namespace Blind
         {
             if (Co_attackStandby == null)
             {
-                Co_attackStandby = StartCoroutine(CoAttackStandby(_attackSpeed));
+                Co_attackStandby = StartCoroutine(CoAttackStandby(Data.attackSpeed));
                 gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
             }
         }
@@ -164,7 +164,7 @@ namespace Blind
 
         private IEnumerator CoStun()
         {
-            yield return new WaitForSeconds(_stunTime);
+            yield return new WaitForSeconds(Data.stunTime);
 
             if (attackSense.Attackable())
                 state = State.AttackStandby;

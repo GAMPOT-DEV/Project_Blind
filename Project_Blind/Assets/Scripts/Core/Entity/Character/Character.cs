@@ -6,9 +6,12 @@ namespace Blind
 {
     public abstract class Character : MonoBehaviour
     {
-        [SerializeField] private float maxHp; // 초기화 시키기 위한 코드. 참조하지 말것 나중에 scriptableobject로 변환해야함
         private bool _isInvincibility;
         public UnitHP Hp { get; private set; }
+        public void Awake(ScriptableObjects.Character data)
+        {
+            Hp = new UnitHP(data.maxHp);
+        }
 
         public void HittedWithKnockBack(AttackInfo attackInfo)
         {
@@ -42,10 +45,6 @@ namespace Blind
             Hp.unInvicibility();
             _isInvincibility = false;
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
-        }
-        public virtual void Awake()
-        {
-            Hp = new UnitHP(maxHp);
         }
     }
 }

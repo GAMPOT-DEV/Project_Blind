@@ -139,11 +139,10 @@ namespace Blind
         {
             base.Awake(); 
             state = State.Patrol;
-            playerFinder.setRange(_sensingRange);
+            playerFinder.setRange(Data.sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
             _anim = GetComponent<Animator>();
-            attackSense.setRange(_attackRange);
-            patrolDirection = new Vector2(RandomDirection() * _speed, 0f);
+            attackSense.setRange(Data.attackRange);
         }
         
         protected int RandomDirection()
@@ -164,13 +163,13 @@ namespace Blind
             if (patrolDirection.x >= 0)
             {
                 thisScale.x = -Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(-_speed, 0f);
+                patrolDirection = new Vector2(-Data.speed, 0f);
                 //_sprite.flipX = false;
             }
             else
             {
                 thisScale.x = Mathf.Abs(thisScale.x);
-                patrolDirection = new Vector2(_speed, 0f);
+                patrolDirection = new Vector2(Data.speed, 0f);
                 //_sprite.flipX = true;
             }
             transform.localScale = thisScale;
