@@ -21,11 +21,11 @@ namespace Blind
         {
             if (_gameobject.StunGauge ==10)
             {
-                
+                _gameobject.CoStun();
             }
             else
             {
-                // 
+                
             }
         }
     }

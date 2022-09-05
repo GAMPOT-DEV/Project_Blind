@@ -7,7 +7,6 @@ namespace Blind
     public class BatMonster : CrowdEnemyCharacter
     {
         private Coroutine Co_attack;
-        private Coroutine Co_attackStandby;
         private Coroutine Co_hitted;
         private Coroutine Co_stun;
         private Coroutine Co_die;
@@ -71,22 +70,14 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            if(_anim.GetBool("Basic Attack") == false)
-            {
-                _anim.SetBool("Basic Attack", true);
-            }
-
             if (Co_attack == null)
             {
                 Co_attack = StartCoroutine(CoAttack());
             }
-        }
 
-        protected override void updateAttackStandby()
-        {
-            if (Co_attackStandby == null)
+            if (_anim.GetBool("Basic Attack") == false)
             {
-                Co_attackStandby = StartCoroutine(CoAttackStandby(Data.attackSpeed));
+                _anim.SetBool("Basic Attack", true);
             }
         }
 
@@ -123,13 +114,6 @@ namespace Blind
             Co_die = StartCoroutine(CoDie());
         }
 
-        private IEnumerator CoAttackStandby(float time)
-        {
-            yield return new WaitForSeconds(time);
-            state = State.Attack;
-            Co_attackStandby = null;
-        }
-
         private IEnumerator CoAttack()
         {
             //yield return new WaitForSeconds(2f);
@@ -152,18 +136,20 @@ namespace Blind
             _anim.SetBool("Basic Attack", false);
         }
 
-        private IEnumerator CoStun()
+        public IEnumerator CoStun()
         {
+            _anim.SetBool("Stun", true);
             yield return new WaitForSeconds(Data.stunTime);
 
             if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
-                state = State.Patrol;
+                state = State.Default;
 
             Co_stun = null;
+            _anim.SetBool("Stun", false);
         }   
     }
 }

@@ -9,7 +9,6 @@ namespace Blind
 
         private Coroutine Co_default;
         private Coroutine Co_attack;
-        private Coroutine Co_attackStandby;
         private Coroutine Co_stun;
         private Coroutine Co_die;
         private Coroutine Co_avoid;
@@ -67,7 +66,7 @@ namespace Blind
                 //if (attackSense.isAvoid())
                 //state = State.Avoid;
                 //else
-                state = State.AttackStandby;
+                state = State.Attack;
                 return;
             }
 
@@ -77,11 +76,6 @@ namespace Blind
         protected override void updateAttack()
         {
             if (Co_attack == null) Co_attack = StartCoroutine(CoAttack());
-        }
-
-        protected override void updateAttackStandby()
-        {
-            if (Co_attackStandby == null) Co_attackStandby = StartCoroutine(CoAttackStandby(Data.attackSpeed));
         }
 
         protected override void updateHitted()
@@ -97,7 +91,7 @@ namespace Blind
             if (Hp.GetHP() <= 0)
                 state = State.Die;
             else if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
@@ -113,7 +107,7 @@ namespace Blind
             {
                 StopCoroutine(Co_avoid);
                 Flip();
-                state = State.AttackStandby;
+                state = State.Attack;
             }
         }
 
@@ -143,13 +137,6 @@ namespace Blind
             Co_default = null;
         }
 
-        private IEnumerator CoAttackStandby(float time)
-        {
-            yield return new WaitForSeconds(time);
-            state = State.Attack;
-            Co_attackStandby = null;
-        }
-
         private IEnumerator CoAttack()
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
@@ -166,7 +153,7 @@ namespace Blind
                 if (attackSense.isAvoid())
                     state = State.Avoid;
                 else
-                    state = State.AttackStandby;
+                    state = State.Attack;
             }
             else if (playerFinder.FindPlayer())
             {
@@ -185,7 +172,7 @@ namespace Blind
             yield return new WaitForSeconds(Data.stunTime);
 
             if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
@@ -200,7 +187,7 @@ namespace Blind
             yield return new WaitForSeconds(1);
             Flip();
             if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else

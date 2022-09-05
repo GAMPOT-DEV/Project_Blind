@@ -13,7 +13,6 @@ namespace Blind
             Default,
             Chase,
             Attack,
-            AttackStandby,
             Hitted,
             Stun,
             Avoid,
@@ -46,10 +45,6 @@ namespace Blind
 
                 case State.Attack:
                     updateAttack();
-                    break;
-
-                case State.AttackStandby:
-                    updateAttackStandby();
                     break;
 
                 case State.Hitted:
