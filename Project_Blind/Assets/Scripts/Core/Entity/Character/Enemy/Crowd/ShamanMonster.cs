@@ -194,23 +194,6 @@ namespace Blind
             Co_stun = null;
         }
 
-        private IEnumerator CoDie()
-        {
-            yield return new WaitForSeconds(1);
-            while (_sprite.color.a > 0)
-            {
-                var color = _sprite.color;
-                //color.a is 0 to 1. So .5*time.deltaTime will take 2 seconds to fade out
-                color.a -= .25f * Time.deltaTime;
-
-                _sprite.color = color;
-                //wait for a frame
-                yield return null;
-            }
-
-            Destroy(gameObject);
-        }
-
         private IEnumerator CoAvoid()
         {
             Flip();

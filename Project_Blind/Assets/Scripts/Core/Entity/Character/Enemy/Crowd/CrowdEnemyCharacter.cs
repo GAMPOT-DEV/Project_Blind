@@ -24,6 +24,7 @@ namespace Blind
         protected State state;
         protected float _patrolTime = 3f;
         protected Animator _anim;
+        private int defaultCount = 0;
 
         private Coroutine co_patrol;
 
@@ -74,12 +75,17 @@ namespace Blind
 
         protected virtual void updatePatrol()
         {
+            if (_anim.GetBool("Patrol") == false)
+            {
+                _anim.SetBool("Patrol", true);
+            }
+
             if (playerFinder.FindPlayer())
             {
                 state = State.Chase;
                 StopCoroutine(co_patrol);
                 co_patrol = null;
-                animChange("Patrol", "Chase");
+                _anim.SetBool("Patrol", false);
                 return;
             }
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
@@ -87,7 +93,7 @@ namespace Blind
                 state = State.Default;
                 StopCoroutine(co_patrol);
                 co_patrol = null;
-                animChange("Patrol", "Default");
+                _anim.SetBool("Patrol", false);
                 return;
             }
 
@@ -99,7 +105,17 @@ namespace Blind
         
         protected virtual void updateDefault()
         {
-            throw new NotImplementedException();
+            if (_anim.GetBool("Default") == false)
+            {
+                _anim.SetBool("Default", true);
+            }
+
+            if (playerFinder.FindPlayer())
+            {
+                state = State.Chase;
+                _anim.SetBool("Default", false);
+                return;
+            }
         }
         
         protected virtual void updateChase()
@@ -198,10 +214,36 @@ namespace Blind
             animChange("Patrol", "Default");
         }
 
+        protected IEnumerator CoDie()
+        {
+            yield return new WaitForSeconds(1);
+            while (_sprite.color.a > 0)
+            {
+                var color = _sprite.color;
+                color.a -= (.25f * Time.deltaTime);
+
+                _sprite.color = color;
+                yield return null;
+            }
+            Destroy(gameObject);
+        }
+
         protected void animChange(string before, string after)
         {
             _anim.SetBool(before, false);
             _anim.SetBool(after, true);
+        }
+
+        public void AniDefault()
+        {
+            defaultCount++;
+            if (defaultCount == 2)
+            {
+                _anim.SetBool("Default", false);
+                state = State.Patrol;
+                Flip();
+                defaultCount = 0;
+            }
         }
     }
 }

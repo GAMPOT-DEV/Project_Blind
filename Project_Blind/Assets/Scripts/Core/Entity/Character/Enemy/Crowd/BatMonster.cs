@@ -6,9 +6,6 @@ namespace Blind
 {
     public class BatMonster : CrowdEnemyCharacter
     {
-        private Transform knockBackRange;
-
-        private Coroutine Co_default;
         private Coroutine Co_attack;
         private Coroutine Co_attackStandby;
         private Coroutine Co_hitted;
@@ -19,6 +16,8 @@ namespace Blind
         public int maxStunGauge;
 
         public bool isPowerAttack;
+        
+
         protected void Awake()
         {
             base.Awake();
@@ -44,33 +43,26 @@ namespace Blind
             base.FixedUpdate();
         }
 
-        protected override void updateDefault()
-        {
-            if (Co_default == null)
-                Co_default = StartCoroutine(CoWaitDefalut(2f));
-
-            if (playerFinder.FindPlayer())
-            {
-                StopCoroutine(Co_default);
-                Co_default = null;
-                state = State.Chase;
-                animChange("Default", "Chase");
-                return;
-            }
-        }
-
         protected override void updateChase()
         {
+            if(_anim.GetBool("Chase") == false)
+            {
+                _anim.SetBool("Chase", true);
+            }
+
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
-                animChange("Chase", "Patrol");
+                _anim.SetBool("Chase", false);
                 return;
             }
 
             if (attackSense.Attackable())
             {
-                state = State.AttackStandby;
+                //attackStandby가 꼭 필요할까...?
+                //state = State.AttackStandby;
+                state = State.Attack;
+                _anim.SetBool("Chase", false);
                 return;
             }
 
@@ -79,10 +71,14 @@ namespace Blind
 
         protected override void updateAttack()
         {
+            if(_anim.GetBool("Basic Attack") == false)
+            {
+                _anim.SetBool("Basic Attack", true);
+            }
+
             if (Co_attack == null)
             {
                 Co_attack = StartCoroutine(CoAttack());
-                gameObject.GetComponent<SpriteRenderer>().color = Color.red;
             }
         }
 
@@ -91,7 +87,6 @@ namespace Blind
             if (Co_attackStandby == null)
             {
                 Co_attackStandby = StartCoroutine(CoAttackStandby(Data.attackSpeed));
-                gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
             }
         }
 
@@ -128,15 +123,6 @@ namespace Blind
             Co_die = StartCoroutine(CoDie());
         }
 
-        private IEnumerator CoWaitDefalut(float time)
-        {
-            yield return new WaitForSeconds(time);
-            Flip();
-            state = State.Patrol; 
-            Co_default = null;
-            animChange("Default", "Patrol");
-        }
-
         private IEnumerator CoAttackStandby(float time)
         {
             yield return new WaitForSeconds(time);
@@ -146,20 +132,24 @@ namespace Blind
 
         private IEnumerator CoAttack()
         {
-            yield return new WaitForSeconds(2f);
+            //yield return new WaitForSeconds(2f);
             Debug.Log("공격!!");
             _attack.EnableDamage();
-            gameObject.GetComponent<SpriteRenderer>().color = Color.blue; //000FE9
             yield return new WaitForSeconds(0.2f);
-
             _attack.DisableDamage();
+
+            Co_attack = null;
+        }
+
+        public void AniAfterAttack()
+        {
             if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
                 state = State.Default;
-            Co_attack = null;
+            _anim.SetBool("Basic Attack", false);
         }
 
         private IEnumerator CoStun()
@@ -174,33 +164,6 @@ namespace Blind
                 state = State.Patrol;
 
             Co_stun = null;
-        }
-
-        private IEnumerator CoDie()
-        {
-            yield return new WaitForSeconds(1);
-            while (_sprite.color.a > 0)
-            {
-                var color = _sprite.color;
-                color.a -= (.25f * Time.deltaTime);
-
-                _sprite.color = color;
-                yield return null;
-            }
-            Destroy(gameObject);
-        }
-
-        private IEnumerator CoHitted()
-        {
-            yield return null;
-            if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else if (attackSense.Attackable())
-                state = State.AttackStandby;
-            else
-                state = State.Patrol;
-
-            Co_hitted = null;
-        }
+        }   
     }
 }
