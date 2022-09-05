@@ -59,6 +59,7 @@ namespace Blind
         public bool isOnLava;
         private float desiredSpeed;
         private float currentmovevector_x;
+        public float gravity;
 
         public Action<int> OnWaveGaugeChanged;
 
@@ -76,6 +77,7 @@ namespace Blind
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
             _dashCount = 1;
+            gravity = Data.gravity;
             
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
@@ -425,8 +427,8 @@ namespace Blind
         public void UpdateVelocity()
         {
             Vector2 velocity = _characterController2D.Velocity;
-            _animator.SetFloat("RunningSpeed", Math.Abs(velocity.x));
-            _animator.SetFloat("VerticalSpeed",velocity.y);
+            _animator.SetFloat("RunningSpeed", Mathf.Abs(velocity.x));
+            _animator.SetFloat("VerticalSpeed",Mathf.Abs(velocity.y));
         }
         
         public void UpdateFacing()
