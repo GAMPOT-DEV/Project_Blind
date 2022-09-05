@@ -10,14 +10,7 @@ namespace Blind
         protected Rigidbody2D rigid;
         protected SpriteRenderer _sprite;
 
-        [SerializeField] protected Vector2 _sensingRange;
-        [SerializeField] protected float _speed;
-        [SerializeField] protected float _runSpeed;
-        [SerializeField] protected float _attackCoolTime;
-        [SerializeField] protected float _attackSpeed;
-        [SerializeField] protected Vector2 _attackRange;
-        [SerializeField] protected int _damage;
-        [SerializeField] protected float _stunTime;
+        [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
 
         protected GameObject player;
         protected MeleeAttackable _attack;
@@ -34,7 +27,7 @@ namespace Blind
         
         protected void Awake()
         {
-            base.Awake();
+            base.Awake(Data);
             _attack = GetComponent<MeleeAttackable>();
             _sprite = GetComponent<SpriteRenderer>();
             _characterController2D = GetComponent<CharacterController2D>();
