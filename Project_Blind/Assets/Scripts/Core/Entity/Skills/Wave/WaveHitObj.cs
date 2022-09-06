@@ -13,14 +13,14 @@ namespace Blind
     {
         private Coroutine _coroutine = null;
         private Renderer _renderer;
-        private Material _material;
+        private MaterialPropertyBlock _mpb;
         [SerializeField] private List<Material> meta = new List<Material>();
         private static readonly int ShowInShadow = Shader.PropertyToID("_ShowInShadow");
 
         public void Awake()
         {
             _renderer = GetComponent<Renderer>();
-            _material = _renderer.material;
+            _mpb = new MaterialPropertyBlock();
         }
 
         public void GetHit()
@@ -33,9 +33,12 @@ namespace Blind
         private IEnumerator Glow()
         {
             SoundManager.Instance.Play("PureWaveSound1", Define.Sound.Effect);
-            _material.SetFloat(ShowInShadow,1);            
+            _mpb.SetFloat(ShowInShadow,1);
+            _renderer.SetPropertyBlock(_mpb);
             yield return new WaitForSeconds(5f);
-            _material.SetFloat(ShowInShadow,0);            
+            _mpb.SetFloat(ShowInShadow,0);            
+            _renderer.SetPropertyBlock(_mpb);
+            
             _coroutine = null;
         }
     }

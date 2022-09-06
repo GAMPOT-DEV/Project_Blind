@@ -224,6 +224,7 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
             ENDHLSL
         }
         // 외곽선 그리기
+    	/*
 		Pass
 		{
 			Blend SrcAlpha OneMinusSrcAlpha
@@ -291,6 +292,7 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
 			}
 			ENDCG
 		}
+    	*/
     }
     Fallback "Sprites/Default"
 }
