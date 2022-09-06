@@ -21,7 +21,7 @@ namespace Blind
         }
 
         protected State state;
-        protected float _patrolTime = 3f;
+        protected float _patrolTime;
         protected Animator _anim;
         private int defaultCount = 0;
 
