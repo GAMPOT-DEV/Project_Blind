@@ -48,7 +48,7 @@ namespace Blind
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;
             // 오브젝트의 머리 위에 위치하도록 설정
-            _unitHPUI.SetPosition(transform.position, Vector3.up * 4);
+            _unitHPUI.SetPosition(transform.position, Vector3.up * 9);
         }
 
         public bool ReturnFacing()
