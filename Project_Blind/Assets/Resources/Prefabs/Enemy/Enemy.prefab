@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 551951293491680953}
   - component: {fileID: 551951293491680950}
   - component: {fileID: 551951293491680951}
-  - component: {fileID: 551951293491680948}
   - component: {fileID: 5180659260102421671}
   - component: {fileID: 507291986}
   - component: {fileID: 507291987}
@@ -146,32 +145,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   groundedRaycastDistance: 0.1
---- !u!114 &551951293491680948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 551951293491680949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b5285bb28742954fbcc71e3462b5020, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHp: 10
-  _sensingRange: {x: 0, y: 0}
-  _speed: 0
-  _runSpeed: 0
-  _attackCoolTime: 0
-  _attackSpeed: 0
-  _attackRange: {x: 0, y: 0}
-  _maxHP: 0
-  _damage: 0
-  _stunTime: 0
-  WallLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  WallCheck: {fileID: 1679402497856284347}
 --- !u!114 &5180659260102421671
 MonoBehaviour:
   m_ObjectHideFlags: 0
