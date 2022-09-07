@@ -30,6 +30,8 @@ namespace Blind
         private float _dashTime;
         private float _defaultSpeed;
         private bool _candash = true;
+        public bool isCheck = false;
+        public float nextDash_x;
         private int _dashCount;
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
@@ -55,6 +57,9 @@ namespace Blind
         public int paringWaveGauge;
 
         public bool isOnLava;
+        private float desiredSpeed;
+        private float currentmovevector_x;
+        public float gravity;
 
         public Action<int> OnWaveGaugeChanged;
 
@@ -72,6 +77,7 @@ namespace Blind
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
             _dashCount = 1;
+            gravity = Data.gravity;
             
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
@@ -127,25 +133,30 @@ namespace Blind
         {
             _animator.SetTrigger("Dash");
             _candash = false;
+            isCheck = false;
             float originalGravity = Data.gravity;
-            float desiredSpeed = GetFacing() * Data.dashSpeed * 0.1f;
-            Debug.Log(desiredSpeed);
             if (_characterController2D.IsGrounded && _moveVector.x == 0)
             {
-                _moveVector.x = desiredSpeed * 2;
-                _moveVector.y = 0;
+                isCheck = true;
+                desiredSpeed = GetFacing() * Data.dashSpeed * 0.05f;
+                currentmovevector_x = _moveVector.x;
             }
             else
             {
+                float desiredSpeed = GetFacing() * Data.dashSpeed * 0.1f;
                 _moveVector.x = desiredSpeed;
                 _moveVector.y = 0;
             }
-
             yield return new WaitForSeconds(Data.defaultTime);
             Data.gravity = originalGravity;
             yield return new WaitForSeconds(1f);
             _candash = true;
+            isCheck = false;
+        }
 
+        public void StopDash()
+        {
+            _moveVector.x = Mathf.MoveTowards(currentmovevector_x, desiredSpeed, 500 * Time.deltaTime);
         }
         public bool CheckForDash()
         {
@@ -416,8 +427,8 @@ namespace Blind
         public void UpdateVelocity()
         {
             Vector2 velocity = _characterController2D.Velocity;
-            _animator.SetFloat("RunningSpeed", Math.Abs(velocity.x));
-            _animator.SetFloat("VerticalSpeed",velocity.y);
+            _animator.SetFloat("RunningSpeed", Mathf.Abs(velocity.x));
+            _animator.SetFloat("VerticalSpeed",Mathf.Abs(velocity.y));
         }
         
         public void UpdateFacing()

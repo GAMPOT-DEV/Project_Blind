@@ -5,7 +5,6 @@ namespace Blind
 {
     public class MeleeAttackCombo2SMB: SceneLinkedSMB<PlayerCharacter>
     {
-
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _monoBehaviour.StopMoveY();
