@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Blind
@@ -9,6 +10,7 @@ namespace Blind
         [SerializeField] private GameObject rangeObject;
         private BoxCollider2D _collider;
         private Transform RealAttackPostion;
+        private List<float> randomRangeList;
         private Vector2 currentPostion;
         private bool isAttackStart;
 
@@ -19,6 +21,7 @@ namespace Blind
             rangeObject.transform.position = player.transform.position;
             RealAttackPostion = this.transform;
             isAttackStart = false;
+            randomRangeList = new List<float>();
         }
 
         Vector2 Return_RandomPosion()
@@ -28,6 +31,18 @@ namespace Blind
             float random_y = _collider.bounds.size.y;
             Debug.Log(random_y);
             random_x = Random.Range((random_x / 2) * -1, random_x / 2);
+            while (true)
+            {
+                if (randomRangeList.Contains(random_x))
+                {
+                    random_x = Random.Range((random_x / 2) * -1, random_x / 2);
+                }
+                else
+                {
+                    randomRangeList.Add(random_x);
+                    break;
+                }
+            }
             random_y = Random.Range((random_y / 2), random_y / 2); 
             Vector2 randomPosiotion = new Vector2(random_x, random_y);
             Vector2 RespawnPostion = randomPosiotion + originposion;
