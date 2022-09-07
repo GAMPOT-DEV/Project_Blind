@@ -21,6 +21,8 @@ namespace Blind
         [SerializeField] private Sprite _setting_NonClicked;
         private GameObject _currActiveUI = null;
 
+        public bool CanInput { get; set; } = true;
+
         #region Enums
         enum Images
         {
@@ -142,6 +144,9 @@ namespace Blind
                 return;
 
             if (_uiNum != UIManager.Instance.UINum)
+                return;
+
+            if (!CanInput)
                 return;
 
             if (Input.GetKeyDown(KeyCode.Escape))

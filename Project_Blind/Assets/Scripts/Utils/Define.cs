@@ -72,7 +72,20 @@ public class Define
     }
     public enum KeyAction
     {
-
+        Jump,
+        DownJump,
+        LeftMove,
+        RightMove,
+        Paring,
+        Interaction,
+        Attack,
+        Dash,
+        Wave,
+        Horizontal,
+        Vertical,
+        Skill,
+        ChangeSlot,
+        ItemT
     }
 }
 

@@ -16,7 +16,7 @@ namespace Blind
             private set;
         } = new Dictionary<Define.KeyAction, KeyCode>();
 
-        public Dictionary<Define.KeyAction, KeyCode> CurrKeyActions = new Dictionary<Define.KeyAction, KeyCode>();
+        public Dictionary<Define.KeyAction, KeyCode> CurrKeyActions;
 
         protected bool _HaveControl = true;
 
@@ -58,6 +58,21 @@ namespace Blind
             Skill = new InputButton(KeyCode.I, XboxControllerButtons.LeftBumper);
             ChangeSlot = new InputButton(KeyCode.E, XboxControllerButtons.X);
             ItemT = new InputButton(KeyCode.Q, XboxControllerButtons.Y);
+
+            InitialKeyActions.Add(Define.KeyAction.Jump, KeyCode.W);
+            InitialKeyActions.Add(Define.KeyAction.DownJump, KeyCode.S);
+            InitialKeyActions.Add(Define.KeyAction.LeftMove, KeyCode.A);
+            InitialKeyActions.Add(Define.KeyAction.RightMove, KeyCode.D);
+            InitialKeyActions.Add(Define.KeyAction.Paring, KeyCode.K);
+            InitialKeyActions.Add(Define.KeyAction.Interaction, KeyCode.N);
+            InitialKeyActions.Add(Define.KeyAction.Attack, KeyCode.J);
+            InitialKeyActions.Add(Define.KeyAction.Dash, KeyCode.Space);
+            InitialKeyActions.Add(Define.KeyAction.Wave, KeyCode.LeftControl);
+            InitialKeyActions.Add(Define.KeyAction.Skill, KeyCode.I);
+            InitialKeyActions.Add(Define.KeyAction.ChangeSlot, KeyCode.E);
+            InitialKeyActions.Add(Define.KeyAction.ItemT, KeyCode.Q);
+
+            CurrKeyActions = new Dictionary<Define.KeyAction, KeyCode>(InitialKeyActions);
         }
 
         /// <summary>
@@ -133,34 +148,50 @@ namespace Blind
             ReleaseControl(ChangeSlot, resetValues);
         }
 
-        public void ReKetSet(string key, KeyCode keycode)
+        public void ReKetSet()
         {
-            switch (key)
+            foreach (Define.KeyAction action in CurrKeyActions.Keys)
             {
-                case "Jump":
-                    Jump = new InputButton(keycode, XboxControllerButtons.A);
-                    break;
-                case "Attack":
-                    Attack = new InputButton(keycode, XboxControllerButtons.RightBumper);
-                    break;
-                case "Paring":
-                    Paring = new InputButton(keycode, XboxControllerButtons.Leftstick);
-                    break;
-                case "Interaction":
-                    Interaction = new InputButton(keycode, XboxControllerButtons.X);
-                    break;
-                case "Dash":
-                    Dash = new InputButton(keycode, XboxControllerButtons.LeftBumper);
-                    break;
-                case "Wave":
-                    Wave = new InputButton(keycode, XboxControllerButtons.B);
-                    break;
-                case "Skill":
-                    Skill = new InputButton(keycode, XboxControllerButtons.LeftBumper);
-                    break;
-                case "ItemT":
-                    ItemT = new InputButton(keycode, XboxControllerButtons.Y);
-                    break;
+                KeyCode key = CurrKeyActions[action];
+                switch (action)
+                {
+                    case Define.KeyAction.Jump:
+                        Jump = new InputButton(key, XboxControllerButtons.A);
+                        break;
+                    case Define.KeyAction.DownJump:
+                        DownJump = new InputButton(key, XboxControllerButtons.B);
+                        break;
+                    case Define.KeyAction.LeftMove:
+                        LeftMove = new InputButton(key, XboxControllerButtons.A);
+                        break;
+                    case Define.KeyAction.RightMove:
+                        RightMove = new InputButton(key, XboxControllerButtons.X);
+                        break;
+                    case Define.KeyAction.Paring:
+                        Paring = new InputButton(key, XboxControllerButtons.Leftstick);
+                        break;
+                    case Define.KeyAction.Interaction:
+                        Interaction = new InputButton(key, XboxControllerButtons.X);
+                        break;
+                    case Define.KeyAction.Attack:
+                        Attack = new InputButton(key, XboxControllerButtons.RightBumper);
+                        break;
+                    case Define.KeyAction.Dash:
+                        Dash = new InputButton(key, XboxControllerButtons.LeftBumper);
+                        break;
+                    case Define.KeyAction.Wave:
+                        Wave = new InputButton(key, XboxControllerButtons.B);
+                        break;
+                    case Define.KeyAction.Skill:
+                        Skill = new InputButton(key, XboxControllerButtons.LeftBumper);
+                        break;
+                    case Define.KeyAction.ChangeSlot:
+                        ChangeSlot = new InputButton(key, XboxControllerButtons.X);
+                        break;
+                    case Define.KeyAction.ItemT:
+                        ItemT = new InputButton(key, XboxControllerButtons.Y);
+                        break;
+                }
             }
         }
     }

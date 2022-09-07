@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.Serialization;
+
 namespace Blind
 {
     /// <summary>
@@ -19,42 +21,19 @@ namespace Blind
         private SpriteRenderer _renderer;
         private Paringable _paring;
         public Vector2 _playerposition;
+        public ScriptableObjects.PlayerCharacter Data;
 
-        [SerializeField] private float _jumpSpeed = 3f;
-        [SerializeField] private float _jumpAbortSpeedReduction = 100f;
-        [SerializeField] private float _gravity = 30f;
-        
-        [SerializeField] private float _maxSpeed = 5f;
-        [SerializeField] private float groundAcceleration = 100f;
-        [SerializeField] private float groundDeceleration = 100f;
-        
-        [Range(0f, 1f)] public float airborneAccelProportion;
-        [Range(0f, 1f)] public float airborneDecelProportion;
-
-        [SerializeField] public float _dashSpeed; // = 10f;
-        [SerializeField] private float _defaultTime = 0.1f;
-        [SerializeField] public float _attackMove = 1f;
-        [SerializeField] public float _maxComboDelay;
-        [SerializeField] public float _hurtMove = 1f;
+        [SerializeField] private Transform _spawnPoint;
         public bool _isHurtCheck;
         public float _lastClickTime;
         public int _clickcount = 0;
-
-        [SerializeField] private int attack_x;
-        [SerializeField] private int attack_y;
-        [SerializeField] private int damage;
-        [SerializeField] public int _powerAttackdamage;
-        
-        [SerializeField] private int paring_x;
-        [SerializeField] private int paring_y;
-
-        [SerializeField] private Transform _spawnPoint;
         private float _dashTime;
         private float _defaultSpeed;
         private bool _candash = true;
+        public bool isCheck = false;
+        public float nextDash_x;
         private int _dashCount;
         public bool isJump;
-        private int flip;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         public bool _isInvincibility;
@@ -78,12 +57,15 @@ namespace Blind
         public int paringWaveGauge;
 
         public bool isOnLava;
+        private float desiredSpeed;
+        private float currentmovevector_x;
+        public float gravity;
 
         public Action<int> OnWaveGaugeChanged;
 
-        public override void Awake()
+        public void Awake()
         {
-            base.Awake();
+            base.Awake(Data);
             _moveVector = new Vector2();
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             skeletonmecanim = GetComponent<SkeletonMecanim>();
@@ -91,15 +73,16 @@ namespace Blind
             _paring = GetComponent<Paringable>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
-            _defaultSpeed = _maxSpeed;
+            _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
             _dashCount = 1;
+            gravity = Data.gravity;
             
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
-            _attack.Init(attack_x,attack_y,damage);
-            _paring.Init(paring_x, paring_y);
+            _attack.Init(Data.attack_x,Data.attack_y,Data.damage);
+            _paring.Init(Data.paring_x, Data.paring_y);
 
 
             // TEST
@@ -131,14 +114,14 @@ namespace Blind
             {
                 flip = 1;
             }
-
+            
             if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
                 flip = 0;
 
-            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = true;
-            else isInputCheck = false;
-            float desiredSpeed = useInput ? flip * _maxSpeed * speedScale : 0f;
-            float acceleration = useInput && isInputCheck ? groundAcceleration : groundDeceleration;
+            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = false;
+            else isInputCheck = true;
+            float desiredSpeed = useInput ? flip * Data.maxSpeed * speedScale : 0f;
+            float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
 
@@ -150,25 +133,30 @@ namespace Blind
         {
             _animator.SetTrigger("Dash");
             _candash = false;
-            float originalGravity = _gravity;
-            float desiredSpeed = GetFacing() * _dashSpeed * 0.1f;
-            Debug.Log(desiredSpeed);
+            isCheck = false;
+            float originalGravity = Data.gravity;
             if (_characterController2D.IsGrounded && _moveVector.x == 0)
             {
-                _moveVector.x = desiredSpeed * 2;
-                _moveVector.y = 0;
+                isCheck = true;
+                desiredSpeed = GetFacing() * Data.dashSpeed * 0.05f;
+                currentmovevector_x = _moveVector.x;
             }
             else
             {
+                float desiredSpeed = GetFacing() * Data.dashSpeed * 0.1f;
                 _moveVector.x = desiredSpeed;
                 _moveVector.y = 0;
             }
-
-            yield return new WaitForSeconds(_defaultTime);
-            _gravity = originalGravity;
+            yield return new WaitForSeconds(Data.defaultTime);
+            Data.gravity = originalGravity;
             yield return new WaitForSeconds(1f);
             _candash = true;
+            isCheck = false;
+        }
 
+        public void StopDash()
+        {
+            _moveVector.x = Mathf.MoveTowards(currentmovevector_x, desiredSpeed, 500 * Time.deltaTime);
         }
         public bool CheckForDash()
         {
@@ -183,7 +171,7 @@ namespace Blind
             if (InputController.Instance.Jump.Down)
             {
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
-                    _moveVector.y = _jumpSpeed;
+                    _moveVector.y = Data.jumpSpeed;
                 }
                 _animator.SetTrigger("Jump");
             }
@@ -215,7 +203,7 @@ namespace Blind
         {
             if (!InputController.Instance.Jump.Held && _moveVector.y > 0.0f)
             {
-                _moveVector.y -= _jumpAbortSpeedReduction * Time.deltaTime;
+                _moveVector.y -= Data.jumpAbortSpeedReduction * Time.deltaTime;
             }
         }
         /// <summary>
@@ -231,24 +219,24 @@ namespace Blind
         }
         public void AirborneHorizontalMovement()
         {
-            float desiredSpeed = InputController.Instance.Horizontal.Value * _maxSpeed;
+            float desiredSpeed = InputController.Instance.Horizontal.Value * Data.maxSpeed;
 
             float acceleration;
 
             if (InputController.Instance.Horizontal.ReceivingInput)
-                acceleration = airborneAccelProportion;
+                acceleration = Data.airborneAccelProportion;
             else
-                acceleration = airborneDecelProportion;
+                acceleration = Data.airborneDecelProportion;
 
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
         public void GroundedVerticalMovement()
         {
-            _moveVector.y -= _gravity * Time.deltaTime;
+            _moveVector.y -= Data.gravity * Time.deltaTime;
 
-            if (_moveVector.y < -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier)
+            if (_moveVector.y < - Data.gravity * Time.deltaTime * GroundedStickingVelocityMultiplier)
             {
-                _moveVector.y = -_gravity * Time.deltaTime * GroundedStickingVelocityMultiplier;
+                _moveVector.y = - Data.gravity * Time.deltaTime * GroundedStickingVelocityMultiplier;
             }
         }
 
@@ -287,7 +275,7 @@ namespace Blind
 
         public bool CheckForAttackTime()
         {
-            return Time.time - _lastClickTime > _maxComboDelay;
+            return Time.time - _lastClickTime > Data.maxComboDelay;
         }
 
         public void ReAttackSize(int x, int y)
@@ -370,7 +358,7 @@ namespace Blind
 
         protected override void HurtMove(Facing enemyFacing)
         {
-            _moveVector.x = _hurtMove * (float)enemyFacing;
+            _moveVector.x = Data.hurtMove * (float)enemyFacing;
         }
 
         public void Deed()
@@ -439,8 +427,8 @@ namespace Blind
         public void UpdateVelocity()
         {
             Vector2 velocity = _characterController2D.Velocity;
-            _animator.SetFloat("RunningSpeed", Math.Abs(velocity.x));
-            _animator.SetFloat("VerticalSpeed",velocity.y);
+            _animator.SetFloat("RunningSpeed", Mathf.Abs(velocity.x));
+            _animator.SetFloat("VerticalSpeed",Mathf.Abs(velocity.y));
         }
         
         public void UpdateFacing()
@@ -491,7 +479,7 @@ namespace Blind
             Debug.Log("디버프 걸림");
             isOnLava = true;
             _defaultSpeed -= 2.0f;
-            _jumpSpeed = 0.3f;
+            Data.jumpSpeed = 0.3f;
             StartCoroutine(GetDotDamage());
 
         }
@@ -510,7 +498,7 @@ namespace Blind
         public void DebuffOff()
         {
             _defaultSpeed += 2.0f;
-            _jumpSpeed = 0.7f;
+            Data.jumpSpeed = 0.7f;
             Debug.Log("디버프 풀림");
 
         }

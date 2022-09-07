@@ -10,6 +10,7 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             _monoBehaviour.Log();
             _monoBehaviour.CheckForGrounded();
+            _monoBehaviour.StopMoveY();
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
@@ -50,6 +51,7 @@ namespace Blind
             {
                 _monoBehaviour.Skill();
             }
+            
         }
         
     }
