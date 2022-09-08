@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18d2213c103d47fd8f7fabb90679706c, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: 
+  maxHp: 20
+  jumpSpeed: 1
+  jumpAbortSpeedReduction: 10
+  gravity: 3
+  maxSpeed: 5
+  groundAcceleration: 100
+  groundDeceleration: 100
+  airborneAccelProportion: 0.219
+  airborneDecelProportion: 0.229
+  dashSpeed: 20
+  defaultTime: 1
+  attackMove: 1
+  maxComboDelay: 0
+  hurtMove: 1
+  attack_x: 2
+  attack_y: 2
+  damage: 2
+  powerAttackdamage: 2
+  paring_x: 2
+  paring_y: 2

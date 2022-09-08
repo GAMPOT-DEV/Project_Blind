@@ -5,21 +5,16 @@ namespace Blind
 {
     public class MeleeAttackCombo2SMB: SceneLinkedSMB<PlayerCharacter>
     {
-        private bool isPowerAttack;
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _monoBehaviour.StopMoveY();
         }
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
         {
-            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge >= 10)
-            {
-                animator.speed = 0.06f;
-                isPowerAttack = true;
-            }
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10) animator.speed = 0.1f;
             else
             {
-                if(_monoBehaviour.isJump) _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
+                if(_monoBehaviour.isJump) _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
         }
@@ -49,24 +44,20 @@ namespace Blind
                 _monoBehaviour.MeleeAttackCombo2();
             if (_monoBehaviour._clickcount == 0) 
                 _monoBehaviour.MeleeAttackComoEnd();
-            if (isPowerAttack)
+
+            if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10)
             {
-                if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge >= 10)
-                {
-                    animator.speed = 1.0f;
-                    _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
-                    _monoBehaviour.enableAttack();
-                    _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
-                    _monoBehaviour.CurrentWaveGauge -= 10;
-                    isPowerAttack = false;
-                }
+                animator.speed = 1.0f;
+                _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
+                _monoBehaviour.enableAttack();
+                _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
+                _monoBehaviour.CurrentWaveGauge -= 10;
             }
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if(_monoBehaviour._clickcount == 2)
                 _monoBehaviour.MeleeAttackComoEnd();
-            if (animator.speed == 0.06f) animator.speed = 1.0f;
             _monoBehaviour.DisableAttack();
         }
     }

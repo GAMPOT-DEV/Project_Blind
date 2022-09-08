@@ -9,7 +9,6 @@ namespace Blind
 
         private Coroutine Co_default;
         private Coroutine Co_attack;
-        private Coroutine Co_attackStandby;
         private Coroutine Co_stun;
         private Coroutine Co_die;
         private Coroutine Co_avoid;
@@ -19,13 +18,15 @@ namespace Blind
         protected void Awake()
         {
             base.Awake();
-            _sensingRange = new Vector2(8f, 5f);
+            /*
+            sensingRange = new Vector2(8f, 5f);
             _speed = 0.07f;
             _runSpeed = 0.1f;
             _attackCoolTime = 0.5f;
             _attackSpeed = 0.3f;
             _attackRange = new Vector2(6f, 5f);
             _stunTime = 1f;
+            */
         }
 
         private void Start()
@@ -37,23 +38,6 @@ namespace Blind
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-        }
-
-        protected override void updatePatrol()
-        {
-            if (playerFinder.FindPlayer())
-            {
-                state = State.Chase;
-                return;
-            }
-
-            if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
-            {
-                state = State.Default;
-                return;
-            }
-
-            _characterController2D.Move(patrolDirection);
         }
 
         protected override void updateDefault()
@@ -82,21 +66,16 @@ namespace Blind
                 //if (attackSense.isAvoid())
                 //state = State.Avoid;
                 //else
-                state = State.AttackStandby;
+                state = State.Attack;
                 return;
             }
 
-            _characterController2D.Move(playerFinder.ChasePlayer() * _runSpeed);
+            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected override void updateAttack()
         {
             if (Co_attack == null) Co_attack = StartCoroutine(CoAttack());
-        }
-
-        protected override void updateAttackStandby()
-        {
-            if (Co_attackStandby == null) Co_attackStandby = StartCoroutine(CoAttackStandby(_attackSpeed));
         }
 
         protected override void updateHitted()
@@ -112,7 +91,7 @@ namespace Blind
             if (Hp.GetHP() <= 0)
                 state = State.Die;
             else if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
@@ -121,14 +100,14 @@ namespace Blind
 
         protected override void updateAvoid()
         {
-            _characterController2D.Move(-playerFinder.ChasePlayer() * _runSpeed);
+            _characterController2D.Move(-playerFinder.ChasePlayer() * Data.runSpeed);
             if (Co_avoid == null) Co_avoid = StartCoroutine(CoAvoid());
 
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
                 StopCoroutine(Co_avoid);
                 Flip();
-                state = State.AttackStandby;
+                state = State.Attack;
             }
         }
 
@@ -158,18 +137,11 @@ namespace Blind
             Co_default = null;
         }
 
-        private IEnumerator CoAttackStandby(float time)
-        {
-            yield return new WaitForSeconds(time);
-            state = State.Attack;
-            Co_attackStandby = null;
-        }
-
         private IEnumerator CoAttack()
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
-            projectile.GetComponent<Projectile>().SetProjectile(dir, _damage, _projectileSpeed);
+            projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, _projectileSpeed);
 
             yield return new WaitForSeconds(2f);
             yield return new WaitForSeconds(0.2f);
@@ -181,7 +153,7 @@ namespace Blind
                 if (attackSense.isAvoid())
                     state = State.Avoid;
                 else
-                    state = State.AttackStandby;
+                    state = State.Attack;
             }
             else if (playerFinder.FindPlayer())
             {
@@ -197,10 +169,10 @@ namespace Blind
 
         private IEnumerator CoStun()
         {
-            yield return new WaitForSeconds(_stunTime);
+            yield return new WaitForSeconds(Data.stunTime);
 
             if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
@@ -209,30 +181,13 @@ namespace Blind
             Co_stun = null;
         }
 
-        private IEnumerator CoDie()
-        {
-            yield return new WaitForSeconds(1);
-            while (_sprite.color.a > 0)
-            {
-                var color = _sprite.color;
-                //color.a is 0 to 1. So .5*time.deltaTime will take 2 seconds to fade out
-                color.a -= .25f * Time.deltaTime;
-
-                _sprite.color = color;
-                //wait for a frame
-                yield return null;
-            }
-
-            Destroy(gameObject);
-        }
-
         private IEnumerator CoAvoid()
         {
             Flip();
             yield return new WaitForSeconds(1);
             Flip();
             if (attackSense.Attackable())
-                state = State.AttackStandby;
+                state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else

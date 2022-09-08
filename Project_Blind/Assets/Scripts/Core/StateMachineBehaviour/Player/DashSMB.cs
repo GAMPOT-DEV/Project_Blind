@@ -12,6 +12,7 @@ namespace Blind
             AnimatorControllerPlayable controller)
         {
             _monoBehaviour.GroundedHorizontalMovement(false);
+            if(_monoBehaviour.isCheck) _monoBehaviour.StopDash();
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {

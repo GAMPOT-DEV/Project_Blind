@@ -4,23 +4,22 @@ namespace Blind
 {
     public class MeleeAttackComboSMB: SceneLinkedSMB<PlayerCharacter>
     {
-        private bool isPowerAttack;
+        private bool powerattack = false;
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _monoBehaviour.StopMoveY();
         }
 
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge >= 10)
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10)
             {
-                animator.speed = 0.06f;
-                isPowerAttack = true;
+                animator.speed = 0.1f;
             }
             else
             {
                 if (_monoBehaviour.isJump)
                 {
-                    _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
+                    _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
                 }
                 _monoBehaviour.enableAttack();
             }
@@ -50,18 +49,16 @@ namespace Blind
                 _monoBehaviour.MeleeAttackComoEnd();
             if (_monoBehaviour._clickcount >= 2)
                 _monoBehaviour.MeleeAttackCombo1();
+            
 
-            if (isPowerAttack)
+            if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10 && !powerattack)
             {
-                if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge >= 10)
-                {
-                    animator.speed = 1.0f;
-                    _monoBehaviour._attack.DamageReset(_monoBehaviour._powerAttackdamage);
-                    _monoBehaviour.enableAttack();
-                    _monoBehaviour.AttackableMove(_monoBehaviour._attackMove * _monoBehaviour.GetFacing());
-                    _monoBehaviour.CurrentWaveGauge -= 10;
-                    isPowerAttack = false;
-                }
+                animator.speed = 1.0f;
+                _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
+                _monoBehaviour.enableAttack();
+                _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
+                _monoBehaviour.CurrentWaveGauge -= 10;
+                powerattack = true;
             }
 
         }
@@ -71,10 +68,9 @@ namespace Blind
             {
                 _monoBehaviour.MeleeAttackComoEnd();
             }
-
-            if (animator.speed == 0.06f) animator.speed = 1.0f;
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
+            powerattack = false;
         }
     }
 }
