@@ -16,7 +16,7 @@ namespace Blind
             _monoBehaviour.CheckForGrounded();
             _monoBehaviour.WaveSensePress();
             _monoBehaviour.Jump();
-            _monoBehaviour.GroundedHorizontalMovement(_monoBehaviour._isGroundHorizontalMovement);
+            _monoBehaviour.GroundedHorizontalMovement(true);
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.UpdateFacing();
             
