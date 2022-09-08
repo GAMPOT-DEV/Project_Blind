@@ -20,14 +20,14 @@ namespace Blind
             if (range == 0)
             {
                 bossHand.transform.position = _floorStart.position;
-                bossHand.GetTransform(_floorStart, _floorEnd);
-                
+                bossHand.GetTransform(_floorStart.position, _floorEnd.position);
+                bossHand.GetFacing(false);
             }
             else
             {
-                Debug.Log("DD");
                 bossHand.transform.position = _floorEnd.position;
-                bossHand.GetTransform(_floorEnd,_floorStart);
+                bossHand.GetTransform(_floorEnd.position,_floorStart.position);
+                bossHand.GetFacing(true);
             }
         }
         

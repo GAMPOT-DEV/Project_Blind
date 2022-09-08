@@ -92,7 +92,8 @@ namespace Blind
 
         public void Dash(Vector2 movement)
         {
-            _rigidBody2D.velocity = movement;
+            _rigidBody2D.MovePosition(movement);
+            Debug.Log("dD");
         }
 
          public void CheckCapsuleEndCollisions(bool bottom = true)
