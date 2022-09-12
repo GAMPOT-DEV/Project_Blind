@@ -8,8 +8,8 @@ namespace Blind
         UI_FieldScene ui = null;
         private bool _powerAttack = false;
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.enableAttack();
-            _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
+            _monoBehaviour.StopMoveY();
+            SoundManager.Instance.Play("주인공 공격 사운드", Define.Sound.Effect);
         }
 
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -17,6 +17,7 @@ namespace Blind
             if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge>10)
             {
                 animator.speed = 0.1f;
+                _monoBehaviour.EndPowerAttack();
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();
@@ -49,13 +50,15 @@ namespace Blind
             }
             else _monoBehaviour.GroundedHorizontalMovement(false);
             
-            if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10 && !_powerAttack)
+            if ((_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10 && !_powerAttack)
+                || (_monoBehaviour.isPowerAttackEnd &&!_powerAttack)) 
             {
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
                 _monoBehaviour.enableAttack();
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
+                _monoBehaviour.isPowerAttackEnd = false;
 
                 if (ui == null)
                 {
@@ -74,6 +77,7 @@ namespace Blind
             _monoBehaviour.DisableAttack();
             _monoBehaviour.MeleeAttackComoEnd();
             _powerAttack = false;
+            SoundManager.Instance.StopEffect();
         }
     }
 }
