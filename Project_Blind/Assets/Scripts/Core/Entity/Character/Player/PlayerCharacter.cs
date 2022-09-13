@@ -37,6 +37,7 @@ namespace Blind
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
         public bool _isInvincibility;
+        public bool isPowerAttackEnd;
 
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
@@ -140,6 +141,7 @@ namespace Blind
                 isCheck = true;
                 desiredSpeed = GetFacing() * Data.dashSpeed * 0.05f;
                 currentmovevector_x = _moveVector.x;
+                Debug.Log("1번 실행됨");
             }
             else
             {
@@ -217,28 +219,6 @@ namespace Blind
             }
             _moveVector.y -= _gravity * Time.deltaTime;
         }
-        public void AirborneHorizontalMovement()
-        {
-            float desiredSpeed = InputController.Instance.Horizontal.Value * Data.maxSpeed;
-
-            float acceleration;
-
-            if (InputController.Instance.Horizontal.ReceivingInput)
-                acceleration = Data.airborneAccelProportion;
-            else
-                acceleration = Data.airborneDecelProportion;
-
-            _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
-        }
-        public void GroundedVerticalMovement()
-        {
-            _moveVector.y -= Data.gravity * Time.deltaTime;
-
-            if (_moveVector.y < - Data.gravity * Time.deltaTime * GroundedStickingVelocityMultiplier)
-            {
-                _moveVector.y = - Data.gravity * Time.deltaTime * GroundedStickingVelocityMultiplier;
-            }
-        }
 
         public void CheckForGrounded()
         {
@@ -314,6 +294,17 @@ namespace Blind
         public bool CheckForPowerAttack()
         {
             return InputController.Instance.Attack.Held;
+        }
+
+        public void EndPowerAttack()
+        {
+            StartCoroutine(isEndPowerAttack());
+        }
+
+        IEnumerator isEndPowerAttack()
+        {
+            yield return new WaitForSeconds(1f);
+            isPowerAttackEnd = true;
         }
 
         public bool CheckForUpKey()

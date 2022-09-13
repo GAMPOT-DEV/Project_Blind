@@ -6,6 +6,7 @@ namespace Blind
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
         {
+            SoundManager.Instance.Play("주인공 대쉬", Define.Sound.Effect);
             animator.speed = 2.5f;
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,

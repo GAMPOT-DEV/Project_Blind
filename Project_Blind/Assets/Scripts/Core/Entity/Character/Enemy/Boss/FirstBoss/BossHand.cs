@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
+using Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,10 +20,12 @@ namespace Blind
         private bool isStop;
         private bool isParing = false;
         private bool isCameraShakeStop = false;
+        private CinemachineImpulseSource _source;
         public void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
             _collider = GetComponent<BoxCollider2D>();
+            _source = GetComponent<CinemachineImpulseSource>();
         }
 
         public void FixedUpdate()
@@ -30,6 +33,7 @@ namespace Blind
             if (!isStop)
             {
                 transform.position = Vector2.MoveTowards(transform.position, EndTransform, 0.5f);
+                _source.GenerateImpulse();
                 if (transform.position.x == EndTransform.x)
                 {
                     isCameraShakeStop = true;
@@ -40,7 +44,7 @@ namespace Blind
             {
                 if (!isParing)
                 {
-                    TargetPostion = new Vector2(transform.position.x + (5f * (float)facing), transform.position.y);
+                    TargetPostion = new Vector2(transform.position.x + (5f * -(float)facing), transform.position.y);
                     isParing = true;
                 }
                 transform.position = Vector2.MoveTowards(transform.position,
