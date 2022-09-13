@@ -48,12 +48,12 @@ namespace Blind
             Vector2 RespawnPostion = randomPosiotion + originposion;
             return RespawnPostion;
         }
-        public override void AttackPattern()
+        public override Coroutine AttackPattern()
         {
             Init();
             int AttackRange = RandomRange();
             int RealAttack = RandomRange(AttackRange);
-            StartCoroutine(SettingAttack(AttackRange, RealAttack));
+            return StartCoroutine(SettingAttack(AttackRange, RealAttack));
         }
 
         IEnumerator SettingAttack(int AttackRange, int RealAttack)
