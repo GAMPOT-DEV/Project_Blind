@@ -6,16 +6,16 @@ namespace Blind
         where TMonoBehaviour : MonoBehaviour
 
     {
-    protected TMonoBehaviour _gameobject;
+        protected TMonoBehaviour _gameobject;
 
-    public void Initialise(TMonoBehaviour gameobject)
-    {
-        _gameobject = gameobject;
-    }
+        public void Initialise(TMonoBehaviour gameobject)
+        {
+            _gameobject = gameobject;
+        }
 
-    public virtual void AttackPattern()
-    {
-
-    }
+        public virtual Coroutine AttackPattern()
+        {
+            return null;
+        }
     }
 }

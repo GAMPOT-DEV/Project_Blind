@@ -12,7 +12,7 @@ namespace Blind
             _floorStart = _gameobject._floorStart;
             _floorEnd = _gameobject._floorEnd;
         }
-        public override void AttackPattern()
+        public override Coroutine AttackPattern()
         {
             Init();
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
@@ -29,6 +29,7 @@ namespace Blind
                 bossHand.GetTransform(_floorEnd.position,_floorStart.position);
                 bossHand.GetFacing(true);
             }
+            return null;
         }
         
         private int RandomRange()
