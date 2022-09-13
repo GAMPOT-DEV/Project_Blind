@@ -6,9 +6,10 @@ namespace Blind
     public class BossPattern3: BossAttackPattern<FirstBossEnemy>
 
     {
-        public override void AttackPattern()
+        public override Coroutine AttackPattern()
         {
             Debug.Log("pattern3");
+            return null;
         }
     }
 }
