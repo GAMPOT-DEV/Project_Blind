@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using Random = System.Random;
+
 namespace Blind
 {
     public class FirstBossEnemy : BossEnemyCharacter
@@ -11,14 +13,26 @@ namespace Blind
         public Transform _floorStart;
         public Transform _floorEnd;
         private BossAttackPattern<FirstBossEnemy> _pattern;
+        private Random _rand = new Random();
 
         private void Awake()
         {
             base.Awake();
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
-            ChangePattern(2);
-            StartPattern();
+            StartCoroutine(StartAttackState());
+        }
+
+        public IEnumerator StartAttackState()
+        {
+            while (true)
+            {
+                var next = _rand.Next(1, 4);
+                Debug.Log(next);
+                ChangePattern(next);
+                yield return StartPattern();
+                yield return new WaitForSeconds(1f);
+            }
         }
         public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)
         {
@@ -26,9 +40,9 @@ namespace Blind
             _pattern.Initialise(gameObject.GetComponent<FirstBossEnemy>());
         }
 
-        public void StartPattern()
+        public Coroutine StartPattern()
         {
-            _pattern.AttackPattern();
+            return _pattern.AttackPattern();
         }
 
         IEnumerator BossPatternTest()

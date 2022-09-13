@@ -4,16 +4,27 @@ namespace Blind
 {
     public class MeleeAttackComboSMB: SceneLinkedSMB<PlayerCharacter>
     {
-        
+        UI_FieldScene ui = null;
+        private bool _powerAttack = false;
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _monoBehaviour.StopMoveY();
+            SoundManager.Instance.Play("주인공 공격 사운드", Define.Sound.Effect);
         }
 
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10)
             {
                 animator.speed = 0.1f;
+                _monoBehaviour.EndPowerAttack();
+                if (ui == null)
+                {
+                    ui = FindObjectOfType<UI_FieldScene>();
+                }
+                if (ui != null)
+                {
+                    ui.StartCharge();
+                }
             }
             else
             {
@@ -51,13 +62,24 @@ namespace Blind
                 _monoBehaviour.MeleeAttackCombo1();
             
 
-            if (_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10)
-            {
+            if ((_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10 && !_powerAttack)
+                || (_monoBehaviour.isPowerAttackEnd &&!_powerAttack)){
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
                 _monoBehaviour.enableAttack();
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * _monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
+                _monoBehaviour.isPowerAttackEnd = false;
+
+                if (ui == null)
+                {
+                    ui = FindObjectOfType<UI_FieldScene>();
+                }
+                if (ui != null)
+                {
+                    ui.StopCharge();
+                }
+                _powerAttack = true;
             }
 
         }
@@ -69,6 +91,8 @@ namespace Blind
             }
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
+            _powerAttack = false;
+            SoundManager.Instance.StopEffect();
         }
     }
 }

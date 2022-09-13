@@ -30,9 +30,6 @@ namespace Blind
             Image_Talisman,
             Image_Clue,
             Image_Setting,
-            
-
-            Image_Close,
         }
         #endregion
         const int MENU_SIZE = (int)Images.Image_Setting + 1;
@@ -88,7 +85,6 @@ namespace Blind
             Get<Image>((int)Images.Image_Talisman).gameObject.BindEvent(() => PushButton((int)Images.Image_Talisman), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Clue).gameObject.BindEvent(() => PushButton((int)Images.Image_Clue), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Setting).gameObject.BindEvent(() => PushButton((int)Images.Image_Setting), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_Close).gameObject.BindEvent(PushCloseButton, Define.UIEvent.Click);
 
             _actions[(int)Images.Image_Bag] += PushBagButton;
             _actions[(int)Images.Image_Talisman] += PushTalismanButton;

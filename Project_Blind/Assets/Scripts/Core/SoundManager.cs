@@ -77,6 +77,12 @@ namespace Blind
             _audioSources[(int)Define.Sound.Bgm].Stop();
             _audioSources[(int)Define.Sound.Bgm].clip = null;
         }
+
+        public void StopEffect()
+        {
+            _audioSources[(int)Define.Sound.Effect].Stop();
+            _audioSources[(int)Define.Sound.Effect].clip = null;
+        }
         AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.Effect)
         {
             if (path.Contains("Sounds/") == false)

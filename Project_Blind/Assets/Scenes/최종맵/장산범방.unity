@@ -145,7 +145,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   WallCheck: {fileID: 0}
-  _patternList: []
+  _patternList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   _floorStart: {fileID: 0}
   _floorEnd: {fileID: 0}
 --- !u!1001 &431814551
@@ -811,6 +815,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 115.48
       objectReference: {fileID: 0}
+    - target: {fileID: 7138595047812326861, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 21d0741f5cd6f56409144bf3436bbc14, type: 2}
     - target: {fileID: 8314999231079122163, guid: 6608f749168414cb9bc98f4ea5e24d51, type: 3}
       propertyPath: m_Name
       value: Player
