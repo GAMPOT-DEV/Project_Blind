@@ -27,6 +27,17 @@ namespace Blind
 
         private Coroutine co_patrol;
 
+        protected void Awake()
+        {
+            base.Awake();
+            state = State.Patrol;
+            patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
+            playerFinder.setRange(Data.sensingRange);
+            attackSense = GetComponentInChildren<EnemyAttack>();
+            _anim = GetComponent<Animator>();
+            attackSense.setRange(Data.attackRange);
+        }
+
         protected virtual void FixedUpdate()
         {
             switch (state)
@@ -144,16 +155,6 @@ namespace Blind
         protected virtual void updateAvoid()
         {
             return;
-        }
-
-        protected void Awake()
-        {
-            base.Awake(); 
-            state = State.Patrol;
-            playerFinder.setRange(Data.sensingRange);
-            attackSense = GetComponentInChildren<EnemyAttack>();
-            _anim = GetComponent<Animator>();
-            attackSense.setRange(Data.attackRange);
         }
         
         protected int RandomDirection()
