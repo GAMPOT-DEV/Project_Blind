@@ -14,6 +14,11 @@ namespace Blind
         private float _maxHp;
         private PlayerCharacter _player = null;
         private Slider[] _waveGauges = new Slider[GAUGE_SIZE];
+
+        private const float ALPHA = 50f;
+        private float _chargeAlpha = ALPHA;
+
+        Coroutine _coCharge = null;
         
         enum Texts
         {
@@ -23,6 +28,8 @@ namespace Blind
         {
             Image_TestDamage,
             Image_TestHeal,
+
+            Charge,
         }
         enum Sliders
         {
@@ -118,6 +125,37 @@ namespace Blind
         private void TestWaveGauge()
         {
             _player.CurrentWaveGauge += 1;
+        }
+        public void StartCharge()
+        {
+            _coCharge = StartCoroutine(CoStartCharge());
+        }
+        public void StopCharge()
+        {
+            if (_coCharge != null)
+            {
+                StopCoroutine(_coCharge);
+                _coCharge = null;
+            }
+            _chargeAlpha = ALPHA;
+            Get<Image>((int)Images.Charge).color = new Color(1f, 1f, 1f, _chargeAlpha / 255f);
+        }
+        IEnumerator CoStartCharge()
+        {
+            _chargeAlpha = ALPHA;
+            while (true)
+            {
+                if (_chargeAlpha >= 255)
+                {
+                    _chargeAlpha = 255f;
+                    Get<Image>((int)Images.Charge).color = new Color(1f, 1f, 1f, _chargeAlpha / 255f);
+                    _coCharge = null;
+                    break;
+                }
+                _chargeAlpha += 1.5f;
+                Get<Image>((int)Images.Charge).color = new Color(1f, 1f, 1f, _chargeAlpha / 255f);
+                yield return new WaitForSeconds(0.01f);
+            }
         }
     }
 }
