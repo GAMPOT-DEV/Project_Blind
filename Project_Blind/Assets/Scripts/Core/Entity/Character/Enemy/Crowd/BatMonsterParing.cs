@@ -19,13 +19,13 @@ namespace Blind
 
         public override void EnemyDibuff()
         {
-            if (_gameobject.StunGauge ==10)
+            if (_gameobject.CurrentStunGauge >= _gameobject.MaxStunGauge)
             {
                 _gameobject.CoStun();
             }
             else
             {
-                
+                _gameobject.OnHurt();
             }
         }
     }

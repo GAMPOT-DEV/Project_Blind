@@ -11,11 +11,6 @@ namespace Blind
         private Coroutine Co_stun;
         private Coroutine Co_die;
         
-        public int StunGauge;
-        public int maxStunGauge;
-
-        public bool isPowerAttack;
-        
 
         protected void Awake()
         {
@@ -59,8 +54,6 @@ namespace Blind
 
             if (attackSense.Attackable())
             {
-                //attackStandby가 꼭 필요할까...?
-                //state = State.AttackStandby;
                 state = State.Attack;
                 _anim.SetBool("Chase", false);
                 return;
@@ -71,14 +64,24 @@ namespace Blind
 
         protected override void updateAttack()
         {
+            if(Random.Range(0, 100) > 20)
+            {
+                if (_anim.GetBool("Basic Attack") == false)
+                {
+                    _anim.SetBool("Basic Attack", true);
+                }
+            } else
+            {
+                if(_anim.GetBool("Skill Attack") == false)
+                {
+                    isPowerAttack = true;
+                    _anim.SetBool("Skill Attack", true);
+                }
+            }
+
             if (Co_attack == null)
             {
                 Co_attack = StartCoroutine(CoAttack());
-            }
-
-            if (_anim.GetBool("Basic Attack") == false)
-            {
-                _anim.SetBool("Basic Attack", true);
             }
         }
 
@@ -135,6 +138,7 @@ namespace Blind
             else
                 state = State.Default;
             _anim.SetBool("Basic Attack", false);
+            _anim.SetBool("Skill Attack", false);
         }
 
         public IEnumerator CoStun()
