@@ -2,28 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Blind
-{
-    public class BatMonster : CrowdEnemyCharacter
+namespace Blind {
+    public class ParasiteMonster : CrowdEnemyCharacter
     {
         private Coroutine Co_attack;
         private Coroutine Co_hitted;
         private Coroutine Co_stun;
         private Coroutine Co_die;
-        
+
+        public int StunGauge;
+        public int maxStunGauge;
+
+        public bool isPowerAttack;
+
 
         protected void Awake()
         {
             base.Awake();
 
             Data.sensingRange = new Vector2(12f, 8f);
-            Data.speed = 0.1f ;
+            Data.speed = 0.1f;
             Data.runSpeed = 0.07f;
             Data.attackCoolTime = 0.5f;
             Data.attackSpeed = 0.3f;
             Data.attackRange = new Vector2(9f, 8f);
             Data.stunTime = 1f;
-            _patrolTime = 3f;
+            _patrolTime = 2;
 
         }
 
@@ -40,7 +44,7 @@ namespace Blind
 
         protected override void updateChase()
         {
-            if(_anim.GetBool("Chase") == false)
+            if (_anim.GetBool("Chase") == false)
             {
                 _anim.SetBool("Chase", true);
             }
@@ -54,6 +58,8 @@ namespace Blind
 
             if (attackSense.Attackable())
             {
+                //attackStandby°¡ ²À ÇÊ¿äÇÒ±î...?
+                //state = State.AttackStandby;
                 state = State.Attack;
                 _anim.SetBool("Chase", false);
                 return;
@@ -64,24 +70,14 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            if(Random.Range(0, 100) > 20)
-            {
-                if (_anim.GetBool("Basic Attack") == false)
-                {
-                    _anim.SetBool("Basic Attack", true);
-                }
-            } else
-            {
-                if(_anim.GetBool("Skill Attack") == false)
-                {
-                    isPowerAttack = true;
-                    _anim.SetBool("Skill Attack", true);
-                }
-            }
-
             if (Co_attack == null)
             {
                 Co_attack = StartCoroutine(CoAttack());
+            }
+
+            if (_anim.GetBool("Basic Attack") == false)
+            {
+                _anim.SetBool("Basic Attack", true);
             }
         }
 
@@ -95,7 +91,7 @@ namespace Blind
             }
 
             Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //í”Œë ˆì´ì–´ê°€ ì˜¤ë¥¸ìª½
+            if (playerFinder.ChasePlayer().x > 0) //ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊ
             {
                 hittedVelocity = new Vector2(-0.2f, 0);
             }
@@ -121,7 +117,7 @@ namespace Blind
         private IEnumerator CoAttack()
         {
             //yield return new WaitForSeconds(2f);
-            Debug.Log("ê³µê²©!!");
+            Debug.Log("°ø°Ý!!");
             _attack.EnableDamage();
             yield return new WaitForSeconds(0.2f);
             _attack.DisableDamage();
@@ -138,7 +134,6 @@ namespace Blind
             else
                 state = State.Default;
             _anim.SetBool("Basic Attack", false);
-            _anim.SetBool("Skill Attack", false);
         }
 
         public IEnumerator CoStun()
@@ -155,6 +150,6 @@ namespace Blind
 
             Co_stun = null;
             _anim.SetBool("Stun", false);
-        }   
+        }
     }
 }

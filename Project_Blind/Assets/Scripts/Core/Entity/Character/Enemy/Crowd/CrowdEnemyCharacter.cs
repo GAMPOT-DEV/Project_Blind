@@ -21,11 +21,26 @@ namespace Blind
         }
 
         protected State state;
-        protected float _patrolTime = 3f;
+        protected float _patrolTime;
         protected Animator _anim;
         private int defaultCount = 0;
 
+        public float CurrentStunGauge = 0;
+        public float MaxStunGauge = 10f;
+        public bool isPowerAttack = false;
+
         private Coroutine co_patrol;
+
+        protected void Awake()
+        {
+            base.Awake();
+            state = State.Patrol;
+            patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
+            playerFinder.setRange(Data.sensingRange);
+            attackSense = GetComponentInChildren<EnemyAttack>();
+            _anim = GetComponent<Animator>();
+            attackSense.setRange(Data.attackRange);
+        }
 
         protected virtual void FixedUpdate()
         {
@@ -145,16 +160,6 @@ namespace Blind
         {
             return;
         }
-
-        protected void Awake()
-        {
-            base.Awake(); 
-            state = State.Patrol;
-            playerFinder.setRange(Data.sensingRange);
-            attackSense = GetComponentInChildren<EnemyAttack>();
-            _anim = GetComponent<Animator>();
-            attackSense.setRange(Data.attackRange);
-        }
         
         protected int RandomDirection()
         {
@@ -167,7 +172,20 @@ namespace Blind
                 return -1;
             }
         }
-        
+
+        public void OnHurt()
+        {
+            base.onHurt();
+            _anim.SetBool("Hurt", true);
+            Hp.GetDamage(1f);
+            if (Hp.GetHP() <= 0)
+                _anim.SetBool("Dead", true);
+            if (isPowerAttack)
+                CurrentStunGauge += 2.5f;
+            else
+                CurrentStunGauge += 1f;
+        }
+
         protected void Flip()
         {
             Vector2 thisScale = transform.localScale;

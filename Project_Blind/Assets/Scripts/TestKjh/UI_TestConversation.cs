@@ -12,6 +12,10 @@ namespace Blind
         int _defaultHeight = 2;
         int _defaultWidth = 10;
         int page = 0;
+
+        int _currHeight;
+        int _maxHeight;
+
         string _title;
         public string Title
         {
@@ -51,9 +55,10 @@ namespace Blind
         void ShowText(int page)
         {
             // 글자수에 따라 ui의 높이 변경
-            int height = (conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length - 1) / _defaultWidth;
-            if (height >= 10) height++;
-            Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + height);
+            _maxHeight = (conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length - 1) / _defaultWidth;
+            if (_maxHeight >= 10) _maxHeight++;
+            _currHeight = 0;
+            Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight);
 
             // 한글자씩 출력하도록 하는 코루틴 시작
             _showText = StartCoroutine(CoShowTexts(page));
@@ -67,6 +72,8 @@ namespace Blind
                 StopCoroutine(_showText);
                 _showText = null;
                 string text = "";
+                _currHeight = _maxHeight;
+                Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight);
                 for (int i = 0; i < conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length; i++)
                 {
                     if (i % 10 == 0 && i != 0) text += "\n";
@@ -101,10 +108,15 @@ namespace Blind
         {
             // 텍스트를 한줄에 전부 띄울수는 없으니 줄바꿈을 적용할 텍스트를 새로 만듬
             string text = "";
-            for(int i = 0; i < conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length; i++)
+            for (int i = 0; i < conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length; i++)
             {
                 // 글자수 10개 넘어가면 줄바꿈
-                if (i % 10 == 0 && i != 0) text += "\n";
+                if (i % 10 == 0 && i != 0)
+                {
+                    _currHeight++;
+                    Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight);
+                    text += "\n";
+                }
                 // 한글자씩 text에 추가
                 text += conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script[i];
                 // ui에 텍스트를 띄움
