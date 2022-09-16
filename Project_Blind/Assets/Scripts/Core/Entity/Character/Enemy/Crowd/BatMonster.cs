@@ -11,11 +11,6 @@ namespace Blind
         private Coroutine Co_stun;
         private Coroutine Co_die;
         
-        public int StunGauge;
-        public int maxStunGauge;
-
-        public bool isPowerAttack;
-        
 
         protected void Awake()
         {
@@ -28,13 +23,14 @@ namespace Blind
             Data.attackSpeed = 0.3f;
             Data.attackRange = new Vector2(9f, 8f);
             Data.stunTime = 1f;
+            _patrolTime = 3f;
 
         }
 
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(2, 2);
+            _attack.Init(5, 2);
         }
 
         protected override void FixedUpdate()
@@ -42,42 +38,27 @@ namespace Blind
             base.FixedUpdate();
         }
 
-        protected override void updateChase()
-        {
-            if(_anim.GetBool("Chase") == false)
-            {
-                _anim.SetBool("Chase", true);
-            }
-
-            if (playerFinder.MissPlayer())
-            {
-                state = State.Patrol;
-                _anim.SetBool("Chase", false);
-                return;
-            }
-
-            if (attackSense.Attackable())
-            {
-                //attackStandby가 꼭 필요할까...?
-                //state = State.AttackStandby;
-                state = State.Attack;
-                _anim.SetBool("Chase", false);
-                return;
-            }
-
-            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
-        }
-
         protected override void updateAttack()
         {
             if (Co_attack == null)
             {
-                Co_attack = StartCoroutine(CoAttack());
-            }
+                if (Random.Range(0, 100) > 20)
+                {
+                    if (_anim.GetBool("Basic Attack") == false)
+                    {
+                        _anim.SetBool("Basic Attack", true);
+                    }
+                }
+                else
+                {
+                    if (_anim.GetBool("Skill Attack") == false)
+                    {
+                        isPowerAttack = true;
+                        _anim.SetBool("Skill Attack", true);
+                    }
+                }
 
-            if (_anim.GetBool("Basic Attack") == false)
-            {
-                _anim.SetBool("Basic Attack", true);
+                Co_attack = StartCoroutine(CoAttack());
             }
         }
 
@@ -109,17 +90,11 @@ namespace Blind
             Co_stun = StartCoroutine(CoStun());
         }
 
-        protected override void updateDie()
-        {
-            Co_die = StartCoroutine(CoDie());
-        }
-
         private IEnumerator CoAttack()
         {
-            //yield return new WaitForSeconds(2f);
-            Debug.Log("공격!!");
-            _attack.EnableDamage();
             yield return new WaitForSeconds(0.2f);
+            _attack.EnableDamage();
+            yield return new WaitForSeconds(0.5f);
             _attack.DisableDamage();
 
             Co_attack = null;
@@ -134,22 +109,7 @@ namespace Blind
             else
                 state = State.Default;
             _anim.SetBool("Basic Attack", false);
+            _anim.SetBool("Skill Attack", false);
         }
-
-        public IEnumerator CoStun()
-        {
-            _anim.SetBool("Stun", true);
-            yield return new WaitForSeconds(Data.stunTime);
-
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-
-            Co_stun = null;
-            _anim.SetBool("Stun", false);
-        }   
     }
 }

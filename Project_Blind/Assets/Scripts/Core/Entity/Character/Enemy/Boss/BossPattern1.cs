@@ -65,17 +65,17 @@ namespace Blind
                 Vector2 postion = Return_RandomPosion();
                 if (n == RealAttack)
                 {
-                    Debug.Log("DD");
+                    //Debug.Log("DD");
 
                     RealAttackPostion.position = postion;
-                    Debug.Log(RealAttackPostion.position);
+                    //Debug.Log(RealAttackPostion.position);
                 }
                 var wave = ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense 1").GetComponent<WaveSense>();
                 wave.transform.position = postion;
                 wave.StartSpread();
                 n++;
             }
-            Debug.Log(RealAttackPostion.position);
+            //Debug.Log(RealAttackPostion.position);
             StartCoroutine(StartAttack());
         }
 
@@ -87,7 +87,7 @@ namespace Blind
 
             bossHand.transform.position = RealAttackPostion.position;
             currentPostion = player.transform.position;
-            Debug.Log(RealAttackPostion.position + " " + currentPostion);
+            //Debug.Log(RealAttackPostion.position + " " + currentPostion);
             bossHand.GetTransform(RealAttackPostion.position, currentPostion);
         }
 

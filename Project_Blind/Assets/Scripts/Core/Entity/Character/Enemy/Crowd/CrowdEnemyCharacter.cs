@@ -21,11 +21,27 @@ namespace Blind
         }
 
         protected State state;
-        protected float _patrolTime = 3f;
+        protected float _patrolTime;
         protected Animator _anim;
         private int defaultCount = 0;
 
+        public float CurrentStunGauge = 0;
+        public float MaxStunGauge = 10f;
+        public bool isPowerAttack = false;
+
         private Coroutine co_patrol;
+        private Coroutine co_stun;
+
+        protected void Awake()
+        {
+            base.Awake();
+            state = State.Patrol;
+            patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
+            playerFinder.setRange(Data.sensingRange);
+            attackSense = GetComponentInChildren<EnemyAttack>();
+            _anim = GetComponent<Animator>();
+            attackSense.setRange(Data.attackRange);
+        }
 
         protected virtual void FixedUpdate()
         {
@@ -115,7 +131,26 @@ namespace Blind
         
         protected virtual void updateChase()
         {
-            throw new NotImplementedException();
+            if (_anim.GetBool("Chase") == false)
+            {
+                _anim.SetBool("Chase", true);
+            }
+
+            if (playerFinder.MissPlayer())
+            {
+                state = State.Patrol;
+                _anim.SetBool("Chase", false);
+                return;
+            }
+
+            if (attackSense.Attackable())
+            {
+                state = State.Attack;
+                _anim.SetBool("Chase", false);
+                return;
+            }
+
+            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected virtual void updateAttack()
@@ -145,16 +180,6 @@ namespace Blind
         {
             return;
         }
-
-        protected void Awake()
-        {
-            base.Awake(); 
-            state = State.Patrol;
-            playerFinder.setRange(Data.sensingRange);
-            attackSense = GetComponentInChildren<EnemyAttack>();
-            _anim = GetComponent<Animator>();
-            attackSense.setRange(Data.attackRange);
-        }
         
         protected int RandomDirection()
         {
@@ -167,7 +192,20 @@ namespace Blind
                 return -1;
             }
         }
-        
+
+        public void OnHurt()
+        {
+            base.onHurt();
+            _anim.SetBool("Hurt", true);
+            Hp.GetDamage(1f);
+            if (Hp.GetHP() <= 0)
+                _anim.SetBool("Dead", true);
+            if (isPowerAttack)
+                CurrentStunGauge += 2.5f;
+            else
+                CurrentStunGauge += 1f;
+        }
+
         protected void Flip()
         {
             Vector2 thisScale = transform.localScale;
@@ -221,6 +259,22 @@ namespace Blind
                 yield return null;
             }
             Destroy(gameObject);
+        }
+
+        public IEnumerator CoStun()
+        {
+            _anim.SetBool("Stun", true);
+            yield return new WaitForSeconds(Data.stunTime);
+
+            if (attackSense.Attackable())
+                state = State.Attack;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Default;
+
+            co_stun = null;
+            _anim.SetBool("Stun", false);
         }
 
         protected void animChange(string before, string after)

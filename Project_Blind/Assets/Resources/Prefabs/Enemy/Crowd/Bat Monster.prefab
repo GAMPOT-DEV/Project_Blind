@@ -126,7 +126,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9c06012ecc553c64ca3ac3fa5952dd41, type: 2}
+  - {fileID: 2100000, guid: 2d172a3bee21b9a40997bf111261a397, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -256,8 +256,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   WallCheck: {fileID: 3758395228340987582}
-  StunGauge: 0
-  maxStunGauge: 0
+  CurrentStunGauge: 0
+  MaxStunGauge: 10
   isPowerAttack: 0
 --- !u!114 &3758395228494642314
 MonoBehaviour:
@@ -357,14 +357,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3758395228494642423}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06df7acbb0a84e6580986521c086d75c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hitLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 8192
 --- !u!1 &3758395228640963974
 GameObject:
   m_ObjectHideFlags: 0
