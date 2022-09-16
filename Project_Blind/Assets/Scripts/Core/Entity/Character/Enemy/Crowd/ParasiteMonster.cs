@@ -13,9 +13,6 @@ namespace Blind {
         public int StunGauge;
         public int maxStunGauge;
 
-        public bool isPowerAttack;
-
-
         protected void Awake()
         {
             base.Awake();
@@ -28,13 +25,12 @@ namespace Blind {
             Data.attackRange = new Vector2(9f, 8f);
             Data.stunTime = 1f;
             _patrolTime = 2;
-
         }
 
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(2, 2);
+            _attack.Init(7, 2);
         }
 
         protected override void FixedUpdate()
@@ -58,8 +54,6 @@ namespace Blind {
 
             if (attackSense.Attackable())
             {
-                //attackStandby가 꼭 필요할까...?
-                //state = State.AttackStandby;
                 state = State.Attack;
                 _anim.SetBool("Chase", false);
                 return;
@@ -72,12 +66,23 @@ namespace Blind {
         {
             if (Co_attack == null)
             {
-                Co_attack = StartCoroutine(CoAttack());
-            }
+                if (Random.Range(0, 100) > 20)
+                {
+                    if (_anim.GetBool("Basic Attack") == false)
+                    {
+                        _anim.SetBool("Basic Attack", true);
+                    }
+                }
+                else
+                {
+                    if (_anim.GetBool("Skill Attack") == false)
+                    {
+                        isPowerAttack = true;
+                        _anim.SetBool("Skill Attack", true);
+                    }
+                }
 
-            if (_anim.GetBool("Basic Attack") == false)
-            {
-                _anim.SetBool("Basic Attack", true);
+                Co_attack = StartCoroutine(CoAttack());
             }
         }
 
@@ -116,10 +121,9 @@ namespace Blind {
 
         private IEnumerator CoAttack()
         {
-            //yield return new WaitForSeconds(2f);
-            Debug.Log("공격!!");
-            _attack.EnableDamage();
             yield return new WaitForSeconds(0.2f);
+            _attack.EnableDamage();
+            yield return new WaitForSeconds(0.5f);
             _attack.DisableDamage();
 
             Co_attack = null;
@@ -134,22 +138,7 @@ namespace Blind {
             else
                 state = State.Default;
             _anim.SetBool("Basic Attack", false);
-        }
-
-        public IEnumerator CoStun()
-        {
-            _anim.SetBool("Stun", true);
-            yield return new WaitForSeconds(Data.stunTime);
-
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-
-            Co_stun = null;
-            _anim.SetBool("Stun", false);
+            _anim.SetBool("Skill Attack", false);
         }
     }
 }

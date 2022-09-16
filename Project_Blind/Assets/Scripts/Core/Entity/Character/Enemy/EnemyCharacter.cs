@@ -53,7 +53,6 @@ namespace Blind
 
         public bool ReturnFacing()
         {
-            //return _sprite.flipX;
             if (transform.localScale.x > 0)
                 return true;
             else return false;

@@ -345,9 +345,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   WallCheck: {fileID: 6332912896856356007}
+  CurrentStunGauge: 0
+  MaxStunGauge: 10
+  isPowerAttack: 0
   StunGauge: 0
   maxStunGauge: 0
-  isPowerAttack: 0
 --- !u!50 &5754174511786141345
 Rigidbody2D:
   serializedVersion: 4
@@ -499,14 +501,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5988874260522668160}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06df7acbb0a84e6580986521c086d75c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hitLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 8192
 --- !u!1001 &6924452183238023909
 PrefabInstance:
   m_ObjectHideFlags: 0
