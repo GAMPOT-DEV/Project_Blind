@@ -70,7 +70,8 @@ namespace Blind
                 {
                     _anim.SetBool("Basic Attack", true);
                 }
-            } else
+            }
+            else
             {
                 if(_anim.GetBool("Skill Attack") == false)
                 {
