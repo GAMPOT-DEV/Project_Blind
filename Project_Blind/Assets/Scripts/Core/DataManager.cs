@@ -55,14 +55,11 @@ namespace Blind
 
             if (File.Exists(filePath))
             {
-                Debug.Log("Data Load Success!");
                 string JsonData = File.ReadAllText(filePath);
-                Debug.Log(JsonData);
                 _gameData = JsonUtility.FromJson<GameData>(JsonData);
             }
             else
             {
-                Debug.Log("New Data Created!");
                 _gameData = new GameData();
             }
 
@@ -73,7 +70,6 @@ namespace Blind
             string JsonData = JsonUtility.ToJson(GameData);
             string filePath = Application.persistentDataPath + FileName;
             File.WriteAllText(filePath, JsonData);
-            Debug.Log("Save Completed!");
         }
         #endregion
         public bool AddClueItem(int itemId)
