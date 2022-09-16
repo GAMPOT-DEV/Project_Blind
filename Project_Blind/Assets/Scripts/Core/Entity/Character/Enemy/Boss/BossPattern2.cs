@@ -16,6 +16,7 @@ namespace Blind
         {
             Init();
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
+            bossHand.CheckBossPattern(false);
             int range = RandomRange();
             if (range == 0)
             {

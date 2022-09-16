@@ -83,6 +83,7 @@ namespace Blind
         {
             yield return new WaitForSeconds(1f);
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
+            bossHand.CheckBossPattern(true);
 
             bossHand.transform.position = RealAttackPostion.position;
             currentPostion = player.transform.position;

@@ -291,6 +291,27 @@ namespace Blind
             _clickcount = 0;
         }
 
+        public void Combo(int combo)
+        {
+            StartCoroutine(NextAttack(combo));
+        }
+
+        public IEnumerator NextAttack(int combo)
+        {
+            yield return new WaitForSeconds(0.07f);
+            if (combo == 1)
+            {
+                MeleeAttackCombo1();
+            }
+            else if (combo == 2)
+            {
+                MeleeAttackCombo2();
+            }
+            else
+            {
+                MeleeAttackCombo3();
+            }
+        }
         public bool CheckForPowerAttack()
         {
             return InputController.Instance.Attack.Held;
