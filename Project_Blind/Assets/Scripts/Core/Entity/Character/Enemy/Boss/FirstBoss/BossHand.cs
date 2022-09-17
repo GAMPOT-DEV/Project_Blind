@@ -19,8 +19,9 @@ namespace Blind
         private Facing facing;
         private bool isStop;
         private bool isParing = false;
-        private bool isCameraShakeStop = false;
+        private bool isCameraShakeStop = false; // 패턴 1: true, 패턴 2: false
         private CinemachineImpulseSource _source;
+        private bool isBossPatternCheck;
         public void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
@@ -33,9 +34,10 @@ namespace Blind
             if (!isStop)
             {
                 transform.position = Vector2.MoveTowards(transform.position, EndTransform, 0.5f);
-                _source.GenerateImpulse();
+                if(!isBossPatternCheck)_source.GenerateImpulse();
                 if (transform.position.x == EndTransform.x)
                 {
+                    if (isBossPatternCheck) _source.GenerateImpulse();
                     isCameraShakeStop = true;
                     Destroy(gameObject);
                 }
@@ -71,6 +73,10 @@ namespace Blind
                 sprite.flipX = true;
                 this.facing = Facing.Right;
             }
+        }
+        public void CheckBossPattern(bool isBossPattern)
+        {
+            isBossPatternCheck = isBossPattern;
         }
 
         public void GetTransform(Vector2 left, Vector2 right)
