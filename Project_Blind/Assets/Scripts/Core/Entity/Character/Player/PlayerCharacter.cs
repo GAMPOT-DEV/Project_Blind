@@ -352,6 +352,7 @@ namespace Blind
 
         public void enableAttack()
         {
+            EffectManager.Instance.PlayPlayerFx("Slash",transform.position);
             _attack.EnableDamage();
         }
 
