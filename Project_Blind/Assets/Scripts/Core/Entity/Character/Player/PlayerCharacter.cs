@@ -115,12 +115,24 @@ namespace Blind
             {
                 flip = 1;
             }
-            
-            if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
-                flip = 0;
 
-            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = false;
+            if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
+            {
+                flip = 0;
+            }
+
+            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down)
+            {
+                isInputCheck = false;
+                _animator.SetBool("RunEnd", false);
+            }
             else isInputCheck = true;
+
+            if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
+            {
+                _animator.SetBool("RunEnd", true);
+                
+            }
             float desiredSpeed = useInput ? flip * Data.maxSpeed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
@@ -175,6 +187,7 @@ namespace Blind
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = Data.jumpSpeed;
                 }
+                Debug.Log(_moveVector.y);
                 _animator.SetTrigger("Jump");
             }
         }
