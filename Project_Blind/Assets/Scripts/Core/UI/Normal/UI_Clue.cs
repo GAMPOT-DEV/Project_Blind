@@ -70,7 +70,9 @@ namespace Blind
         public void RefreshUI()
         {
             Size = DataManager.Instance.GameData.clueInfos.Count;
-            grid.GetComponent<RectTransform>().sizeDelta = new Vector2(750f, 220f * (float)Size);
+            Debug.Log(grid.name);
+            grid.GetComponent<RectTransform>().sizeDelta = new Vector2(500f * (float)Size - 1800f, 770f);
+            Debug.Log(grid.GetComponent<RectTransform>().sizeDelta.x);
             for(int i = 0; i < Size; i++)
             {
                 int itemId = -1;
@@ -107,21 +109,21 @@ namespace Blind
             foreach (Transform child in grid.transform)
                 Destroy(child.gameObject);
 
-            ShowDetailDesc(-1);
+            //ShowDetailDesc(-1);
             RefreshUI();
         }
-        public void ShowDetailDesc(int itemId)
-        {
-            if (itemId == -1)
-            {
-                Get<Text>((int)Texts.Text_DetailDesc).text = "";
-                return;
-            }
-            Data.Clue clue;
-            _cludData.TryGetValue(itemId, out clue);
-            string text = clue.description;
+        //public void ShowDetailDesc(int itemId)
+        //{
+        //    if (itemId == -1)
+        //    {
+        //        Get<Text>((int)Texts.Text_DetailDesc).text = "";
+        //        return;
+        //    }
+        //    Data.Clue clue;
+        //    _cludData.TryGetValue(itemId, out clue);
+        //    string text = clue.description;
 
-            Get<Text>((int)Texts.Text_DetailDesc).text = text;
-        }
+        //    Get<Text>((int)Texts.Text_DetailDesc).text = text;
+        //}
     }
 }
