@@ -30,6 +30,7 @@ namespace Blind
         public bool isPowerAttack = false;
 
         private Coroutine co_patrol;
+        private Coroutine co_stun;
 
         protected void Awake()
         {
@@ -130,7 +131,26 @@ namespace Blind
         
         protected virtual void updateChase()
         {
-            throw new NotImplementedException();
+            if (_anim.GetBool("Chase") == false)
+            {
+                _anim.SetBool("Chase", true);
+            }
+
+            if (playerFinder.MissPlayer())
+            {
+                state = State.Patrol;
+                _anim.SetBool("Chase", false);
+                return;
+            }
+
+            if (attackSense.Attackable())
+            {
+                state = State.Attack;
+                _anim.SetBool("Chase", false);
+                return;
+            }
+
+            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected virtual void updateAttack()
@@ -239,6 +259,22 @@ namespace Blind
                 yield return null;
             }
             Destroy(gameObject);
+        }
+
+        public IEnumerator CoStun()
+        {
+            _anim.SetBool("Stun", true);
+            yield return new WaitForSeconds(Data.stunTime);
+
+            if (attackSense.Attackable())
+                state = State.Attack;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Default;
+
+            co_stun = null;
+            _anim.SetBool("Stun", false);
         }
 
         protected void animChange(string before, string after)
