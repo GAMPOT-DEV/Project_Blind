@@ -16,8 +16,7 @@ namespace Blind
         }
         enum Texts
         {
-            Text_ClueName,
-            Text_ClueDesc,
+
         }
         public int ItemId { get;private set; }
         public override void Init()
@@ -25,7 +24,7 @@ namespace Blind
             Bind<Image>(typeof(Images));
             Bind<Text>(typeof(Texts));
             _cludData = DataManager.Instance.ClueDict;
-            Get<Image>((int)Images.Image_ItemIcon).gameObject.BindEvent(PushItemIcon, Define.UIEvent.Click);
+            //Get<Image>((int)Images.Image_ItemIcon).gameObject.BindEvent(PushItemIcon, Define.UIEvent.Click);
         }
         public void SetItem(int itemId, UI_Clue owner)
         {
@@ -45,13 +44,13 @@ namespace Blind
             }
             SetText();
         }
-        public void PushItemIcon()
-        {
-            _owner.ShowDetailDesc(Clue.id);
-        }
+        //public void PushItemIcon()
+        //{
+        //    _owner.ShowDetailDesc(Clue.id);
+        //}
         private void SetText()
         {
-            Get<Text>((int)Texts.Text_ClueName).text = Clue.name;
+            //Get<Text>((int)Texts.Text_ClueName).text = Clue.name;
             //Get<Text>((int)Texts.Text_ClueDesc).text = Clue.description;
         }
     }

@@ -179,40 +179,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca3a64169bd4dd4bb08e07908ae7a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 10
   _moveVector: {x: 0, y: 0}
   _attack: {fileID: 8157876191047730959}
   _playerposition: {x: 0, y: 0}
-  _jumpSpeed: 1
-  _jumpAbortSpeedReduction: 2
-  _gravity: 3
-  _maxSpeed: 4
-  groundAcceleration: 15
-  groundDeceleration: 15
-  airborneAccelProportion: 0
-  airborneDecelProportion: 0
-  _dashSpeed: 10
-  _defaultTime: 0.2
-  _attackMove: 1
-  _maxComboDelay: 0.9
-  _hurtMove: 0.3
+  Data: {fileID: 11400000, guid: 21d0741f5cd6f56409144bf3436bbc14, type: 2}
+  _spawnPoint: {fileID: 0}
   _isHurtCheck: 0
   _lastClickTime: 0
   _clickcount: 0
-  attack_x: 3
-  attack_y: 5
-  damage: 1
-  _powerAttackdamage: 0
-  paring_x: 2
-  paring_y: 2
-  _spawnPoint: {fileID: 0}
+  isCheck: 0
+  nextDash_x: 0
   isJump: 0
   _isInvincibility: 0
+  isPowerAttackEnd: 0
   maxWaveGauge: 30
   _currentWaveGauge: 30
   attackWaveGauge: 3
   paringWaveGauge: 5
   isOnLava: 0
+  gravity: 0
 --- !u!50 &8157876191047730957
 Rigidbody2D:
   serializedVersion: 4
@@ -230,7 +215,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 33e71d9d71a4b09498708826b6610611, type: 2}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4

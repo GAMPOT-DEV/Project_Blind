@@ -8,8 +8,9 @@ namespace Blind
 {
     public class UI_Menu : UI_Base
     {
-        [SerializeField] private GameObject _settingUI;
+        [SerializeField] private GameObject _bagUI;
         [SerializeField] private GameObject _clueUI;
+        [SerializeField] private GameObject _settingUI;
 
         [SerializeField] private Sprite _bag_Clicked;
         [SerializeField] private Sprite _bag_NonClicked;
@@ -21,6 +22,8 @@ namespace Blind
         [SerializeField] private Sprite _setting_NonClicked;
         private GameObject _currActiveUI = null;
 
+        public bool CanInput { get; set; } = true;
+
         #region Enums
         enum Images
         {
@@ -28,9 +31,6 @@ namespace Blind
             Image_Talisman,
             Image_Clue,
             Image_Setting,
-            
-
-            Image_Close,
         }
         #endregion
         const int MENU_SIZE = (int)Images.Image_Setting + 1;
@@ -61,10 +61,11 @@ namespace Blind
 
             _transition = GameObject.Find("TransitionStart_Main").GetComponent<TransitionPoint>();
 
-            _settingUI.SetActive(false);
+            _bagUI.SetActive(false);
             _clueUI.SetActive(false);
+            _settingUI.SetActive(false);
 
-            _uis[(int)Images.Image_Bag] = null;
+            _uis[(int)Images.Image_Bag] = _bagUI;
             _uis[(int)Images.Image_Talisman] = null;
             _uis[(int)Images.Image_Clue] = _clueUI;
             _uis[(int)Images.Image_Setting] = _settingUI;
@@ -86,7 +87,6 @@ namespace Blind
             Get<Image>((int)Images.Image_Talisman).gameObject.BindEvent(() => PushButton((int)Images.Image_Talisman), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Clue).gameObject.BindEvent(() => PushButton((int)Images.Image_Clue), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_Setting).gameObject.BindEvent(() => PushButton((int)Images.Image_Setting), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_Close).gameObject.BindEvent(PushCloseButton, Define.UIEvent.Click);
 
             _actions[(int)Images.Image_Bag] += PushBagButton;
             _actions[(int)Images.Image_Talisman] += PushTalismanButton;
@@ -109,7 +109,8 @@ namespace Blind
         }
         private void PushBagButton()
         {
-            Debug.Log("PushBagButton");
+            _bagUI.SetActive(true);
+            _currActiveUI = _bagUI;
         }
         private void PushTalismanButton()
         {
@@ -142,6 +143,9 @@ namespace Blind
                 return;
 
             if (_uiNum != UIManager.Instance.UINum)
+                return;
+
+            if (!CanInput)
                 return;
 
             if (Input.GetKeyDown(KeyCode.Escape))

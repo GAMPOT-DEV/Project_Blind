@@ -30,15 +30,10 @@ namespace Blind
             _playerPos = new Vector2(playerTransform.x,playerTransform.y); // 플레이어의 현재 포지션 저장
         }
 
-        public void Start()
-        {
-            AttackPattern();
-        }
-
-        public override void AttackPattern()
+        public override Coroutine AttackPattern()
         {
             _collider.enabled = false;
-            StartCoroutine(attackPattern());
+            return StartCoroutine(attackPattern());
         }
 
         private void OnTriggerEnter2D(Collider2D col)

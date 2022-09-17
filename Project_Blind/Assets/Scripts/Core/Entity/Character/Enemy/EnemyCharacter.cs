@@ -10,14 +10,7 @@ namespace Blind
         protected Rigidbody2D rigid;
         protected SpriteRenderer _sprite;
 
-        [SerializeField] protected Vector2 _sensingRange;
-        [SerializeField] protected float _speed;
-        [SerializeField] protected float _runSpeed;
-        [SerializeField] protected float _attackCoolTime;
-        [SerializeField] protected float _attackSpeed;
-        [SerializeField] protected Vector2 _attackRange;
-        [SerializeField] protected int _damage;
-        [SerializeField] protected float _stunTime;
+        [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
 
         protected GameObject player;
         protected MeleeAttackable _attack;
@@ -34,7 +27,7 @@ namespace Blind
         
         protected void Awake()
         {
-            base.Awake();
+            base.Awake(Data);
             _attack = GetComponent<MeleeAttackable>();
             _sprite = GetComponent<SpriteRenderer>();
             _characterController2D = GetComponent<CharacterController2D>();
@@ -55,12 +48,11 @@ namespace Blind
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;
             // 오브젝트의 머리 위에 위치하도록 설정
-            _unitHPUI.SetPosition(transform.position, Vector3.up * 4);
+            _unitHPUI.SetPosition(transform.position, Vector3.up * 9);
         }
 
         public bool ReturnFacing()
         {
-            //return _sprite.flipX;
             if (transform.localScale.x > 0)
                 return true;
             else return false;

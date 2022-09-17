@@ -111,9 +111,10 @@ using UnityEngine;
          {
              var gameobject = gameObject.GetComponent<EnemyCharacter>();
              Facing facing = Facing.Left;
-             if (sprite.flipX != _isSpriteFlip) facing = Facing.Right;
- 
-             var pointA = new Vector2(transform.position.x + (float)facing * 1, transform.position.y);
+            //if (sprite.flipX != _isSpriteFlip) facing = Facing.Right;
+            if (gameobject.ReturnFacing()) facing = Facing.Right;
+
+            var pointA = new Vector2(transform.position.x + (float)facing * 1, transform.position.y);
              if (facing == Facing.Right) size = new Vector2(pointA.x + x, pointA.y - y);
              else size = new Vector2(pointA.x - x, pointA.y - y);
  

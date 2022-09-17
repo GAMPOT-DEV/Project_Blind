@@ -10,7 +10,7 @@ public class EnemyAttack : MonoBehaviour
 
     public void setRange(Vector2 range)
     {
-        gameObject.GetComponent<BoxCollider2D>().size = range;
+        //gameObject.GetComponent<BoxCollider2D>().size = range;
     }
 
     public bool Attackable()

@@ -28,12 +28,21 @@ namespace Blind
         #region Clue
         public List<ClueInfo> clueInfos = new List<ClueInfo>();
         #endregion
+
+        public List<BagItemInfo> bagItemInfos = new List<BagItemInfo>();
     }
     [Serializable]
     public class ClueInfo
     {
         public int slot;
         public int itemId;
+    }
+    [Serializable]
+    public class BagItemInfo
+    {
+        public int slot;
+        public int itemId;
+        public int itemCnt;
     }
     public partial class GameData
     {
@@ -65,6 +74,54 @@ namespace Blind
             clueInfos.Clear();
             ClueInfoBySlot.Clear();
             ClueInfoById.Clear();
+        }
+        #endregion
+        #region BagItemDict
+        public Dictionary<int, BagItemInfo> BagItemInfoBySlot { get; private set; } = new Dictionary<int, BagItemInfo>();
+        public Dictionary<int, BagItemInfo> BagItemInfoById { get; private set; } = new Dictionary<int, BagItemInfo>();
+        public void MakeBagItemDict()
+        {
+            foreach (BagItemInfo bagItemInfo in bagItemInfos)
+            {
+                BagItemInfoBySlot.Add(bagItemInfo.slot, bagItemInfo);
+                BagItemInfoById.Add(bagItemInfo.itemId, bagItemInfo);
+            }
+        }
+        public void AddBagItem(BagItemInfo bagItem)
+        {
+            bagItemInfos.Add(bagItem);
+            BagItemInfoBySlot.Add(bagItem.slot, bagItem);
+            BagItemInfoById.Add(bagItem.itemId, bagItem);
+        }
+        public void AddBagItem(int itemId, int cnt)
+        {
+            BagItemInfo item = BagItemInfoById[itemId];
+            item.itemCnt += cnt;
+        }
+        public void DeleteBagItem(BagItemInfo item)
+        {
+            bagItemInfos.Remove(item);
+            BagItemInfoBySlot.Remove(item.slot);
+            BagItemInfoById.Remove(item.itemId);
+        }
+        public void DeleteBagItem(BagItemInfo item, int cnt)
+        {
+            item.itemCnt -= cnt;
+        }
+        public void OneIndexForwardBag(int start, int end)
+        {
+            for(int i = start; i < end; i++)
+            {
+                BagItemInfoBySlot[i].slot = i - 1;
+                BagItemInfoBySlot[i - 1] = BagItemInfoBySlot[i];
+            }
+            BagItemInfoBySlot.Remove(end - 1);
+        }
+        public void ClearBagData()
+        {
+            bagItemInfos.Clear();
+            BagItemInfoBySlot.Clear();
+            BagItemInfoById.Clear();
         }
         #endregion
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
+using Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,27 +12,32 @@ namespace Blind
         private SpriteRenderer sprite;
         private BoxCollider2D _collider;
         public Transform StartTransform;
-        public Transform EndTransform;
+        public Vector2 EndTransform;
         private Vector2 TargetPostion;
         private bool isRight;
         private int speed = 2;
         private Facing facing;
         private bool isStop;
         private bool isParing = false;
-        private bool isCameraShakeStop = false;
+        private bool isCameraShakeStop = false; // 패턴 1: true, 패턴 2: false
+        private CinemachineImpulseSource _source;
+        private bool isBossPatternCheck;
         public void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
             _collider = GetComponent<BoxCollider2D>();
+            _source = GetComponent<CinemachineImpulseSource>();
         }
 
         public void FixedUpdate()
         {
             if (!isStop)
             {
-                transform.position = Vector2.MoveTowards(transform.position, EndTransform.position, 0.5f);
-                if (transform.position.x == EndTransform.position.x)
+                transform.position = Vector2.MoveTowards(transform.position, EndTransform, 0.5f);
+                if(!isBossPatternCheck)_source.GenerateImpulse();
+                if (transform.position.x == EndTransform.x)
                 {
+                    if (isBossPatternCheck) _source.GenerateImpulse();
                     isCameraShakeStop = true;
                     Destroy(gameObject);
                 }
@@ -40,7 +46,7 @@ namespace Blind
             {
                 if (!isParing)
                 {
-                    TargetPostion = new Vector2(transform.position.x + (2f * (float)facing), transform.position.y);
+                    TargetPostion = new Vector2(transform.position.x + (5f * -(float)facing), transform.position.y);
                     isParing = true;
                 }
                 transform.position = Vector2.MoveTowards(transform.position,
@@ -60,18 +66,22 @@ namespace Blind
             if (facing)
             {
                 sprite.flipX = false;
-                this.facing = Facing.Right;
+                this.facing = Facing.Left;
             }
             else
             {
                 sprite.flipX = true;
-                this.facing = Facing.Left;
+                this.facing = Facing.Right;
             }
         }
-
-        public void GetTransform(Transform left, Transform right)
+        public void CheckBossPattern(bool isBossPattern)
         {
-            transform.position = left.position;
+            isBossPatternCheck = isBossPattern;
+        }
+
+        public void GetTransform(Vector2 left, Vector2 right)
+        {
+            transform.position = left;
             EndTransform = right;
         }
 

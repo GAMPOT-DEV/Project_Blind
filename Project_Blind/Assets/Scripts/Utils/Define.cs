@@ -34,6 +34,7 @@ public class Define
         동굴,
         장산범입구,
         장산범방,
+        맵테스트,
     }
 
     public enum Sound
@@ -72,7 +73,20 @@ public class Define
     }
     public enum KeyAction
     {
-
+        Jump,
+        DownJump,
+        LeftMove,
+        RightMove,
+        Paring,
+        Interaction,
+        Attack,
+        Dash,
+        Wave,
+        Horizontal,
+        Vertical,
+        Skill,
+        ChangeSlot,
+        ItemT
     }
 }
 
