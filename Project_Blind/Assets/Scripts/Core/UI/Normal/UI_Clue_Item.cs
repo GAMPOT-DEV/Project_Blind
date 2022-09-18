@@ -133,8 +133,6 @@ namespace Blind
         {
             while (true)
             {
-                Debug.Log(Get<Image>((int)Images.Image_Line_Down).transform.position.y + UP_DIST);
-                Debug.Log(Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y);
                 if (Get<Image>((int)Images.Image_Line_Down).transform.position.y + UP_DIST <= Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y)
                 {
                     Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * UP_DIST;
