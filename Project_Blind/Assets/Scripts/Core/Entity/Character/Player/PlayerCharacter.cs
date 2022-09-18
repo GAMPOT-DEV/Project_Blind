@@ -115,12 +115,24 @@ namespace Blind
             {
                 flip = 1;
             }
-            
-            if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
-                flip = 0;
 
-            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = false;
+            if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
+            {
+                flip = 0;
+            }
+
+            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down)
+            {
+                isInputCheck = false;
+                _animator.SetBool("RunEnd", false);
+            }
             else isInputCheck = true;
+
+            if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
+            {
+                _animator.SetBool("RunEnd", true);
+                
+            }
             float desiredSpeed = useInput ? flip * Data.maxSpeed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
@@ -139,13 +151,13 @@ namespace Blind
             if (_characterController2D.IsGrounded && _moveVector.x == 0)
             {
                 isCheck = true;
-                desiredSpeed = GetFacing() * Data.dashSpeed * 0.05f;
+                desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.05f;
                 currentmovevector_x = _moveVector.x;
                 Debug.Log("1번 실행됨");
             }
             else
             {
-                float desiredSpeed = GetFacing() * Data.dashSpeed * 0.1f;
+                float desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.1f;
                 _moveVector.x = desiredSpeed;
                 _moveVector.y = 0;
             }
@@ -175,6 +187,7 @@ namespace Blind
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = Data.jumpSpeed;
                 }
+                Debug.Log(_moveVector.y);
                 _animator.SetTrigger("Jump");
             }
         }
@@ -291,6 +304,27 @@ namespace Blind
             _clickcount = 0;
         }
 
+        public void Combo(int combo)
+        {
+            StartCoroutine(NextAttack(combo));
+        }
+
+        public IEnumerator NextAttack(int combo)
+        {
+            yield return new WaitForSeconds(0.07f);
+            if (combo == 1)
+            {
+                MeleeAttackCombo1();
+            }
+            else if (combo == 2)
+            {
+                MeleeAttackCombo2();
+            }
+            else
+            {
+                MeleeAttackCombo3();
+            }
+        }
         public bool CheckForPowerAttack()
         {
             return InputController.Instance.Attack.Held;
@@ -318,7 +352,7 @@ namespace Blind
 
         public void enableAttack()
         {
-            EffectManager.Instance.PlayPlayerFx("Slash",transform.position);
+            PlayAttackFx(1,GetFacing());
             _attack.EnableDamage();
         }
 
@@ -457,10 +491,10 @@ namespace Blind
             else _renderer.flipX = true;
         }
 
-        public int GetFacing()
+        public override Facing GetFacing()
         {
-            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? 1 : -1;
-            else return _renderer.flipX ? 1 : -1;
+            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+            else return _renderer.flipX ? Facing.Left : Facing.Right;
         }
 
         public void Log() {

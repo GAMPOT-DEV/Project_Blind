@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Blind
@@ -13,7 +12,13 @@ namespace Blind
             fx.transform.position = pos;
         }
 
-        public void PlayPlayerFx(string path, Vector2 pos)
+        public void PlayFxFacing(string path, Vector2 pos, Facing face)
+        {
+            var fx = ResourceManager.Instance.Instantiate(parentPath + path);
+            fx.transform.position = pos;
+        }
+
+        public void PlayPlayerFx(string path, Vector2 pos,Facing face)
         {
             PlayFx(playerPath + path,pos);
         }
