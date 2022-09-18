@@ -15,20 +15,13 @@ namespace Blind
             base.Awake();
             _inputController = InputController.Instance;
         }
-
-        private void Update()
-        {
-            
-        }
-
-        private void FixedUpdate()
+        protected void FixedUpdate()
         {
             if(Player != null)
             {
                 Player.OnFixedUpdate();
             }
         }
-        
     }
 }
 
