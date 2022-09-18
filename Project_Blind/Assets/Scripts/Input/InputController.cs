@@ -28,6 +28,7 @@ namespace Blind
         public InputButton Paring;
         public InputButton Interaction;
         public InputButton Attack;
+        public InputButton PowerAttack;
         public InputButton Skill;
         public InputButton ItemT;
         public InputButton DownJump;
@@ -58,6 +59,7 @@ namespace Blind
             Skill = new InputButton(KeyCode.I, XboxControllerButtons.LeftBumper);
             ChangeSlot = new InputButton(KeyCode.E, XboxControllerButtons.X);
             ItemT = new InputButton(KeyCode.Q, XboxControllerButtons.Y);
+            PowerAttack = new InputButton(KeyCode.L, XboxControllerButtons.A);
 
             InitialKeyActions.Add(Define.KeyAction.Jump, KeyCode.W);
             InitialKeyActions.Add(Define.KeyAction.DownJump, KeyCode.S);
@@ -71,6 +73,7 @@ namespace Blind
             InitialKeyActions.Add(Define.KeyAction.Skill, KeyCode.I);
             InitialKeyActions.Add(Define.KeyAction.ChangeSlot, KeyCode.E);
             InitialKeyActions.Add(Define.KeyAction.ItemT, KeyCode.Q);
+            InitialKeyActions.Add(Define.KeyAction.PowerAttack, KeyCode.L);
 
             CurrKeyActions = new Dictionary<Define.KeyAction, KeyCode>(InitialKeyActions);
         }
@@ -97,6 +100,7 @@ namespace Blind
             Skill.Get(fixedUpdateHappened, inputType);
             ItemT.Get(fixedUpdateHappened, inputType);
             ChangeSlot.Get(fixedUpdateHappened, inputType);
+            PowerAttack.Get(fixedUpdateHappened, inputType);
         }
         /// <summary>
         /// 막은 키 입력을 다시 활성화 합니다.
@@ -121,6 +125,7 @@ namespace Blind
             GainControl(Skill);
             GainControl(ItemT);
             GainControl(ChangeSlot);
+            GainControl(PowerAttack);
         }
         
         /// <summary>
@@ -146,6 +151,7 @@ namespace Blind
             ReleaseControl(Skill, resetValues);
             ReleaseControl(ItemT, resetValues);
             ReleaseControl(ChangeSlot, resetValues);
+            ReleaseControl(PowerAttack, resetValues);
         }
 
         public void ReKetSet()
@@ -190,6 +196,9 @@ namespace Blind
                         break;
                     case Define.KeyAction.ItemT:
                         ItemT = new InputButton(key, XboxControllerButtons.Y);
+                        break;
+                    case Define.KeyAction.PowerAttack:
+                        PowerAttack = new InputButton(key, XboxControllerButtons.Y);
                         break;
                 }
             }
