@@ -54,11 +54,11 @@ namespace Blind
             _unitHPUI.SetPosition(transform.position, Vector3.up * 9);
         }
 
-        public bool ReturnFacing()
+        public override Facing GetFacing()
         {
             if (transform.localScale.x > 0)
-                return true;
-            else return false;
+                return Facing.Right;
+            else return Facing.Left;
         }
 
         public void hitted(int dir)
@@ -70,6 +70,11 @@ namespace Blind
         protected virtual IEnumerator CoHitted()
         {
             return null;
+        }
+
+        public override void HitSuccess()
+        {
+            return;
         }
 
         protected override void onHurt()

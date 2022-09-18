@@ -20,16 +20,17 @@ namespace Blind
         }
         enum Texts
         {
-            Text_DetailDesc,
+
         }
         Dictionary<int, Data.Clue> _cludData;
         public static int Size { get; set; }
+        private int _currIdx = -1;
         public List<UI_Clue_Item> Items { get; } = new List<UI_Clue_Item>();
         GameObject grid;
         public override void Init()
         {
             Bind<Image>(typeof(Images));
-            Bind<Text>(typeof(Texts));
+            //Bind<Text>(typeof(Texts));
 
             _cludData = DataManager.Instance.ClueDict;
 
@@ -70,9 +71,7 @@ namespace Blind
         public void RefreshUI()
         {
             Size = DataManager.Instance.GameData.clueInfos.Count;
-            Debug.Log(grid.name);
             grid.GetComponent<RectTransform>().sizeDelta = new Vector2(500f * (float)Size - 1800f, 770f);
-            Debug.Log(grid.GetComponent<RectTransform>().sizeDelta.x);
             for(int i = 0; i < Size; i++)
             {
                 int itemId = -1;
@@ -85,7 +84,7 @@ namespace Blind
                 // 각각의 슬롯에 아이템 ID를 넘겨줘서 갱신한다.
                 // 위에서 찾지 못하면 ID = -1이고 ID가 -1인 아이템은 없기 때문에 
                 // 자동으로 null로 할당된다.
-                Items[i].SetItem(itemId, this);
+                Items[i].SetItem(itemId, i, this);
             }
         }
         private void PushTestImage(int id)
@@ -103,6 +102,10 @@ namespace Blind
         }
         private void PushTestClear()
         {
+            if (_currIdx != -1)
+                Items[_currIdx].CloseUI();
+            _currIdx = -1;
+
             DataManager.Instance.ClearClueData();
             Items.Clear();
             // 단서 슬롯들을 전부 날려주고 UI를 새로고침해준다.
@@ -111,6 +114,7 @@ namespace Blind
 
             //ShowDetailDesc(-1);
             RefreshUI();
+            
         }
         //public void ShowDetailDesc(int itemId)
         //{
@@ -125,5 +129,19 @@ namespace Blind
 
         //    Get<Text>((int)Texts.Text_DetailDesc).text = text;
         //}
+        public void PushClueItem(int idx)
+        {
+            if (_currIdx != -1)
+            {
+                Items[_currIdx].SetNonClickedState();
+            }
+            _currIdx = idx;
+            Items[_currIdx].SetClickedState();
+        }
+        public void CloseUI()
+        {
+            if (_currIdx == -1) return;
+            Items[_currIdx].CloseUI();
+        }
     }
 }
