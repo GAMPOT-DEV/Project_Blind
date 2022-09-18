@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Blind
 {
-    public abstract class Character : MonoBehaviour
+    public abstract class Character : MonoBehaviour, IAttackFxExcutable
     {
         private bool _isInvincibility;
         public UnitHP Hp { get; private set; }
@@ -33,6 +33,7 @@ namespace Blind
 
         protected abstract void onHurt();
         protected abstract void HurtMove(Facing enemyFacing);
+        public abstract Facing GetFacing();
         public bool CheckForDeed()
         {
             return Hp.GetHP()<= 0;
@@ -45,6 +46,10 @@ namespace Blind
             Hp.unInvicibility();
             _isInvincibility = false;
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
+        }
+        public void PlayAttackFx(int level, Facing face)
+        {
+            transform.GetChild(level).GetComponent<AttackFX>().Play(face);
         }
     }
 }

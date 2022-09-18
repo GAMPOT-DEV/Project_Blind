@@ -151,13 +151,13 @@ namespace Blind
             if (_characterController2D.IsGrounded && _moveVector.x == 0)
             {
                 isCheck = true;
-                desiredSpeed = GetFacing() * Data.dashSpeed * 0.05f;
+                desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.05f;
                 currentmovevector_x = _moveVector.x;
                 Debug.Log("1번 실행됨");
             }
             else
             {
-                float desiredSpeed = GetFacing() * Data.dashSpeed * 0.1f;
+                float desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.1f;
                 _moveVector.x = desiredSpeed;
                 _moveVector.y = 0;
             }
@@ -352,7 +352,7 @@ namespace Blind
 
         public void enableAttack()
         {
-            EffectManager.Instance.PlayPlayerFx("Slash",transform.position);
+            PlayAttackFx(1,GetFacing());
             _attack.EnableDamage();
         }
 
@@ -491,10 +491,10 @@ namespace Blind
             else _renderer.flipX = true;
         }
 
-        public int GetFacing()
+        public override Facing GetFacing()
         {
-            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? 1 : -1;
-            else return _renderer.flipX ? 1 : -1;
+            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+            else return _renderer.flipX ? Facing.Left : Facing.Right;
         }
 
         public void Log() {
