@@ -31,6 +31,7 @@ namespace Blind
             if(_isInvincibility) StartCoroutine(Invincibility());
         }
 
+        public abstract void HitSuccess();
         protected abstract void onHurt();
         protected abstract void HurtMove(Facing enemyFacing);
         public abstract Facing GetFacing();
