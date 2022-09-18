@@ -54,8 +54,8 @@ namespace Blind
         public override Facing GetFacing()
         {
             if (transform.localScale.x > 0)
-                return Facing.Left;
-            else return Facing.Right;
+                return Facing.Right;
+            else return Facing.Left;
         }
 
         public void hitted(int dir)
@@ -67,6 +67,11 @@ namespace Blind
         protected virtual IEnumerator CoHitted()
         {
             return null;
+        }
+
+        public override void HitSuccess()
+        {
+            return;
         }
 
         protected override void onHurt()

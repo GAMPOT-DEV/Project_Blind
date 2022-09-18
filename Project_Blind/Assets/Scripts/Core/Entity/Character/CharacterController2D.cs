@@ -62,7 +62,6 @@ namespace Blind
             _previousPosition = _rigidBody2D.position;
             _currentPosition = _previousPosition + _nextMovement;
             Velocity = (_currentPosition - _previousPosition) / Time.deltaTime;
-            Debug.Log(_nextMovement.y);
             _rigidBody2D.MovePosition(_currentPosition);
             _nextMovement = Vector2.zero;
             
