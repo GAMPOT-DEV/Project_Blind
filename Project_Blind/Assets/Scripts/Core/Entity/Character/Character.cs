@@ -20,6 +20,9 @@ namespace Blind
         }
         public void Hitted(float damage)
         {
+            var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit-white-2");
+            obj.transform.position = transform.position + Vector3.up * 5;
+            Debug.Log(obj.transform.position);
             Hp.GetDamage(damage);
             if (Hp.GetHP() > 1 && !_isInvincibility)
             {
@@ -31,6 +34,7 @@ namespace Blind
             if(_isInvincibility) StartCoroutine(Invincibility());
         }
 
+        public abstract void HitSuccess();
         protected abstract void onHurt();
         protected abstract void HurtMove(Facing enemyFacing);
         public abstract Facing GetFacing();

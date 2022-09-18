@@ -376,6 +376,11 @@ namespace Blind
             _characterController2D.MakePlatformFallthrough();
         }
 
+        public override void HitSuccess()
+        {
+            CurrentWaveGauge += attackWaveGauge;
+        }
+
         protected override void onHurt()
         {
             _animator.SetTrigger("Hurt");
