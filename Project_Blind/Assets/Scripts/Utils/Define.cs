@@ -86,7 +86,8 @@ public class Define
         Vertical,
         Skill,
         ChangeSlot,
-        ItemT
+        ItemT,
+        PowerAttack
     }
 }
 

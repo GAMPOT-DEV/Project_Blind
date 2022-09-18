@@ -24,6 +24,7 @@ namespace Blind
         public ScriptableObjects.PlayerCharacter Data;
 
         [SerializeField] private Transform _spawnPoint;
+        [SerializeField] private Transform _bulletPoint;
         public bool _isHurtCheck;
         public float _lastClickTime;
         public int _clickcount = 0;
@@ -98,9 +99,10 @@ namespace Blind
 
         public void OnFixedUpdate()
         {
+            Debug.Log(_clickcount);
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
-            _playerposition = new Vector2(transform.position.x, transform.position.y + 4f);
+            _playerposition = new Vector2(transform.position.x, transform.position.y + 2.5f);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
@@ -153,7 +155,6 @@ namespace Blind
                 isCheck = true;
                 desiredSpeed = GetFacing() * Data.dashSpeed * 0.05f;
                 currentmovevector_x = _moveVector.x;
-                Debug.Log("1번 실행됨");
             }
             else
             {
@@ -226,6 +227,7 @@ namespace Blind
         /// </summary>
         public void AirborneVerticalMovement(float _gravity)
         {
+            _characterController2D.isDown = true;
             if (Mathf.Approximately(_moveVector.y, 0f) )//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
             {
                 _moveVector.y = 0;
@@ -327,7 +329,7 @@ namespace Blind
         }
         public bool CheckForPowerAttack()
         {
-            return InputController.Instance.Attack.Held;
+            return InputController.Instance.PowerAttack.Held;
         }
 
         public void EndPowerAttack()
@@ -343,7 +345,7 @@ namespace Blind
 
         public bool CheckForUpKey()
         {
-            return InputController.Instance.Attack.Up;
+            return InputController.Instance.PowerAttack.Up;
         }
         public void AttackableMove(float newMoveVector)
         {
@@ -436,7 +438,7 @@ namespace Blind
         public void ThrowItem()
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
-            bullet.transform.position = _playerposition;
+            bullet.transform.position = _bulletPoint.position;
             if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
             else bullet.GetFacing(_renderer.flipX);
         }
