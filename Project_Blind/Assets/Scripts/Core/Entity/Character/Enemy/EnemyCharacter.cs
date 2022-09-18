@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Blind
         protected CharacterController2D _characterController2D;
         protected Rigidbody2D rigid;
         protected SpriteRenderer _sprite;
+        protected CapsuleCollider2D _col;
 
         [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
 
@@ -34,6 +36,7 @@ namespace Blind
             rigid = GetComponent<Rigidbody2D>();
             CreateHpUI();
             playerFinder = GetComponentInChildren<PlayerFinder>();
+            _col = GetComponent<CapsuleCollider2D>();
         }
 
         protected void CreateHpUI()
@@ -84,5 +87,6 @@ namespace Blind
             _characterController2D.Move(new Vector2((float)enemyFacing*1, 0));
             return;
         }
+        
     }
 }

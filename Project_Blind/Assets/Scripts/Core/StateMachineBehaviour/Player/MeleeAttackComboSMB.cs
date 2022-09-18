@@ -12,11 +12,11 @@ namespace Blind
     {
         UI_FieldScene ui = null;
         private bool _powerAttack = false;
-        private float time = 0;
+        private bool _checkForPowerAttack = false;
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            _monoBehaviour.ReAttackSize(3,5);
             _monoBehaviour.StopMoveY();
-            time = Time.time - Time.time;
             SoundManager.Instance.Play("주인공 공격 사운드", Define.Sound.Effect);
         }
 
@@ -24,6 +24,7 @@ namespace Blind
             if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10)
             {
                 animator.speed = 0.1f;
+                _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
                 if (ui == null)
                 {
@@ -46,7 +47,6 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
-            time = Time.time;
             if (!_monoBehaviour.isJump)
             {
                 _monoBehaviour.AirborneVerticalMovement(1f);
@@ -70,7 +70,7 @@ namespace Blind
             
 
 
-            if ((_monoBehaviour.CheckForUpKey() && _monoBehaviour.CurrentWaveGauge > 10 && !_powerAttack)
+            if ((_monoBehaviour.CheckForUpKey() && _checkForPowerAttack && !_powerAttack)
                 || (_monoBehaviour.isPowerAttackEnd &&!_powerAttack)){
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
@@ -88,6 +88,7 @@ namespace Blind
                     ui.StopCharge();
                 }
                 _powerAttack = true;
+                _checkForPowerAttack = false;
             }
 
         }
