@@ -47,7 +47,8 @@ namespace Blind
         {
             conversations = ConversationScriptStorage.Instance.GetConversation(_title);
             // 스크립트를 띄우는 주인의 이름 출력
-            Get<Text>((int)Texts.NPCNameText).text = Owner.name;
+            if(Owner != null)
+                Get<Text>((int)Texts.NPCNameText).text = Owner.name;
 
             // 맨 처음에 0번 페이지의 텍스트 출력
             ShowText(0);
@@ -89,8 +90,15 @@ namespace Blind
             if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
                 UIManager.Instance.CloseWorldSpaceUI(this);
-                Owner.GetComponent<ConversationTest>()._player.GetComponent<PlayerCharacter>().UnTalk();
-                Owner.GetComponent<ConversationTest>()._state = Define.ObjectState.NonKeyDown;
+                if(Owner != null)
+                {
+                    if (Owner.GetComponent<PlayerCharacter>() != null)
+                    {
+                        Owner.GetComponent<ConversationTest>()._player.GetComponent<PlayerCharacter>().UnTalk();
+                        Owner.GetComponent<ConversationTest>()._state = Define.ObjectState.NonKeyDown;
+                    }
+                }
+                
                 return;
             }
 

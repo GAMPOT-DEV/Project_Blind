@@ -35,11 +35,13 @@ namespace Blind
         {
             var dict = DataManager.Instance.ConversationDict;
             Dictionary<int, List<Data.Script>> tmp = new Dictionary<int, List<Data.Script>>();
+
             foreach (var scripts in dict.Values)
             {
                 tmp.Add((int)Define.Language.KOR, scripts.KOR);
                 tmp.Add((int)Define.Language.ENG, scripts.ENG);
                 _dict.Add(scripts.title, tmp);
+                tmp = new Dictionary<int, List<Data.Script>>();
             }
         }
     }

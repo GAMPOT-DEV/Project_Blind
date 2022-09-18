@@ -14,6 +14,11 @@ namespace Blind
         {
             base.Awake();
             _inputController = InputController.Instance;
+
+            //UI_TestConversation ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestConversation>();
+            //ui.Title = "Test2";
+            //ui.Owner = null;
+            //ui.SetPosition(Player.transform.position , Vector3.right * 30);
         }
         protected void FixedUpdate()
         {
