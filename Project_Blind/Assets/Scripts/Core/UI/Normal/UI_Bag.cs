@@ -128,10 +128,8 @@ namespace Blind
                 GameObject go = Items[lastSlot].gameObject;
                 Items.Remove(Items[lastSlot]);
                 Destroy(go);
-                DataManager.Instance.OneIndexForwardBag(lastSlot + 1, Size);
                 _currSelectItemId = Define.BagItem.Unknown;
             }
-            DataManager.Instance.SaveGameData();
             RefreshUI();
         }
 

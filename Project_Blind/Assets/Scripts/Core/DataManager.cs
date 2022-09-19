@@ -149,14 +149,18 @@ namespace Blind
                 return false;
 
             if (item.itemCnt == cnt)
+            {
+                int slot = item.slot;
                 _gameData.DeleteBagItem(item);
+                OneIndexForwardBag(slot + 1, _gameData.bagItemInfos.Count + 1);
+            }
             else
                 _gameData.DeleteBagItem(item, cnt);
 
             SaveGameData();
             return true;
         }
-        public void OneIndexForwardBag(int start, int end)
+        private void OneIndexForwardBag(int start, int end)
         {
             _gameData.OneIndexForwardBag(start, end);
         }
