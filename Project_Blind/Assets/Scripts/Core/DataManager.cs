@@ -75,27 +75,39 @@ namespace Blind
             File.WriteAllText(filePath, JsonData);
         }
         #endregion
-        public bool AddClueItem(int itemId)
+        public bool AddClueItem(Define.ClueItem itemId)
         {
+            int id = (int)itemId;
+
             ClueInfo clue = null;
-            _gameData.ClueInfoById.TryGetValue(itemId, out clue);
+            _gameData.ClueInfoById.TryGetValue(id, out clue);
             if (clue != null)
                 return false;
 
-            clue = new ClueInfo() { itemId = itemId, slot = UI_Clue.Size++ };
+            clue = new ClueInfo() { itemId = id, slot = UI_Clue.Size++ };
             _gameData.AddClueItem(clue);
             SaveGameData();
             return true;
         }
-        public void DeleteClueItem(int itemId)
+        public void DeleteClueItem(Define.ClueItem itemId)
         {
+            int id = (int)itemId;
+
             ClueInfo clue = null;
-            _gameData.ClueInfoById.TryGetValue(itemId, out clue);
+            _gameData.ClueInfoById.TryGetValue(id, out clue);
             if (clue == null)
                 return;
 
             _gameData.DeleteClueItem(clue);
             SaveGameData();
+        }
+        public bool HaveClueItem(Define.ClueItem itemId)
+        {
+            int id = (int)itemId;
+            ClueInfo clue;
+            _gameData.ClueInfoById.TryGetValue(id, out clue);
+            if (clue == null) return false;
+            return true;
         }
         public void ClearClueData()
         {
@@ -103,27 +115,31 @@ namespace Blind
             SaveGameData();
         }
 
-        public bool AddBagItem(int itemId, int cnt = 1)
+        public bool AddBagItem(Define.BagItem itemId, int cnt = 1)
         {
+            int id = (int)itemId;
+
             BagItemInfo item = null;
-            _gameData.BagItemInfoById.TryGetValue(itemId, out item);
+            _gameData.BagItemInfoById.TryGetValue(id, out item);
 
             if (item != null)
             {
-                _gameData.AddBagItem(itemId, cnt);
+                _gameData.AddBagItem(id, cnt);
                 SaveGameData();
                 return false;
             }
 
-            item = new BagItemInfo() { itemId = itemId, slot = UI_Bag.Size++, itemCnt = cnt };
+            item = new BagItemInfo() { itemId = id, slot = UI_Bag.Size++, itemCnt = cnt };
             _gameData.AddBagItem(item);
             SaveGameData();
             return true;
         }
-        public bool DeleteBagItem(int itemId, int cnt)
+        public bool DeleteBagItem(Define.BagItem itemId, int cnt = 1)
         {
+            int id = (int)itemId;
+
             BagItemInfo item = null;
-            _gameData.BagItemInfoById.TryGetValue(itemId, out item);
+            _gameData.BagItemInfoById.TryGetValue(id, out item);
             if (item == null)
                 return false;
 
@@ -133,14 +149,18 @@ namespace Blind
                 return false;
 
             if (item.itemCnt == cnt)
+            {
+                int slot = item.slot;
                 _gameData.DeleteBagItem(item);
+                OneIndexForwardBag(slot + 1, _gameData.bagItemInfos.Count + 1);
+            }
             else
                 _gameData.DeleteBagItem(item, cnt);
 
             SaveGameData();
             return true;
         }
-        public void OneIndexForwardBag(int start, int end)
+        private void OneIndexForwardBag(int start, int end)
         {
             _gameData.OneIndexForwardBag(start, end);
         }
@@ -148,6 +168,14 @@ namespace Blind
         {
             _gameData.ClearBagData();
             SaveGameData();
+        }
+        public bool HaveBagItem(Define.BagItem itemId)
+        {
+            int id = (int)itemId;
+            BagItemInfo item;
+            _gameData.BagItemInfoById.TryGetValue(id, out item);
+            if (item == null) return false;
+            return true;
         }
     }
 }

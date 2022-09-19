@@ -57,13 +57,13 @@ namespace Blind
         }
         void TestInit()
         {
-            Get<Image>((int)Images.Image_TestGetClue1).gameObject.BindEvent(() => PushTestImage(1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue2).gameObject.BindEvent(() => PushTestImage(2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue3).gameObject.BindEvent(() => PushTestImage(3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue4).gameObject.BindEvent(() => PushTestImage(4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue5).gameObject.BindEvent(() => PushTestImage(5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue6).gameObject.BindEvent(() => PushTestImage(6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(7), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue1).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue1), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue2).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue2), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue3).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue3), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue4).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue4), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue5).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue5), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue6).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue6), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue7), Define.UIEvent.Click);
 
             Get<Image>((int)Images.Image_TestClearClue).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }
@@ -87,10 +87,10 @@ namespace Blind
                 Items[i].SetItem(itemId, i, this);
             }
         }
-        private void PushTestImage(int id)
+        private void PushTestImage(Define.ClueItem itemEnum)
         {
             // 게임데이터에 아이템을 추가를 시도한다.
-            bool result = DataManager.Instance.AddClueItem(id);
+            bool result = DataManager.Instance.AddClueItem(itemEnum);
             // 만약 성공한다면 슬롯을 하나 더 만들어주고 UI를 새로고침해준다.
             if (result == true)
             {
@@ -116,19 +116,6 @@ namespace Blind
             RefreshUI();
             
         }
-        //public void ShowDetailDesc(int itemId)
-        //{
-        //    if (itemId == -1)
-        //    {
-        //        Get<Text>((int)Texts.Text_DetailDesc).text = "";
-        //        return;
-        //    }
-        //    Data.Clue clue;
-        //    _cludData.TryGetValue(itemId, out clue);
-        //    string text = clue.description;
-
-        //    Get<Text>((int)Texts.Text_DetailDesc).text = text;
-        //}
         public void PushClueItem(int idx)
         {
             if (_currIdx != -1)
