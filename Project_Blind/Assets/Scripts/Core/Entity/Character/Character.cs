@@ -20,7 +20,7 @@ namespace Blind
         }
         public void Hitted(float damage)
         {
-            var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit-white-2");
+            var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit");
             obj.transform.position = transform.position + Vector3.up * 5;
             Debug.Log(obj.transform.position);
             Hp.GetDamage(damage);
@@ -53,7 +53,8 @@ namespace Blind
         }
         public void PlayAttackFx(int level, Facing face)
         {
-            transform.GetChild(level).GetComponent<AttackFX>().Play(face);
+            Debug.Log(transform.GetChild(1).GetChild(level));
+            transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(face);
         }
     }
 }
