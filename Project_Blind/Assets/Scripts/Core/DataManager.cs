@@ -97,6 +97,13 @@ namespace Blind
             _gameData.DeleteClueItem(clue);
             SaveGameData();
         }
+        public bool HaveClueItem(int clueId)
+        {
+            ClueInfo clue;
+            _gameData.ClueInfoById.TryGetValue(clueId, out clue);
+            if (clue == null) return false;
+            return true;
+        }
         public void ClearClueData()
         {
             _gameData.ClearClueData();
@@ -148,6 +155,13 @@ namespace Blind
         {
             _gameData.ClearBagData();
             SaveGameData();
+        }
+        public bool HaveBagItem(int itemId)
+        {
+            BagItemInfo item;
+            _gameData.BagItemInfoById.TryGetValue(itemId, out item);
+            if (item == null) return false;
+            return true;
         }
     }
 }

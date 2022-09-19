@@ -136,13 +136,13 @@ namespace Blind
 
         void TestInit()
         {
-            Get<Image>((int)Images.Image_TestGetItem1).gameObject.BindEvent(() => PushTestImage(1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem2).gameObject.BindEvent(() => PushTestImage(2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem3).gameObject.BindEvent(() => PushTestImage(3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem4).gameObject.BindEvent(() => PushTestImage(4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem5).gameObject.BindEvent(() => PushTestImage(5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem6).gameObject.BindEvent(() => PushTestImage(6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem7).gameObject.BindEvent(() => PushTestImage(7), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem1).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem1), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem2).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem2), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem3).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem3), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem4).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem4), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem5).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem5), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem6).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem6), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem7).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem7), Define.UIEvent.Click);
 
             Get<Image>((int)Images.Image_TestClearBag).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }

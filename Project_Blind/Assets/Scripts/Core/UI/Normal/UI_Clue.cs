@@ -57,13 +57,13 @@ namespace Blind
         }
         void TestInit()
         {
-            Get<Image>((int)Images.Image_TestGetClue1).gameObject.BindEvent(() => PushTestImage(1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue2).gameObject.BindEvent(() => PushTestImage(2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue3).gameObject.BindEvent(() => PushTestImage(3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue4).gameObject.BindEvent(() => PushTestImage(4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue5).gameObject.BindEvent(() => PushTestImage(5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue6).gameObject.BindEvent(() => PushTestImage(6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(7), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue1).gameObject.BindEvent(() => PushTestImage((int)Define.ClueItem.TestClue1), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue2).gameObject.BindEvent(() => PushTestImage((int)Define.ClueItem.TestClue2), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue3).gameObject.BindEvent(() => PushTestImage((int)Define.ClueItem.TestClue3), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue4).gameObject.BindEvent(() => PushTestImage((int)Define.ClueItem.TestClue4), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue5).gameObject.BindEvent(() => PushTestImage((int)Define.ClueItem.TestClue5), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue6).gameObject.BindEvent(() => PushTestImage((int)Define.ClueItem.TestClue6), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage((int)Define.ClueItem.TestClue7), Define.UIEvent.Click);
 
             Get<Image>((int)Images.Image_TestClearClue).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }
