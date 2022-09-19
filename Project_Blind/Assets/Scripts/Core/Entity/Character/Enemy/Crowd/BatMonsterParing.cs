@@ -7,7 +7,7 @@ namespace Blind
         public override void OnCheckForParing(PlayerCharacter _player)
         {
             Debug.Log(_gameobject.name);
-            if (_gameobject.isAttack())
+            if (_gameobject.IsAttack)
             {
                 _player.CharacterInvincible();
                 if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)

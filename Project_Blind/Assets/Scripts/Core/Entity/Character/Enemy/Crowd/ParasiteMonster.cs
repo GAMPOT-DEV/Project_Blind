@@ -128,17 +128,5 @@ namespace Blind {
 
             Co_attack = null;
         }
-
-        public void AniAfterAttack()
-        {
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-            _anim.SetBool("Basic Attack", false);
-            _anim.SetBool("Skill Attack", false);
-        }
     }
 }
