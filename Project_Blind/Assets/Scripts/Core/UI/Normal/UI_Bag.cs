@@ -38,7 +38,7 @@ namespace Blind
         [SerializeField]
         private GameObject Blocker;
 
-        private int _currSelectItemId = 0;
+        private Define.BagItem _currSelectItemId = Define.BagItem.Unknown;
         private int _currSelectItemSlot;
         public override void Init()
         {
@@ -70,7 +70,7 @@ namespace Blind
         { 
             Size = DataManager.Instance.GameData.bagItemInfos.Count;
 
-            if (_currSelectItemId == 0) Blocker.SetActive(true);
+            if (_currSelectItemId == Define.BagItem.Unknown) Blocker.SetActive(true);
             else Blocker.SetActive(false);
 
             grid.GetComponent<RectTransform>().sizeDelta = new Vector2(750f, 220f * (float)Size);
@@ -86,15 +86,16 @@ namespace Blind
                 Items[i].SetItem(itemId, this);
             }
         }
-        public void ShowDetailDesc(int itemId)
+        public void ShowDetailDesc(Define.BagItem itemEnum)
         {
-            _currSelectItemId = itemId;
+            int id = (int)itemEnum;
+            _currSelectItemId = itemEnum;
 
-            if (_currSelectItemId == 0) Blocker.SetActive(true);
+            if (_currSelectItemId == Define.BagItem.Unknown) Blocker.SetActive(true);
             else Blocker.SetActive(false);
 
             Data.BagItem item;
-            _bagItemData.TryGetValue(itemId, out item);
+            _bagItemData.TryGetValue(id, out item);
 
             Sprite sprite = ResourceManager.Instance.Load<Sprite>(item.iconPath);
 
@@ -110,15 +111,15 @@ namespace Blind
         private void PushDumpButton()
         {
             if (Size == 0) return;
-            if (_currSelectItemId == 0) return;
+            if (_currSelectItemId == Define.BagItem.Unknown) return;
             UI_DumpBagItem dumpUI = UIManager.Instance.ShowNormalUI<UI_DumpBagItem>();
             dumpUI.AdditionalInit(this);
         }
 
         public void DumpItem(int cnt)
         {
-            if (_currSelectItemId == 0) return;
-            BagItemInfo info = DataManager.Instance.GameData.BagItemInfoById[_currSelectItemId];
+            if (_currSelectItemId == Define.BagItem.Unknown) return;
+            BagItemInfo info = DataManager.Instance.GameData.BagItemInfoById[(int)_currSelectItemId];
             int lastCnt = info.itemCnt;
             int lastSlot = info.slot;
             DataManager.Instance.DeleteBagItem(_currSelectItemId, cnt);
@@ -128,7 +129,7 @@ namespace Blind
                 Items.Remove(Items[lastSlot]);
                 Destroy(go);
                 DataManager.Instance.OneIndexForwardBag(lastSlot + 1, Size);
-                _currSelectItemId = 0;
+                _currSelectItemId = Define.BagItem.Unknown;
             }
             DataManager.Instance.SaveGameData();
             RefreshUI();
@@ -136,19 +137,19 @@ namespace Blind
 
         void TestInit()
         {
-            Get<Image>((int)Images.Image_TestGetItem1).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem2).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem3).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem4).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem5).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem6).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem7).gameObject.BindEvent(() => PushTestImage((int)Define.BagItem.TestItem7), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem1).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem1), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem2).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem2), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem3).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem3), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem4).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem4), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem5).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem5), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem6).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem6), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetItem7).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem7), Define.UIEvent.Click);
 
             Get<Image>((int)Images.Image_TestClearBag).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }
-        private void PushTestImage(int id)
+        private void PushTestImage(Define.BagItem itemEnum)
         {
-            bool result = DataManager.Instance.AddBagItem(id, 1);
+            bool result = DataManager.Instance.AddBagItem(itemEnum, 1);
             if (result == true)
             {
                 GameObject go = ResourceManager.Instance.Instantiate("UI/Normal/UI_Bag_Item", grid.transform);
@@ -165,8 +166,7 @@ namespace Blind
             foreach (Transform child in grid.transform)
                 Destroy(child.gameObject);
 
-            _currSelectItemId = 0;
-            //ShowDetailDesc(-1);
+            _currSelectItemId = Define.BagItem.Unknown;
             RefreshUI();
         }
     }
