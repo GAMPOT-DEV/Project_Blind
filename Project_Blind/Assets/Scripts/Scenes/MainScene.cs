@@ -13,7 +13,6 @@ namespace Blind
             UIManager.Instance.ShowSceneUI<UI_MainScene>();
 
             DataManager.Instance.LoadGameData();
-
         }
         public override void Clear()
         {
