@@ -12,9 +12,11 @@ namespace Blind
     {
         UI_FieldScene ui = null;
         private bool _powerAttack = false;
+        private bool _isOnClick = false;
         private bool _checkForPowerAttack = false;
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            _isOnClick = false;
             _monoBehaviour.ReAttackSize(3,5);
             _monoBehaviour.StopMoveY();
             SoundManager.Instance.Play("주인공 공격 사운드", Define.Sound.Effect);
@@ -57,10 +59,11 @@ namespace Blind
             }
             else _monoBehaviour.GroundedHorizontalMovement(false);
             
-            if (_monoBehaviour.CheckForAttack())
+            if (_monoBehaviour.CheckForAttack() && !_isOnClick)
             {
                 _monoBehaviour._clickcount++;
                 _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
+                _isOnClick = true;
             }
 
             if (_monoBehaviour._clickcount >= 2)
@@ -94,10 +97,13 @@ namespace Blind
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            
             if (_monoBehaviour._clickcount == 1)
             {
+                Debug.Log("실행됨");
                 _monoBehaviour.MeleeAttackComoEnd();
             }
+            Debug.Log(_monoBehaviour._clickcount);
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
             _powerAttack = false;

@@ -7,8 +7,11 @@ namespace Blind
     {
         UI_FieldScene ui = null;
         private bool _powerAttack = false;
+        private bool _isOnClick = false;
         private bool _checkForPowerAttack = false;
-        public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
+        public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
+        {
+            _isOnClick = false;
             _monoBehaviour.StopMoveY();
         }
 
@@ -53,10 +56,11 @@ namespace Blind
             }
             else _monoBehaviour.GroundedHorizontalMovement(false);
 
-            if (_monoBehaviour.CheckForAttack())
+            if (_monoBehaviour.CheckForAttack() && !_isOnClick)
             {
                 _monoBehaviour._clickcount++;
                 _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
+                _isOnClick = true;
             }
             if(_monoBehaviour._clickcount>=4)
                 _monoBehaviour.MeleeAttackCombo3();

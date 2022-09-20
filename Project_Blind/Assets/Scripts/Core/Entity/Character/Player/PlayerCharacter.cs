@@ -101,7 +101,6 @@ namespace Blind
 
         public void OnFixedUpdate()
         {
-            Debug.Log(_clickcount);
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
             _playerposition = new Vector2(transform.position.x, transform.position.y + 2.5f);
