@@ -30,7 +30,7 @@ namespace Blind
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(5, 2);
+            _attack.Init(7, 10);
         }
 
         protected override void FixedUpdate()
@@ -40,25 +40,17 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            if (Co_attack == null)
+            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {
                 if (Random.Range(0, 100) > 20)
                 {
-                    if (_anim.GetBool("Basic Attack") == false)
-                    {
-                        _anim.SetBool("Basic Attack", true);
-                    }
+                    _anim.SetBool("Basic Attack", true);
                 }
                 else
                 {
-                    if (_anim.GetBool("Skill Attack") == false)
-                    {
-                        isPowerAttack = true;
-                        _anim.SetBool("Skill Attack", true);
-                    }
+                    isPowerAttack = true;
+                    _anim.SetBool("Skill Attack", true);
                 }
-
-                Co_attack = StartCoroutine(CoAttack());
             }
         }
 
@@ -98,18 +90,6 @@ namespace Blind
             _attack.DisableDamage();
 
             Co_attack = null;
-        }
-
-        public void AniAfterAttack()
-        {
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-            _anim.SetBool("Basic Attack", false);
-            _anim.SetBool("Skill Attack", false);
         }
     }
 }

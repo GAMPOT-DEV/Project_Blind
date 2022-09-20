@@ -28,6 +28,7 @@ namespace Blind
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
         public bool isPowerAttack = false;
+        public bool IsAttack = false;
 
         private Coroutine co_patrol;
         private Coroutine co_stun;
@@ -213,13 +214,11 @@ namespace Blind
             {
                 thisScale.x = -Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(-Data.speed, 0f);
-                //_sprite.flipX = false;
             }
             else
             {
                 thisScale.x = Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(Data.speed, 0f);
-                //_sprite.flipX = true;
             }
             transform.localScale = thisScale;
             _unitHPUI.Reverse();
@@ -293,6 +292,30 @@ namespace Blind
                 Flip();
                 defaultCount = 0;
             }
+        }
+
+        public void AniAfterAttack()
+        {
+            if (attackSense.Attackable())
+                state = State.Attack;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Default;
+            _anim.SetBool("Basic Attack", false);
+            _anim.SetBool("Skill Attack", false);
+        }
+
+        public void AniAttackStart()
+        {
+            _attack.EnableDamage();
+            IsAttack = true;
+        }
+
+        public void AniAttackEnd()
+        {
+            _attack.DisableDamage();
+            IsAttack = false;
         }
     }
 }
