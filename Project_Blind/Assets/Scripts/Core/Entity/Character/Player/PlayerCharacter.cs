@@ -188,6 +188,8 @@ namespace Blind
                     _moveVector.y = Data.jumpSpeed;
                 }
                 Debug.Log(_moveVector.y);
+                var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
+                obj.transform.position = transform.position + Vector3.up * 2;
                 _animator.SetTrigger("Jump");
             }
         }
@@ -353,7 +355,7 @@ namespace Blind
 
         public void enableAttack()
         {
-            PlayAttackFx(1,GetFacing());
+            PlayAttackFx(0,GetFacing());
             _attack.EnableDamage();
         }
 

@@ -35,6 +35,7 @@ namespace Blind
             else
             {
                 if(_monoBehaviour.isJump) _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
+                _monoBehaviour.PlayAttackFx(1,_monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
         }
