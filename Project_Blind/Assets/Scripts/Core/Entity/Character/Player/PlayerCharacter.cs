@@ -22,6 +22,7 @@ namespace Blind
         private Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
+        private Rigidbody2D rigid;
 
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private Transform _bulletPoint;
@@ -75,6 +76,7 @@ namespace Blind
             _paring = GetComponent<Paringable>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
+            rigid = GetComponent<Rigidbody2D>();
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
@@ -99,7 +101,6 @@ namespace Blind
 
         public void OnFixedUpdate()
         {
-            Debug.Log(_clickcount);
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
             _playerposition = new Vector2(transform.position.x, transform.position.y + 2.5f);
@@ -150,18 +151,15 @@ namespace Blind
             _candash = false;
             isCheck = false;
             float originalGravity = Data.gravity;
-            if (_characterController2D.IsGrounded && _moveVector.x == 0)
-            {
-                isCheck = true;
+            isCheck = true;
+            if(_moveVector.x == 0)
                 desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.05f;
-                currentmovevector_x = _moveVector.x;
-            }
             else
-            {
-                float desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.1f;
-                _moveVector.x = desiredSpeed;
-                _moveVector.y = 0;
-            }
+                desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.05f;
+            _moveVector.y = 0;
+
+            currentmovevector_x = _moveVector.x;
+            
             yield return new WaitForSeconds(Data.defaultTime);
             Data.gravity = originalGravity;
             yield return new WaitForSeconds(1f);
@@ -171,6 +169,7 @@ namespace Blind
 
         public void StopDash()
         {
+            Debug.Log("DD");
             _moveVector.x = Mathf.MoveTowards(currentmovevector_x, desiredSpeed, 500 * Time.deltaTime);
         }
         public bool CheckForDash()
