@@ -66,6 +66,12 @@ namespace Blind {
         {
             if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {
+                if (!createAttackHitBox)
+                {
+                    AttackHitBox();
+                    createAttackHitBox = true;
+                }
+                
                 if (Random.Range(0, 100) > 20)
                 {
                     _anim.SetBool("Basic Attack", true);
@@ -78,6 +84,13 @@ namespace Blind {
                 }
             }
         }
+        public void AttackHitBox()
+        {
+            Debug.Log("dd");
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
+            col.size = new Vector2(7, 8);
+        }
 
         protected override void updateHitted()
         {
@@ -89,7 +102,7 @@ namespace Blind {
             }
 
             Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊ
+            if (playerFinder.ChasePlayer().x > 0) //í”Œë ˆì´ì–´ê°€ ì˜¤ë¥¸ìª½
             {
                 hittedVelocity = new Vector2(-0.2f, 0);
             }
