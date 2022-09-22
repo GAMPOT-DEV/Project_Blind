@@ -39,11 +39,6 @@ namespace Blind
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            if(state != tmp)
-            {
-                Debug.Log(state);
-                tmp = state;
-            }
         }
 
         protected override void updateAttack()

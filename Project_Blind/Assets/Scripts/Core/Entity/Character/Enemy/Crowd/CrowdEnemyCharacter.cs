@@ -33,6 +33,8 @@ namespace Blind
         private Coroutine co_stun;
         private Coroutine co_default;
 
+        private State tmp = State.Die;
+
         protected void Awake()
         {
             base.Awake();
@@ -83,6 +85,11 @@ namespace Blind
             }
             if (Hp.GetHP() <= 0)
                 state = State.Die;
+            //if (state != tmp)
+            //{
+            //    Debug.Log(state);
+            //    tmp = state;
+            //}
             _characterController2D.OnFixedUpdate();
         }
 
@@ -170,6 +177,7 @@ namespace Blind
             {
                 state = State.Die;
             }
+            NextAction();
         }
         
         protected virtual void updateAttackStandby()
@@ -189,7 +197,7 @@ namespace Blind
 
         public void AniDestroy()
         {
-            Destroy(gameObject);
+            Destroy(gameObject, 1f);
         }
 
         protected virtual void updateAvoid()
@@ -230,20 +238,6 @@ namespace Blind
             }
             transform.localScale = thisScale;
             _unitHPUI.Reverse();
-        }
-
-        public bool isAttack()
-        {
-            if (state == State.Attack)
-                return true;
-            else
-                return false;
-        }
-
-        protected override IEnumerator CoHitted()
-        {
-            yield return new WaitForSeconds(0.1f);
-            state = State.Test;
         }
 
         protected IEnumerator CoPatrol(float patrolTime)
@@ -323,6 +317,8 @@ namespace Blind
                 state = State.Attack;
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
+            else
+                state = State.Patrol;
         }
         
         void OnCollisionEnter2D(Collision2D collision)

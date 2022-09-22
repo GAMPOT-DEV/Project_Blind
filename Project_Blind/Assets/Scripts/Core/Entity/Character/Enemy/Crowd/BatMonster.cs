@@ -53,28 +53,6 @@ namespace Blind
             }
         }
 
-        protected override void updateHitted()
-        {
-
-            if (Co_hitted == null)
-            {
-                StopAllCoroutines();
-                StartCoroutine(CoHitted());
-            }
-
-            Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
-            {
-                hittedVelocity = new Vector2(-0.2f, 0);
-            }
-            else
-            {
-                hittedVelocity = new Vector2(0.2f, 0);
-            }
-
-            _characterController2D.Move(hittedVelocity);
-        }
-
         protected override void updateStun()
         {
             StopAllCoroutines();
