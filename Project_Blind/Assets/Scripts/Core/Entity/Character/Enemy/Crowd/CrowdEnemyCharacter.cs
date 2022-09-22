@@ -85,11 +85,11 @@ namespace Blind
             }
             if (Hp.GetHP() <= 0)
                 state = State.Die;
-            //if (state != tmp)
-            //{
-            //    Debug.Log(state);
-            //    tmp = state;
-            //}
+            /*if (state != tmp)
+            {
+                Debug.Log(state);
+                tmp = state;
+            }*/
             _characterController2D.OnFixedUpdate();
         }
 
@@ -195,11 +195,6 @@ namespace Blind
             }  
         }
 
-        public void AniDestroy()
-        {
-            Destroy(gameObject, 1f);
-        }
-
         protected virtual void updateAvoid()
         {
             throw new NotImplementedException();
@@ -295,6 +290,8 @@ namespace Blind
                 state = State.Chase;
             else
                 state = State.Default;
+
+            isPowerAttack = false;
             _anim.SetBool("Basic Attack", false);
             _anim.SetBool("Skill Attack", false);
         }
@@ -309,6 +306,11 @@ namespace Blind
         {
             _attack.DisableDamage();
             IsAttack = false;
+        }
+
+        public void AniDestroy()
+        {
+            Destroy(gameObject, 1f);
         }
 
         protected virtual void NextAction()

@@ -52,21 +52,5 @@ namespace Blind
                 }
             }
         }
-
-        protected override void updateStun()
-        {
-            StopAllCoroutines();
-            Co_stun = StartCoroutine(CoStun());
-        }
-
-        private IEnumerator CoAttack()
-        {
-            yield return new WaitForSeconds(0.2f);
-            _attack.EnableDamage();
-            yield return new WaitForSeconds(0.5f);
-            _attack.DisableDamage();
-
-            Co_attack = null;
-        }
     }
 }

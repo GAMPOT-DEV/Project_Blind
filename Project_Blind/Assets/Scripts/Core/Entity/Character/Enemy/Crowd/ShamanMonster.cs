@@ -64,12 +64,6 @@ namespace Blind
             _characterController2D.Move(-playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
-        protected override void updateStun()
-        {
-            StopAllCoroutines();
-            Co_stun = StartCoroutine(CoStun());
-        }
-
         public void AniMakeProjectile()
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
