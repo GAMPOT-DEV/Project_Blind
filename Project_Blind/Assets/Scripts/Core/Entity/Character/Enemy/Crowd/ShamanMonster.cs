@@ -7,11 +7,12 @@ namespace Blind
     {
         public GameObject Circle;
 
-        private Coroutine Co_default;
         private Coroutine Co_attack;
         private Coroutine Co_stun;
         private Coroutine Co_die;
         private Coroutine Co_avoid;
+
+        private State tmp = State.Die;
 
         [SerializeField] private float _projectileSpeed = 10;
 
@@ -27,81 +28,36 @@ namespace Blind
             _attackRange = new Vector2(6f, 5f);
             _stunTime = 1f;
             */
+            _patrolTime = 1.5f;
         }
 
         private void Start()
         {
-            startingPosition = gameObject.transform;
-            player = GameObject.Find("Player");
+            //startingPosition = gameObject.transform;
         }
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-        }
-
-        protected override void updateDefault()
-        {
-            if (Co_default == null)
-                Co_default = StartCoroutine(CoWaitDefalut(1f));
-
-            if (playerFinder.FindPlayer())
+            if(state != tmp)
             {
-                StopCoroutine(Co_default);
-                Co_default = null;
-                state = State.Chase;
+                Debug.Log(state);
+                tmp = state;
             }
-        }
-
-        protected override void updateChase()
-        {
-            if (playerFinder.MissPlayer())
-            {
-                state = State.Patrol;
-                return;
-            }
-
-            if (attackSense.Attackable())
-            {
-                //if (attackSense.isAvoid())
-                //state = State.Avoid;
-                //else
-                state = State.Attack;
-                return;
-            }
-
-            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected override void updateAttack()
         {
-            if (Co_attack == null) Co_attack = StartCoroutine(CoAttack());
-        }
-
-        protected override void updateHitted()
-        {
-            var hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
-                hittedVelocity = new Vector2(-200, 400);
-            else
-                hittedVelocity = new Vector2(200, 400);
-
-            rigid.AddForce(hittedVelocity);
-
-            if (Hp.GetHP() <= 0)
-                state = State.Die;
-            else if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Patrol;
+            _anim.SetBool("Basic Attack", true);
         }
 
         protected override void updateAvoid()
         {
-            _characterController2D.Move(-playerFinder.ChasePlayer() * Data.runSpeed);
-            if (Co_avoid == null) Co_avoid = StartCoroutine(CoAvoid());
+            if (Co_avoid == null)
+            {
+                _anim.SetBool("Avoid", true);
+                Co_avoid = StartCoroutine(CoAvoid());
+            }
 
             if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, WallLayer))
             {
@@ -109,6 +65,8 @@ namespace Blind
                 Flip();
                 state = State.Attack;
             }
+
+            _characterController2D.Move(-playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected override void updateStun()
@@ -117,37 +75,45 @@ namespace Blind
             Co_stun = StartCoroutine(CoStun());
         }
 
-        protected override void updateDie()
-        {
-            Co_die = StartCoroutine(CoDie());
-        }
-
-        public bool isAttack()
-        {
-            if (state == State.Attack)
-                return true;
-            return false;
-        }
-
-        private IEnumerator CoWaitDefalut(float time)
-        {
-            yield return new WaitForSeconds(time);
-            Flip();
-            state = State.Patrol;
-            Co_default = null;
-        }
-
-        private IEnumerator CoAttack()
+        public void AniMakeProjectile()
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
             projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, _projectileSpeed);
+            _anim.SetBool("Basic Attack", false);
+            NextAction();
+        }
 
+        /*
+        private IEnumerator CoAttack()
+        {
             yield return new WaitForSeconds(2f);
             yield return new WaitForSeconds(0.2f);
 
             _attack.DisableDamage();
 
+            Co_attack = null;
+        } */
+
+        private IEnumerator CoAvoid()
+        {
+            Flip();
+            yield return new WaitForSeconds(1);
+            Flip();
+
+            if (attackSense.Attackable())
+                state = State.Attack;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Default;
+
+            Co_avoid = null;
+            _anim.SetBool("Avoid", false);
+        }
+
+        protected override void NextAction()
+        {
             if (attackSense.Attackable())
             {
                 if (attackSense.isAvoid())
@@ -163,36 +129,6 @@ namespace Blind
             {
                 state = State.Default;
             }
-
-            Co_attack = null;
-        }
-
-        private IEnumerator CoStun()
-        {
-            yield return new WaitForSeconds(Data.stunTime);
-
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Patrol;
-
-            Co_stun = null;
-        }
-
-        private IEnumerator CoAvoid()
-        {
-            Flip();
-            yield return new WaitForSeconds(1);
-            Flip();
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-            Co_avoid = null;
         }
     }
 }

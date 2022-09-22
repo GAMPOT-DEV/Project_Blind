@@ -76,6 +76,7 @@ namespace Blind
                 case State.Die:
                     updateDie();
                     break;
+
                 case State.Avoid:
                     updateAvoid();
                     break;
@@ -185,7 +186,7 @@ namespace Blind
 
         protected virtual void updateAvoid()
         {
-            return;
+            throw new NotImplementedException();
         }
         
         protected int RandomDirection()
@@ -308,7 +309,7 @@ namespace Blind
             IsAttack = false;
         }
 
-        public void NextAction()
+        protected virtual void NextAction()
         {
             if (attackSense.Attackable())
                 state = State.Attack;

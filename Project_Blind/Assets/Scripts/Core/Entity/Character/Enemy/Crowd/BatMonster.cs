@@ -24,7 +24,6 @@ namespace Blind
             Data.attackRange = new Vector2(9f, 8f);
             Data.stunTime = 1f;
             _patrolTime = 3f;
-
         }
 
         private void Start()
