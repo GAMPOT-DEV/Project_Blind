@@ -62,29 +62,33 @@ namespace Blind
         {
             if (!_isParing) return;
             
-            int facing = -1;
-            if (_sprite == null)
-            {
-                if (_skeletonComponent.Skeleton.FlipX != _isFlip) facing = 1;
-            }
-            else
-            {
-                if (_sprite.flipX != _isFlip) facing = 1;
-            }
-            Vector2 pointA = new Vector2(gameObject.GetComponent<PlayerCharacter>()._playerposition.x + facing, gameObject.GetComponent<PlayerCharacter>()._playerposition.y);
+            var entity = gameObject.GetComponent<Character>();
+            var facing = entity.GetFacing();
+             
+            var position = transform.position;
+            var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
+             
             hitbox = pointA;
-            if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
-            else size = new Vector2(pointA.x - x, pointA.y - y);
+            size = new Vector2(pointA.x + ((float)facing * x), pointA.y + y);
+
             int hitCount = Physics2D.OverlapArea(pointA, size, _filter, _result);
             for (int i = 0; i < hitCount; i++)
             {
                 _hitObj = _result[i];
                 if (_hitObj.GetComponent<BatMonster>() != null)
                 {
+                    Debug.Log("DD");
                     ParingEffect<BatMonster>.Initialise(_hitObj.GetComponent<BatMonster>());
                     BatMonsterParing batMonsterparing = _hitObj.gameObject.AddComponent<BatMonsterParing>();
                     batMonsterparing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
-                    batMonsterparing.EnemyDibuff();
+                    _isParing = false;
+                    Destroy(batMonsterparing);
+                }
+                else if (_hitObj.GetComponent<ParasiteMonster>() != null)
+                {
+                    ParingEffect<ParasiteMonster>.Initialise(_hitObj.GetComponent<ParasiteMonster>());
+                    ParasiteMonsterParing batMonsterparing = _hitObj.gameObject.AddComponent<ParasiteMonsterParing>();
+                    batMonsterparing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
                     _isParing = false;
                     Destroy(batMonsterparing);
                 }

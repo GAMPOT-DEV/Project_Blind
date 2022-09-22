@@ -34,6 +34,8 @@ namespace Blind
         private Coroutine co_default;
 
         private State tmp = State.Die;
+        protected BoxCollider2D col;
+        protected bool createAttackHitBox;
 
         protected void Awake()
         {
@@ -294,12 +296,17 @@ namespace Blind
             isPowerAttack = false;
             _anim.SetBool("Basic Attack", false);
             _anim.SetBool("Skill Attack", false);
+            createAttackHitBox = false;
+            Destroy(col);
         }
 
+        public void AniParingenable()
+        {
+            IsAttack = true;
+        }
         public void AniAttackStart()
         {
             _attack.EnableDamage();
-            IsAttack = true;
         }
 
         public void AniAttackEnd()

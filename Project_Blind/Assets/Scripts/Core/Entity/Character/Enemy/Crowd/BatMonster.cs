@@ -10,7 +10,7 @@ namespace Blind
         private Coroutine Co_hitted;
         private Coroutine Co_stun;
         private Coroutine Co_die;
-        
+        [SerializeField] private Transform AttackHitBoxRange;
 
         protected void Awake()
         {
@@ -39,6 +39,11 @@ namespace Blind
 
         protected override void updateAttack()
         {
+            if (!createAttackHitBox)
+            {
+                AttackHitBox();
+                createAttackHitBox = true;
+            }
             if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {
                 if (Random.Range(0, 100) > 20)
@@ -51,6 +56,14 @@ namespace Blind
                     _anim.SetBool("Skill Attack", true);
                 }
             }
+        }
+
+        public void AttackHitBox()
+        {
+            Debug.Log("dd");
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
+            col.size = new Vector2(7, 10);
         }
     }
 }

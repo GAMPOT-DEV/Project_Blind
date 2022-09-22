@@ -15,7 +15,7 @@ namespace Blind
         [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
 
         protected GameObject player;
-        protected MeleeAttackable _attack;
+        public MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
         protected Transform startingPosition;
