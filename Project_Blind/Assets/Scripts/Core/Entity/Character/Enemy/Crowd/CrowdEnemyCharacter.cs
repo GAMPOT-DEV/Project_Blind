@@ -81,10 +81,9 @@ namespace Blind
                     updateAvoid();
                     break;
             }
-            _characterController2D.OnFixedUpdate();
-            //체력 업데이트
             if (Hp.GetHP() <= 0)
                 state = State.Die;
+            _characterController2D.OnFixedUpdate();
         }
 
         protected virtual void updatePatrol()
@@ -167,10 +166,9 @@ namespace Blind
         protected virtual void updateHitted()
         {
             _anim.SetTrigger("Hurt");
-            Debug.Log("On Hurt");
             if (Hp.GetHP() <= 0)
             {
-                _anim.SetTrigger("Dead");
+                state = State.Die;
             }
         }
         
@@ -181,7 +179,17 @@ namespace Blind
         
         protected virtual void updateDie()
         {
-            throw new NotImplementedException();
+            gameObject.layer = 0;
+            if(_anim.GetBool("Dead") == false)
+            {
+                _anim.Play("Dead");
+                _anim.SetBool("Dead", true);
+            }  
+        }
+
+        public void AniDestroy()
+        {
+            Destroy(gameObject);
         }
 
         protected virtual void updateAvoid()

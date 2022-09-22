@@ -84,17 +84,6 @@ namespace Blind
             NextAction();
         }
 
-        /*
-        private IEnumerator CoAttack()
-        {
-            yield return new WaitForSeconds(2f);
-            yield return new WaitForSeconds(0.2f);
-
-            _attack.DisableDamage();
-
-            Co_attack = null;
-        } */
-
         private IEnumerator CoAvoid()
         {
             Flip();
