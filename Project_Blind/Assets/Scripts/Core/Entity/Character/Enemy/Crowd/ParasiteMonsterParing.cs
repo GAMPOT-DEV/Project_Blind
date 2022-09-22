@@ -29,7 +29,7 @@ namespace Blind
             }
             else
             {
-                _gameobject.OnHurt();
+                //_gameobject.OnHurt();
             }
         }
     }

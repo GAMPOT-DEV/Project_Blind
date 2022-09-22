@@ -42,11 +42,12 @@ namespace Blind {
         {
             if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {
+                /*
                 if (!createAttackHitBox)
                 {
                     AttackHitBox();
                     createAttackHitBox = true;
-                }
+                }*/
                 
                 if (Random.Range(0, 100) > 20)
                 {
@@ -58,12 +59,13 @@ namespace Blind {
                 }
             }
         }
+        /*
         public void AttackHitBox()
         {
             Debug.Log("dd");
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
             col.size = new Vector2(7, 8);
-        }
+        }*/
     }
 }
