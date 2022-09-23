@@ -114,6 +114,14 @@ public class Define
         TestItem6 = 6,
         TestItem7 = 7,
     }
+
+    public enum ScriptTitle
+    {
+        Unknown,
+
+        Test1,
+        Test2,
+    }
 }
 
 namespace Blind {

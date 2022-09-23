@@ -8,6 +8,7 @@ namespace Blind
     public class UI_WorldSpace : UI_Base
     {
         public GameObject Owner = null;
+        public string Text;
         public override void Init()
         {
             UIManager.Instance.SetCanvasWorldSpace(gameObject);

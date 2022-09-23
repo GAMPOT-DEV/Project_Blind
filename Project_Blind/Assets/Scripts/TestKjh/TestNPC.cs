@@ -6,12 +6,22 @@ namespace Blind
 {
     public class TestNPC : MonoBehaviour
     {
-        InteractionAble _interactionConversation;
-        InteractionAble _interaction;
+        ConversationTest _interactionConversation;
+        InteractionTest _interaction;
+
+        [SerializeField] private string InteractionText;
+        [SerializeField] private Define.ScriptTitle ScriptTitle;
+        [SerializeField] private Define.BagItem BagItem;
+        [SerializeField] private Define.ClueItem ClueItem;
         void Awake()
         {
             _interactionConversation = gameObject.GetOrAddComponent<ConversationTest>();
+            _interactionConversation.ScriptTitle = ScriptTitle;
+            _interactionConversation.BagItem = BagItem;
+            _interactionConversation.ClueItem = ClueItem;
+
             _interaction = gameObject.GetOrAddComponent<InteractionTest>();
+            _interaction.InteractionText = InteractionText;
         }
     }
 }
