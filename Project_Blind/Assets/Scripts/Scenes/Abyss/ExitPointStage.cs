@@ -7,8 +7,9 @@ namespace Blind.Abyss
     {
         public GameObject ExitPoint;
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             ExitPoint.GetComponent<ExitPoint>().stage = this;
         }
 
