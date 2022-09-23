@@ -5,17 +5,17 @@ namespace Blind.Abyss
 {
     public class Stage : MonoBehaviour
     {
-        public List<GameObject> Walls;
+        public List<Wall> Walls;
         
         protected virtual void Awake()
         {
-            
+            //
         }
-        public void Enable()
+        public virtual void Enable()
         {
             foreach (var wall in Walls)
             {
-                wall.GetComponent<Wall>().Enable();    
+                wall.Enable();    
             }
         }
 
@@ -23,7 +23,7 @@ namespace Blind.Abyss
         {
             foreach (var wall in Walls)
             {
-                wall.GetComponent<Wall>().Disable();    
+                wall.Disable();    
             }
         }
 
