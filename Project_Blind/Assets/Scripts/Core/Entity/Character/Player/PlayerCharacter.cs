@@ -352,6 +352,11 @@ namespace Blind
             _moveVector.x = Data.hurtMove * (float)enemyFacing;
         }
 
+        public void OnCaught()
+        {
+            _animator.SetTrigger("Caught");
+        }
+
         public void Deed()
         {
             _animator.SetBool("Dead", true);
