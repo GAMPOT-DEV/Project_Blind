@@ -82,17 +82,15 @@ using UnityEngine;
              var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
              
              _hitbox = pointA;
-             size = new Vector2(pointA.x + ((float)facing * x), pointA.y - ((float)facing * y));
+             size = new Vector2(pointA.x + ((float)facing * x), pointA.y + y);
              
              var hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
              for (var i = 0; i < hitCount; i++)
              {
                  hitobj = ResultObj[i];
-                 Debug.Log(hitobj.name);
                  hitobj.GetComponent<Character>().HittedWithKnockBack(new AttackInfo(_damage, facing));
                  entity.HitSuccess();
                  canDamage = false;
-                 Debug.Log("맞음");
              }
          }
          public void FixedUpdate()

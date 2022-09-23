@@ -21,12 +21,12 @@ namespace Blind
             if (face != _face)
             {
                 _face = face;
-                var position = transform.localPosition;
-                position = new Vector3(-position.x,position.y,position.z);
-                transform.localPosition = position;
-                var localScale = transform.localScale;
-                localScale = new Vector3(-localScale.x,localScale.y,localScale.z);
-                transform.localScale = localScale;
+                var position = transform.parent.localPosition;
+                position = new Vector3((float)_face*Math.Abs(position.x),position.y,position.z);
+                transform.parent.localPosition = position;
+                var localScale = transform.parent.localScale;
+                localScale = new Vector3(-(float)_face*Math.Abs(localScale.x),localScale.y,localScale.z);
+                transform.parent.localScale = localScale;
             }
             _particleSystem.Play();
         }

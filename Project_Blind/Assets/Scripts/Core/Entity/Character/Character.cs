@@ -15,14 +15,17 @@ namespace Blind
 
         public void HittedWithKnockBack(AttackInfo attackInfo)
         {
-            Hitted(attackInfo.Damage);
-            HurtMove(attackInfo.EnemyFacing);
+            if (!_isInvincibility)
+            {
+                Hitted(attackInfo.Damage);
+                HurtMove(attackInfo.EnemyFacing);
+
+            }
         }
         public void Hitted(float damage)
         {
-            var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit-white-2");
+            var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit");
             obj.transform.position = transform.position + Vector3.up * 5;
-            Debug.Log(obj.transform.position);
             Hp.GetDamage(damage);
             if (Hp.GetHP() > 1 && !_isInvincibility)
             {
@@ -31,7 +34,7 @@ namespace Blind
         }
         public void CharacterInvincible()
         {
-            if(_isInvincibility) StartCoroutine(Invincibility());
+            if(!_isInvincibility) StartCoroutine(Invincibility());
         }
 
         public abstract void HitSuccess();
@@ -53,7 +56,8 @@ namespace Blind
         }
         public void PlayAttackFx(int level, Facing face)
         {
-            transform.GetChild(level).GetComponent<AttackFX>().Play(face);
+            //Debug.Log(transform.GetChild(1).GetChild(level));
+            transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(face);
         }
     }
 }

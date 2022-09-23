@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Cinemachine;
 
 namespace Blind
 {
@@ -14,7 +15,7 @@ namespace Blind
     public class PlayerCharacter : Character,IGameManagerObj
     {
         public Vector2 _moveVector;
-        private PlayerCharacterController2D _characterController2D;
+        public PlayerCharacterController2D _characterController2D;
         private ISkeletonComponent skeletonmecanim;
         public MeleeAttackable _attack;
         private Animator _animator;
@@ -22,6 +23,8 @@ namespace Blind
         private Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
+        private Rigidbody2D rigid;
+        public CinemachineImpulseSource _source;
 
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private Transform _bulletPoint;
@@ -39,6 +42,7 @@ namespace Blind
         private GameObject _waveSense;
         public bool _isInvincibility;
         public bool isPowerAttackEnd;
+        public bool isPowerAttack;
 
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
@@ -62,6 +66,7 @@ namespace Blind
         private float desiredSpeed;
         private float currentmovevector_x;
         public float gravity;
+        private bool soundPlay;
 
         public Action<int> OnWaveGaugeChanged;
 
@@ -75,6 +80,8 @@ namespace Blind
             _paring = GetComponent<Paringable>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
+            rigid = GetComponent<Rigidbody2D>();
+            _source = GetComponent<CinemachineImpulseSource>();
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
@@ -99,15 +106,16 @@ namespace Blind
 
         public void OnFixedUpdate()
         {
-            Debug.Log(_clickcount);
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
             _playerposition = new Vector2(transform.position.x, transform.position.y + 2.5f);
         }
         
-        public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
+        public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
         {
             int flip = 0;
+            float speed = 0;
+            float jumpattackspeed = 3f;
             bool isInputCheck;
             if (InputController.Instance.LeftMove.Held)
             {
@@ -127,15 +135,17 @@ namespace Blind
             {
                 isInputCheck = false;
                 _animator.SetBool("RunEnd", false);
+                SoundManager.Instance.StopEffect();
             }
             else isInputCheck = true;
 
             if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
             {
                 _animator.SetBool("RunEnd", true);
-                
             }
-            float desiredSpeed = useInput ? flip * Data.maxSpeed * speedScale : 0f;
+
+            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
+            float desiredSpeed = useInput ? flip * speed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
@@ -150,18 +160,15 @@ namespace Blind
             _candash = false;
             isCheck = false;
             float originalGravity = Data.gravity;
-            if (_characterController2D.IsGrounded && _moveVector.x == 0)
-            {
-                isCheck = true;
+            isCheck = true;
+            if(_moveVector.x == 0)
                 desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.05f;
-                currentmovevector_x = _moveVector.x;
-            }
             else
-            {
-                float desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.1f;
-                _moveVector.x = desiredSpeed;
-                _moveVector.y = 0;
-            }
+                desiredSpeed = (float)GetFacing() * (Data.dashSpeed+ 3) * 0.05f;
+            _moveVector.y = 0;
+
+            currentmovevector_x = _moveVector.x;
+            
             yield return new WaitForSeconds(Data.defaultTime);
             Data.gravity = originalGravity;
             yield return new WaitForSeconds(1f);
@@ -189,6 +196,8 @@ namespace Blind
                     _moveVector.y = Data.jumpSpeed;
                 }
                 Debug.Log(_moveVector.y);
+                var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
+                obj.transform.position = transform.position + Vector3.up * 2;
                 _animator.SetTrigger("Jump");
             }
         }
@@ -267,11 +276,7 @@ namespace Blind
         {
             return InputController.Instance.Attack.Down;
         }
-
-        public bool CheckForAttackTime()
-        {
-            return Time.time - _lastClickTime > Data.maxComboDelay;
-        }
+        
 
         public void ReAttackSize(int x, int y)
         {
@@ -305,31 +310,10 @@ namespace Blind
             _animator.SetBool("Attack4", false);
             _clickcount = 0;
         }
-
-        public void Combo(int combo)
-        {
-            StartCoroutine(NextAttack(combo));
-        }
-
-        public IEnumerator NextAttack(int combo)
-        {
-            yield return new WaitForSeconds(0.07f);
-            if (combo == 1)
-            {
-                MeleeAttackCombo1();
-            }
-            else if (combo == 2)
-            {
-                MeleeAttackCombo2();
-            }
-            else
-            {
-                MeleeAttackCombo3();
-            }
-        }
+        
         public bool CheckForPowerAttack()
         {
-            return InputController.Instance.PowerAttack.Held;
+            return InputController.Instance.PowerAttack.Down;
         }
 
         public void EndPowerAttack()
@@ -354,7 +338,7 @@ namespace Blind
 
         public void enableAttack()
         {
-            PlayAttackFx(1,GetFacing());
+            PlayAttackFx(0,GetFacing());
             _attack.EnableDamage();
         }
 
@@ -387,6 +371,7 @@ namespace Blind
         {
             _animator.SetTrigger("Hurt");
             _isHurtCheck = true;
+            _moveVector.y = 0;
         }
 
         protected override void HurtMove(Facing enemyFacing)

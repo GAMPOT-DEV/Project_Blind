@@ -30,7 +30,7 @@ namespace Blind {
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(7, 2);
+            _attack.Init(7, 8);
         }
 
         protected override void FixedUpdate()
@@ -38,107 +38,34 @@ namespace Blind {
             base.FixedUpdate();
         }
 
-        protected override void updateChase()
-        {
-            if (_anim.GetBool("Chase") == false)
-            {
-                _anim.SetBool("Chase", true);
-            }
-
-            if (playerFinder.MissPlayer())
-            {
-                state = State.Patrol;
-                _anim.SetBool("Chase", false);
-                return;
-            }
-
-            if (attackSense.Attackable())
-            {
-                state = State.Attack;
-                _anim.SetBool("Chase", false);
-                return;
-            }
-
-            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
-        }
-
         protected override void updateAttack()
         {
-            if (Co_attack == null)
+            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {
+                /*
+                if (!createAttackHitBox)
+                {
+                    AttackHitBox();
+                    createAttackHitBox = true;
+                }*/
+                
                 if (Random.Range(0, 100) > 20)
                 {
-                    if (_anim.GetBool("Basic Attack") == false)
-                    {
-                        _anim.SetBool("Basic Attack", true);
-                    }
+                    _anim.SetBool("Basic Attack", true);
                 }
                 else
                 {
-                    if (_anim.GetBool("Skill Attack") == false)
-                    {
-                        isPowerAttack = true;
-                        _anim.SetBool("Skill Attack", true);
-                    }
+                    _anim.SetBool("Skill Attack", true);
                 }
-
-                Co_attack = StartCoroutine(CoAttack());
             }
         }
-
-        protected override void updateHitted()
+        /*
+        public void AttackHitBox()
         {
-
-            if (Co_hitted == null)
-            {
-                StopAllCoroutines();
-                StartCoroutine(CoHitted());
-            }
-
-            Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
-            {
-                hittedVelocity = new Vector2(-0.2f, 0);
-            }
-            else
-            {
-                hittedVelocity = new Vector2(0.2f, 0);
-            }
-
-            _characterController2D.Move(hittedVelocity);
-        }
-
-        protected override void updateStun()
-        {
-            StopAllCoroutines();
-            Co_stun = StartCoroutine(CoStun());
-        }
-
-        protected override void updateDie()
-        {
-            Co_die = StartCoroutine(CoDie());
-        }
-
-        private IEnumerator CoAttack()
-        {
-            yield return new WaitForSeconds(0.2f);
-            _attack.EnableDamage();
-            yield return new WaitForSeconds(0.5f);
-            _attack.DisableDamage();
-
-            Co_attack = null;
-        }
-
-        public void AniAfterAttack()
-        {
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-            _anim.SetBool("Basic Attack", false);
-            _anim.SetBool("Skill Attack", false);
-        }
+            Debug.Log("dd");
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
+            col.size = new Vector2(7, 8);
+        }*/
     }
 }
