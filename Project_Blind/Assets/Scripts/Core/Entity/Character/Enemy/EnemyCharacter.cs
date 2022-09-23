@@ -15,7 +15,7 @@ namespace Blind
         [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
 
         protected GameObject player;
-        protected MeleeAttackable _attack;
+        public MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
         protected Transform startingPosition;
@@ -59,17 +59,6 @@ namespace Blind
             if (transform.localScale.x > 0)
                 return Facing.Right;
             else return Facing.Left;
-        }
-
-        public void hitted(int dir)
-        {
-            Debug.Log("Enemy Hitted !");
-            StartCoroutine(CoHitted());
-        }
-
-        protected virtual IEnumerator CoHitted()
-        {
-            return null;
         }
 
         public override void HitSuccess()
