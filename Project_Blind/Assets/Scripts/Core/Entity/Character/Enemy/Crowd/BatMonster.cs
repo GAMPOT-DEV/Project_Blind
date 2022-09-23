@@ -24,7 +24,6 @@ namespace Blind
             Data.attackRange = new Vector2(9f, 8f);
             Data.stunTime = 1f;
             _patrolTime = 3f;
-
         }
 
         private void Start()
@@ -65,44 +64,6 @@ namespace Blind
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
             col.size = new Vector2(7, 10);
-        }
-
-        protected override void updateHitted()
-        {
-
-            if (Co_hitted == null)
-            {
-                StopAllCoroutines();
-                StartCoroutine(CoHitted());
-            }
-
-            Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
-            {
-                hittedVelocity = new Vector2(-0.2f, 0);
-            }
-            else
-            {
-                hittedVelocity = new Vector2(0.2f, 0);
-            }
-
-            _characterController2D.Move(hittedVelocity);
-        }
-
-        protected override void updateStun()
-        {
-            StopAllCoroutines();
-            Co_stun = StartCoroutine(CoStun());
-        }
-
-        private IEnumerator CoAttack()
-        {
-            yield return new WaitForSeconds(0.2f);
-            _attack.EnableDamage();
-            yield return new WaitForSeconds(0.5f);
-            _attack.DisableDamage();
-
-            Co_attack = null;
         }
     }
 }

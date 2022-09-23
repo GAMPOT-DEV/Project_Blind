@@ -61,17 +61,6 @@ namespace Blind
             else return Facing.Left;
         }
 
-        public void hitted(int dir)
-        {
-            Debug.Log("Enemy Hitted !");
-            StartCoroutine(CoHitted());
-        }
-
-        protected virtual IEnumerator CoHitted()
-        {
-            return null;
-        }
-
         public override void HitSuccess()
         {
             return;
