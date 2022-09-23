@@ -17,6 +17,7 @@ namespace Blind
             _collider = gameObject.GetComponent<Collider2D>();
             _collider.enabled = false;
             _shadowCaster = gameObject.GetComponent<ShadowCaster2D>();
+            _shadowCaster.enabled = false;
         }
 
         public void SetVisible()
