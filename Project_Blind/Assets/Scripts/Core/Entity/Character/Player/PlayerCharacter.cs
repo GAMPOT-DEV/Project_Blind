@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Cinemachine;
 
 namespace Blind
 {
@@ -14,7 +15,7 @@ namespace Blind
     public class PlayerCharacter : Character,IGameManagerObj
     {
         public Vector2 _moveVector;
-        private PlayerCharacterController2D _characterController2D;
+        public PlayerCharacterController2D _characterController2D;
         private ISkeletonComponent skeletonmecanim;
         public MeleeAttackable _attack;
         private Animator _animator;
@@ -22,8 +23,11 @@ namespace Blind
         private Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
+        private Rigidbody2D rigid;
+        public CinemachineImpulseSource _source;
 
         [SerializeField] private Transform _spawnPoint;
+        [SerializeField] private Transform _bulletPoint;
         public bool _isHurtCheck;
         public float _lastClickTime;
         public int _clickcount = 0;
@@ -38,6 +42,7 @@ namespace Blind
         private GameObject _waveSense;
         public bool _isInvincibility;
         public bool isPowerAttackEnd;
+        public bool isPowerAttack;
 
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
@@ -61,6 +66,7 @@ namespace Blind
         private float desiredSpeed;
         private float currentmovevector_x;
         public float gravity;
+        private bool soundPlay;
 
         public Action<int> OnWaveGaugeChanged;
 
@@ -74,6 +80,8 @@ namespace Blind
             _paring = GetComponent<Paringable>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
+            rigid = GetComponent<Rigidbody2D>();
+            _source = GetComponent<CinemachineImpulseSource>();
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
@@ -100,12 +108,14 @@ namespace Blind
         {
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
-            _playerposition = new Vector2(transform.position.x, transform.position.y + 4f);
+            _playerposition = new Vector2(transform.position.x, transform.position.y + 2.5f);
         }
         
-        public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f)
+        public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
         {
             int flip = 0;
+            float speed = 0;
+            float jumpattackspeed = 3f;
             bool isInputCheck;
             if (InputController.Instance.LeftMove.Held)
             {
@@ -115,13 +125,27 @@ namespace Blind
             {
                 flip = 1;
             }
-            
-            if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
-                flip = 0;
 
-            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down) isInputCheck = false;
+            if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
+            {
+                flip = 0;
+            }
+
+            if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down)
+            {
+                isInputCheck = false;
+                _animator.SetBool("RunEnd", false);
+                SoundManager.Instance.StopEffect();
+            }
             else isInputCheck = true;
-            float desiredSpeed = useInput ? flip * Data.maxSpeed * speedScale : 0f;
+
+            if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
+            {
+                _animator.SetBool("RunEnd", true);
+            }
+
+            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
+            float desiredSpeed = useInput ? flip * speed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
         }
@@ -136,19 +160,15 @@ namespace Blind
             _candash = false;
             isCheck = false;
             float originalGravity = Data.gravity;
-            if (_characterController2D.IsGrounded && _moveVector.x == 0)
-            {
-                isCheck = true;
-                desiredSpeed = GetFacing() * Data.dashSpeed * 0.05f;
-                currentmovevector_x = _moveVector.x;
-                Debug.Log("1번 실행됨");
-            }
+            isCheck = true;
+            if(_moveVector.x == 0)
+                desiredSpeed = (float)GetFacing() * Data.dashSpeed * 0.05f;
             else
-            {
-                float desiredSpeed = GetFacing() * Data.dashSpeed * 0.1f;
-                _moveVector.x = desiredSpeed;
-                _moveVector.y = 0;
-            }
+                desiredSpeed = (float)GetFacing() * (Data.dashSpeed+ 3) * 0.05f;
+            _moveVector.y = 0;
+
+            currentmovevector_x = _moveVector.x;
+            
             yield return new WaitForSeconds(Data.defaultTime);
             Data.gravity = originalGravity;
             yield return new WaitForSeconds(1f);
@@ -175,6 +195,9 @@ namespace Blind
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = Data.jumpSpeed;
                 }
+                Debug.Log(_moveVector.y);
+                var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
+                obj.transform.position = transform.position + Vector3.up * 2;
                 _animator.SetTrigger("Jump");
             }
         }
@@ -213,6 +236,7 @@ namespace Blind
         /// </summary>
         public void AirborneVerticalMovement(float _gravity)
         {
+            _characterController2D.isDown = true;
             if (Mathf.Approximately(_moveVector.y, 0f) )//|| CharacterController2D.IsCeilinged && _moveVector.y > 0f) 나중에 천장 코드 구현되면 그 때 수정
             {
                 _moveVector.y = 0;
@@ -252,11 +276,7 @@ namespace Blind
         {
             return InputController.Instance.Attack.Down;
         }
-
-        public bool CheckForAttackTime()
-        {
-            return Time.time - _lastClickTime > Data.maxComboDelay;
-        }
+        
 
         public void ReAttackSize(int x, int y)
         {
@@ -290,10 +310,10 @@ namespace Blind
             _animator.SetBool("Attack4", false);
             _clickcount = 0;
         }
-
+        
         public bool CheckForPowerAttack()
         {
-            return InputController.Instance.Attack.Held;
+            return InputController.Instance.PowerAttack.Down;
         }
 
         public void EndPowerAttack()
@@ -309,7 +329,7 @@ namespace Blind
 
         public bool CheckForUpKey()
         {
-            return InputController.Instance.Attack.Up;
+            return InputController.Instance.PowerAttack.Up;
         }
         public void AttackableMove(float newMoveVector)
         {
@@ -318,6 +338,7 @@ namespace Blind
 
         public void enableAttack()
         {
+            PlayAttackFx(0,GetFacing());
             _attack.EnableDamage();
         }
 
@@ -341,10 +362,16 @@ namespace Blind
             _characterController2D.MakePlatformFallthrough();
         }
 
+        public override void HitSuccess()
+        {
+            CurrentWaveGauge += attackWaveGauge;
+        }
+
         protected override void onHurt()
         {
             _animator.SetTrigger("Hurt");
             _isHurtCheck = true;
+            _moveVector.y = 0;
         }
 
         protected override void HurtMove(Facing enemyFacing)
@@ -406,7 +433,7 @@ namespace Blind
         public void ThrowItem()
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
-            bullet.transform.position = _playerposition;
+            bullet.transform.position = _bulletPoint.position;
             if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
             else bullet.GetFacing(_renderer.flipX);
         }
@@ -461,10 +488,10 @@ namespace Blind
             else _renderer.flipX = true;
         }
 
-        public int GetFacing()
+        public override Facing GetFacing()
         {
-            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? 1 : -1;
-            else return _renderer.flipX ? 1 : -1;
+            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+            else return _renderer.flipX ? Facing.Left : Facing.Right;
         }
 
         public void Log() {

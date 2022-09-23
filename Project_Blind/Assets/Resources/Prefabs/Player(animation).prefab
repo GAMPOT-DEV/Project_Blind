@@ -182,18 +182,22 @@ MonoBehaviour:
   _moveVector: {x: 0, y: 0}
   _attack: {fileID: 8157876191047730959}
   _playerposition: {x: 0, y: 0}
-  Data: {fileID: 11400000, guid: f27aeab61d3e149938bb36b2cce95a11, type: 2}
+  Data: {fileID: 11400000, guid: 21d0741f5cd6f56409144bf3436bbc14, type: 2}
   _spawnPoint: {fileID: 0}
   _isHurtCheck: 0
   _lastClickTime: 0
   _clickcount: 0
+  isCheck: 0
+  nextDash_x: 0
   isJump: 0
   _isInvincibility: 0
+  isPowerAttackEnd: 0
   maxWaveGauge: 30
   _currentWaveGauge: 30
   attackWaveGauge: 3
   paringWaveGauge: 5
   isOnLava: 0
+  gravity: 0
 --- !u!50 &8157876191047730957
 Rigidbody2D:
   serializedVersion: 4
@@ -211,7 +215,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 33e71d9d71a4b09498708826b6610611, type: 2}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4

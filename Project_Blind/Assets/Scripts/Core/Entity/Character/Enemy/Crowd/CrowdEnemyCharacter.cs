@@ -28,8 +28,12 @@ namespace Blind
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
         public bool isPowerAttack = false;
+        public bool IsAttack = false;
 
         private Coroutine co_patrol;
+        private Coroutine co_stun;
+        protected BoxCollider2D col;
+        protected bool createAttackHitBox;
 
         protected void Awake()
         {
@@ -130,7 +134,26 @@ namespace Blind
         
         protected virtual void updateChase()
         {
-            throw new NotImplementedException();
+            if (_anim.GetBool("Chase") == false)
+            {
+                _anim.SetBool("Chase", true);
+            }
+
+            if (playerFinder.MissPlayer())
+            {
+                state = State.Patrol;
+                _anim.SetBool("Chase", false);
+                return;
+            }
+
+            if (attackSense.Attackable())
+            {
+                state = State.Attack;
+                _anim.SetBool("Chase", false);
+                return;
+            }
+
+            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         protected virtual void updateAttack()
@@ -193,13 +216,11 @@ namespace Blind
             {
                 thisScale.x = -Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(-Data.speed, 0f);
-                //_sprite.flipX = false;
             }
             else
             {
                 thisScale.x = Mathf.Abs(thisScale.x);
                 patrolDirection = new Vector2(Data.speed, 0f);
-                //_sprite.flipX = true;
             }
             transform.localScale = thisScale;
             _unitHPUI.Reverse();
@@ -241,6 +262,22 @@ namespace Blind
             Destroy(gameObject);
         }
 
+        public IEnumerator CoStun()
+        {
+            _anim.SetBool("Stun", true);
+            yield return new WaitForSeconds(Data.stunTime);
+
+            if (attackSense.Attackable())
+                state = State.Attack;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Default;
+
+            co_stun = null;
+            _anim.SetBool("Stun", false);
+        }
+
         protected void animChange(string before, string after)
         {
             _anim.SetBool(before, false);
@@ -257,6 +294,35 @@ namespace Blind
                 Flip();
                 defaultCount = 0;
             }
+        }
+
+        public void AniAfterAttack()
+        {
+            if (attackSense.Attackable())
+                state = State.Attack;
+            else if (playerFinder.FindPlayer())
+                state = State.Chase;
+            else
+                state = State.Default;
+            _anim.SetBool("Basic Attack", false);
+            _anim.SetBool("Skill Attack", false);
+            createAttackHitBox = false;
+            Destroy(col);
+        }
+
+        public void AniParingenable()
+        {
+            IsAttack = true;
+        }
+        public void AniAttackStart()
+        {
+            _attack.EnableDamage();
+        }
+
+        public void AniAttackEnd()
+        {
+            _attack.DisableDamage();
+            IsAttack = false;
         }
     }
 }

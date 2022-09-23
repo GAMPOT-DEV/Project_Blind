@@ -62,4 +62,27 @@ namespace Data
         }
     }
     #endregion
+    #region Bag
+    [Serializable]
+    public class BagItem
+    {
+        public int id;
+        public string name;
+        public string shortDescription;
+        public string longDescription;
+        public string effectDescription;
+        public string iconPath;
+    }
+    public class BagItemData : ILoader<int, BagItem>
+    {
+        public List<BagItem> bagItems = new List<BagItem>();
+        public Dictionary<int, BagItem> MakeDict()
+        {
+            Dictionary<int, BagItem> dict = new Dictionary<int, BagItem>();
+            foreach(BagItem bagItem in bagItems)
+                dict.Add(bagItem.id, bagItem);
+            return dict;
+        }
+    }
+    #endregion
 }

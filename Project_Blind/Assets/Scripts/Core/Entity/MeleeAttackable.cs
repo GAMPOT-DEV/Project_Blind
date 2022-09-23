@@ -19,7 +19,7 @@ using UnityEngine;
          private Collider2D hitobj;
          private bool _isSpriteFlip;
  
-         private Vector2 hitbox;
+         private Vector2 _hitbox;
  
          public void Awake()
          {
@@ -67,82 +67,36 @@ using UnityEngine;
          public void OnDrawGizmos()
          {
              Gizmos.color = Color.blue;
-             Gizmos.DrawLine(hitbox, new Vector2(size.x, hitbox.y));
-             Gizmos.DrawLine(hitbox, new Vector2(hitbox.x, size.y));
-             Gizmos.DrawLine(new Vector2(size.x, hitbox.y), size);
-             Gizmos.DrawLine(size, new Vector2(hitbox.x, size.y));
+             Gizmos.DrawLine(_hitbox, new Vector2(size.x, _hitbox.y));
+             Gizmos.DrawLine(_hitbox, new Vector2(_hitbox.x, size.y));
+             Gizmos.DrawLine(new Vector2(size.x, _hitbox.y), size);
+             Gizmos.DrawLine(size, new Vector2(_hitbox.x, size.y));
          }
  
          private void MeleeAttack()
          {
-             var _player = gameObject.GetComponent<PlayerCharacter>();
-             var facing = Facing.Left;
-             if (sprite == null)
-             {
-                 if (_skeletonComponent.Skeleton.FlipX) facing = Facing.Right;
-             }
-             else
-             {
-                 if (sprite.flipX) facing = Facing.Right;
-             }
- 
-             var pointA = new Vector2(_player._playerposition.x + (float) facing * 1, _player._playerposition.y + 2);
-             hitbox = pointA;
-             if (facing == Facing.Right) size = new Vector2(pointA.x + x, pointA.y - y);
-             else size = new Vector2(pointA.x - x, pointA.y - y);
+             var entity = gameObject.GetComponent<Character>();
+             var facing = entity.GetFacing();
+             
+             var position = transform.position;
+             var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
+             
+             _hitbox = pointA;
+             size = new Vector2(pointA.x + ((float)facing * x), pointA.y + y);
+             
              var hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
              for (var i = 0; i < hitCount; i++)
              {
                  hitobj = ResultObj[i];
-                 Debug.Log(hitobj.name);
-                 if (hitobj.tag.Equals("Enemy"))
-                 {
-                     hitobj.GetComponent<EnemyCharacter>().HittedWithKnockBack(new AttackInfo(_damage, facing));
-                     if (_player.CurrentWaveGauge + _player.attackWaveGauge < _player.maxWaveGauge)
-                         _player.CurrentWaveGauge += _player.attackWaveGauge;
-                     else _player.CurrentWaveGauge = _player.maxWaveGauge;
-                     canDamage = false;
-                     Debug.Log("맞음");
-                 }
-             }
-         }
- 
-         private void EnemyMeleeAttack()
-         {
-             var gameobject = gameObject.GetComponent<EnemyCharacter>();
-             Facing facing = Facing.Left;
-             if (sprite.flipX != _isSpriteFlip) facing = Facing.Right;
- 
-             var pointA = new Vector2(transform.position.x + (float)facing * 1, transform.position.y);
-             if (facing == Facing.Right) size = new Vector2(pointA.x + x, pointA.y - y);
-             else size = new Vector2(pointA.x - x, pointA.y - y);
- 
-             var hitCount = Physics2D.OverlapArea(pointA, size, _attackcontactfilter, ResultObj);
-             for (var i = 0; i < hitCount; i++)
-             {
-                 hitobj = ResultObj[i];
-                 if (hitobj.tag.Equals("Player"))
-                 {
-                     var _player = hitobj.GetComponent<Character>();
-                     _player.HittedWithKnockBack(new AttackInfo(_damage, facing));
-                 }
+                 hitobj.GetComponent<Character>().HittedWithKnockBack(new AttackInfo(_damage, facing));
+                 entity.HitSuccess();
                  canDamage = false;
              }
          }
          public void FixedUpdate()
          {
-             if (gameObject.GetComponent<PlayerCharacter>() != null)
-             {
-                 if (!canDamage) return;
-                 MeleeAttack();
-             }
-     
-             else
-             {
-                 if (!canDamage) return;
-     
-                 EnemyMeleeAttack();
-             }
+             if (!canDamage) return;
+             MeleeAttack();
          }
      }
  }

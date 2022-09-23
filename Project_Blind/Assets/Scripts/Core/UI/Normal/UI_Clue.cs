@@ -20,16 +20,17 @@ namespace Blind
         }
         enum Texts
         {
-            Text_DetailDesc,
+
         }
         Dictionary<int, Data.Clue> _cludData;
         public static int Size { get; set; }
+        private int _currIdx = -1;
         public List<UI_Clue_Item> Items { get; } = new List<UI_Clue_Item>();
         GameObject grid;
         public override void Init()
         {
             Bind<Image>(typeof(Images));
-            Bind<Text>(typeof(Texts));
+            //Bind<Text>(typeof(Texts));
 
             _cludData = DataManager.Instance.ClueDict;
 
@@ -56,13 +57,13 @@ namespace Blind
         }
         void TestInit()
         {
-            Get<Image>((int)Images.Image_TestGetClue1).gameObject.BindEvent(() => PushTestImage(1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue2).gameObject.BindEvent(() => PushTestImage(2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue3).gameObject.BindEvent(() => PushTestImage(3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue4).gameObject.BindEvent(() => PushTestImage(4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue5).gameObject.BindEvent(() => PushTestImage(5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue6).gameObject.BindEvent(() => PushTestImage(6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(7), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue1).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue1), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue2).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue2), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue3).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue3), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue4).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue4), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue5).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue5), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue6).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue6), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue7), Define.UIEvent.Click);
 
             Get<Image>((int)Images.Image_TestClearClue).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }
@@ -70,7 +71,7 @@ namespace Blind
         public void RefreshUI()
         {
             Size = DataManager.Instance.GameData.clueInfos.Count;
-            grid.GetComponent<RectTransform>().sizeDelta = new Vector2(750f, 220f * (float)Size);
+            grid.GetComponent<RectTransform>().sizeDelta = new Vector2(500f * (float)Size - 1800f, 770f);
             for(int i = 0; i < Size; i++)
             {
                 int itemId = -1;
@@ -83,13 +84,13 @@ namespace Blind
                 // 각각의 슬롯에 아이템 ID를 넘겨줘서 갱신한다.
                 // 위에서 찾지 못하면 ID = -1이고 ID가 -1인 아이템은 없기 때문에 
                 // 자동으로 null로 할당된다.
-                Items[i].SetItem(itemId, this);
+                Items[i].SetItem(itemId, i, this);
             }
         }
-        private void PushTestImage(int id)
+        private void PushTestImage(Define.ClueItem itemEnum)
         {
             // 게임데이터에 아이템을 추가를 시도한다.
-            bool result = DataManager.Instance.AddClueItem(id);
+            bool result = DataManager.Instance.AddClueItem(itemEnum);
             // 만약 성공한다면 슬롯을 하나 더 만들어주고 UI를 새로고침해준다.
             if (result == true)
             {
@@ -101,27 +102,33 @@ namespace Blind
         }
         private void PushTestClear()
         {
+            if (_currIdx != -1)
+                Items[_currIdx].CloseUI();
+            _currIdx = -1;
+
             DataManager.Instance.ClearClueData();
             Items.Clear();
             // 단서 슬롯들을 전부 날려주고 UI를 새로고침해준다.
             foreach (Transform child in grid.transform)
                 Destroy(child.gameObject);
 
-            ShowDetailDesc(-1);
+            //ShowDetailDesc(-1);
             RefreshUI();
+            
         }
-        public void ShowDetailDesc(int itemId)
+        public void PushClueItem(int idx)
         {
-            if (itemId == -1)
+            if (_currIdx != -1)
             {
-                Get<Text>((int)Texts.Text_DetailDesc).text = "";
-                return;
+                Items[_currIdx].SetNonClickedState();
             }
-            Data.Clue clue;
-            _cludData.TryGetValue(itemId, out clue);
-            string text = clue.description;
-
-            Get<Text>((int)Texts.Text_DetailDesc).text = text;
+            _currIdx = idx;
+            Items[_currIdx].SetClickedState();
+        }
+        public void CloseUI()
+        {
+            if (_currIdx == -1) return;
+            Items[_currIdx].CloseUI();
         }
     }
 }

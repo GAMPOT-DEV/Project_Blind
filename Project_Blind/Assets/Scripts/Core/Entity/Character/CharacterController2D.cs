@@ -22,7 +22,7 @@ namespace Blind
         private Vector2 _nextMovement;
         private Vector2 _previousPosition;
         private Vector2 _currentPosition;
-        
+        private float prevY;
         private Vector2 _boxCastSize = new Vector2(0.4f,0.3f);
         private float _boxCastMaxDistance = 1f;
         private int _groundMask;
@@ -32,7 +32,9 @@ namespace Blind
         RaycastHit2D[] m_FoundHits = new RaycastHit2D[3];
         Collider2D[] m_GroundColliders = new Collider2D[3];
         Vector2[] m_RaycastPositions = new Vector2[3];
-        
+        public bool isDown = false;
+        public bool isDie = false;
+
         public Vector2 Velocity { get; private set; }
         public bool IsGrounded { get; protected set; }
         public ContactFilter2D ContactFilter { get { return m_ContactFilter; } }
@@ -59,11 +61,20 @@ namespace Blind
 
         public void OnFixedUpdate()
         {
+            if (IsGrounded)
+            {
+                prevY = _rigidBody2D.position.y;
+            }
+
+            if (gameObject.tag.Equals("Enemy"))
+            {
+                _rigidBody2D.velocity = Vector2.zero;
+                _rigidBody2D.angularVelocity = 0f;
+            }
             _previousPosition = _rigidBody2D.position;
-            _currentPosition = _previousPosition + _nextMovement;
+            _currentPosition= _previousPosition + _nextMovement;
             Velocity = (_currentPosition - _previousPosition) / Time.deltaTime;
-            
-            _rigidBody2D.MovePosition(_currentPosition);
+            if(!isDie) _rigidBody2D.MovePosition(_currentPosition);
             _nextMovement = Vector2.zero;
             
             CheckCapsuleEndCollisions();
@@ -90,13 +101,7 @@ namespace Blind
             _nextMovement += movement;
         }
 
-        public void Dash(Vector2 movement)
-        {
-            _rigidBody2D.MovePosition(movement);
-            Debug.Log("dD");
-        }
-
-         public void CheckCapsuleEndCollisions(bool bottom = true)
+        public void CheckCapsuleEndCollisions(bool bottom = true)
         {
             Vector2 raycastDirection;
             Vector2 raycastStart;

@@ -13,9 +13,6 @@ namespace Blind {
         public int StunGauge;
         public int maxStunGauge;
 
-        public bool isPowerAttack;
-
-
         protected void Awake()
         {
             base.Awake();
@@ -28,13 +25,12 @@ namespace Blind {
             Data.attackRange = new Vector2(9f, 8f);
             Data.stunTime = 1f;
             _patrolTime = 2;
-
         }
 
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(2, 2);
+            _attack.Init(7, 8);
         }
 
         protected override void FixedUpdate()
@@ -58,8 +54,6 @@ namespace Blind {
 
             if (attackSense.Attackable())
             {
-                //attackStandby∞° ≤¿ « ø‰«“±Ó...?
-                //state = State.AttackStandby;
                 state = State.Attack;
                 _anim.SetBool("Chase", false);
                 return;
@@ -70,15 +64,32 @@ namespace Blind {
 
         protected override void updateAttack()
         {
-            if (Co_attack == null)
+            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {
-                Co_attack = StartCoroutine(CoAttack());
-            }
+                if (!createAttackHitBox)
+                {
+                    AttackHitBox();
+                    createAttackHitBox = true;
+                }
+                
+                if (Random.Range(0, 100) > 20)
+                {
+                    _anim.SetBool("Basic Attack", true);
+                }
+                else
+                {
+                    isPowerAttack = true;
+                    _anim.SetBool("Skill Attack", true);
 
-            if (_anim.GetBool("Basic Attack") == false)
-            {
-                _anim.SetBool("Basic Attack", true);
+                }
             }
+        }
+        public void AttackHitBox()
+        {
+            Debug.Log("dd");
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
+            col.size = new Vector2(7, 8);
         }
 
         protected override void updateHitted()
@@ -91,7 +102,7 @@ namespace Blind {
             }
 
             Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //«√∑π¿ÃæÓ∞° ø¿∏•¬ 
+            if (playerFinder.ChasePlayer().x > 0) //ÌîåÎ†àÏù¥Ïñ¥Í∞Ä Ïò§Î•∏Ï™Ω
             {
                 hittedVelocity = new Vector2(-0.2f, 0);
             }
@@ -116,40 +127,12 @@ namespace Blind {
 
         private IEnumerator CoAttack()
         {
-            //yield return new WaitForSeconds(2f);
-            Debug.Log("∞¯∞›!!");
-            _attack.EnableDamage();
             yield return new WaitForSeconds(0.2f);
+            _attack.EnableDamage();
+            yield return new WaitForSeconds(0.5f);
             _attack.DisableDamage();
 
             Co_attack = null;
-        }
-
-        public void AniAfterAttack()
-        {
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-            _anim.SetBool("Basic Attack", false);
-        }
-
-        public IEnumerator CoStun()
-        {
-            _anim.SetBool("Stun", true);
-            yield return new WaitForSeconds(Data.stunTime);
-
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
-
-            Co_stun = null;
-            _anim.SetBool("Stun", false);
         }
     }
 }
