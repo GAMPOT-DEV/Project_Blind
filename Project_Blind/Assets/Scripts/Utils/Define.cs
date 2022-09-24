@@ -35,6 +35,7 @@ public class Define
         장산범입구,
         장산범방,
         맵테스트,
+        숲맵테스트,
     }
 
     public enum Sound

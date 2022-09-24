@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 4731757639545332}
   - component: {fileID: 212116989277417380}
   - component: {fileID: 95020970517844702}
+  - component: {fileID: 8807679238278517419}
+  - component: {fileID: -3580445549689070672}
   m_Layer: 0
   m_Name: JumpFx
   m_TagString: Untagged
@@ -105,3 +107,29 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8807679238278517419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389089849652810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04c89067105e5b04c969d04cf0499be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selfdestruct_in: 0.5
+--- !u!114 &-3580445549689070672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389089849652810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfdda8e5d4d91c43baaa6f4d33706c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0

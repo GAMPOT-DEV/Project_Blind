@@ -201,7 +201,7 @@ namespace Blind
                 _anim.Play("Dead");
                 _anim.SetBool("Dead", true);
             }
-            _col.isTrigger = false;
+            DeathCallback.Invoke();
         }
 
         protected virtual void updateAvoid()
