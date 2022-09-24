@@ -196,7 +196,8 @@ namespace Blind
             {
                 _anim.Play("Dead");
                 _anim.SetBool("Dead", true);
-            }  
+            }
+            DeathCallback.Invoke();
         }
 
         protected virtual void updateAvoid()
