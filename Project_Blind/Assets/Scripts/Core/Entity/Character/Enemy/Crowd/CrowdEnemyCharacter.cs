@@ -23,6 +23,7 @@ namespace Blind
         protected State state;
         protected float _patrolTime;
         protected Animator _anim;
+        protected float _chaseRange = 20;
 
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
@@ -168,6 +169,7 @@ namespace Blind
         {
             throw new NotImplementedException();
         }
+
         protected virtual void updateStun()
         {
             throw new NotImplementedException();
@@ -284,7 +286,7 @@ namespace Blind
             co_default = null;
         }
 
-        public void AniAfterAttack()
+        public virtual void AniAfterAttack()
         {
             if (attackSense.Attackable())
                 state = State.Attack;
@@ -304,6 +306,7 @@ namespace Blind
         {
             IsAttack = true;
         }
+
         public void AniAttackStart()
         {
             _attack.EnableDamage();
