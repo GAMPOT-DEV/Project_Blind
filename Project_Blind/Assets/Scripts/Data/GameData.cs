@@ -44,6 +44,17 @@ namespace Blind
         public int itemId;
         public int itemCnt;
     }
+    public class PlayerCharacterData
+    {
+        public UnitHP Hp;
+        public int CurrentWaveGage;
+
+        public PlayerCharacterData(UnitHP hp, int currentWaveGage)
+        {
+            Hp = new UnitHP(hp.GetMaxHP(),hp.GetHP());
+            CurrentWaveGage = currentWaveGage;
+        }
+    }
     public partial class GameData
     {
         #region ClueDict
@@ -123,6 +134,11 @@ namespace Blind
             BagItemInfoBySlot.Clear();
             BagItemInfoById.Clear();
         }
+        #endregion
+
+        #region PlayerCharater
+        public PlayerCharacterData PlayerCharacterData { get; set; }
+
         #endregion
     }
 }
