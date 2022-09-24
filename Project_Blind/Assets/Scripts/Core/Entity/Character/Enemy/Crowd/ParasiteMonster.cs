@@ -50,7 +50,6 @@ namespace Blind {
                     AttackHitBox();
                     createAttackHitBox = true;
                 }
-
                 
                 float r = Random.Range(0, 100);
                 if (r > 50)
@@ -93,10 +92,23 @@ namespace Blind {
         
         public void AttackHitBox()
         {
-            Debug.Log("dd");
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
-            col.size = new Vector2(7, 8);
+            col.size = new Vector2(13, 10);
+        }
+
+        public override IEnumerator CoStun()
+        {
+            _anim.SetBool("Stun", true);
+            _anim.SetBool("Basic Attack", false);
+            _anim.SetBool("Skill Attack", false);
+            _anim.SetBool("Grab Attack", false);
+
+            yield return new WaitForSeconds(Data.stunTime);
+            _anim.SetBool("Stun", false);
+            NextAction();
+
+            co_stun = null;
         }
     }
 }
