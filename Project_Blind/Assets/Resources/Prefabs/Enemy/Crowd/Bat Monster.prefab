@@ -89,7 +89,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -240,6 +240,7 @@ MonoBehaviour:
     m_Bits: 64
   groundedRaycastDistance: 0.1
   isDown: 0
+  isDie: 0
 --- !u!114 &3758395228494642315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,14 +254,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: ddbd3f51f221c4b57a1b05be7c80325d, type: 2}
+  _attack: {fileID: 0}
   WallLayer:
     serializedVersion: 2
     m_Bits: 128
   WallCheck: {fileID: 3758395228340987582}
   CurrentStunGauge: 0
   MaxStunGauge: 10
-  isPowerAttack: 0
   IsAttack: 0
+  AttackHitBoxRange: {fileID: 0}
 --- !u!114 &3758395228494642314
 MonoBehaviour:
   m_ObjectHideFlags: 0

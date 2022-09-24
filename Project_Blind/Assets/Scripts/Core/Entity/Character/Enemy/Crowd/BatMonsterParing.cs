@@ -26,7 +26,6 @@ namespace Blind
         {
             _gameobject._attack.DisableDamage();
             _gameobject.OnStun();
-            Debug.Log("패링 성공");
         }
     }
 }
