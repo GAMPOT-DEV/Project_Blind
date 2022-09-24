@@ -25,8 +25,14 @@ namespace Blind
         public override void EnemyDibuff()
         {
             _gameobject._attack.DisableDamage();
-            _gameobject.OnStun();
-            Debug.Log("패링 성공");
+            if (_gameobject.CurrentStunGauge >= _gameobject.MaxStunGauge)
+            {
+                _gameobject.CoStun();
+            }
+            else
+            {
+                //_gameobject.OnHurt();
+            }
         }
     }
 }

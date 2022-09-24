@@ -7,7 +7,7 @@ namespace Blind
     public abstract class Character : MonoBehaviour, IAttackFxExcutable
     {
         private bool _isInvincibility;
-        public UnitHP Hp { get; protected set; }
+        public UnitHP Hp { get; private set; }
         public void Awake(ScriptableObjects.Character data)
         {
             Hp = new UnitHP(data.maxHp);

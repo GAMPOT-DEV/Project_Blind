@@ -16,28 +16,16 @@ namespace Blind
         // UI_FieldScene에서 연동해놨음
         public Action<float , float> RefreshHpUI;
 
-        public void SetHealth()
+        private void SetHealth()
         {
             if(RefreshHpUI != null)
                 RefreshHpUI.Invoke(_health, _maxHealth);
-        }
-
-        public void SetHealth(UnitHP hp)
-        {
-            _health = hp.GetHP();
-            _maxHealth = hp.GetMaxHP();
-            SetHealth();
         }
 
         public UnitHP(float maxHealth) {
             _maxHealth = maxHealth;
             _health = _maxHealth;
 
-        }
-
-        public UnitHP(float maxHealth, float currentHealth) :this(maxHealth)
-        {
-            _health = currentHealth;
             SetHealth();
         }
         public void GetDamage(float damage) {

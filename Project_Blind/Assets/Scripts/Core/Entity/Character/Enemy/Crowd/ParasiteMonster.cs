@@ -44,14 +44,14 @@ namespace Blind {
                 && _anim.GetBool("Skill Attack") == false 
                 && _anim.GetBool("Grab Attack") == false)
             {
-                
+                /*
                 if (!createAttackHitBox)
                 {
                     AttackHitBox();
                     createAttackHitBox = true;
-                }
+                }*/
 
-                
+                /*
                 float r = Random.Range(0, 100);
                 if (r > 50)
                 {
@@ -64,7 +64,9 @@ namespace Blind {
                 else
                 {
                     _anim.SetBool("Skill Attack", true);
-                }
+                }*/
+
+                _anim.SetBool("Grab Attack", true);
             }
         }
 
@@ -73,12 +75,14 @@ namespace Blind {
             if (Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(11, 3, 0), 3f, 13))
             {
                 Debug.Log("Grab Success");
-                _anim.SetBool("Success", true);
+                //_anim.SetBool("Grab", false);
+                _anim.Play("Grab Success");
             }
             else
             {
                 Debug.Log("Grab Fail");
-                _anim.SetBool("Fail", true);
+                //_anim.SetBool("Grab", false);
+                _anim.Play("Grab Failure");
             }
             _anim.SetBool("Grab Attack", false);
         }
@@ -86,17 +90,16 @@ namespace Blind {
         public override void AniAfterAttack()
         {
             base.AniAfterAttack();
-
-            _anim.SetBool("Fail", false);
-            _anim.SetBool("Success", false);
+            //_anim.SetBool("Grab Attack", false);
+            _anim.SetBool("Grab", false);
         }
-        
+        /*
         public void AttackHitBox()
         {
             Debug.Log("dd");
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
             col.size = new Vector2(7, 8);
-        }
+        }*/
     }
 }
