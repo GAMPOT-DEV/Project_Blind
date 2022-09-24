@@ -22,7 +22,7 @@ namespace Blind
             Data.attackCoolTime = 0.5f;
             Data.attackSpeed = 0.3f;
             Data.attackRange = new Vector2(9f, 8f);
-            Data.stunTime = 1f;
+            Data.stunTime = 1.5f;
             _patrolTime = 3f;
         }
 
