@@ -26,7 +26,7 @@ namespace Blind
         private Rigidbody2D rigid;
         public CinemachineImpulseSource _source;
 
-        [SerializeField] private Transform _spawnPoint;
+        [FormerlySerializedAs("_spawnPoint")] public Transform spawnPoint;
         [SerializeField] private Transform _bulletPoint;
         public bool _isHurtCheck;
         public float _lastClickTime;
@@ -109,6 +109,13 @@ namespace Blind
             _characterController2D.Move(_moveVector);
             _characterController2D.OnFixedUpdate();
             _playerposition = new Vector2(transform.position.x, transform.position.y + 2.5f);
+        }
+
+        public void SetPlayerValue(PlayerCharacterData playerCharacterData)
+        {
+            if (playerCharacterData == null) return;
+            Hp.SetHealth(playerCharacterData.Hp);
+            CurrentWaveGauge = playerCharacterData.CurrentWaveGage;
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
@@ -407,7 +414,7 @@ namespace Blind
             Hp.ResetHp();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
-            gameObject.transform.position = _spawnPoint.position;
+            gameObject.transform.position = spawnPoint.position;
         }
 
         public void GetItem()
