@@ -43,7 +43,7 @@ namespace Blind
         public bool _isInvincibility;
         public bool isPowerAttackEnd;
         public bool isPowerAttack;
-
+        public bool isParingCheck = false;
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
@@ -285,9 +285,9 @@ namespace Blind
         }
         
 
-        public void ReAttackSize(int x, int y)
+        public void ReAttackSize(int x, int y, int damege)
         {
-            _attack.Init(x, y);
+            _attack.Init(x, y, damege);
         }
         public void MeleeAttack()
         {
@@ -384,6 +384,11 @@ namespace Blind
         protected override void HurtMove(Facing enemyFacing)
         {
             _moveVector.x = Data.hurtMove * (float)enemyFacing;
+        }
+
+        public void OnCaught()
+        {
+            _animator.SetTrigger("Caught");
         }
 
         public void Deed()

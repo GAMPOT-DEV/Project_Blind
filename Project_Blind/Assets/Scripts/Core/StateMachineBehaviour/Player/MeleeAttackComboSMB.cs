@@ -17,13 +17,14 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _isOnClick = false;
-            _monoBehaviour.ReAttackSize(3,5);
+            _monoBehaviour.ReAttackSize(3,5, _monoBehaviour.Data.damage);
             _monoBehaviour.StopMoveY();
             if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
             if (!_monoBehaviour.isJump)
             {
-                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity);
+                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
                 _monoBehaviour.GroundedHorizontalMovement(true);
+                _monoBehaviour.UpdateJump();
             }
 
         }
@@ -58,7 +59,7 @@ namespace Blind
         {
             if (!_monoBehaviour.isJump)
             {
-                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity);
+                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
                 _monoBehaviour.UpdateJump();
                 _monoBehaviour.CheckForGrounded();
                 _monoBehaviour.GroundedHorizontalMovement(true);
