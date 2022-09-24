@@ -94,6 +94,7 @@ namespace Blind
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
+                _monoBehaviour.PlayAttackFx(4,_monoBehaviour.GetFacing());
 
                 if (ui == null)
                 {

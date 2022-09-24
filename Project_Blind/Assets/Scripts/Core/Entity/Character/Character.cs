@@ -56,7 +56,7 @@ namespace Blind
         }
         public void PlayAttackFx(int level, Facing face)
         {
-            Debug.Log(transform.GetChild(1).GetChild(level));
+            //Debug.Log(transform.GetChild(1).GetChild(level));
             transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(face);
         }
     }

@@ -18,7 +18,6 @@ public class PlayerFinder : MonoBehaviour
         Vector2 position = GetComponentInParent<Transform>().position;
         Vector2 direction = new Vector2(player.position.x - position.x, 0);
         direction.x /= Mathf.Abs(direction.x);
-        //direction.y /= Mathf.Abs(direction.y);
 
         return direction;
     }

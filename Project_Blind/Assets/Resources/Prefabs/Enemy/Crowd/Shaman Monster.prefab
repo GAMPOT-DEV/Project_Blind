@@ -106,7 +106,7 @@ Animator:
   m_GameObject: {fileID: 4350793403597091271}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c796a8364e8058e42a09f96375047068, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8c732913b8403ee40a23b0f3edb6ea5f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -167,15 +167,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8446ed06e6369a14ab64654cba5eb3b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data: {fileID: 0}
+  Data: {fileID: 11400000, guid: 3a50501bba7e74fa7ac124f938476dc2, type: 2}
   WallLayer:
     serializedVersion: 2
-    m_Bits: 0
-  WallCheck: {fileID: 0}
+    m_Bits: 128
+  WallCheck: {fileID: 1837201239422002073}
   CurrentStunGauge: 0
   MaxStunGauge: 10
   isPowerAttack: 0
-  Circle: {fileID: 0}
+  IsAttack: 0
+  Circle: {fileID: 1127694543582911680, guid: d1d50fcce58fbd241829541521180501, type: 3}
   _projectileSpeed: 10
 --- !u!50 &2129257590885779312
 Rigidbody2D:
@@ -361,7 +362,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6266647876468223023}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 0, z: 0}
+  m_LocalPosition: {x: 3.5, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
