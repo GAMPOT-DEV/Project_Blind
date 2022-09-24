@@ -51,6 +51,7 @@ namespace Blind {
                     createAttackHitBox = true;
                 }*/
 
+                /*
                 float r = Random.Range(0, 100);
                 if (r > 50)
                 {
@@ -63,7 +64,9 @@ namespace Blind {
                 else
                 {
                     _anim.SetBool("Skill Attack", true);
-                }
+                }*/
+
+                _anim.SetBool("Grab Attack", true);
             }
         }
 
@@ -72,12 +75,14 @@ namespace Blind {
             if (Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(11, 3, 0), 3f, 13))
             {
                 Debug.Log("Grab Success");
-                _anim.SetBool("Grab", true);
+                //_anim.SetBool("Grab", false);
+                _anim.Play("Grab Success");
             }
             else
             {
                 Debug.Log("Grab Fail");
-                _anim.SetBool("Grab", false);
+                //_anim.SetBool("Grab", false);
+                _anim.Play("Grab Failure");
             }
             _anim.SetBool("Grab Attack", false);
         }

@@ -192,7 +192,7 @@ namespace Blind
         protected virtual void updateDie()
         {
             gameObject.layer = 0;
-            if(_anim.GetBool("Dead") == false)
+            if (_anim.GetBool("Dead") == false)
             {
                 _anim.Play("Dead");
                 _anim.SetBool("Dead", true);
@@ -248,20 +248,6 @@ namespace Blind
             _anim.SetBool("Patrol", false);
         }
 
-        protected IEnumerator CoDie()
-        {
-            yield return new WaitForSeconds(1);
-            while (_sprite.color.a > 0)
-            {
-                var color = _sprite.color;
-                color.a -= (.25f * Time.deltaTime);
-
-                _sprite.color = color;
-                yield return null;
-            }
-            Destroy(gameObject);
-        }
-
         public IEnumerator CoStun()
         {
             _anim.SetBool("Stun", true);
@@ -310,13 +296,13 @@ namespace Blind
 
         public void AniAttackStart()
         {
+            IsAttack = false;
             _attack.EnableDamage();
         }
 
         public void AniAttackEnd()
         {
             _attack.DisableDamage();
-            IsAttack = false;
         }
 
         public void AniDestroy()
@@ -333,7 +319,8 @@ namespace Blind
             else
                 state = State.Patrol;
         }
-        
+
+        /*
         void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.CompareTag("Player"))
@@ -344,6 +331,6 @@ namespace Blind
                 : Facing.Right
                 ));
             }
-        }
+        }*/
     }
 }
