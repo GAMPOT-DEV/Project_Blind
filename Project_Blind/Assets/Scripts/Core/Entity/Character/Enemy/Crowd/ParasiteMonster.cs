@@ -30,7 +30,7 @@ namespace Blind {
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(7, 8);
+            _attack.Init(13, 10);
         }
 
         protected override void FixedUpdate()
@@ -40,7 +40,9 @@ namespace Blind {
 
         protected override void updateAttack()
         {
-            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
+            if (_anim.GetBool("Basic Attack") == false 
+                && _anim.GetBool("Skill Attack") == false 
+                && _anim.GetBool("Grab Attack") == false)
             {
                 /*
                 if (!createAttackHitBox)
@@ -48,16 +50,43 @@ namespace Blind {
                     AttackHitBox();
                     createAttackHitBox = true;
                 }*/
-                
-                if (Random.Range(0, 100) > 20)
+
+                float r = Random.Range(0, 100);
+                if (r > 50)
                 {
                     _anim.SetBool("Basic Attack", true);
+                }
+                else if (r <= 10)
+                {
+                    _anim.SetBool("Grab Attack", true);
                 }
                 else
                 {
                     _anim.SetBool("Skill Attack", true);
                 }
             }
+        }
+
+        public void AniGrab()
+        {
+            if (Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(11, 3, 0), 3f, 13))
+            {
+                Debug.Log("Grab Success");
+                _anim.SetBool("Grab", true);
+            }
+            else
+            {
+                Debug.Log("Grab Fail");
+                _anim.SetBool("Grab", false);
+            }
+            _anim.SetBool("Grab Attack", false);
+        }
+
+        public override void AniAfterAttack()
+        {
+            base.AniAfterAttack();
+            //_anim.SetBool("Grab Attack", false);
+            _anim.SetBool("Grab", false);
         }
         /*
         public void AttackHitBox()
