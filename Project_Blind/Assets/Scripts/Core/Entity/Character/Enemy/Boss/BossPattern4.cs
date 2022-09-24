@@ -32,6 +32,7 @@ namespace Blind
 
         public override Coroutine AttackPattern()
         {
+            Debug.Log(_collider);
             _collider.enabled = false;
             return StartCoroutine(attackPattern());
         }

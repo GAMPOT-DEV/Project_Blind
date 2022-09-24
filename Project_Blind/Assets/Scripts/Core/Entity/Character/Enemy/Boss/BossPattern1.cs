@@ -16,7 +16,7 @@ namespace Blind
 
         private void Init()
         {
-            player = GameObject.Find("Player(animation3)");
+            player = GameObject.Find("Player");
             _collider = rangeObject.GetComponent<BoxCollider2D>();
             rangeObject.transform.position = player.transform.position;
             RealAttackPostion = this.transform;
