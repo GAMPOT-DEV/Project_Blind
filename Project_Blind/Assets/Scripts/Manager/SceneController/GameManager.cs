@@ -20,6 +20,7 @@ namespace Blind
             // 나중에 고치면 좋을듯
             Player = ResourceManager.Instance.Instantiate("Player").GetComponent<PlayerCharacter>();
             Player.spawnPoint = SpawnPoint;
+            Debug.Log(SpawnPoint);
             Player.gameObject.transform.position = SpawnPoint.position;
             Player.transform.SetParent(GameObject.Find("Entity").transform);
             GameObject.Find("CM Virtual Camera").GetComponent<CinemachineVirtualCamera>().Follow = Player.transform;

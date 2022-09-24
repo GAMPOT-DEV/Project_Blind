@@ -240,7 +240,7 @@ MonoBehaviour:
   _playerposition: {x: 0, y: 0}
   Data: {fileID: 11400000, guid: 21d0741f5cd6f56409144bf3436bbc14, type: 2}
   _source: {fileID: 0}
-  _spawnPoint: {fileID: 0}
+  spawnPoint: {fileID: 0}
   _bulletPoint: {fileID: 5778886490676913870}
   _isHurtCheck: 0
   _lastClickTime: 0
@@ -251,6 +251,7 @@ MonoBehaviour:
   _isInvincibility: 0
   isPowerAttackEnd: 0
   isPowerAttack: 0
+  isParingCheck: 0
   maxWaveGauge: 30
   _currentWaveGauge: 30
   attackWaveGauge: 3
@@ -304,7 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitLayer:
     serializedVersion: 2
-    m_Bits: 49152
+    m_Bits: 50176
 --- !u!114 &4706548655785219384
 MonoBehaviour:
   m_ObjectHideFlags: 0

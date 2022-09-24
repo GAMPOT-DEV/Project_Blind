@@ -102,6 +102,20 @@ namespace Blind
                     _isParing = false;
                     Destroy(bossHandParing);
                 }
+                else if (_hitObj.GetComponent<Projectile>() != null)
+                {
+                    PlayerCharacter _player = GetComponent<PlayerCharacter>();
+                    _player.CharacterInvincible();
+                    if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
+                        _player.CurrentWaveGauge += _player.paringWaveGauge;
+                    else
+                        _player.CurrentWaveGauge = _player.maxWaveGauge;
+                    _player._source.GenerateImpulse();
+                    _player.isParingCheck = true;
+                    Time.timeScale = 0.5f;
+                    SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
+                    
+                }
             }
         }
     }
