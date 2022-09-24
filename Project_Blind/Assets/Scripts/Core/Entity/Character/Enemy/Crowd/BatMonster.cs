@@ -39,12 +39,12 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            /*
+            
             if (!createAttackHitBox)
             {
                 AttackHitBox();
                 createAttackHitBox = true;
-            }*/
+            }
 
             if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {

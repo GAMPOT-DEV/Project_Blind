@@ -296,13 +296,14 @@ namespace Blind
 
         public void AniAttackStart()
         {
-            IsAttack = false;
             _attack.EnableDamage();
         }
 
         public void AniAttackEnd()
         {
             _attack.DisableDamage();
+            IsAttack = false;
+            Destroy(col);
         }
 
         public void AniDestroy()
