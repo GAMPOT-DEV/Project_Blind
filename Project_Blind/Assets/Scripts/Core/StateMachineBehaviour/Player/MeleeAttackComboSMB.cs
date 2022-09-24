@@ -19,11 +19,17 @@ namespace Blind
             _isOnClick = false;
             _monoBehaviour.ReAttackSize(3,5);
             _monoBehaviour.StopMoveY();
-            SoundManager.Instance.Play("주인공 공격 사운드", Define.Sound.Effect);
+            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
+            if (!_monoBehaviour.isJump)
+            {
+                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity);
+                _monoBehaviour.GroundedHorizontalMovement(true);
+            }
+
         }
 
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10)
+            if (_monoBehaviour.isPowerAttack && _monoBehaviour.CurrentWaveGauge >= 10)
             {
                 animator.speed = 0.1f;
                 _checkForPowerAttack = true;
@@ -52,7 +58,7 @@ namespace Blind
         {
             if (!_monoBehaviour.isJump)
             {
-                _monoBehaviour.AirborneVerticalMovement(1f);
+                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity);
                 _monoBehaviour.UpdateJump();
                 _monoBehaviour.CheckForGrounded();
                 _monoBehaviour.GroundedHorizontalMovement(true);
@@ -67,21 +73,28 @@ namespace Blind
                 _isOnClick = true;
             }
 
-            if (_monoBehaviour._clickcount >= 2)
+            if (_monoBehaviour._clickcount >= 2 && _monoBehaviour.isJump)
             {
                 _monoBehaviour.MeleeAttackCombo1();
+                Debug.Log("dd");
+            }
+
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge >= 10)
+            {
+                _monoBehaviour.MeleeAttackCombo1();
+                _monoBehaviour.isPowerAttack = true;
             }
             
 
 
-            if ((_monoBehaviour.CheckForUpKey() && _checkForPowerAttack && !_powerAttack)
-                || (_monoBehaviour.isPowerAttackEnd &&!_powerAttack)){
+            if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack)){
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
                 _monoBehaviour.enableAttack();
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
+                _monoBehaviour.PlayAttackFx(4,_monoBehaviour.GetFacing());
 
                 if (ui == null)
                 {
@@ -93,6 +106,7 @@ namespace Blind
                 }
                 _powerAttack = true;
                 _checkForPowerAttack = false;
+                _monoBehaviour.isPowerAttack = false;
             }
 
         }
@@ -108,7 +122,6 @@ namespace Blind
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
             _powerAttack = false;
-            SoundManager.Instance.StopEffect();
         }
     }
 }

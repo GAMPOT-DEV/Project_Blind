@@ -13,11 +13,12 @@ namespace Blind
         {
             _isOnClick = false;
             _monoBehaviour.StopMoveY();
+            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
         }
 
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge > 10)
+            if (_monoBehaviour.isPowerAttack && _monoBehaviour.CurrentWaveGauge >= 10)
             {
                 animator.speed = 0.1f;
                 _checkForPowerAttack = true;
@@ -64,11 +65,14 @@ namespace Blind
             }
             if(_monoBehaviour._clickcount>=4)
                 _monoBehaviour.MeleeAttackCombo3();
-            if(_monoBehaviour._clickcount == 0)
-                _monoBehaviour.MeleeAttackComoEnd();
             
-            if ((_monoBehaviour.CheckForUpKey() && _checkForPowerAttack&& !_powerAttack)
-                || (_monoBehaviour.isPowerAttackEnd &&!_powerAttack))
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge >= 10)
+            {
+                _monoBehaviour.MeleeAttackCombo3();
+                _monoBehaviour.isPowerAttack = true;
+            }
+            
+            if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack))
             {
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
@@ -76,6 +80,7 @@ namespace Blind
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
+                _monoBehaviour.PlayAttackFx(6,_monoBehaviour.GetFacing());
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();
@@ -86,6 +91,7 @@ namespace Blind
                 }
                 _powerAttack = true;
                 _checkForPowerAttack = false;
+                _monoBehaviour.isPowerAttack = false;
             }
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -95,7 +101,6 @@ namespace Blind
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
             _powerAttack = false;
-            SoundManager.Instance.StopEffect();
         }
     }
 }

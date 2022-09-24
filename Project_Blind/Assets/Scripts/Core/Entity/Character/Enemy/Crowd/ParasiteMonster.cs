@@ -30,7 +30,7 @@ namespace Blind {
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(7, 8);
+            _attack.Init(13, 10);
         }
 
         protected override void FixedUpdate()
@@ -38,88 +38,68 @@ namespace Blind {
             base.FixedUpdate();
         }
 
-        protected override void updateChase()
-        {
-            if (_anim.GetBool("Chase") == false)
-            {
-                _anim.SetBool("Chase", true);
-            }
-
-            if (playerFinder.MissPlayer())
-            {
-                state = State.Patrol;
-                _anim.SetBool("Chase", false);
-                return;
-            }
-
-            if (attackSense.Attackable())
-            {
-                state = State.Attack;
-                _anim.SetBool("Chase", false);
-                return;
-            }
-
-            _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
-        }
-
         protected override void updateAttack()
         {
-            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
+            if (_anim.GetBool("Basic Attack") == false 
+                && _anim.GetBool("Skill Attack") == false 
+                && _anim.GetBool("Grab Attack") == false)
             {
-                if (Random.Range(0, 100) > 20)
+                /*
+                if (!createAttackHitBox)
+                {
+                    AttackHitBox();
+                    createAttackHitBox = true;
+                }*/
+
+                /*
+                float r = Random.Range(0, 100);
+                if (r > 50)
                 {
                     _anim.SetBool("Basic Attack", true);
                 }
+                else if (r <= 10)
+                {
+                    _anim.SetBool("Grab Attack", true);
+                }
                 else
                 {
-                    isPowerAttack = true;
                     _anim.SetBool("Skill Attack", true);
+                }*/
 
-                }
+                _anim.SetBool("Grab Attack", true);
             }
         }
 
-        protected override void updateHitted()
+        public void AniGrab()
         {
-
-            if (Co_hitted == null)
+            if (Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(11, 3, 0), 3f, 13))
             {
-                StopAllCoroutines();
-                StartCoroutine(CoHitted());
-            }
-
-            Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
-            {
-                hittedVelocity = new Vector2(-0.2f, 0);
+                Debug.Log("Grab Success");
+                //_anim.SetBool("Grab", false);
+                _anim.Play("Grab Success");
             }
             else
             {
-                hittedVelocity = new Vector2(0.2f, 0);
+                Debug.Log("Grab Fail");
+                //_anim.SetBool("Grab", false);
+                _anim.Play("Grab Failure");
             }
-
-            _characterController2D.Move(hittedVelocity);
+            _anim.SetBool("Grab Attack", false);
         }
 
-        protected override void updateStun()
+        public override void AniAfterAttack()
         {
-            StopAllCoroutines();
-            Co_stun = StartCoroutine(CoStun());
+            base.AniAfterAttack();
+            //_anim.SetBool("Grab Attack", false);
+            _anim.SetBool("Grab", false);
         }
-
-        protected override void updateDie()
+        /*
+        public void AttackHitBox()
         {
-            Co_die = StartCoroutine(CoDie());
-        }
-
-        private IEnumerator CoAttack()
-        {
-            yield return new WaitForSeconds(0.2f);
-            _attack.EnableDamage();
-            yield return new WaitForSeconds(0.5f);
-            _attack.DisableDamage();
-
-            Co_attack = null;
-        }
+            Debug.Log("dd");
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
+            col.size = new Vector2(7, 8);
+        }*/
     }
 }

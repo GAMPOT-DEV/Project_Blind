@@ -6,6 +6,7 @@ namespace Blind.Abyss
     [RequireComponent(typeof(Collider2D))]
     public class ExitPoint : MonoBehaviour
     {
+        public Stage stage;
         private Collider2D _collider;
 
         public void Awake()
@@ -21,7 +22,7 @@ namespace Blind.Abyss
         {
             if (col.CompareTag("Player"))
             {
-                AbyssSceneManager.Instance.MoveNextStage();
+                stage.NextStage();
             }
         }
     }

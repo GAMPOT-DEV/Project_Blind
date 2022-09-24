@@ -10,7 +10,7 @@ namespace Blind
         private Coroutine Co_hitted;
         private Coroutine Co_stun;
         private Coroutine Co_die;
-        
+        [SerializeField] private Transform AttackHitBoxRange;
 
         protected void Awake()
         {
@@ -24,7 +24,6 @@ namespace Blind
             Data.attackRange = new Vector2(9f, 8f);
             Data.stunTime = 1f;
             _patrolTime = 3f;
-
         }
 
         private void Start()
@@ -40,6 +39,13 @@ namespace Blind
 
         protected override void updateAttack()
         {
+            /*
+            if (!createAttackHitBox)
+            {
+                AttackHitBox();
+                createAttackHitBox = true;
+            }*/
+
             if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
             {
                 if (Random.Range(0, 100) > 20)
@@ -54,42 +60,12 @@ namespace Blind
             }
         }
 
-        protected override void updateHitted()
+        public void AttackHitBox()
         {
-
-            if (Co_hitted == null)
-            {
-                StopAllCoroutines();
-                StartCoroutine(CoHitted());
-            }
-
-            Vector2 hittedVelocity = Vector2.zero;
-            if (playerFinder.ChasePlayer().x > 0) //플레이어가 오른쪽
-            {
-                hittedVelocity = new Vector2(-0.2f, 0);
-            }
-            else
-            {
-                hittedVelocity = new Vector2(0.2f, 0);
-            }
-
-            _characterController2D.Move(hittedVelocity);
-        }
-
-        protected override void updateStun()
-        {
-            StopAllCoroutines();
-            Co_stun = StartCoroutine(CoStun());
-        }
-
-        private IEnumerator CoAttack()
-        {
-            yield return new WaitForSeconds(0.2f);
-            _attack.EnableDamage();
-            yield return new WaitForSeconds(0.5f);
-            _attack.DisableDamage();
-
-            Co_attack = null;
+            Debug.Log("dd");
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
+            col.size = new Vector2(7, 10);
         }
     }
 }

@@ -33,7 +33,8 @@ namespace Blind
         Collider2D[] m_GroundColliders = new Collider2D[3];
         Vector2[] m_RaycastPositions = new Vector2[3];
         public bool isDown = false;
-        
+        public bool isDie = false;
+
         public Vector2 Velocity { get; private set; }
         public bool IsGrounded { get; protected set; }
         public ContactFilter2D ContactFilter { get { return m_ContactFilter; } }
@@ -73,7 +74,7 @@ namespace Blind
             _previousPosition = _rigidBody2D.position;
             _currentPosition= _previousPosition + _nextMovement;
             Velocity = (_currentPosition - _previousPosition) / Time.deltaTime;
-            _rigidBody2D.MovePosition(_currentPosition);
+            if(!isDie) _rigidBody2D.MovePosition(_currentPosition);
             _nextMovement = Vector2.zero;
             
             CheckCapsuleEndCollisions();

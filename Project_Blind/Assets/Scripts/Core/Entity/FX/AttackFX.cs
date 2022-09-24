@@ -13,6 +13,7 @@ namespace Blind
         private void Awake()
         {
             _particleSystem = GetComponent<ParticleSystem>();
+            _particleSystem.Stop();
             _character = transform.parent.GetComponent<Character>();
         }
 
