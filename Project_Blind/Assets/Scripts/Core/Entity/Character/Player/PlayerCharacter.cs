@@ -490,7 +490,7 @@ namespace Blind
         }
 
         public void Log() {
-            Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
+            //Debug.Log(_characterController2D.IsGrounded ? "땅" : "공중");
         }
         public void DebuffOn()
         {

@@ -172,8 +172,12 @@ namespace Blind
 
         protected virtual void updateStun()
         {
-            throw new NotImplementedException();
+            if (co_stun == null)
+            {
+                co_stun = StartCoroutine(CoStun());
+            }
         }
+
         protected virtual void updateHitted()
         {
             _anim.SetTrigger("Hurt");
@@ -217,10 +221,22 @@ namespace Blind
             }
         }
 
+        public void OnStun()
+        {
+            state = State.Stun;
+        }
+
+
+
         protected override void onHurt()
         {
             base.onHurt();
             state = State.Hitted;
+            if (co_stun != null)
+            {
+                StopCoroutine(co_stun);
+                _anim.SetBool("Stun", false);
+            }
         }
 
         protected void Flip()
@@ -253,12 +269,7 @@ namespace Blind
             _anim.SetBool("Stun", true);
             yield return new WaitForSeconds(Data.stunTime);
 
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
+            NextAction();
 
             co_stun = null;
             _anim.SetBool("Stun", false);
@@ -275,12 +286,7 @@ namespace Blind
 
         public virtual void AniAfterAttack()
         {
-            if (attackSense.Attackable())
-                state = State.Attack;
-            else if (playerFinder.FindPlayer())
-                state = State.Chase;
-            else
-                state = State.Default;
+            NextAction();
 
             isPowerAttack = false;
             _anim.SetBool("Basic Attack", false);
@@ -319,18 +325,5 @@ namespace Blind
             else
                 state = State.Patrol;
         }
-
-        /*
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                player.GetComponent<Character>().HittedWithKnockBack(new AttackInfo(1,
-                player.gameObject.transform.position.x < transform.position.x
-                ? Facing.Left
-                : Facing.Right
-                ));
-            }
-        }*/
     }
 }
