@@ -23,14 +23,7 @@ namespace Blind
         public override void EnemyDibuff()
         {
             _gameobject._attack.DisableDamage();
-            if (_gameobject.CurrentStunGauge >= _gameobject.MaxStunGauge)
-            {
-                _gameobject.CoStun();
-            }
-            else
-            {
-                //_gameobject.OnHurt();
-            }
+            _gameobject.OnStun();
         }
     }
 }
