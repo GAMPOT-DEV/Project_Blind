@@ -54,7 +54,6 @@ namespace Blind
                 }
                 else
                 {
-                    isPowerAttack = true;
                     _anim.SetBool("Skill Attack", true);
                 }
             }
@@ -62,7 +61,6 @@ namespace Blind
 
         public void AttackHitBox()
         {
-            Debug.Log("dd");
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
             col.size = new Vector2(7, 10);

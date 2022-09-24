@@ -27,11 +27,10 @@ namespace Blind
 
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
-        public bool isPowerAttack = false;
         public bool IsAttack = false;
 
         private Coroutine co_patrol;
-        private Coroutine co_stun;
+        protected Coroutine co_stun;
         private Coroutine co_default;
 
         private State tmp = State.Die;
@@ -195,13 +194,14 @@ namespace Blind
         
         protected virtual void updateDie()
         {
-            gameObject.layer = 0;
+            gameObject.layer = 16;
             if (_anim.GetBool("Dead") == false)
             {
                 _anim.Play("Dead");
                 _anim.SetBool("Dead", true);
             }
             DeathCallback.Invoke();
+            Destroy(gameObject, 3f);
         }
 
         protected virtual void updateAvoid()
@@ -221,7 +221,7 @@ namespace Blind
             }
         }
 
-        public void OnStun()
+        public virtual void OnStun()
         {
             state = State.Stun;
             Destroy(col);
@@ -263,7 +263,7 @@ namespace Blind
             _anim.SetBool("Patrol", false);
         }
 
-        public IEnumerator CoStun()
+        public virtual IEnumerator CoStun()
         {
             _anim.SetBool("Stun", true);
             _anim.SetBool("Basic Attack", false);
@@ -289,7 +289,6 @@ namespace Blind
         {
             NextAction();
 
-            isPowerAttack = false;
             _anim.SetBool("Basic Attack", false);
             _anim.SetBool("Skill Attack", false);
             createAttackHitBox = false;
