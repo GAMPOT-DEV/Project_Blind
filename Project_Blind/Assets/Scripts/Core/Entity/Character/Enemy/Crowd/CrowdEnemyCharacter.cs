@@ -224,6 +224,7 @@ namespace Blind
         public void OnStun()
         {
             state = State.Stun;
+            Destroy(col);
         }
 
         protected override void onHurt()
@@ -309,6 +310,7 @@ namespace Blind
         public void AniAttackEnd()
         {
             _attack.DisableDamage();
+            Destroy(col);
         }
 
         public void AniDestroy()
