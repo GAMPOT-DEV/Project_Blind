@@ -8,10 +8,13 @@ namespace Blind {
         private int _damage = 1;
         private Vector2 dir;
         private bool isParing = false;
+        private GameObject monster;
+        private float speed;
 
-        public void SetProjectile(Vector2 dir, int damage, float speed)
+        public void SetProjectile(Vector2 dir, int damage, float speed, GameObject shaman)
         {
             this.dir = dir;
+            this.speed = speed;
             gameObject.GetComponent<Rigidbody2D>().velocity = this.dir.normalized * speed;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.Rotate(new Vector3(0, 0, angle));
@@ -22,13 +25,11 @@ namespace Blind {
         {
             if (isParing)
             {
-                if (collision.CompareTag("Enemy"))
+                if (collision.CompareTag("Enemy") && collision.gameObject.layer != 16)
                 {
-                    EnemyCharacter enemy = collision.gameObject.GetComponent<EnemyCharacter>();
-                    enemy.Hp.GetDamage(_damage);
-                }
-                else if (collision.gameObject.layer == 6)
-                {
+                    CrowdEnemyCharacter enemy = collision.gameObject.GetComponent<CrowdEnemyCharacter>();
+                    enemy.OnStun();
+
                     Destroy(gameObject);
                 }
             }
@@ -39,10 +40,6 @@ namespace Blind {
                     Facing facing = dir.x >= 0 ? Facing.Right : Facing.Left;
                     player.HittedWithKnockBack(new AttackInfo(_damage,facing));
 
-                    Destroy(gameObject);
-                }
-                else if (collision.gameObject.layer == 6)
-                {
                     Destroy(gameObject);
                 }
             }
@@ -59,12 +56,16 @@ namespace Blind {
             }
         }
 
-        public void Paring()
+        public void OnParing()
         {
+            Debug.Log("패링 성공");
             isParing = true;
             StopCoroutine(CoDestroy());
-            gameObject.GetComponent<Rigidbody2D>().velocity
-                = GetComponentInParent<Transform>().position;
+            Vector2 dir = monster.transform.position - gameObject.transform.position;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.Rotate(new Vector3(0, 0, angle));
+
+            gameObject.GetComponent<Rigidbody2D>().velocity = dir.normalized * speed;
             StartCoroutine(CoDestroy());
         }
 
