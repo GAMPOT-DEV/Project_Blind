@@ -226,8 +226,6 @@ namespace Blind
             state = State.Stun;
         }
 
-
-
         protected override void onHurt()
         {
             base.onHurt();
@@ -267,12 +265,14 @@ namespace Blind
         public IEnumerator CoStun()
         {
             _anim.SetBool("Stun", true);
-            yield return new WaitForSeconds(Data.stunTime);
+            _anim.SetBool("Basic Attack", false);
+            _anim.SetBool("Skill Attack", false);
 
+            yield return new WaitForSeconds(Data.stunTime);
+            _anim.SetBool("Stun", false);
             NextAction();
 
             co_stun = null;
-            _anim.SetBool("Stun", false);
         }
 
         public IEnumerator CoDefault()
