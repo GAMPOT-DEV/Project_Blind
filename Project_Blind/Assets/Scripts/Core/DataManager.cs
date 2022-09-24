@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -12,11 +11,25 @@ namespace Blind
     {
         Dictionary<Key, Value> MakeDict();
     }
+
     public class DataManager : Manager<DataManager>
     {
         public Dictionary<string, Data.Conversation> ConversationDict { get; private set; } = new Dictionary<string, Data.Conversation>();
         public Dictionary<int, Data.Clue> ClueDict { get; private set; } = new Dictionary<int, Data.Clue>();
         public Dictionary<int, Data.BagItem> BagItemDict { get; private set; } = new Dictionary<int, Data.BagItem>();
+
+        private PlayerCharacterData _playerCharacterData = null;
+        public PlayerCharacterData PlayerCharacterDataValue
+        {
+            get => _playerCharacterData;
+            set
+            {
+                _playerCharacterData = value;
+                GameData.PlayerCharacterData = _playerCharacterData;
+                SaveGameData();
+            }
+        }
+        
         protected override void Awake()
         {
             base.Awake();
