@@ -12,16 +12,26 @@ namespace Blind
         [SerializeField] private AudioClip bgm;
         [SerializeField] private Transform SpawnPoint;
         public PlayerCharacter Player;
+
+        public Transform Point = null;
+
         private InputController _inputController; 
         protected override void Awake()
         {
             base.Awake();
             // 플레이어 할당하는 코드
             // 나중에 고치면 좋을듯
-            Player = ResourceManager.Instance.Instantiate("Player2").GetComponent<PlayerCharacter>();
+            Player = ResourceManager.Instance.Instantiate("Player").GetComponent<PlayerCharacter>();
+
+            //UI_TestConversation ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestConversation>();
+            //ui.Title = "Test2";
+            //ui.Owner = null;
+            //ui.SetPosition(Player.transform.position , Vector3.right * 30);
+        }
+
+        public void Start()
+        {
             Player.spawnPoint = SpawnPoint;
-            Debug.Log(SpawnPoint);
-            Player.gameObject.transform.position = SpawnPoint.position;
             Player.transform.SetParent(GameObject.Find("Entity").transform);
             GameObject.Find("CM Virtual Camera").GetComponent<CinemachineVirtualCamera>().Follow = Player.transform;
             _inputController = InputController.Instance;
@@ -29,15 +39,15 @@ namespace Blind
             var data = DataManager.Instance.PlayerCharacterDataValue;
             if (data != null)
             {
-                Debug.Log(data.Hp.GetHP() + "체력");
                 Player.SetPlayerValue(data);
             }
-
-            //UI_TestConversation ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestConversation>();
-            //ui.Title = "Test2";
-            //ui.Owner = null;
-            //ui.SetPosition(Player.transform.position , Vector3.right * 30);
+            else
+            {
+                Player.transform.position = SpawnPoint.position;
+            }
+            
         }
+
         protected void FixedUpdate()
         {
             if(Player != null)

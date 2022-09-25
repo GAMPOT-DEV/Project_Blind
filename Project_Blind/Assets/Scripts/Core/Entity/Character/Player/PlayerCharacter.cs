@@ -116,6 +116,7 @@ namespace Blind
             if (playerCharacterData == null) return;
             Hp.SetHealth(playerCharacterData.Hp);
             CurrentWaveGauge = playerCharacterData.CurrentWaveGage;
+            transform.position = SceneController.SetDestination(playerCharacterData.DestinationTag);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
@@ -205,6 +206,7 @@ namespace Blind
                 Debug.Log(_moveVector.y);
                 var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
                 obj.transform.position = transform.position + Vector3.up * 2;
+                SoundManager.Instance.Play("Jump",Define.Sound.Effect);
                 _animator.SetTrigger("Jump");
             }
         }
