@@ -75,6 +75,7 @@ namespace Blind
             for (int i = 0; i < hitCount; i++)
             {
                 _hitObj = _result[i];
+                Debug.Log(_hitObj.name);    
                 if (_hitObj.GetComponent<BatMonster>() != null)
                 {
                     Debug.Log("DD");
@@ -104,6 +105,7 @@ namespace Blind
                 }
                 else if (_hitObj.GetComponent<Projectile>() != null)
                 {
+                    Debug.Log("패링 확인"); 
                     PlayerCharacter _player = GetComponent<PlayerCharacter>();
                     _player.CharacterInvincible();
                     if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
@@ -114,7 +116,7 @@ namespace Blind
                     _player.isParingCheck = true;
                     Time.timeScale = 0.5f;
                     SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
-                    
+                    _hitObj.GetComponent<Projectile>().OnParing();
                 }
             }
         }
