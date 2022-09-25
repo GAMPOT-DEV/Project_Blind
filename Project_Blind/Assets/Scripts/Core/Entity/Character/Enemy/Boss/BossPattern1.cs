@@ -50,7 +50,6 @@ namespace Blind
         public override Coroutine AttackPattern()
         {
             Init();
-            rangeObject.transform.position = player.transform.position;
             int AttackRange = RandomRange();
             int RealAttack = RandomRange(AttackRange);
             return StartCoroutine(SettingAttack(AttackRange, RealAttack));
