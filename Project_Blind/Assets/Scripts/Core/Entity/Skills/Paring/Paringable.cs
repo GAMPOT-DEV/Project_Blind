@@ -62,29 +62,34 @@ namespace Blind
         {
             if (!_isParing) return;
             
-            int facing = -1;
-            if (_sprite == null)
-            {
-                if (_skeletonComponent.Skeleton.FlipX != _isFlip) facing = 1;
-            }
-            else
-            {
-                if (_sprite.flipX != _isFlip) facing = 1;
-            }
-            Vector2 pointA = new Vector2(gameObject.GetComponent<PlayerCharacter>()._playerposition.x + facing, gameObject.GetComponent<PlayerCharacter>()._playerposition.y);
+            var entity = gameObject.GetComponent<Character>();
+            var facing = entity.GetFacing();
+             
+            var position = transform.position;
+            var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
+             
             hitbox = pointA;
-            if (facing == 1) size = new Vector2(pointA.x + x, pointA.y - y);
-            else size = new Vector2(pointA.x - x, pointA.y - y);
+            size = new Vector2(pointA.x + ((float)facing * x), pointA.y + y);
+
             int hitCount = Physics2D.OverlapArea(pointA, size, _filter, _result);
             for (int i = 0; i < hitCount; i++)
             {
                 _hitObj = _result[i];
+                Debug.Log(_hitObj.name);    
                 if (_hitObj.GetComponent<BatMonster>() != null)
                 {
+                    Debug.Log("DD");
                     ParingEffect<BatMonster>.Initialise(_hitObj.GetComponent<BatMonster>());
                     BatMonsterParing batMonsterparing = _hitObj.gameObject.AddComponent<BatMonsterParing>();
                     batMonsterparing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
-                    batMonsterparing.EnemyDibuff();
+                    _isParing = false;
+                    Destroy(batMonsterparing);
+                }
+                else if (_hitObj.GetComponent<ParasiteMonster>() != null)
+                {
+                    ParingEffect<ParasiteMonster>.Initialise(_hitObj.GetComponent<ParasiteMonster>());
+                    ParasiteMonsterParing batMonsterparing = _hitObj.gameObject.AddComponent<ParasiteMonsterParing>();
+                    batMonsterparing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
                     _isParing = false;
                     Destroy(batMonsterparing);
                 }
@@ -97,6 +102,20 @@ namespace Blind
                     bossHandParing.EnemyDibuff();
                     _isParing = false;
                     Destroy(bossHandParing);
+                }
+                else if (_hitObj.GetComponent<Projectile>() != null)
+                {
+                    Debug.Log("패링 확인"); 
+                    PlayerCharacter _player = GetComponent<PlayerCharacter>();
+                    _player.CharacterInvincible();
+                    if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
+                        _player.CurrentWaveGauge += _player.paringWaveGauge;
+                    else
+                        _player.CurrentWaveGauge = _player.maxWaveGauge;
+                    _player.isParingCheck = true;
+                    Time.timeScale = 0.5f;
+                    SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
+                    _hitObj.GetComponent<Projectile>().OnParing();
                 }
             }
         }

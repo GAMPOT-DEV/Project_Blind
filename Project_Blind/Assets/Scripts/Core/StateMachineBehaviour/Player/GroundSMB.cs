@@ -11,6 +11,8 @@ namespace Blind
             _monoBehaviour.Log();
             _monoBehaviour.CheckForGrounded();
             _monoBehaviour.StopMoveY();
+            _monoBehaviour.isPowerAttack = false;
+            _monoBehaviour._characterController2D.isDie = false;
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
@@ -36,6 +38,15 @@ namespace Blind
                 _monoBehaviour._lastClickTime = Time.time;
                 _monoBehaviour._clickcount++;
                 _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
+            }
+
+            if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge >= 10)
+            {
+                _monoBehaviour.MeleeAttack();
+                _monoBehaviour._lastClickTime = Time.time;
+                _monoBehaviour._clickcount++;
+                _monoBehaviour._clickcount = Mathf.Clamp(_monoBehaviour._clickcount, 0, 4);
+                _monoBehaviour.isPowerAttack = true;
             }
             if(_monoBehaviour.CheckForDeed())
             {

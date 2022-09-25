@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +10,12 @@ namespace Blind
         protected CharacterController2D _characterController2D;
         protected Rigidbody2D rigid;
         protected SpriteRenderer _sprite;
+        protected CapsuleCollider2D _col;
 
         [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
 
         protected GameObject player;
-        protected MeleeAttackable _attack;
+        public MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
         protected Transform startingPosition;
@@ -23,8 +25,12 @@ namespace Blind
 
         // HP UI
         protected UI_UnitHP _unitHPUI = null;
-
         
+        //콜백 함수 델리게이트들
+        public delegate void onDeath();
+
+        public onDeath DeathCallback = () => {};
+
         protected void Awake()
         {
             base.Awake(Data);
@@ -34,6 +40,7 @@ namespace Blind
             rigid = GetComponent<Rigidbody2D>();
             CreateHpUI();
             playerFinder = GetComponentInChildren<PlayerFinder>();
+            _col = GetComponent<CapsuleCollider2D>();
         }
 
         protected void CreateHpUI()
@@ -51,22 +58,16 @@ namespace Blind
             _unitHPUI.SetPosition(transform.position, Vector3.up * 9);
         }
 
-        public bool ReturnFacing()
+        public override Facing GetFacing()
         {
             if (transform.localScale.x > 0)
-                return true;
-            else return false;
+                return Facing.Right;
+            else return Facing.Left;
         }
 
-        public void hitted(int dir)
+        public override void HitSuccess()
         {
-            Debug.Log("Enemy Hitted !");
-            StartCoroutine(CoHitted());
-        }
-
-        protected virtual IEnumerator CoHitted()
-        {
-            return null;
+            return;
         }
 
         protected override void onHurt()
@@ -79,5 +80,6 @@ namespace Blind
             _characterController2D.Move(new Vector2((float)enemyFacing*1, 0));
             return;
         }
+        
     }
 }

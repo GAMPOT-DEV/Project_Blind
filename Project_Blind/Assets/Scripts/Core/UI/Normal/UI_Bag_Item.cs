@@ -57,7 +57,7 @@ namespace Blind
         }
         private void PushItemIcon()
         {
-            _owner.ShowDetailDesc(ItemId);
+            _owner.ShowDetailDesc((Define.BagItem)ItemId);
         }
     }
 }

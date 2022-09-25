@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   maxHp: 20
-  jumpSpeed: 1
+  jumpSpeed: 0.7
   jumpAbortSpeedReduction: 10
   gravity: 3
   maxSpeed: 5
   groundAcceleration: 100
   groundDeceleration: 100
-  airborneAccelProportion: 0.219
-  airborneDecelProportion: 0.229
-  dashSpeed: 20
+  airborneAccelProportion: 0
+  airborneDecelProportion: 0
+  dashSpeed: 15
   defaultTime: 1
   attackMove: 1
   maxComboDelay: 0
@@ -29,6 +29,6 @@ MonoBehaviour:
   attack_x: 2
   attack_y: 2
   damage: 2
-  powerAttackdamage: 2
-  paring_x: 2
-  paring_y: 2
+  powerAttackdamage: 4
+  paring_x: 3
+  paring_y: 4

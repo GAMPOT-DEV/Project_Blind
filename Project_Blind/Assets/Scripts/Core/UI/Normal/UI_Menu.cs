@@ -133,6 +133,7 @@ namespace Blind
             DataManager.Instance.SaveGameData();
             Time.timeScale = 1;
             _settingUI.GetComponent<UI_Setting>().CloseUI();
+            _clueUI.GetComponent<UI_Clue>().CloseUI();
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.CloseNormalUI(this);
         }

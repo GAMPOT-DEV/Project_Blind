@@ -35,6 +35,7 @@ public class Define
         장산범입구,
         장산범방,
         맵테스트,
+        숲맵테스트,
     }
 
     public enum Sound
@@ -86,7 +87,33 @@ public class Define
         Vertical,
         Skill,
         ChangeSlot,
-        ItemT
+        ItemT,
+        PowerAttack
+    }
+    public enum ClueItem
+    {
+        Unknown=0,
+
+        TestClue1 = 1,
+        TestClue2 = 2,
+        TestClue3 = 3,
+        TestClue4 = 4,
+        TestClue5 = 5,
+        TestClue6 = 6,
+        TestClue7 = 7,
+    }
+
+    public enum BagItem
+    {
+        Unknown = 0,
+
+        TestItem1 = 1,
+        TestItem2 = 2,
+        TestItem3 = 3,
+        TestItem4 = 4,
+        TestItem5 = 5,
+        TestItem6 = 6,
+        TestItem7 = 7,
     }
 }
 
