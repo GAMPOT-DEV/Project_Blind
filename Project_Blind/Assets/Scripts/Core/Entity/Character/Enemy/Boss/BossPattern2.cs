@@ -11,13 +11,15 @@ namespace Blind
         {
             _floorStart = _gameobject._floorStart;
             _floorEnd = _gameobject._floorEnd;
-            transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 88f);
+            transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z * 80);
             Debug.Log(transform.rotation.z);
         }
         public override Coroutine AttackPattern()
         {
             Init();
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
+            bossHand.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z + 80);
+            
             bossHand.CheckBossPattern(false);
             int range = RandomRange();
             if (range == 0)
