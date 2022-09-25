@@ -7,11 +7,8 @@ namespace Blind
     /// <summary>
     /// 물기 패턴
     /// </summary>
-    [RequireComponent(typeof(BoxCollider2D))]
     public class BossPattern4: BossAttackPattern<FirstBossEnemy>
     {
-        private BoxCollider2D _collider;
-        
         [SerializeField] private float damage = 1f;
         [SerializeField] private int MaxHitCount = 1;
         [SerializeField] private float AttackTime = 1f;
@@ -19,10 +16,18 @@ namespace Blind
         
         private Vector2 _originPos;
         private Vector2 _playerPos;
+
+        private Chin _upperChin;
+        private Chin _lowerChin;
+
+        private void Awake()
+        {
+            _upperChin = transform.GetChild(0).GetComponent<Chin>();
+            _lowerChin = transform.GetChild(1).GetComponent<Chin>();
+        }
+
         public void Start()
         {
-            _collider = GetComponent<BoxCollider2D>();
-            
             var originTransform = transform.position;
             _originPos = new Vector2(originTransform.x,originTransform.y); // 기존 포지션 저장
             
@@ -32,8 +37,6 @@ namespace Blind
 
         public override Coroutine AttackPattern()
         {
-            Debug.Log(_collider);
-            _collider.enabled = false;
             return StartCoroutine(attackPattern());
         }
 
@@ -67,7 +70,6 @@ namespace Blind
             
             float curTime = 0;
             
-            _collider.enabled = true;
             while (curTime < AttackTime)
             {
                 curTime += Time.deltaTime;
@@ -75,7 +77,6 @@ namespace Blind
                 transform.position = new Vector3(nowPos.x,nowPos.y,transform.position.z); 
                 yield return null;
             }
-            _collider.enabled = false;
             transform.position = _originPos;
             yield return null;
         }
