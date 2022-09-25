@@ -115,12 +115,29 @@ public class Define
         TestItem7 = 7,
     }
 
+    public enum TalismanItem
+    {
+        Unknown = 0,
+
+        TestTalisman1 = 1,
+        TestTalisman2 = 2,
+        TestTalisman3 = 3,
+        TestTalisman4 = 4,
+        TestTalisman5 = 5,
+        TestTalisman6 = 6,
+        TestTalisman7 = 7,
+    }
     public enum ScriptTitle
     {
         Unknown,
 
         Test1,
         Test2,
+    }
+    public enum TalismanAbility
+    {
+        STR,
+        DEX,
     }
 }
 

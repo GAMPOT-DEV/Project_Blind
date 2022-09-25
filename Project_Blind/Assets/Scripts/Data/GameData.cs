@@ -29,6 +29,9 @@ namespace Blind
         public List<ClueInfo> clueInfos = new List<ClueInfo>();
         #endregion
 
+        public List<TalismanInfo> talismanInfos = new List<TalismanInfo>();
+        public int currEquipCnt = 0;
+
         public List<BagItemInfo> bagItemInfos = new List<BagItemInfo>();
     }
     [Serializable]
@@ -36,6 +39,13 @@ namespace Blind
     {
         public int slot;
         public int itemId;
+    }
+    [Serializable]
+    public class TalismanInfo
+    {
+        public int slot;
+        public int itemId;
+        public bool equiped;
     }
     [Serializable]
     public class BagItemInfo
@@ -74,6 +84,47 @@ namespace Blind
             clueInfos.Clear();
             ClueInfoBySlot.Clear();
             ClueInfoById.Clear();
+        }
+        #endregion
+        #region Talisman
+        public Dictionary<int, TalismanInfo> TalismanInfoBySlot { get; private set; } = new Dictionary<int, TalismanInfo>();
+        public Dictionary<int, TalismanInfo> TalismanInfoById { get; private set; } = new Dictionary<int, TalismanInfo>();
+        public void MakeTalismanDict()
+        {
+            foreach (TalismanInfo talismanInfo in talismanInfos)
+            {
+                TalismanInfoBySlot.Add(talismanInfo.slot, talismanInfo);
+                TalismanInfoById.Add(talismanInfo.itemId, talismanInfo);
+            }
+        }
+        public void AddTalismanItem(TalismanInfo talisman)
+        {
+            talismanInfos.Add(talisman);
+            TalismanInfoBySlot.Add(talisman.slot, talisman);
+            TalismanInfoById.Add(talisman.itemId, talisman);
+        }
+        public void DeleteTalismanItem(TalismanInfo talisman)
+        {
+            talismanInfos.Remove(talisman);
+            TalismanInfoBySlot.Remove(talisman.slot);
+            TalismanInfoById.Remove(talisman.itemId);
+        }
+        public void EquipTalismanItem(TalismanInfo talisman)
+        {
+            talisman.equiped = true;
+            currEquipCnt++;
+        }
+        public void UnequipTalismanItem(TalismanInfo talisman)
+        {
+            talisman.equiped = false;
+            currEquipCnt--;
+        }
+        public void ClearTalismanData()
+        {
+            talismanInfos.Clear();
+            TalismanInfoBySlot.Clear();
+            TalismanInfoById.Clear();
+            currEquipCnt = 0;
         }
         #endregion
         #region BagItemDict

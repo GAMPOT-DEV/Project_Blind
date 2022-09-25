@@ -41,8 +41,14 @@ namespace Blind
             // 레이어 설정
             _mask = LayerMask.GetMask("Player") | LayerMask.GetMask("Floor");
         }
+        public override void CloseWorldSpaceUI()
+        {
+            _unitHP.RefreshHpUI -= OnHpChanged;
+            base.CloseWorldSpaceUI();
+        }
         private void InitEvents()
         {
+            _unitHP.RefreshHpUI -= OnHpChanged;
             _unitHP.RefreshHpUI += OnHpChanged;
         }
         private void InitCollider()
