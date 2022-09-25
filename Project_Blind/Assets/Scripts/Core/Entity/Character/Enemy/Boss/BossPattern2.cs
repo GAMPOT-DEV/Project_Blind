@@ -11,6 +11,8 @@ namespace Blind
         {
             _floorStart = _gameobject._floorStart;
             _floorEnd = _gameobject._floorEnd;
+            transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 88f);
+            Debug.Log(transform.rotation.z);
         }
         public override Coroutine AttackPattern()
         {

@@ -16,7 +16,7 @@ namespace Blind
                     _player.CurrentWaveGauge = _player.maxWaveGauge;
                 _player._source.GenerateImpulse();
                 _player.isParingCheck = true;
-                SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
+                SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
                 EnemyDibuff();
             }
         }

@@ -250,6 +250,7 @@ namespace Blind
             {
                 _moveVector.y = 0;
             }
+
             _moveVector.y -= _gravity * Time.deltaTime;
         }
 
@@ -332,7 +333,7 @@ namespace Blind
 
         IEnumerator isEndPowerAttack()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.6f);
             isPowerAttackEnd = true;
         }
 
