@@ -4,12 +4,8 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class BatMonster : CrowdEnemyCharacter
+    public class BatTest : CrowdTest
     {
-        private Coroutine Co_attack;
-        private Coroutine Co_hitted;
-        private Coroutine Co_stun;
-        private Coroutine Co_die;
         [SerializeField] private Transform AttackHitBoxRange;
 
         protected void Awake()
@@ -39,31 +35,22 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            
-            if (!createAttackHitBox)
-            {
-                AttackHitBox();
-                createAttackHitBox = true;
-            }
-
-            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
+            if (currentAttack == null)
             {
                 if (Random.Range(0, 100) > 20)
-                {
-                    _anim.SetBool("Basic Attack", true);
-                }
+                    currentAttack = "Basic Attack";
                 else
-                {
-                    _anim.SetBool("Skill Attack", true);
-                }
+                    currentAttack = "Skill Attack";
+                Dischangeable();
+                _anim.SetTrigger(currentAttack);
             }
         }
 
-        public void AttackHitBox()
+        public override void AttackHitBox()
         {
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
-            col.size = new Vector2(7, 10);
+            col.size = new Vector2(7, 9);
         }
 
         public void DeadSound()

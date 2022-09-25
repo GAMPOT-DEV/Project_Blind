@@ -12,8 +12,6 @@ namespace Blind
         private Coroutine Co_die;
         private Coroutine Co_avoid;
 
-        private State tmp = State.Die;
-
         [SerializeField] private float _projectileSpeed = 10;
 
         protected void Awake()
