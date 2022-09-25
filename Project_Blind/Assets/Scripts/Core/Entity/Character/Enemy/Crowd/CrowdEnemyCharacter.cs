@@ -24,6 +24,8 @@ namespace Blind
         protected float _patrolTime;
         protected Animator _anim;
         protected float _chaseRange = 20;
+        protected float afterDelayTime = 0.3f;
+        protected bool attackable = true;
 
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
@@ -154,7 +156,7 @@ namespace Blind
                 return;
             }
 
-            if (attackSense.Attackable())
+            if (attackSense.Attackable() && attackable)
             {
                 state = State.Attack;
                 _anim.SetBool("Chase", false);
@@ -289,10 +291,9 @@ namespace Blind
         {
             NextAction();
 
-            _anim.SetBool("Basic Attack", false);
-            _anim.SetBool("Skill Attack", false);
             createAttackHitBox = false;
             Destroy(col);
+            StartCoroutine(Delay());
         }
 
         public void AniParingenable()
@@ -302,6 +303,7 @@ namespace Blind
 
         public void AniAttackStart()
         {
+            attackable = false;
             IsAttack = false;
             _attack.EnableDamage();
         }
@@ -315,6 +317,12 @@ namespace Blind
         public void AniDestroy()
         {
             Destroy(gameObject, 1f);
+        }
+
+        protected IEnumerator Delay()
+        {
+            yield return new WaitForSeconds(afterDelayTime);
+            attackable = true;
         }
 
         protected virtual void NextAction()
