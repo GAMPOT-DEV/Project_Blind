@@ -32,7 +32,7 @@ namespace Blind
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             if (_monoBehaviour.isPowerAttack && _monoBehaviour.CurrentWaveGauge >= 10)
             {
-                animator.speed = 0.1f;
+                animator.speed = 0.2f;
                 _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
                 if (ui == null)
@@ -89,10 +89,10 @@ namespace Blind
 
 
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack)){
+                Debug.Log("강공격!");
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
                 _monoBehaviour.enableAttack();
-                _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
                 _monoBehaviour.PlayAttackFx(4,_monoBehaviour.GetFacing());
@@ -116,7 +116,6 @@ namespace Blind
             
             if (_monoBehaviour._clickcount == 1)
             {
-                Debug.Log("실행됨");
                 _monoBehaviour.MeleeAttackComoEnd();
             }
             Debug.Log(_monoBehaviour._clickcount);
