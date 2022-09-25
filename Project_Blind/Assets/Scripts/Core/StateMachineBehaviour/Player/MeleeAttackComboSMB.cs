@@ -119,7 +119,7 @@ namespace Blind
                 Debug.Log("실행됨");
                 _monoBehaviour.MeleeAttackComoEnd();
             }
-            Debug.Log(_monoBehaviour._clickcount);
+            //Debug.Log(_monoBehaviour._clickcount);
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
             _powerAttack = false;
