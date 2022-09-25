@@ -47,48 +47,26 @@ namespace Blind
                 isLoading = true;
                 yield return UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeScenOut());
                 string sceneName = newSceneName.ToString();
-                yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName));
-                yield return new WaitForSeconds(0.5f); //씬 로딩이 90퍼에서 100퍼까지 되길 기다리는 시간
-                TransitionDestination entrance = GetDestination(destinationTag);
-                SetEnteringLocation(entrance);
-                yield return new WaitForSeconds(0.5f); // 카메라 움직임을 기다리는 시간
+                DataManager.Instance.PlayerCharacterDataValue.DestinationTag = destinationTag;
+                yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName,destinationTag));
                 UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeSceneIn());
                 isLoading = false;
             }
         }
-
-        protected TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
+        public static Vector3 SetDestination(TransitionDestination.DestinationTag destinationTag)
         {
             TransitionDestination[] entrances = FindObjectsOfType<TransitionDestination>();
             for (int i = 0; i < entrances.Length; i++)
             {
-                Debug.Log(entrances[i].name);
                 if (entrances[i].destinationTag == destinationTag)
-                    return entrances[i];
+                {
+                    var entrance = entrances[i];
+                    Debug.Log(entrance);
+                    return entrance.transform.position;
+                }
             }
-            Debug.LogWarning("No Destination Found");
-            return null;
-        }
-
-        // 캐릭터 이동
-        public static void SetEnteringLocation(TransitionDestination entrance)
-        {
-            if (entrance == null)
-            {
-                Debug.LogWarning("entrance가 설정되지 않음");
-                return;
-            }
-            if (entrance.transformingObject != null)
-            {
-                Transform entranceLocation = entrance.transform;
-                Transform enteringTransform = entrance.transformingObject.transform;
-                enteringTransform.position = entranceLocation.position;
-                enteringTransform.rotation = entranceLocation.rotation;
-            }
-            else
-            {
-                Debug.Log("entrance object가 null임");
-            }
+            return Vector3.one;
+            ;
         }
     }
 }

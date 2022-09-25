@@ -17,13 +17,14 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _isOnClick = false;
-            _monoBehaviour.ReAttackSize(3,5);
+            _monoBehaviour.ReAttackSize(3,5, _monoBehaviour.Data.damage);
             _monoBehaviour.StopMoveY();
             if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
             if (!_monoBehaviour.isJump)
             {
-                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity);
+                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
                 _monoBehaviour.GroundedHorizontalMovement(true);
+                _monoBehaviour.UpdateJump();
             }
 
         }
@@ -31,7 +32,7 @@ namespace Blind
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             if (_monoBehaviour.isPowerAttack && _monoBehaviour.CurrentWaveGauge >= 10)
             {
-                animator.speed = 0.1f;
+                animator.speed = 0.2f;
                 _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
                 if (ui == null)
@@ -58,7 +59,7 @@ namespace Blind
         {
             if (!_monoBehaviour.isJump)
             {
-                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity);
+                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
                 _monoBehaviour.UpdateJump();
                 _monoBehaviour.CheckForGrounded();
                 _monoBehaviour.GroundedHorizontalMovement(true);
@@ -88,12 +89,13 @@ namespace Blind
 
 
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack)){
+                Debug.Log("강공격!");
                 animator.speed = 1.0f;
                 _monoBehaviour._attack.DamageReset(_monoBehaviour.Data.powerAttackdamage);
                 _monoBehaviour.enableAttack();
-                _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
+                _monoBehaviour.PlayAttackFx(4,_monoBehaviour.GetFacing());
 
                 if (ui == null)
                 {
@@ -114,10 +116,9 @@ namespace Blind
             
             if (_monoBehaviour._clickcount == 1)
             {
-                Debug.Log("실행됨");
                 _monoBehaviour.MeleeAttackComoEnd();
             }
-            Debug.Log(_monoBehaviour._clickcount);
+            //Debug.Log(_monoBehaviour._clickcount);
             _monoBehaviour._attack.DefultDamage();
             _monoBehaviour.DisableAttack();
             _powerAttack = false;

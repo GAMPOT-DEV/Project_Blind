@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -12,12 +11,25 @@ namespace Blind
     {
         Dictionary<Key, Value> MakeDict();
     }
+
     public class DataManager : Manager<DataManager>
     {
         public Dictionary<string, Data.Conversation> ConversationDict { get; private set; } = new Dictionary<string, Data.Conversation>();
         public Dictionary<int, Data.Clue> ClueDict { get; private set; } = new Dictionary<int, Data.Clue>();
         public Dictionary<int, Data.BagItem> BagItemDict { get; private set; } = new Dictionary<int, Data.BagItem>();
-        public Dictionary<int, Data.TalismanItem> TalismanItemDict { get; private set; } = new Dictionary<int, Data.TalismanItem>();
+
+        private PlayerCharacterData _playerCharacterData = null;
+        public PlayerCharacterData PlayerCharacterDataValue
+        {
+            get => _playerCharacterData;
+            set
+            {
+                _playerCharacterData = value;
+                GameData.PlayerCharacterData = _playerCharacterData;
+                SaveGameData();
+            }
+        }
+        
         protected override void Awake()
         {
             base.Awake();
@@ -28,7 +40,6 @@ namespace Blind
             ConversationDict = LoadJson<Data.ConversationData, string, Data.Conversation>("ConversationData").MakeDict();
             ClueDict = LoadJson<Data.ClueData, int, Data.Clue>("ClueData").MakeDict();
             BagItemDict = LoadJson<Data.BagItemData, int, Data.BagItem>("BagItemData").MakeDict();
-            TalismanItemDict = LoadJson<Data.TalismanItemData, int, Data.TalismanItem>("TalismanItemData").MakeDict();
         }
         Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
         {
@@ -68,7 +79,6 @@ namespace Blind
             }
 
             _gameData.MakeClueDict();
-            _gameData.MakeTalismanDict();
             _gameData.MakeBagItemDict();
         }
         public void SaveGameData()
@@ -94,19 +104,15 @@ namespace Blind
         }
         public void DeleteClueItem(Define.ClueItem itemId)
         {
-            return;
+            int id = (int)itemId;
 
-            // 수정 필요
+            ClueInfo clue = null;
+            _gameData.ClueInfoById.TryGetValue(id, out clue);
+            if (clue == null)
+                return;
 
-            //int id = (int)itemId;
-
-            //ClueInfo clue = null;
-            //_gameData.ClueInfoById.TryGetValue(id, out clue);
-            //if (clue == null)
-            //    return;
-
-            //_gameData.DeleteClueItem(clue);
-            //SaveGameData();
+            _gameData.DeleteClueItem(clue);
+            SaveGameData();
         }
         public bool HaveClueItem(Define.ClueItem itemId)
         {
@@ -122,71 +128,6 @@ namespace Blind
             SaveGameData();
         }
 
-        #region Talisman
-        public bool AddTalismanItem(Define.TalismanItem itemId)
-        {
-            int id = (int)itemId;
-
-            TalismanInfo talisman = null;
-            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
-            if (talisman != null)
-                return false;
-
-            talisman = new TalismanInfo() { itemId = id, equiped = false, slot = UI_Talisman.Size++ };
-            _gameData.AddTalismanItem(talisman);
-            SaveGameData();
-            return true;
-        }
-        public void DeleteTalismanItem(Define.TalismanItem itemId)
-        {
-            return;
-
-            // 수정 필요
-
-            //int id = (int)itemId;
-
-            //TalismanInfo talisman = null;
-            //_gameData.TalismanInfoById.TryGetValue(id, out talisman);
-            //if (talisman == null)
-            //    return;
-
-            //_gameData.DeleteTalismanItem(talisman);
-            //SaveGameData();
-        }
-        public bool HaveTalismanItem(Define.TalismanItem itemId)
-        {
-            int id = (int)itemId;
-            TalismanInfo talisman;
-            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
-            if (talisman == null) return false;
-            return true;
-        }
-        public bool EquipOrUnequipTalisman(Define.TalismanItem itemId)
-        {
-            int id = (int)itemId;
-            TalismanInfo talisman;
-            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
-            if (talisman == null) return false;
-
-            if (talisman.equiped == false)
-            {
-                if (_gameData.currEquipCnt >= 3) return false;
-                _gameData.EquipTalismanItem(talisman);
-                SaveGameData();
-                return true;
-            }
-
-            _gameData.UnequipTalismanItem(talisman);
-            SaveGameData();
-            return true;
-        }
-        public void ClearTalismanData()
-        {
-            _gameData.ClearTalismanData();
-            SaveGameData();
-        }
-        #endregion
-        #region Bag
         public bool AddBagItem(Define.BagItem itemId, int cnt = 1)
         {
             int id = (int)itemId;
@@ -249,7 +190,6 @@ namespace Blind
             if (item == null) return false;
             return true;
         }
-        #endregion
     }
 }
 

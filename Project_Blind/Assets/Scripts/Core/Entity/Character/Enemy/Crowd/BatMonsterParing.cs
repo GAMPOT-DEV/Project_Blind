@@ -15,7 +15,9 @@ namespace Blind
                 else
                     _player.CurrentWaveGauge = _player.maxWaveGauge;
                 _player._source.GenerateImpulse();
-                SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
+                _player.isParingCheck = true;
+                Time.timeScale = 0.5f;
+                SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
                 EnemyDibuff();
             }
         }
@@ -23,14 +25,7 @@ namespace Blind
         public override void EnemyDibuff()
         {
             _gameobject._attack.DisableDamage();
-            if (_gameobject.CurrentStunGauge >= _gameobject.MaxStunGauge)
-            {
-                _gameobject.CoStun();
-            }
-            else
-            {
-                //_gameobject.OnHurt();
-            }
+            _gameobject.OnStun();
         }
     }
 }

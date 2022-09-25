@@ -30,7 +30,7 @@ namespace Blind {
         private void Start()
         {
             startingPosition = gameObject.transform;
-            _attack.Init(7, 8);
+            _attack.Init(13, 10);
         }
 
         protected override void FixedUpdate()
@@ -40,18 +40,25 @@ namespace Blind {
 
         protected override void updateAttack()
         {
-            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
+            if (_anim.GetBool("Basic Attack") == false 
+                && _anim.GetBool("Skill Attack") == false 
+                && _anim.GetBool("Grab Attack") == false)
             {
-                /*
+                
                 if (!createAttackHitBox)
                 {
                     AttackHitBox();
                     createAttackHitBox = true;
-                }*/
+                }
                 
-                if (Random.Range(0, 100) > 20)
+                float r = Random.Range(0, 100);
+                if (r > 50)
                 {
                     _anim.SetBool("Basic Attack", true);
+                }
+                else if (r <= 10)
+                {
+                    _anim.SetBool("Grab Attack", true);
                 }
                 else
                 {
@@ -59,13 +66,49 @@ namespace Blind {
                 }
             }
         }
-        /*
+
+        public void AniGrab()
+        {
+            if (Physics2D.OverlapCircle(gameObject.transform.position + new Vector3(11, 3, 0), 3f, 13))
+            {
+                Debug.Log("Grab Success");
+                _anim.SetBool("Success", true);
+            }
+            else
+            {
+                Debug.Log("Grab Fail");
+                _anim.SetBool("Fail", true);
+            }
+            _anim.SetBool("Grab Attack", false);
+        }
+
+        public override void AniAfterAttack()
+        {
+            base.AniAfterAttack();
+
+            _anim.SetBool("Fail", false);
+            _anim.SetBool("Success", false);
+        }
+        
         public void AttackHitBox()
         {
-            Debug.Log("dd");
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
-            col.size = new Vector2(7, 8);
-        }*/
+            col.size = new Vector2(13, 10);
+        }
+
+        public override IEnumerator CoStun()
+        {
+            _anim.SetBool("Stun", true);
+            _anim.SetBool("Basic Attack", false);
+            _anim.SetBool("Skill Attack", false);
+            _anim.SetBool("Grab Attack", false);
+
+            yield return new WaitForSeconds(Data.stunTime);
+            _anim.SetBool("Stun", false);
+            NextAction();
+
+            co_stun = null;
+        }
     }
 }

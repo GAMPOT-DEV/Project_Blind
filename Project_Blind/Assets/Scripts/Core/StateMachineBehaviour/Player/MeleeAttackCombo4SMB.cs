@@ -9,7 +9,7 @@ namespace Blind
         private bool _powerAttack = false;
         private bool _checkForPowerAttack = false;
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.ReAttackSize(3,4);
+            _monoBehaviour.ReAttackSize(3,4, _monoBehaviour.Data.damage + 2);
             _monoBehaviour.StopMoveY();
             if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
         }
@@ -18,7 +18,7 @@ namespace Blind
         {
             if (_monoBehaviour.isPowerAttack)
             {
-                animator.speed = 0.1f;
+                animator.speed = 0.06f;
                 _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
                 if (ui == null)
@@ -62,6 +62,7 @@ namespace Blind
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
+                _monoBehaviour.PlayAttackFx(7,_monoBehaviour.GetFacing());
 
                 if (ui == null)
                 {

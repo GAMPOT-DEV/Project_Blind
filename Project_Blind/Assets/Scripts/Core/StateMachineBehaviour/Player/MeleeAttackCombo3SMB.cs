@@ -13,7 +13,12 @@ namespace Blind
         {
             _isOnClick = false;
             _monoBehaviour.StopMoveY();
-            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
+            Debug.Log("실행됨");
+            if (!_monoBehaviour.isPowerAttack)
+            {
+                SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
+                Debug.Log("실행됨");
+            }
         }
 
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -80,6 +85,7 @@ namespace Blind
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
+                _monoBehaviour.PlayAttackFx(6,_monoBehaviour.GetFacing());
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();

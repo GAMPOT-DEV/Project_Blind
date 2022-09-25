@@ -25,8 +25,12 @@ namespace Blind
 
         // HP UI
         protected UI_UnitHP _unitHPUI = null;
-
         
+        //콜백 함수 델리게이트들
+        public delegate void onDeath();
+
+        public onDeath DeathCallback = () => {};
+
         protected void Awake()
         {
             base.Awake(Data);

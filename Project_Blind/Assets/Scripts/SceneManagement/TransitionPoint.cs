@@ -15,14 +15,15 @@ namespace Blind
         public TransitionType transitionType;
         [Tooltip("이동할 다음 씬을 선택하면 됩니다.")]
         public Define.Scene newSceneName;
+        /*
         [Tooltip("이동하고 싶은 게임오브젝트를 인스펙터창에서 집어넣으면 됩니다. ex)메인캐릭터")]
-        public GameObject transitioningGameObject;
+        public GameObject transitioningGameObject; */
         [Tooltip("도착지점의 태그")]
         public TransitionDestination.DestinationTag transitionDestinationTag;
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject == transitioningGameObject)
+            if (collision.gameObject.tag.Equals("Player"))
             {
                 TransitionInternal();
             }
@@ -43,6 +44,9 @@ namespace Blind
             else
             {
                 //다른 씬으로 이동할 경우입니다.
+                var player = GameManager.Instance.Player;
+                if(player!=null)
+                    DataManager.Instance.PlayerCharacterDataValue = new PlayerCharacterData(player.Hp,player.CurrentWaveGauge);
                 SceneController.TransitionToScene(this);
             }
         }

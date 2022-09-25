@@ -21,7 +21,7 @@ namespace Blind
             //SceneManager.LoadScene("LoadingScene");
         }
 
-        public static IEnumerator LoadSceneProcess(string nextScene)
+        public static IEnumerator LoadSceneProcess(string nextScene,TransitionDestination.DestinationTag destinationTag)
         {
             yield return null;
             AsyncOperation op = SceneManager.LoadSceneAsync(nextScene);
@@ -32,11 +32,11 @@ namespace Blind
                 yield return null;
                 if (op.progress < 0.9f)
                 {
-                    //90ÇÁ·Î ·Îµù±îÁö´Â °è¼Ó ÁøÇà
+                    //90ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 }
                 else
                 {
-                    // ·ÎµùÀÌ 90ÇÁ·Î ÀÌ»ó µÇ¸é 1ÃÊ°£ Ãß°¡ ·ÎµùÀ» ÇÔ
+                    // ï¿½Îµï¿½ï¿½ï¿½ 90ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½Ç¸ï¿½ 1ï¿½Ê°ï¿½ ï¿½ß°ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½
                     timer += Time.unscaledDeltaTime;
                     if (timer >= 1.0f)
                     {
@@ -46,7 +46,7 @@ namespace Blind
 
                 }
             }
-            //UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeSceneIn());
         }
+
     }
 }
