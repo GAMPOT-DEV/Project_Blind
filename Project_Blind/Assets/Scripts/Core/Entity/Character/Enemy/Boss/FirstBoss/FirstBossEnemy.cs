@@ -20,6 +20,10 @@ namespace Blind
             base.Awake();
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
+        }
+
+        private void Start()
+        {
             StartCoroutine(StartAttackState());
         }
 
@@ -31,7 +35,7 @@ namespace Blind
                 //Debug.Log(next);
                 ChangePattern(next);
                 yield return StartPattern();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(1.5f);
             }
         }
         public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)
