@@ -116,6 +116,7 @@ namespace Blind
             if (playerCharacterData == null) return;
             Hp.SetHealth(playerCharacterData.Hp);
             CurrentWaveGauge = playerCharacterData.CurrentWaveGage;
+            transform.position = SceneController.SetDestination(playerCharacterData.DestinationTag);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
@@ -249,6 +250,7 @@ namespace Blind
             {
                 _moveVector.y = 0;
             }
+
             _moveVector.y -= _gravity * Time.deltaTime;
         }
 
@@ -331,7 +333,7 @@ namespace Blind
 
         IEnumerator isEndPowerAttack()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.6f);
             isPowerAttackEnd = true;
         }
 

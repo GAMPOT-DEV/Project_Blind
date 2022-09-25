@@ -17,7 +17,7 @@ namespace Blind
                 _player._source.GenerateImpulse();
                 _player.isParingCheck = true;
                 Time.timeScale = 0.5f;
-                SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
+                SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
                 EnemyDibuff();
             }
         }

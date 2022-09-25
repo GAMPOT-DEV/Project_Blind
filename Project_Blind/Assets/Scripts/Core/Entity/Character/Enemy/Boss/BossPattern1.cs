@@ -29,7 +29,6 @@ namespace Blind
             Vector2 originposion = rangeObject.transform.position;
             float random_x = _collider.bounds.size.x;
             float random_y = _collider.bounds.size.y;
-            Debug.Log(random_y);
             random_x = Random.Range((random_x / 2) * -1, random_x / 2);
             while (true)
             {
