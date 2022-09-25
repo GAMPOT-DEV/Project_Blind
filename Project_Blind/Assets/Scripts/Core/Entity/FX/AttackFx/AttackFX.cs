@@ -4,20 +4,17 @@ using UnityEngine;
 namespace Blind
 {
     [RequireComponent(typeof(ParticleSystem))]
-    public class AttackFX : MonoBehaviour
+    public abstract class AttackFX : MonoBehaviour
     {
         private Facing _face = Facing.Left;
-        private ParticleSystem _particleSystem;
         private Character _character;
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            _particleSystem = GetComponent<ParticleSystem>();
-            _particleSystem.Stop();
             _character = transform.parent.GetComponent<Character>();
         }
 
-        public void Play(Facing face)
+        public virtual void Play(Facing face)
         {
             if (face != _face)
             {
@@ -29,7 +26,6 @@ namespace Blind
                 localScale = new Vector3(-(float)_face*Math.Abs(localScale.x),localScale.y,localScale.z);
                 transform.parent.localScale = localScale;
             }
-            _particleSystem.Play();
         }
     }
 }
