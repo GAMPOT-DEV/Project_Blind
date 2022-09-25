@@ -205,6 +205,7 @@ namespace Blind
                 Debug.Log(_moveVector.y);
                 var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
                 obj.transform.position = transform.position + Vector3.up * 2;
+                SoundManager.Instance.Play("Jump",Define.Sound.Effect);
                 _animator.SetTrigger("Jump");
             }
         }
