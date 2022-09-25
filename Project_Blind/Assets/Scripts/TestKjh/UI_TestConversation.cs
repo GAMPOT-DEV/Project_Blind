@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Data;
+using System;
 
 namespace Blind
 {
@@ -16,8 +17,12 @@ namespace Blind
         int _currHeight;
         int _maxHeight;
 
-        string _title;
-        public string Title
+        string _titleStr;
+        Define.ScriptTitle _title;
+
+        public Define.BagItem BagItem;
+        public Define.ClueItem ClueItem;
+        public Define.ScriptTitle Title
         {
             get { return _title; }
             set { _title = value; }
@@ -45,7 +50,8 @@ namespace Blind
         }
         protected override void Start()
         {
-            conversations = ConversationScriptStorage.Instance.GetConversation(_title);
+            _titleStr = Enum.GetName(typeof(Define.ScriptTitle), _title);
+            conversations = ConversationScriptStorage.Instance.GetConversation(_titleStr);
             // 스크립트를 띄우는 주인의 이름 출력
             if(Owner != null)
                 Get<Text>((int)Texts.NPCNameText).text = Owner.name;
@@ -92,13 +98,20 @@ namespace Blind
                 UIManager.Instance.CloseWorldSpaceUI(this);
                 if(Owner != null)
                 {
-                    if (Owner.GetComponent<PlayerCharacter>() != null)
+                    if (Owner.GetComponent<ConversationTest>() != null)
                     {
                         Owner.GetComponent<ConversationTest>()._player.GetComponent<PlayerCharacter>().UnTalk();
                         Owner.GetComponent<ConversationTest>()._state = Define.ObjectState.NonKeyDown;
                     }
                 }
-                
+                if (BagItem != Define.BagItem.Unknown)
+                {
+                    DataManager.Instance.AddBagItem(BagItem);
+                }
+                if (ClueItem != Define.ClueItem.Unknown)
+                {
+                    DataManager.Instance.AddClueItem(ClueItem);
+                }
                 return;
             }
 
