@@ -116,6 +116,7 @@ namespace Blind
             if (playerCharacterData == null) return;
             Hp.SetHealth(playerCharacterData.Hp);
             CurrentWaveGauge = playerCharacterData.CurrentWaveGage;
+            transform.position = SceneController.SetDestination(playerCharacterData.DestinationTag);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
