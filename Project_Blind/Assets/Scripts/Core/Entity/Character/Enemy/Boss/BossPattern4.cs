@@ -19,7 +19,7 @@ namespace Blind
         
         private Vector2 _originPos;
         private Vector2 _playerPos;
-        public void Awake()
+        public void Start()
         {
             _collider = GetComponent<BoxCollider2D>();
             

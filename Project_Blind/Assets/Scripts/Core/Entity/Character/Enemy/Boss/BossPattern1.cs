@@ -6,7 +6,7 @@ namespace Blind
 {
     public class BossPattern1 : BossAttackPattern<FirstBossEnemy>
     {
-        private GameObject player;
+        private PlayerCharacter player;
         [SerializeField] private GameObject rangeObject;
         private BoxCollider2D _collider;
         private Transform RealAttackPostion;
@@ -16,7 +16,7 @@ namespace Blind
 
         private void Init()
         {
-            player = GameObject.Find("Player");
+            player = GameManager.Instance.Player;
             _collider = rangeObject.GetComponent<BoxCollider2D>();
             rangeObject.transform.position = player.transform.position;
             RealAttackPostion = this.transform;
