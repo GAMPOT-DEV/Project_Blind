@@ -80,6 +80,7 @@ namespace Blind
         public void ResetHp()
         {
             _health = _maxHealth;
+            SetHealth();
         }
     }
 }

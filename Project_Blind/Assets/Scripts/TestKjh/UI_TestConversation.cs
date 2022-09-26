@@ -14,6 +14,8 @@ namespace Blind
         int _defaultWidth = 10;
         int page = 0;
 
+        float fontHeight = 1.5f;
+
         int _currHeight;
         int _maxHeight;
 
@@ -65,7 +67,7 @@ namespace Blind
             _maxHeight = (conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length - 1) / _defaultWidth;
             if (_maxHeight >= 10) _maxHeight++;
             _currHeight = 0;
-            Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight);
+            Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight * fontHeight);
 
             // 한글자씩 출력하도록 하는 코루틴 시작
             _showText = StartCoroutine(CoShowTexts(page));
@@ -80,7 +82,7 @@ namespace Blind
                 _showText = null;
                 string text = "";
                 _currHeight = _maxHeight;
-                Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight);
+                Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight * fontHeight);
                 for (int i = 0; i < conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script.Length; i++)
                 {
                     if (i % 10 == 0 && i != 0) text += "\n";
@@ -135,7 +137,7 @@ namespace Blind
                 if (i % 10 == 0 && i != 0)
                 {
                     _currHeight++;
-                    Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight);
+                    Get<Image>((int)Images.BackGroundImage).rectTransform.sizeDelta = new Vector2(_defaultWidth, _defaultHeight + _currHeight * fontHeight);
                     text += "\n";
                 }
                 // 한글자씩 text에 추가
