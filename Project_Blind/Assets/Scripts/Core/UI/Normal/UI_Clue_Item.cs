@@ -38,8 +38,8 @@ namespace Blind
         private int _index;
         private bool _pushZButton = false;
 
-        private const float UP_DIST = 500f;
-        private const float DOWN_DIST = 130f;
+        private float UP_DIST;
+        private float DOWN_DIST;
 
         private Coroutine _coroutine = null;
         public override void Init()
@@ -49,6 +49,9 @@ namespace Blind
             Bind<GameObject>(typeof(GameObjects));
             _cludData = DataManager.Instance.ClueDict;
             Get<Image>((int)Images.Image_ItemIcon).gameObject.BindEvent(PushItemIcon, Define.UIEvent.Click);
+
+            UP_DIST = UIManager.Instance.Resolution.height / 2;
+            DOWN_DIST = UIManager.Instance.Resolution.height / 10;
         }
         public void SetItem(int itemId, int index, UI_Clue owner)
         {
@@ -139,7 +142,7 @@ namespace Blind
                     _coroutine = null;
                     break;
                 }
-                Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position += Vector3.up * 5;
+                Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position += Vector3.up * 800f * Time.unscaledDeltaTime;
                 yield return null;
             }
         }
@@ -153,7 +156,7 @@ namespace Blind
                     _coroutine = null;
                     break;
                 }
-                Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position -= Vector3.up * 5;
+                Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position -= Vector3.up * 800f * Time.unscaledDeltaTime;
                 yield return null;
             }
         }
