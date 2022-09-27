@@ -134,7 +134,6 @@ namespace Blind
             _gameData.ClearClueData();
             SaveGameData();
         }
-
         #region Talisman
         public bool AddTalismanItem(Define.TalismanItem itemId)
         {
@@ -263,6 +262,32 @@ namespace Blind
             return true;
         }
         #endregion
+
+        public bool AddMoney(int money)
+        {
+            if (money <= 0) return false;
+            _gameData.money += money;
+            UI_FieldScene ui = FindObjectOfType<UI_FieldScene>();
+            if(ui != null)
+            {
+                ui.DisplayMoney();
+            }
+            SaveGameData();
+            return true;
+        }
+        public bool SubMoney(int money)
+        {
+            if (money <= 0) return false;
+            if (_gameData.money < money) return false;
+            _gameData.money -= money;
+            UI_FieldScene ui = FindObjectOfType<UI_FieldScene>();
+            if (ui != null)
+            {
+                ui.DisplayMoney();
+            }
+            SaveGameData();
+            return true;
+        }
     }
 }
 
