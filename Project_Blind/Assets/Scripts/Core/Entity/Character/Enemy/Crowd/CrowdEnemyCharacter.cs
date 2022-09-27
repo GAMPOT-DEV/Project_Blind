@@ -39,7 +39,7 @@ namespace Blind
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
             state = State.Patrol;
@@ -333,6 +333,15 @@ namespace Blind
                 state = State.Chase;
             else
                 state = State.Patrol;
+        }
+
+        protected virtual void offAllAnimation()
+        {
+            _anim.SetBool("Patrol", false);
+            _anim.SetBool("Default", false);
+            _anim.SetBool("Chase", false);
+            _anim.SetBool("Stun", false);
+            _anim.SetBool("Attack", false);
         }
     }
 }

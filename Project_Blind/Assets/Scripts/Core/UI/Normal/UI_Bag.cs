@@ -36,7 +36,7 @@ namespace Blind
         [SerializeField]
         private GameObject grid;
         [SerializeField]
-        private GameObject Blocker;
+        private GameObject ItemWindow;
 
         private Define.BagItem _currSelectItemId = Define.BagItem.Unknown;
         private int _currSelectItemSlot;
@@ -70,8 +70,8 @@ namespace Blind
         { 
             Size = DataManager.Instance.GameData.bagItemInfos.Count;
 
-            if (_currSelectItemId == Define.BagItem.Unknown) Blocker.SetActive(true);
-            else Blocker.SetActive(false);
+            if (_currSelectItemId == Define.BagItem.Unknown) ItemWindow.SetActive(false);
+            else ItemWindow.SetActive(true);
 
             grid.GetComponent<RectTransform>().sizeDelta = new Vector2(750f, 220f * (float)Size);
             for (int i = 0; i < Size; i++)
@@ -91,8 +91,8 @@ namespace Blind
             int id = (int)itemEnum;
             _currSelectItemId = itemEnum;
 
-            if (_currSelectItemId == Define.BagItem.Unknown) Blocker.SetActive(true);
-            else Blocker.SetActive(false);
+            if (_currSelectItemId == Define.BagItem.Unknown) ItemWindow.SetActive(false);
+            else ItemWindow.SetActive(true);
 
             Data.BagItem item;
             _bagItemData.TryGetValue(id, out item);

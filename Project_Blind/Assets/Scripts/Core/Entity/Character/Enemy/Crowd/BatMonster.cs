@@ -12,7 +12,7 @@ namespace Blind
         private Coroutine Co_die;
         [SerializeField] private Transform AttackHitBoxRange;
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
 
@@ -65,6 +65,11 @@ namespace Blind
             col.isTrigger = true;
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
             col.size = new Vector2(7, 10);
+        }
+
+        public void DeadSound()
+        {
+            SoundManager.Instance.Play("Crowd/Bat/Death");
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Blind
         private Facing facing;
         private bool isStop;
         private bool isParing = false;
-        private bool isCameraShakeStop = false; // ÆÐÅÏ 1: true, ÆÐÅÏ 2: false
+        private bool isCameraShakeStop = false; // ï¿½ï¿½ï¿½ï¿½ 1: true, ï¿½ï¿½ï¿½ï¿½ 2: false
         private CinemachineImpulseSource _source;
         private bool isBossPatternCheck;
         public void Awake()
@@ -99,7 +99,7 @@ namespace Blind
                 if (!_player._isInvincibility)
                 {
                     _collider.isTrigger = true;
-                    _player.HittedWithKnockBack(new AttackInfo(5f,facing));
+                    _player.HitWithKnockBack(new AttackInfo(5f,facing));
                     StartCoroutine(ResetTrigger());
                 }
             }

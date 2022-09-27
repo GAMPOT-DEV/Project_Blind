@@ -15,7 +15,7 @@ namespace Blind
         private BossAttackPattern<FirstBossEnemy> _pattern;
         private Random _rand = new Random();
 
-        private void Awake()
+        protected override void Awake()
         {
             base.Awake();
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
@@ -31,8 +31,8 @@ namespace Blind
         {
             while (true)
             {
-                var next = _rand.Next(1, 5);
-                //Debug.Log(next);
+                //var next = _rand.Next(1, 5);
+                var next = 4;
                 ChangePattern(next);
                 yield return StartPattern();
                 yield return new WaitForSeconds(1.5f);

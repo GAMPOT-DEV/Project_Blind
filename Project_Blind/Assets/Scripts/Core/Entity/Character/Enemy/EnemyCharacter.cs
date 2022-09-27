@@ -31,7 +31,7 @@ namespace Blind
 
         public onDeath DeathCallback = () => {};
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             base.Awake(Data);
             _attack = GetComponent<MeleeAttackable>();
@@ -45,7 +45,6 @@ namespace Blind
 
         protected void CreateHpUI()
         {
-            Debug.LogWarning("??");
             // UI매니저로 UI_UnitHP 생성
             _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
             // UI에서 UnitHP 참조

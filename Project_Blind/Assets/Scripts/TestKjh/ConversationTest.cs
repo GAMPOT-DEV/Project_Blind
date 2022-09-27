@@ -9,6 +9,9 @@ namespace Blind
     // TODO
     public class ConversationTest : InteractionAble
     {
+        public Define.ScriptTitle ScriptTitle;
+        public Define.BagItem BagItem;
+        public Define.ClueItem ClueItem;
         public Define.ObjectState _state;
         public GameObject _player = null;
         private Define.ObjectType _objType;
@@ -39,7 +42,9 @@ namespace Blind
         {
             _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestConversation>();
             _ui.Owner = gameObject;
-            (_ui as UI_TestConversation).Title = "Test1";
+            (_ui as UI_TestConversation).Title = ScriptTitle;
+            (_ui as UI_TestConversation).BagItem = BagItem;
+            (_ui as UI_TestConversation).ClueItem = ClueItem;
             _ui.SetPosition(gameObject.transform.position, Vector3.up * 3);
 
             _player.GetComponent<PlayerCharacter>().Talk();

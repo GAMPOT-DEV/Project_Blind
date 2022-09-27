@@ -14,8 +14,9 @@ namespace Blind
 
         protected State state;
 
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             state = State.Phase;
         }
 

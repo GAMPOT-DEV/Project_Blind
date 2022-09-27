@@ -7,6 +7,8 @@ namespace Blind
 {
     public class InteractionTest : InteractionAble
     {
+        public string InteractionText;
+
         int _x = 7;
         int _y = 7;
 
@@ -23,6 +25,7 @@ namespace Blind
             UIManager.Instance.KeyInputEvents += HandleKeyInput;
 
             _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestInteraction>();
+            _ui.Text = InteractionText;
             _ui.SetPosition(gameObject.transform.position, Vector3.up * 3);
         }
         protected override void OnTriggerExit2D(Collider2D collision)
