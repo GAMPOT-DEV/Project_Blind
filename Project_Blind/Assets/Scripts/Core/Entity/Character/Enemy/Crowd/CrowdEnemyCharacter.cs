@@ -39,7 +39,7 @@ namespace Blind
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
             state = State.Patrol;

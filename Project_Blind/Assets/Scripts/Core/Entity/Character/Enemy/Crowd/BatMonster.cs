@@ -12,7 +12,7 @@ namespace Blind
         private Coroutine Co_die;
         [SerializeField] private Transform AttackHitBoxRange;
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
 
