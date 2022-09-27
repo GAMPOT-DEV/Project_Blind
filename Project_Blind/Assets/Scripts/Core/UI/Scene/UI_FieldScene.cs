@@ -78,7 +78,7 @@ namespace Blind
             _player.Hp.RefreshHpUI += OnHpChanged;
             _player.OnWaveGaugeChanged += OnWaveGaugeChanged;
             // Test
-            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.Hitted(5.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.Hit(5.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.Hp.GetHeal(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(TestWaveGauge, Define.UIEvent.Click);
 
