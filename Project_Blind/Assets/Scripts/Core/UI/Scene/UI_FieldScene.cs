@@ -220,7 +220,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp += value;
+                    _hp += value * Time.deltaTime * 100;
                     Get<Image>((int)Images.Image_RealHp).fillAmount = _hp / _maxHp;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
@@ -238,7 +238,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp -= value;
+                    _hp -= value * Time.deltaTime * 100;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
                 }

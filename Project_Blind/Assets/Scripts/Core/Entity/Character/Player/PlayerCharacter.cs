@@ -102,6 +102,7 @@ namespace Blind
         private void Start()
         {
             SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
+            Hp.SetHealth();
         }
 
         public void OnFixedUpdate()
