@@ -20,7 +20,7 @@ namespace Blind
         public MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
-        private Paringable _paring;
+        [SerializeField] private Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
         private Rigidbody2D rigid;
@@ -77,7 +77,6 @@ namespace Blind
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             skeletonmecanim = GetComponent<SkeletonMecanim>();
             _attack = GetComponent<MeleeAttackable>();
-            _paring = GetComponent<Paringable>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             rigid = GetComponent<Rigidbody2D>();
@@ -91,7 +90,6 @@ namespace Blind
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
             _attack.Init(Data.attack_x,Data.attack_y,Data.damage);
-            _paring.Init(Data.paring_x, Data.paring_y);
 
 
             // TEST
