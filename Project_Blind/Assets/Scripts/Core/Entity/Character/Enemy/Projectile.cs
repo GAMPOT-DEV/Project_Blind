@@ -38,7 +38,7 @@ namespace Blind {
                 {
                     PlayerCharacter player = collision.gameObject.GetComponent<PlayerCharacter>();
                     Facing facing = dir.x >= 0 ? Facing.Right : Facing.Left;
-                    player.HittedWithKnockBack(new AttackInfo(_damage,facing));
+                    player.HitWithKnockBack(new AttackInfo(_damage,facing));
 
                     Destroy(gameObject);
                 }
@@ -58,7 +58,7 @@ namespace Blind {
 
         public void OnParing()
         {
-            Debug.Log("ÆÐ¸µ ¼º°ø");
+            Debug.Log("ï¿½Ð¸ï¿½ ï¿½ï¿½ï¿½ï¿½");
             isParing = true;
             StopCoroutine(CoDestroy());
             Vector2 dir = monster.transform.position - gameObject.transform.position;

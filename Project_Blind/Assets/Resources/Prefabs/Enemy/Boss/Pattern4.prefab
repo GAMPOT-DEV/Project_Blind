@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7292465067140983303}
   - component: {fileID: 6977499615003690663}
   - component: {fileID: 566009160020383834}
+  - component: {fileID: 9049126199436259573}
   m_Layer: 0
   m_Name: LowerChin
   m_TagString: Untagged
@@ -111,6 +112,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &9049126199436259573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2320744197022703102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc424379d777492daaa72e3791749a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dir: -1
 --- !u!1 &2324475547580092848
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +212,7 @@ GameObject:
   - component: {fileID: 6901160230699364189}
   - component: {fileID: 8003297451812938813}
   - component: {fileID: 8688304664324641229}
+  - component: {fileID: 7282317184995370812}
   m_Layer: 0
   m_Name: UpperChin
   m_TagString: Untagged
@@ -298,3 +313,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7282317184995370812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8857913103875110163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc424379d777492daaa72e3791749a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dir: 1
