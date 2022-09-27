@@ -92,13 +92,14 @@ namespace Blind
             else if (col.gameObject.GetComponent<Projectile>() != null)
             {
                 Debug.Log("패링 확인");
-                PlayerCharacter _player = GetComponent<PlayerCharacter>();
+                PlayerCharacter _player = gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>();
                 _player.CharacterInvincible();
                 if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
                     _player.CurrentWaveGauge += _player.paringWaveGauge;
                 else
                     _player.CurrentWaveGauge = _player.maxWaveGauge;
                 _player.isParingCheck = true;
+                _isParing = false;
                 Time.timeScale = 0.5f;
                 SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
                 col.GetComponent<Projectile>().OnParing();
