@@ -65,5 +65,10 @@ namespace Blind
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
             col.size = new Vector2(7, 10);
         }
+
+        public void DeadSound()
+        {
+            SoundManager.Instance.Play("Crowd/Bat/Death");
+        }
     }
 }

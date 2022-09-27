@@ -334,5 +334,14 @@ namespace Blind
             else
                 state = State.Patrol;
         }
+
+        protected virtual void offAllAnimation()
+        {
+            _anim.SetBool("Patrol", false);
+            _anim.SetBool("Default", false);
+            _anim.SetBool("Chase", false);
+            _anim.SetBool("Stun", false);
+            _anim.SetBool("Attack", false);
+        }
     }
 }

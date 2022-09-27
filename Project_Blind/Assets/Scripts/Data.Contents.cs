@@ -85,4 +85,28 @@ namespace Data
         }
     }
     #endregion
+    #region Talisman
+    [Serializable]
+    public class TalismanItem
+    {
+        public int id;
+        public int abilityValue;
+        public string name;
+        public string description;
+        public string iconPath;
+        public Define.TalismanAbility ability;
+    }
+    [Serializable]
+    public class TalismanItemData : ILoader<int, TalismanItem>
+    {
+        public List<TalismanItem> talismanItems = new List<TalismanItem>();
+        public Dictionary<int, TalismanItem> MakeDict()
+        {
+            Dictionary<int, TalismanItem> dict = new Dictionary<int, TalismanItem>();
+            foreach(TalismanItem talismanItem in talismanItems)
+                dict.Add(talismanItem.id, talismanItem);
+            return dict;
+        }
+    }
+    #endregion
 }
