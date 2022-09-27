@@ -22,6 +22,8 @@ namespace Blind
         {
             _upperChin = transform.GetChild(0).GetComponent<Chin>();
             _lowerChin = transform.GetChild(1).GetComponent<Chin>();
+            _upperChin.Parent = this;
+            _lowerChin.Parent = this;
         }
 
         public override Coroutine AttackPattern()

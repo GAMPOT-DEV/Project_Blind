@@ -31,7 +31,7 @@ namespace Blind
 
         public onDeath DeathCallback = () => {};
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             base.Awake(Data);
             _attack = GetComponent<MeleeAttackable>();

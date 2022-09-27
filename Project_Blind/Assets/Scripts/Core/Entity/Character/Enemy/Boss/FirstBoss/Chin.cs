@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Blind
 {
@@ -9,7 +10,7 @@ namespace Blind
     {
         [SerializeField] private ChinDir dir;
         private Vector3  _originPos;
-        private BossPattern4 _parent;
+        [FormerlySerializedAs("_parent")] public BossPattern4 Parent;
         public enum ChinDir
         {
             Upper = 1,
@@ -31,7 +32,7 @@ namespace Blind
         {
             if (col.CompareTag("Player"))
             {
-                _parent.Attack();
+                Parent.Attack();
             }
         }
 
