@@ -97,5 +97,20 @@ namespace Blind
                 state = State.Default;
             }
         }
+
+        public void DeadSound()
+        {
+            SoundManager.Instance.Play("Crowd/Shaman/Death");
+        }
+
+        public void AttackSound()
+        {
+            SoundManager.Instance.Play("Crowd/Shaman/BigAttack");
+        }
+
+        public override void WalkSound()
+        {
+            SoundManager.Instance.Play("Crowd/Shaman/Move");
+        }
     }
 }

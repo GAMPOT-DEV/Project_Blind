@@ -17,9 +17,6 @@ namespace Blind
             DataManager.Instance.LoadGameData();
             DataManager.Instance.AddClueItem(Define.ClueItem.TestClue1);
 
-            UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-            ui.SetName("테스트");
-            ui.SetScriptTitle(Define.ScriptTitle.Test1);
         }
         public override void Clear()
         {

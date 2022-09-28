@@ -15,6 +15,7 @@ namespace Blind {
         {
             this.dir = dir;
             this.speed = speed;
+            monster = shaman;
             gameObject.GetComponent<Rigidbody2D>().velocity = this.dir.normalized * speed;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.Rotate(new Vector3(0, 0, angle));
@@ -46,23 +47,11 @@ namespace Blind {
             }
         }
 
-        private void rotate()
-        {
-            Vector2 thisScale = transform.localScale;
-            
-            if (dir.x < 0)
-            {
-                thisScale.x = -Mathf.Abs(thisScale.x);
-                transform.localScale = thisScale;
-            }
-        }
-
         public void OnParing()
         {
-            Debug.Log("�и� ����");
             isParing = true;
             StopCoroutine(CoDestroy());
-            Vector2 dir = monster.transform.position - gameObject.transform.position;
+            Vector2 dir = monster.transform.position - gameObject.transform.position + new Vector3(0, 2f, 0);
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.Rotate(new Vector3(0, 0, angle));
 

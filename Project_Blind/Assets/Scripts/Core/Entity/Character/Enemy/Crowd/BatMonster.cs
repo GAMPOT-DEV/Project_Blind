@@ -12,13 +12,6 @@ namespace Blind
         {
             base.Awake();
 
-            Data.sensingRange = new Vector2(12f, 8f);
-            Data.speed = 0.3f;
-            Data.runSpeed = 0.33f;
-            Data.attackCoolTime = 0.5f;
-            Data.attackSpeed = 0.3f;
-            Data.attackRange = new Vector2(9f, 8f);
-            Data.stunTime = 1.5f;
             _patrolTime = 3f;
         }
 
@@ -41,7 +34,6 @@ namespace Blind
                     currentAttack = 1;
                 else
                     currentAttack = 2;
-
             }
 
             flipToFacing();
@@ -51,17 +43,30 @@ namespace Blind
                 _anim.SetInteger("State", 31);
         }
 
-        public void DeadSound()
-        {
-            SoundManager.Instance.Play("Crowd/Bat/Death");
-        }
-
         public override void AttackHitBox()
         {
             col = gameObject.AddComponent<BoxCollider2D>();
             col.offset = new Vector2(_col.offset.x + 3.5f, _col.offset.y);
             col.size = new Vector2(7, 10);
             col.isTrigger = true;
+        }
+
+        public void DeadSound()
+        {
+            SoundManager.Instance.Play("Crowd/Bat/Death");
+        }
+
+        public void AttackSound()
+        {
+            if(currentAttack == 1)
+                SoundManager.Instance.Play("Crowd/Bat/SmallAttack");
+            else if(currentAttack == 2)
+                SoundManager.Instance.Play("Crowd/Bat/BigAttack");
+        }
+
+        public override void WalkSound()
+        {
+            SoundManager.Instance.Play("Crowd/Bat/Patrol");
         }
     }
 }
