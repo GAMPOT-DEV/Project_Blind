@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Blind
 {
-    public class CrowdEnemyCharacter : EnemyCharacter
+    public class V2CrowdTest : EnemyCharacter
     {
         protected enum State
         {
@@ -26,6 +26,7 @@ namespace Blind
         protected float _chaseRange = 20;
         protected float afterDelayTime = 0.3f;
         protected bool attackable = true;
+        protected int currentAttack = 0;
 
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
@@ -39,7 +40,7 @@ namespace Blind
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
 
-        protected override void Awake()
+        protected void Awake()
         {
             base.Awake();
             state = State.Patrol;
@@ -49,11 +50,6 @@ namespace Blind
             _anim = GetComponent<Animator>();
             player = GameObject.FindGameObjectWithTag("Player");
             //attackSense.setRange(Data.attackRange);
-        }
-
-        protected void Start()
-        {
-            SceneLinkedSMB<CrowdEnemyCharacter>.Initialise(_anim, this);
         }
 
         protected virtual void FixedUpdate()
@@ -94,26 +90,32 @@ namespace Blind
             }
             if (Hp.GetHP() <= 0)
                 state = State.Die;
+            /*if (state != tmp)
+            {
+                Debug.Log(state);
+                tmp = state;
+            }*/
 
+            //공중에 떴을 때 하강 속도 UP
+            if (Physics2D.OverlapCircle(WallCheck.position, 0.01f, 6))
+            {
+                Debug.Log("On Floor");
+                rigid.gravityScale = 1;
+            }
+            //else if(!Physics2D.OverlapCircle(WallCheck.position, 0.01f, 6))
+            //{
+            //    rigid.gravityScale = 150;
+            //}
             _characterController2D.OnFixedUpdate();
         }
 
         protected virtual void updatePatrol()
         {
-            if (attackSense.Attackable() && attackable)
-            {
-                state = State.Attack;
-                return;
-            }
-
             if (playerFinder.FindPlayer())
             {
                 state = State.Chase;
-                if (co_patrol != null)
-                {
-                    StopCoroutine(co_patrol);
-                    co_patrol = null;
-                }
+                if (co_patrol != null) StopCoroutine(co_patrol);
+                co_patrol = null;
                 return;
             }
 
@@ -126,14 +128,14 @@ namespace Blind
             }
 
             if (co_patrol == null)
-            {
+            { 
                 co_patrol = StartCoroutine(CoPatrol(_patrolTime));
             }
 
             _anim.SetInteger("State", 1);
             _characterController2D.Move(patrolDirection);
         }
-
+        
         protected virtual void updateDefault()
         {
             if (playerFinder.FindPlayer())
@@ -152,13 +154,15 @@ namespace Blind
         
         protected virtual void updateChase()
         {
+            flipToFacing(); 
+
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
                 return;
             }
 
-            if (attackSense.Attackable() && attackable)
+            if (attackSense.Attackable())
             {
                 state = State.Attack;
                 return;
@@ -179,7 +183,6 @@ namespace Blind
             {
                 co_stun = StartCoroutine(CoStun());
             }
-            _anim.SetInteger("State", 5);
         }
 
         protected virtual void updateHitted()
@@ -200,11 +203,8 @@ namespace Blind
         protected virtual void updateDie()
         {
             gameObject.layer = 16;
-            if (_anim.GetBool("Dead") == false)
-            {
-                _anim.Play("Dead");
-                _anim.SetBool("Dead", true);
-            }
+            _anim.Play("Dead");
+            _anim.SetInteger("State", 6);
             DeathCallback.Invoke();
             Destroy(gameObject, 3f);
         }
@@ -290,6 +290,8 @@ namespace Blind
 
         public virtual IEnumerator CoStun()
         {
+            _anim.SetInteger("State", 5);
+
             yield return new WaitForSeconds(Data.stunTime);
             NextAction();
 
@@ -310,6 +312,7 @@ namespace Blind
 
             createAttackHitBox = false;
             Destroy(col);
+            currentAttack = 0;
             StartCoroutine(Delay());
         }
 
