@@ -15,19 +15,13 @@ namespace Blind
 
         public Transform Point = null;
 
-        private InputController _inputController; 
+        private InputController _inputController;
         protected override void Awake()
         {
             base.Awake();
             // 플레이어 할당하는 코드
             // 나중에 고치면 좋을듯
             Player = ResourceManager.Instance.Instantiate("Player2").GetComponent<PlayerCharacter>();
-
-            
-            //UI_TestConversation ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestConversation>();
-            //ui.Title = "Test2";
-            //ui.Owner = null;
-            //ui.SetPosition(Player.transform.position , Vector3.right * 30);
         }
 
         public void Start()

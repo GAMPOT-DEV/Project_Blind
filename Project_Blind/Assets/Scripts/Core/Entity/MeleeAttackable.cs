@@ -88,7 +88,7 @@ using UnityEngine;
              for (var i = 0; i < hitCount; i++)
              {
                  hitobj = ResultObj[i];
-                 hitobj.GetComponent<Character>().HittedWithKnockBack(new AttackInfo(_damage, facing));
+                 hitobj.GetComponent<Character>().HitWithKnockBack(new AttackInfo(_damage, facing));
                  entity.HitSuccess();
                  canDamage = false;
              }

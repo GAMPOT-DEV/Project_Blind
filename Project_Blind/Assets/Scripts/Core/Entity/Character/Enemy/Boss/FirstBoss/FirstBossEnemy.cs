@@ -15,7 +15,7 @@ namespace Blind
         private BossAttackPattern<FirstBossEnemy> _pattern;
         private Random _rand = new Random();
 
-        private void Awake()
+        protected override void Awake()
         {
             base.Awake();
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
@@ -25,6 +25,8 @@ namespace Blind
         private void Start()
         {
             StartCoroutine(StartAttackState());
+            ResourceManager.Instance.Instantiate("UI/Normal/UI_BossHp");
+            Hp.SetHealth();
         }
 
         public IEnumerator StartAttackState()
@@ -32,10 +34,12 @@ namespace Blind
             while (true)
             {
                 var next = _rand.Next(1, 5);
-                //Debug.Log(next);
                 ChangePattern(next);
                 yield return StartPattern();
                 yield return new WaitForSeconds(1.5f);
+
+                // Test
+                Hp.GetDamage(1);
             }
         }
         public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)

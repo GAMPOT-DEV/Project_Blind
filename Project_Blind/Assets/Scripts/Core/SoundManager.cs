@@ -37,6 +37,7 @@ namespace Blind
             _volumes[(int)Define.Sound.Bgm] = DataManager.Instance.GameData.bgmVolume;
             _volumes[(int)Define.Sound.Effect] = DataManager.Instance.GameData.effectVolume;
             _audioSources[(int)Define.Sound.Bgm].loop = true;
+            RefreshSound();
         }
         public void Clear()
         {
@@ -51,6 +52,16 @@ namespace Blind
         {
             AudioClip audioClip = GetOrAddAudioClip(path, type);
             Play(audioClip, type, pitch);
+        }
+
+        public void PlayNoOverlapEffect(string path,float pitch = 1.0f)
+        {
+            AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
+            if (audioSource.isPlaying) return;
+            AudioClip audioClip = GetOrAddAudioClip(path);
+            audioSource.pitch = pitch;
+            audioSource.clip = audioClip;
+            audioSource.Play();
         }
         public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
         {

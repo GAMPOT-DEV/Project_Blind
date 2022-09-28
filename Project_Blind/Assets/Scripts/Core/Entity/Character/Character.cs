@@ -15,16 +15,16 @@ namespace Blind
             _renderer = GetComponent<Renderer>();
         }
 
-        public void HittedWithKnockBack(AttackInfo attackInfo)
+        public void HitWithKnockBack(AttackInfo attackInfo)
         {
             if (!_isInvincibility)
             {
-                Hitted(attackInfo.Damage);
+                Hit(attackInfo.Damage);
                 HurtMove(attackInfo.EnemyFacing);
 
             }
         }
-        public void Hitted(float damage)
+        public void Hit(float damage)
         {
             var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit");
             obj.transform.position = transform.position + Vector3.up * 5;

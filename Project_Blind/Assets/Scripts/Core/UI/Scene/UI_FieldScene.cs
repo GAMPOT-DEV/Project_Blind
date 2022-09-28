@@ -7,25 +7,26 @@ namespace Blind
 {
     public class UI_FieldScene : UI_Scene
     {
-        private const int GAUGE_SIZE = 3;
-
-        private int _currWaveGauge = 30;
+        
         private float _hp;
         private float _maxHp;
+        private float _currWaveGauge;
+        private float _maxWaveGauge;
         private PlayerCharacter _player = null;
-
-        private int _currWaveIndex = 2;
-        private Slider[] _waveGauges = new Slider[GAUGE_SIZE];
 
         private const float ALPHA = 50f;
         private float _chargeAlpha = ALPHA;
 
         Coroutine _coHpChange = null;
+        Coroutine _coWaveChange = null;
         Coroutine _coCharge = null;
         
+        Dictionary<int, Data.BagItem> dict;
         enum Texts
         {
-
+            Text_Money,
+            Text_ItemCount1,
+            Text_ItemCount2,
         }
         enum Images
         {
@@ -33,23 +34,20 @@ namespace Blind
             Image_TestHeal,
 
             Charge,
-            Image_RealHp
+            Image_RealHp,
+            Image_RealGauge,
+
+            Image_ItemSlot1,
+            Image_ItemSlot2
         }
         enum Sliders
         {
-            Slider_WaveGauge1,
-            Slider_WaveGauge2,
-            Slider_WaveGauge3,
+            Slider_WaveGauge,
             Slider_HP,
         }
         protected override void Start()
         {
-            EnemyCharacter monster = FindObjectOfType<EnemyCharacter>();
-            if (monster != null)
-            {
-                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster.Hp.GetDamage(1.0f), Define.UIEvent.Click);
-                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster.Hp.GetHeal(1.0f), Define.UIEvent.Click);
-            }
+
         }
         public override void Init()
         {
@@ -65,13 +63,17 @@ namespace Blind
             //_hp = _player.Hp.GetHP();
             //_maxHp = _player.Hp.GetMaxHP();
 
-            _waveGauges[0] = Get<Slider>((int)Sliders.Slider_WaveGauge1);
-            _waveGauges[1] = Get<Slider>((int)Sliders.Slider_WaveGauge2);
-            _waveGauges[2] = Get<Slider>((int)Sliders.Slider_WaveGauge3);
             //OnWaveGaugeChanged(_player.CurrentWaveGauge);
 
             //InitTexts();
             InitEvents();
+            DisplayMoney();
+
+            dict = DataManager.Instance.BagItemDict;
+            Get<Image>((int)Images.Image_ItemSlot1).sprite = ResourceManager.Instance.Load<Sprite>(dict[1].iconPath);
+            Get<Image>((int)Images.Image_ItemSlot2).sprite = ResourceManager.Instance.Load<Sprite>(dict[2].iconPath);
+
+            RefreshItemCnt();
         }
         private void InitTexts()
         {
@@ -82,9 +84,12 @@ namespace Blind
             _player.Hp.RefreshHpUI += OnHpChanged;
             _player.OnWaveGaugeChanged += OnWaveGaugeChanged;
             // Test
-            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.Hitted(5.0f), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.Hit(5.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.Hp.GetHeal(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(TestWaveGauge, Define.UIEvent.Click);
+
+            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => DataManager.Instance.SubMoney(1), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => DataManager.Instance.AddMoney(1), Define.UIEvent.Click);
         }
         private void HandleUIKeyInput()
         {
@@ -104,6 +109,11 @@ namespace Blind
                 Debug.Log("ESC");
                 UIManager.Instance.ShowNormalUI<UI_Menu>();
             }
+
+            if (Input.GetKeyDown(KeyCode.F1))
+            {
+                UIManager.Instance.ShowNormalUI<UI_Shop>();
+            }
         }
         private void OnHpChanged(float hp, float maxHp)
         {
@@ -121,82 +131,28 @@ namespace Blind
         }
         private void OnWaveGaugeChanged(int gauge)
         {
-            //if (gauge == _currWaveGauge) return;
-            //int lastWaveGauge = _currWaveGauge;
-            //int lastWaveIndex = _currWaveIndex;
-            //int targetWaveGauge = gauge;
-            //int targetWaveIndex = Mathf.Max(0, gauge - 1) / 10;
-            //Debug.Log(targetWaveIndex);
-            //int speed = 1 / Mathf.Abs(lastWaveGauge - targetWaveGauge);
-            //if (lastWaveIndex == targetWaveIndex)
-            //{
-            //    // 같은 바 안에서 증가/감소
-            //    Debug.Log("1");
-            //    if(_currWaveGauge>targetWaveGauge)
-            //        StartCoroutine(CoDecreaseWaveGauge(targetWaveGauge, targetWaveIndex, speed));
-            //}
-            //else if (lastWaveIndex < targetWaveIndex)
-            //{
-            //    // 왼쪽 바에서 오른쪽 바로 증가
+            if (_currWaveGauge == gauge) return;
+            if (_coWaveChange != null)
+            {
+                StopCoroutine(_coWaveChange);
+                _coWaveChange = null;
+            }
+            float lastGauge = _currWaveGauge;
+            _maxWaveGauge = 30f;
+            float time = 1f / (Mathf.Abs((float)gauge - lastGauge) * 10f);
+            _coWaveChange = StartCoroutine(CoChangeWave(lastGauge, gauge, time));
 
-            //}
-            //else
+            //_currWaveGauge = gauge;
+            //int idx = 0;
+            //while (gauge >= 10)
             //{
-            //    // 오른쪽 바에서 왼쪽 바로 감소
-            //    Debug.Log("2");
-            //    StartCoroutine(CoDecreaseWaveGauge(targetWaveGauge, targetWaveIndex, speed));
+            //    _waveGauges[idx++].value = 1.0f;
+            //    gauge -= 10;
             //}
-            _currWaveGauge = gauge;
-            int idx = 0;
-            while (gauge >= 10)
-            {
-                _waveGauges[idx++].value = 1.0f;
-                gauge -= 10;
-            }
-            if (idx >= GAUGE_SIZE) return;
-            _waveGauges[idx].value = (float)gauge / 10.0f;
-            for (int i = idx + 1; i < GAUGE_SIZE; i++)
-                _waveGauges[i].value = 0f;
-        }
-        IEnumerator CoIncreaseWaveGauge(int index, int time)
-        {
-            // TODO
-            while (true)
-            {
-
-            }
-        }
-        IEnumerator CoDecreaseWaveGauge(int targetGauge, int targetIndex, int time)
-        {
-            // TODO
-            while (true)
-            {
-                _currWaveGauge--;
-                if (_currWaveGauge % 10 == 0) _currWaveIndex--;
-                _waveGauges[_currWaveIndex].value = (float)(_currWaveGauge % 10) / 10;
-                yield return new WaitForSeconds(0.5f);
-                if (_currWaveIndex == targetIndex)
-                {
-                    if (_currWaveGauge == targetGauge)
-                    {
-                        Debug.Log(targetIndex);
-                        Debug.Log(targetGauge);
-                        _waveGauges[_currWaveIndex].value = (float)(_currWaveGauge % 11) / 10;
-                        break;
-                    }
-                }
-                else
-                {
-                    if (_currWaveGauge % 10 == 0)
-                    {
-                        _currWaveIndex--;
-                        _waveGauges[_currWaveIndex].value = (float)(_currWaveGauge % 11) / 10;
-                        StartCoroutine(CoDecreaseWaveGauge(targetGauge, targetIndex, time));
-                        break;
-                    }
-                }
-                
-            }
+            //if (idx >= GAUGE_SIZE) return;
+            //_waveGauges[idx].value = (float)gauge / 10.0f;
+            //for (int i = idx + 1; i < GAUGE_SIZE; i++)
+            //    _waveGauges[i].value = 0f;
         }
         private void TestWaveGauge()
         {
@@ -208,7 +164,7 @@ namespace Blind
         }
         IEnumerator CoChangeHp(float lastHp, float targetHp, float time)
         {
-            float value = 0.1f;
+            float value = 0.15f;
             if (lastHp < targetHp)
             {
                 while (true)
@@ -221,7 +177,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp += value;
+                    _hp += value * Time.deltaTime * 100;
                     Get<Image>((int)Images.Image_RealHp).fillAmount = _hp / _maxHp;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
@@ -239,8 +195,47 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp -= value;
+                    _hp -= value * Time.deltaTime * 100;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
+                    yield return new WaitForSeconds(time / 5f);
+                }
+            }
+        }
+        IEnumerator CoChangeWave(float lastWave, float targetWave, float time)
+        {
+            float value = 0.15f;
+            if (lastWave < targetWave)
+            {
+                while (true)
+                {
+                    if (_currWaveGauge > targetWave)
+                    {
+                        _currWaveGauge = targetWave;
+                        Get<Image>((int)Images.Image_RealGauge).fillAmount = _currWaveGauge / _maxWaveGauge;
+                        Get<Slider>((int)Sliders.Slider_WaveGauge).value = _currWaveGauge / _maxWaveGauge;
+                        _coWaveChange = null;
+                        break;
+                    }
+                    _currWaveGauge += value * Time.deltaTime * 150;
+                    Get<Image>((int)Images.Image_RealGauge).fillAmount = _currWaveGauge / _maxWaveGauge;
+                    Get<Slider>((int)Sliders.Slider_WaveGauge).value = _currWaveGauge / _maxWaveGauge;
+                    yield return new WaitForSeconds(time / 5f);
+                }
+            }
+            else
+            {
+                Get<Image>((int)Images.Image_RealGauge).fillAmount = targetWave / _maxWaveGauge;
+                while (true)
+                {
+                    if (_currWaveGauge < targetWave)
+                    {
+                        _currWaveGauge = targetWave;
+                        Get<Slider>((int)Sliders.Slider_WaveGauge).value = _currWaveGauge / _maxWaveGauge;
+                        _coWaveChange = null;
+                        break;
+                    }
+                    _currWaveGauge -= value * Time.deltaTime * 150;
+                    Get<Slider>((int)Sliders.Slider_WaveGauge).value = _currWaveGauge / _maxWaveGauge;
                     yield return new WaitForSeconds(time / 5f);
                 }
             }
@@ -271,6 +266,24 @@ namespace Blind
                 Get<Image>((int)Images.Charge).color = new Color(1f, 1f, 1f, _chargeAlpha / 255f);
                 yield return new WaitForSeconds(0.01f);
             }
+        }
+        public void DisplayMoney()
+        {
+            Get<Text>((int)Texts.Text_Money).text = DataManager.Instance.GameData.money.ToString();
+        }
+        public void RefreshItemCnt()
+        {
+            BagItemInfo info1;
+            DataManager.Instance.GameData.BagItemInfoById.TryGetValue(1, out info1);
+            int itemCnt1 = 0;
+            if (info1 != null) itemCnt1 = info1.itemCnt;
+            Get<Text>((int)Texts.Text_ItemCount1).text = itemCnt1.ToString();
+
+            BagItemInfo info2;
+            DataManager.Instance.GameData.BagItemInfoById.TryGetValue(2, out info2);
+            int itemCnt2 = 0;
+            if (info2 != null) itemCnt2 = info2.itemCnt;
+            Get<Text>((int)Texts.Text_ItemCount2).text = itemCnt2.ToString();
         }
     }
 }

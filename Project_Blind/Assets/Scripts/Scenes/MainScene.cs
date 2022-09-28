@@ -16,6 +16,7 @@ namespace Blind
 
             DataManager.Instance.LoadGameData();
             DataManager.Instance.AddClueItem(Define.ClueItem.TestClue1);
+
         }
         public override void Clear()
         {

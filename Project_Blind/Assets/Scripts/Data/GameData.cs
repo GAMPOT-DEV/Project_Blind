@@ -25,6 +25,8 @@ namespace Blind
         public bool windowMode = false;
         #endregion
 
+        public int money = 0;
+
         #region Clue
         public List<ClueInfo> clueInfos = new List<ClueInfo>();
         #endregion

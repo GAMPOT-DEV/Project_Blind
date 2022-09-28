@@ -21,7 +21,9 @@ namespace Blind
             Image_TestGetItem6,
             Image_TestGetItem7,
 
+            Image_EmptyText,
             Image_TestClear,
+
         }
         enum Texts
         {
@@ -96,6 +98,10 @@ namespace Blind
         public void RefreshUI()
         {
             Size = DataManager.Instance.GameData.talismanInfos.Count;
+
+            if (Size == 0) Get<Image>((int)Images.Image_EmptyText).gameObject.SetActive(true);
+            else Get<Image>((int)Images.Image_EmptyText).gameObject.SetActive(false);
+
             grid.GetComponent<RectTransform>().sizeDelta = new Vector2(800f, 220f * Size);
             for (int i = 0; i < Size; i++)
             {
