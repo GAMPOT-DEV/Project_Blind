@@ -233,11 +233,18 @@ namespace Blind
         {
             base.onHurt();
             state = State.Hitted;
+            StartCoroutine(onHurtAnim());
             if (co_stun != null)
             {
                 StopCoroutine(co_stun);
                 _anim.SetBool("Stun", false);
             }
+        }
+
+        private IEnumerator onHurtAnim()
+        {
+            
+            yield return new WaitForSeconds(0.1f);
         }
 
         protected void Flip()

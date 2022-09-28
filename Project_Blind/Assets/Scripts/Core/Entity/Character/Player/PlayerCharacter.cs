@@ -146,13 +146,13 @@ namespace Blind
             }
             else
             {
-                
                 isInputCheck = true;
             }
 
             if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
             {
                 _animator.SetBool("RunEnd", true);
+                SoundManager.Instance.StopEffect();
             }
 
             speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
@@ -206,7 +206,6 @@ namespace Blind
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = Data.jumpSpeed;
                 }
-                Debug.Log(_moveVector.y);
                 var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
                 obj.transform.position = transform.position + Vector3.up * 2;
                 SoundManager.Instance.Play("Jump",Define.Sound.Effect);
@@ -558,11 +557,6 @@ namespace Blind
         {
             
             
-        }
-        protected void PlayWalkingSound()
-        {
-            if (isInputCheck) return;
-            SoundManager.Instance.Play("Player/Walk",Define.Sound.Effect);
         }
     }
 }
