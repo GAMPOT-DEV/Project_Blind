@@ -67,6 +67,7 @@ namespace Data
     public class BagItem
     {
         public int id;
+        public int cost;
         public string name;
         public string shortDescription;
         public string longDescription;

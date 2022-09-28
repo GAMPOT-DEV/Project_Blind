@@ -22,6 +22,8 @@ namespace Blind
         string _titleStr;
         string _name = "이름 없음";
 
+        public Action EndEvent = null;
+
         Coroutine _showText;
 
         Dictionary<int, List<Data.Script>> conversations;
@@ -30,6 +32,10 @@ namespace Blind
             Bind<Image>(typeof(Images));
             Bind<Text>(typeof(Texts));
             Get<Image>((int)Images.Image_Button).gameObject.BindEvent(PushNextButton, Define.UIEvent.Click);
+
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
+
             PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
             if (player != null) player.Talk();
         }
@@ -72,6 +78,9 @@ namespace Blind
                 UIManager.Instance.CloseNormalUI(this);
                 PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
                 if(player != null) player.UnTalk();
+                UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+                if (EndEvent != null) EndEvent.Invoke();
+                EndEvent = null;
                 return;
             }
             ShowText(page);
@@ -91,6 +100,22 @@ namespace Blind
             }
             _showText = null;
         }
+        #region Update
+        private void HandleUIKeyInput()
+        {
+            if (!Input.anyKey)
+                return;
+
+            if (_uiNum != UIManager.Instance.UINum)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                PushNextButton();
+                return;
+            }
+        }
+        #endregion
     }
 }
 
