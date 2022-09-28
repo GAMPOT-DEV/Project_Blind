@@ -31,8 +31,7 @@ namespace Blind
         {
             while (true)
             {
-                //var next = _rand.Next(1, 5);
-                var next = 4;
+                var next = _rand.Next(1, 5);
                 ChangePattern(next);
                 yield return StartPattern();
                 yield return new WaitForSeconds(1.5f);

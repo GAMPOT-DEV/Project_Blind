@@ -20,11 +20,12 @@ namespace Blind
         public MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
-        [SerializeField] private Paringable _paring;
+        [SerializeField] public Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
         private Rigidbody2D rigid;
         public CinemachineImpulseSource _source;
+        public CinemachineVirtualCamera _camera;
 
         [FormerlySerializedAs("_spawnPoint")] public Transform spawnPoint;
         [SerializeField] private Transform _bulletPoint;
@@ -81,6 +82,8 @@ namespace Blind
             _renderer = GetComponent<SpriteRenderer>();
             rigid = GetComponent<Rigidbody2D>();
             _source = GetComponent<CinemachineImpulseSource>();
+            _camera = GetComponent<CinemachineVirtualCamera>();
+            _camera = GameObject.Find("CM Virtual Camera").GetComponent<CinemachineVirtualCamera>();
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
@@ -498,7 +501,11 @@ namespace Blind
 
         public override Facing GetFacing()
         {
-            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+            if (_renderer == null)
+            {
+                Debug.Log("tlfgjpdah");
+                return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+            }
             else return _renderer.flipX ? Facing.Left : Facing.Right;
         }
 

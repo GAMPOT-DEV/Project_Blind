@@ -21,6 +21,7 @@ namespace Blind
         private Vector2 hitbox;
         [SerializeField] private GameObject ParingBox;
         private BoxCollider2D _paringBox;
+        private Facing face = Facing.Left;
         public void Init(int x = 1, int y = 1)
         {
             this.x = x;
@@ -59,9 +60,24 @@ namespace Blind
             Gizmos.DrawLine(size, new Vector2(hitbox.x, size.y));
 
         }
+        public virtual void Facings(Facing _face)
+        {
+            if (face != _face)
+            {
+                face = _face;
+                var position = transform.localPosition;
+                position = new Vector3((float)_face*Math.Abs(position.x),position.y,position.z);
+                transform.localPosition = position;
+                var localScale = transform.localScale;
+                localScale = new Vector3(-(float)_face*Math.Abs(localScale.x),localScale.y,localScale.z);
+                transform.localScale = localScale;
+            }
+        }
         public void OnTriggerStay2D(Collider2D col)
         {
             if (!_isParing) return;
+
+            Facings(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>().GetFacing());
             if (col.gameObject.GetComponent<BatMonster>() != null)
             {
                 Debug.Log("DD");
