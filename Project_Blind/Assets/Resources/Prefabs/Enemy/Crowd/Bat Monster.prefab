@@ -51,7 +51,6 @@ GameObject:
   - component: {fileID: 3758395228494642314}
   - component: {fileID: 3758395228494642421}
   - component: {fileID: 3758395228494642420}
-  - component: {fileID: 1251601537}
   m_Layer: 14
   m_Name: Bat Monster
   m_TagString: Enemy
@@ -93,7 +92,7 @@ Rigidbody2D:
   m_Mass: 1000000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 150
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -249,7 +248,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3758395228494642423}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a95a58fc3c1409148a304641924e0be2, type: 3}
   m_Name: 
@@ -371,29 +370,6 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 8192
---- !u!114 &1251601537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3758395228494642423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de0061c06e0b94744bc1bf2589bddb2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: ddbd3f51f221c4b57a1b05be7c80325d, type: 2}
-  _attack: {fileID: 0}
-  WallLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  WallCheck: {fileID: 3758395228340987582}
-  state: 0
-  CurrentStunGauge: 0
-  MaxStunGauge: 10
-  IsAttack: 0
-  AttackHitBoxRange: {fileID: 0}
 --- !u!1 &3758395228640963974
 GameObject:
   m_ObjectHideFlags: 0

@@ -425,17 +425,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fe7c7235ba6e2745b5fab498abab0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: ddbd3f51f221c4b57a1b05be7c80325d, type: 2}
+  Data: {fileID: 11400000, guid: f9bb3a6068a83c748a7746a54fe64361, type: 2}
   _attack: {fileID: 0}
   WallLayer:
     serializedVersion: 2
     m_Bits: 128
   WallCheck: {fileID: 6332912896856356007}
+  state: 0
   CurrentStunGauge: 0
   MaxStunGauge: 10
   IsAttack: 0
-  StunGauge: 0
-  maxStunGauge: 0
 --- !u!50 &5754174511786141345
 Rigidbody2D:
   serializedVersion: 4
@@ -451,7 +450,7 @@ Rigidbody2D:
   m_Mass: 1000000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 150
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
