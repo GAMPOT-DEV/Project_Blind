@@ -454,11 +454,13 @@ namespace Blind
         }
         public void Talk()
         {
+            InputController.Instance.ReleaseControl();
             _animator.SetBool("Talk", true);
         }
 
         public void UnTalk()
         {
+            InputController.Instance.GainControl();
             _animator.SetBool("Talk" , false);
         }
         
@@ -520,8 +522,8 @@ namespace Blind
         {
             Debug.Log("디버프 걸림");
             isOnLava = true;
-            _defaultSpeed -= 2.0f;
-            Data.jumpSpeed = 0.3f;
+            _defaultSpeed -= 1.0f;
+            Data.jumpSpeed = 0.5f;
             StartCoroutine(GetDotDamage());
 
         }
