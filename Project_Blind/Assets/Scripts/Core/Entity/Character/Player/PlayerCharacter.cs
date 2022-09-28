@@ -44,6 +44,7 @@ namespace Blind
         public bool isPowerAttackEnd;
         public bool isPowerAttack;
         public bool isParingCheck = false;
+        public bool isInputCheck;
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
@@ -123,7 +124,6 @@ namespace Blind
             int flip = 0;
             float speed = 0;
             float jumpattackspeed = 3f;
-            bool isInputCheck;
             if (InputController.Instance.LeftMove.Held)
             {
                 flip = -1;
@@ -144,7 +144,11 @@ namespace Blind
                 _animator.SetBool("RunEnd", false);
                 SoundManager.Instance.StopEffect();
             }
-            else isInputCheck = true;
+            else
+            {
+                
+                isInputCheck = true;
+            }
 
             if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
             {
@@ -554,6 +558,11 @@ namespace Blind
         {
             
             
+        }
+        protected void PlayWalkingSound()
+        {
+            if (isInputCheck) return;
+            SoundManager.Instance.Play("Player/Walk",Define.Sound.Effect);
         }
     }
 }
