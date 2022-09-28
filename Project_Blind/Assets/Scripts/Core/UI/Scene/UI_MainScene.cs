@@ -12,6 +12,7 @@ namespace Blind
         const int BUTTON_COUNT = (int)Images.Image_Exit + 1;
         private Action[] _actions = new Action[BUTTON_COUNT];
         private int _currCursor;
+        private bool _goNextScene = false;
         TransitionPoint _transition;
 
         [SerializeField] private Sprite _startSprite_Click;
@@ -108,7 +109,7 @@ namespace Blind
             if (_uiNum != UIManager.Instance.UINum)
                 return;
 
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return) && _goNextScene == false)
             {
                 Debug.Log("Enter");
                 _actions[_currCursor].Invoke();
@@ -130,8 +131,11 @@ namespace Blind
         private void PushStartButton()
         {
             ChangeCursor((int)Images.Image_Start);
-            UIManager.Instance.Clear();
-            _transition.TransitionInternal();
+            ResourceManager.Instance.Instantiate("UI/Video");
+            _goNextScene = true;
+            gameObject.SetActive(false);
+            //UIManager.Instance.Clear();
+            //_transition.TransitionInternal();
         }
         private void PushOptionButton()
         {

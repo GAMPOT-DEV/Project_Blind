@@ -37,6 +37,7 @@ namespace Blind
             _volumes[(int)Define.Sound.Bgm] = DataManager.Instance.GameData.bgmVolume;
             _volumes[(int)Define.Sound.Effect] = DataManager.Instance.GameData.effectVolume;
             _audioSources[(int)Define.Sound.Bgm].loop = true;
+            RefreshSound();
         }
         public void Clear()
         {
