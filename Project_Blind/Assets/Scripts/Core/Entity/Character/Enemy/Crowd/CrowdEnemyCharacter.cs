@@ -24,8 +24,9 @@ namespace Blind
         protected float _patrolTime;
         protected Animator _anim;
         protected float _chaseRange = 20;
-        protected float afterDelayTime = 0.3f;
+        protected float afterDelayTime = 0.6f;
         protected bool attackable = true;
+        protected int currentAttack = 0;
 
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
@@ -46,14 +47,14 @@ namespace Blind
             patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
             playerFinder.setRange(Data.sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
-            _anim = GetComponent<Animator>();
-            player = GameObject.FindGameObjectWithTag("Player");
+            _anim = GetComponent<Animator>();  
             //attackSense.setRange(Data.attackRange);
         }
 
         protected void Start()
         {
             SceneLinkedSMB<CrowdEnemyCharacter>.Initialise(_anim, this);
+            player = GameObject.FindGameObjectWithTag("Player");
         }
 
         protected virtual void FixedUpdate()
@@ -92,6 +93,7 @@ namespace Blind
                     updateAvoid();
                     break;
             }
+
             if (Hp.GetHP() <= 0)
                 state = State.Die;
 
@@ -142,6 +144,12 @@ namespace Blind
                 return;
             }
 
+            if (attackSense.Attackable() && attackable)
+            {
+                state = State.Attack;
+                return;
+            }
+
             if (co_default == null)
             {
                 co_default = StartCoroutine(CoDefault());
@@ -152,6 +160,8 @@ namespace Blind
         
         protected virtual void updateChase()
         {
+            flipToFacing();
+
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
@@ -185,10 +195,6 @@ namespace Blind
         protected virtual void updateHitted()
         {
             _anim.SetTrigger("Hurt");
-            if (Hp.GetHP() <= 0)
-            {
-                state = State.Die;
-            }
             NextAction();
         }
         
@@ -200,11 +206,7 @@ namespace Blind
         protected virtual void updateDie()
         {
             gameObject.layer = 16;
-            if (_anim.GetBool("Dead") == false)
-            {
-                _anim.Play("Dead");
-                _anim.SetBool("Dead", true);
-            }
+            _anim.SetInteger("State", 6);
             DeathCallback.Invoke();
             Destroy(gameObject, 3f);
         }
@@ -238,7 +240,6 @@ namespace Blind
             _anim.SetTrigger("Hurt");
             flipToFacing();
             HurtMove(GetFacing());
-            state = State.Hitted;
             StartCoroutine(onHurtAnim());
             if (co_stun != null)
             {
@@ -318,12 +319,19 @@ namespace Blind
             NextAction();
 
             createAttackHitBox = false;
+            currentAttack = 0;
             Destroy(col);
+            attackable = false;
             StartCoroutine(Delay());
         }
 
         public void AniParingenable()
         {
+            if (!createAttackHitBox)
+            {
+                AttackHitBox();
+                createAttackHitBox = true;
+            }
             IsAttack = true;
         }
 
@@ -364,6 +372,11 @@ namespace Blind
                 state = State.Chase;
             else
                 state = State.Patrol;
+        }
+
+        public virtual void AttackHitBox()
+        {
+            return;
         }
     }
 }
