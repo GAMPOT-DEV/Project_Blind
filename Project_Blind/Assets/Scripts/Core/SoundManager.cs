@@ -53,6 +53,16 @@ namespace Blind
             AudioClip audioClip = GetOrAddAudioClip(path, type);
             Play(audioClip, type, pitch);
         }
+
+        public void PlayNoOverlapEffect(string path,float pitch = 1.0f)
+        {
+            AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
+            if (audioSource.isPlaying) return;
+            AudioClip audioClip = GetOrAddAudioClip(path);
+            audioSource.pitch = pitch;
+            audioSource.clip = audioClip;
+            audioSource.Play();
+        }
         public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
         {
             if (audioClip == null) return;

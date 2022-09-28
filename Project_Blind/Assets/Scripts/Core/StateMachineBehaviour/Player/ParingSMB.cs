@@ -9,8 +9,12 @@ namespace Blind
         {
             _monoBehaviour.EnableParing();
             _monoBehaviour.DieStopVector(Vector2.zero);
+
             if (_monoBehaviour.isParingCheck)
             {
+                _monoBehaviour._paring.gameObject.transform.position =
+                    new Vector2(_monoBehaviour._paring.gameObject.transform.position.x * -1,
+                        _monoBehaviour._paring.gameObject.transform.position.y);
                 animator.speed = 2f;
             }
         }

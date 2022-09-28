@@ -20,11 +20,12 @@ namespace Blind
         public MeleeAttackable _attack;
         private Animator _animator;
         private SpriteRenderer _renderer;
-        private Paringable _paring;
+        [SerializeField] public Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
         private Rigidbody2D rigid;
         public CinemachineImpulseSource _source;
+        public CinemachineVirtualCamera _camera;
 
         [FormerlySerializedAs("_spawnPoint")] public Transform spawnPoint;
         [SerializeField] private Transform _bulletPoint;
@@ -44,6 +45,7 @@ namespace Blind
         public bool isPowerAttackEnd;
         public bool isPowerAttack;
         public bool isParingCheck = false;
+        public bool isInputCheck;
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
@@ -77,11 +79,12 @@ namespace Blind
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             skeletonmecanim = GetComponent<SkeletonMecanim>();
             _attack = GetComponent<MeleeAttackable>();
-            _paring = GetComponent<Paringable>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             rigid = GetComponent<Rigidbody2D>();
             _source = GetComponent<CinemachineImpulseSource>();
+            _camera = GetComponent<CinemachineVirtualCamera>();
+            _camera = GameObject.Find("CM Virtual Camera").GetComponent<CinemachineVirtualCamera>();
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
@@ -91,7 +94,6 @@ namespace Blind
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
             _attack.Init(Data.attack_x,Data.attack_y,Data.damage);
-            _paring.Init(Data.paring_x, Data.paring_y);
 
 
             // TEST
@@ -126,7 +128,6 @@ namespace Blind
             int flip = 0;
             float speed = 0;
             float jumpattackspeed = 3f;
-            bool isInputCheck;
             if (InputController.Instance.LeftMove.Held)
             {
                 flip = -1;
@@ -147,11 +148,15 @@ namespace Blind
                 _animator.SetBool("RunEnd", false);
                 SoundManager.Instance.StopEffect();
             }
-            else isInputCheck = true;
+            else
+            {
+                isInputCheck = true;
+            }
 
             if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
             {
                 _animator.SetBool("RunEnd", true);
+                SoundManager.Instance.StopEffect();
             }
 
             speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
@@ -205,7 +210,6 @@ namespace Blind
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = Data.jumpSpeed;
                 }
-                Debug.Log(_moveVector.y);
                 var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
                 obj.transform.position = transform.position + Vector3.up * 2;
                 SoundManager.Instance.Play("Jump",Define.Sound.Effect);
@@ -451,11 +455,13 @@ namespace Blind
         }
         public void Talk()
         {
+            InputController.Instance.ReleaseControl();
             _animator.SetBool("Talk", true);
         }
 
         public void UnTalk()
         {
+            InputController.Instance.GainControl();
             _animator.SetBool("Talk" , false);
         }
         
@@ -502,7 +508,11 @@ namespace Blind
 
         public override Facing GetFacing()
         {
-            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+            if (_renderer == null)
+            {
+                Debug.Log("tlfgjpdah");
+                return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+            }
             else return _renderer.flipX ? Facing.Left : Facing.Right;
         }
 
@@ -513,8 +523,8 @@ namespace Blind
         {
             Debug.Log("디버프 걸림");
             isOnLava = true;
-            _defaultSpeed -= 2.0f;
-            Data.jumpSpeed = 0.3f;
+            _defaultSpeed -= 1.0f;
+            Data.jumpSpeed = 0.5f;
             StartCoroutine(GetDotDamage());
 
         }

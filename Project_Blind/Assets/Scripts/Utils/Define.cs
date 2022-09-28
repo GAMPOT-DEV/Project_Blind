@@ -134,12 +134,13 @@ public class Define
 
         Test1,
         Test2,
-
-        CutScene1,
-        CutScene2,
-        CutScene3,
-        CutScene4,
-        CutScene5
+        Stage1,
+        Stage2,
+        Stage2_1,
+        Stage2_2,
+        Stage3,
+        Stage4,
+        Stage5,
     }
     public enum TalismanAbility
     {
