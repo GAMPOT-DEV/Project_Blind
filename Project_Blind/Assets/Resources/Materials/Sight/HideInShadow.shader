@@ -7,7 +7,7 @@ Shader "Universal Render Pipeline/2D/HideInShadow"
         _NormalMap("Normal Map", 2D) = "bump" {}
         _ShowInShadow("ShowInShadow",Float) = 0 
         _HitColor("HitColor", Color) = (1,1,1,0)
-        _EnableHit("Enable External Alpha", Float) = 0
+        _EnableHit("EnableHit", Float) = 0
         
         _OutlineColor("Outline Color", Color) = (1,1,1,1)
         _Outline ("OutlineWidth", Range(0, 1)) = 1

@@ -39,7 +39,7 @@ namespace Blind
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
             state = State.Patrol;
@@ -267,8 +267,10 @@ namespace Blind
 
         private IEnumerator onHurtAnim()
         {
-            
-            yield return new WaitForSeconds(0.1f);
+            Debug.Log(_renderer.material);
+            _renderer.material.SetFloat("EnableHit",1);
+            yield return new WaitForSeconds(1f);
+            _renderer.material.SetFloat("EnableHit",0);
         }
 
         protected void Flip()
