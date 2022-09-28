@@ -11,6 +11,7 @@ namespace Blind
         private IEnumerator<Stage> currentStage;
         private int currentStageIndex;
         public PlayerCharacter player;
+        public GameObject fadeOut;
 
 
         protected override void Awake()
@@ -31,24 +32,30 @@ namespace Blind
             if (currentStage.MoveNext())
             {
                 prev.Disable();
-                if (currentStage.Current != null) 
+                if (currentStage.Current != null)
                     currentStage.Current.Enable();
                 currentStageIndex++;
-                Debug.Log("현재 스테이지는 : "+currentStageIndex);
+                if (currentStageIndex == 6)
+                {
+                    fadeOut.GetComponent<FadeOutExit>().enabled = true;
+                    return;
+                }
+                Debug.Log("현재 스테이지는 : " + currentStageIndex);
                 player._moveVector = Vector3.zero;
                 ShowText("Stage" + currentStageIndex);
+
             }
         }
 
         public void ShowText(string stage)
         {
             UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-            ui.SetName("원효대사"+stage); //가시성을 위해 임시로  stage 추가, 이후 제거하면 됨
-            ui.SetScriptTitle((Define.ScriptTitle)Enum.Parse(typeof(Define.ScriptTitle),stage));
+            ui.SetName("원효대사" + stage); //가시성을 위해 임시로  stage 추가, 이후 제거하면 됨
+            ui.SetScriptTitle((Define.ScriptTitle)Enum.Parse(typeof(Define.ScriptTitle), stage));
         }
 
-        
 
-        
+
+
     }
 }
