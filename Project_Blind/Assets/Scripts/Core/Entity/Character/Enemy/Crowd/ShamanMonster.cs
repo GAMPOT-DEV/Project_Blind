@@ -41,14 +41,14 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            _anim.SetBool("Basic Attack", true);
+            _anim.SetInteger("State", 3);
         }
 
         protected override void updateAvoid()
         {
             if (Co_avoid == null)
             {
-                _anim.SetBool("Avoid", true);
+                
                 Co_avoid = StartCoroutine(CoAvoid());
             }
 
@@ -59,13 +59,14 @@ namespace Blind
                 state = State.Attack;
             }
 
+            _anim.SetInteger("State", 7);
             _characterController2D.Move(-playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         public void AniMakeProjectile()
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
-            Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
+            Vector2 dir = player.transform.position - gameObject.transform.position;
             projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, _projectileSpeed, gameObject);
             _anim.SetBool("Basic Attack", false);
             NextAction();
@@ -82,10 +83,9 @@ namespace Blind
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
-                state = State.Default;
+                state = State.Patrol;
 
             Co_avoid = null;
-            _anim.SetBool("Avoid", false);
         }
 
         protected override void NextAction()

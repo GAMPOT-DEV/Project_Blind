@@ -55,5 +55,13 @@ namespace Blind
         {
             SoundManager.Instance.Play("Crowd/Bat/Death");
         }
+
+        public override void AttackHitBox()
+        {
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x + 3.5f, _col.offset.y);
+            col.size = new Vector2(7, 10);
+            col.isTrigger = true;
+        }
     }
 }

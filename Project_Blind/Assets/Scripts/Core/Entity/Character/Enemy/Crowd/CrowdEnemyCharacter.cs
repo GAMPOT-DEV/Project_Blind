@@ -47,14 +47,14 @@ namespace Blind
             patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
             playerFinder.setRange(Data.sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
-            _anim = GetComponent<Animator>();
-            player = GameObject.FindGameObjectWithTag("Player");
+            _anim = GetComponent<Animator>();  
             //attackSense.setRange(Data.attackRange);
         }
 
         protected void Start()
         {
             SceneLinkedSMB<CrowdEnemyCharacter>.Initialise(_anim, this);
+            player = GameObject.FindGameObjectWithTag("Player");
         }
 
         protected virtual void FixedUpdate()
@@ -367,12 +367,9 @@ namespace Blind
                 state = State.Patrol;
         }
 
-        public void AttackHitBox()
+        public virtual void AttackHitBox()
         {
-            col = gameObject.AddComponent<BoxCollider2D>();
-            col.offset = new Vector2(_col.offset.x + 3.5f, _col.offset.y);
-            col.size = new Vector2(7, 10);
-            col.isTrigger = true;
+            return;
         }
     }
 }
