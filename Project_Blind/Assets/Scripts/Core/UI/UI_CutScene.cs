@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
@@ -12,7 +12,6 @@ namespace Blind
         bool _stop2 = false;
         bool _stop3 = false;
         bool _stop4 = false;
-        bool _stop5 = false;
 
         TransitionPoint _transition;
         private void Start()
@@ -25,7 +24,7 @@ namespace Blind
             {
                 videoPlayer.Pause();
                 UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-                ui.SetName("ÁØÁ¤");
+                ui.SetName("ì¤€ì •");
                 ui.SetScriptTitle(Define.ScriptTitle.CutScene1);
                 ui.EndEvent += Play;
                 _stop1 = false;
@@ -35,7 +34,7 @@ namespace Blind
             {
                 videoPlayer.Pause();
                 UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-                ui.SetName("³²¸ð");
+                ui.SetName("ë‚¨ëª¨");
                 ui.SetScriptTitle(Define.ScriptTitle.CutScene2);
                 ui.EndEvent += Play;
                 _stop2 = false;
@@ -45,7 +44,7 @@ namespace Blind
             {
                 videoPlayer.Pause();
                 UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-                ui.SetName("ÁØÁ¤");
+                ui.SetName("ì¤€ì •");
                 ui.SetScriptTitle(Define.ScriptTitle.CutScene3);
                 ui.EndEvent += Play;
                 _stop3 = false;
@@ -55,21 +54,11 @@ namespace Blind
             {
                 videoPlayer.Pause();
                 UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-                ui.SetName("³²¸ð");
+                ui.SetName("ë‚¨ëª¨");
                 ui.SetScriptTitle(Define.ScriptTitle.CutScene4);
                 ui.EndEvent += Play;
                 _stop4 = false;
-                _stop5 = true;
             }
-            //if (_stop5 && videoPlayer.time >= 15.5f)
-            //{
-            //    videoPlayer.Pause();
-            //    UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-            //    ui.SetName("ÁØÁ¤");
-            //    ui.SetScriptTitle(Define.ScriptTitle.CutScene5);
-            //    ui.EndEvent += Play;
-            //    _stop5 = false;
-            //}
             if (videoPlayer.clip.length - videoPlayer.time <= 0.2f)
             {
                 UIManager.Instance.Clear();

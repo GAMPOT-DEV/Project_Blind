@@ -141,6 +141,12 @@ public class Define
         Stage3,
         Stage4,
         Stage5,
+
+        CutScene1,
+        CutScene2,
+        CutScene3,
+        CutScene4,
+        CutScene5,
     }
     public enum TalismanAbility
     {
