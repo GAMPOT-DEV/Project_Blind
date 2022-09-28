@@ -21,7 +21,7 @@ namespace Blind
             base.Awake();
             // 플레이어 할당하는 코드
             // 나중에 고치면 좋을듯
-            Player = ResourceManager.Instance.Instantiate("Player2").GetComponent<PlayerCharacter>();
+            Player = ResourceManager.Instance.Instantiate("Player3").GetComponent<PlayerCharacter>();
         }
 
         public void Start()
