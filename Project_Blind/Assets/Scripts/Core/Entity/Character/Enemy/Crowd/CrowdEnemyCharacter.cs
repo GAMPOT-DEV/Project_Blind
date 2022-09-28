@@ -236,9 +236,10 @@ namespace Blind
         {
             base.onHurt();
             _anim.SetTrigger("Hurt");
-            //state = State.Hitted;
             flipToFacing();
             HurtMove(GetFacing());
+            state = State.Hitted;
+            StartCoroutine(onHurtAnim());
             if (co_stun != null)
             {
                 StopCoroutine(co_stun);
@@ -262,6 +263,14 @@ namespace Blind
                         Flip();
                     break;
             }
+        }
+
+        private IEnumerator onHurtAnim()
+        {
+            Debug.Log(_renderer.material);
+            _renderer.material.SetFloat("EnableHit",1);
+            yield return new WaitForSeconds(1f);
+            _renderer.material.SetFloat("EnableHit",0);
         }
 
         protected void Flip()

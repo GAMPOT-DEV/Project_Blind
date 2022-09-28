@@ -45,6 +45,7 @@ namespace Blind
         public bool isPowerAttackEnd;
         public bool isPowerAttack;
         public bool isParingCheck = false;
+        public bool isInputCheck;
         public int maxWaveGauge;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
@@ -126,7 +127,6 @@ namespace Blind
             int flip = 0;
             float speed = 0;
             float jumpattackspeed = 3f;
-            bool isInputCheck;
             if (InputController.Instance.LeftMove.Held)
             {
                 flip = -1;
@@ -147,11 +147,15 @@ namespace Blind
                 _animator.SetBool("RunEnd", false);
                 SoundManager.Instance.StopEffect();
             }
-            else isInputCheck = true;
+            else
+            {
+                isInputCheck = true;
+            }
 
             if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
             {
                 _animator.SetBool("RunEnd", true);
+                SoundManager.Instance.StopEffect();
             }
 
             speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
@@ -205,7 +209,6 @@ namespace Blind
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = Data.jumpSpeed;
                 }
-                Debug.Log(_moveVector.y);
                 var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
                 obj.transform.position = transform.position + Vector3.up * 2;
                 SoundManager.Instance.Play("Jump",Define.Sound.Effect);
