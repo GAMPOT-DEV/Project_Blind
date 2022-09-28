@@ -8,7 +8,7 @@ namespace Blind
     {
         [SerializeField] private Transform AttackHitBoxRange;
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
 

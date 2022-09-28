@@ -42,6 +42,7 @@ namespace Blind
         private float DOWN_DIST;
 
         private Coroutine _coroutine = null;
+        int _coroutineState = 0;
         public override void Init()
         {
             Bind<Image>(typeof(Images));
@@ -50,8 +51,26 @@ namespace Blind
             _cludData = DataManager.Instance.ClueDict;
             Get<Image>((int)Images.Image_ItemIcon).gameObject.BindEvent(PushItemIcon, Define.UIEvent.Click);
 
-            UP_DIST = UIManager.Instance.Resolution.height / 2;
-            DOWN_DIST = UIManager.Instance.Resolution.height / 10;
+            UP_DIST = 500f;
+            DOWN_DIST = 130f;
+        }
+        private void OnEnable()
+        {
+            if (_coroutineState == -1)
+            {
+                StartCoroutine(CoGoDown());
+            }
+            else if (_coroutineState == 1)
+            {
+                StartCoroutine(CoGoUp());
+            }
+            //Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * DOWN_DIST;
+            //SetNonClickedState();
+            //Get<Image>((int)Images.Image_Z).sprite = Button_Non_Clicked;
+            //_pushZButton = false;
+            //Get<Text>((int)Texts.Text_ClueDesc).gameObject.SetActive(false);
+            //Get<Text>((int)Texts.Text_ClueName).gameObject.SetActive(true);
+            //_coroutine = null;
         }
         public void SetItem(int itemId, int index, UI_Clue owner)
         {
@@ -134,12 +153,14 @@ namespace Blind
         }
         IEnumerator CoGoUp()
         {
+            _coroutineState = 1;
             while (true)
             {
                 if (Get<Image>((int)Images.Image_Line_Down).transform.position.y + UP_DIST <= Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y)
                 {
                     Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * UP_DIST;
                     _coroutine = null;
+                    _coroutineState = 0;
                     break;
                 }
                 Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position += Vector3.up * 800f * Time.unscaledDeltaTime;
@@ -148,12 +169,14 @@ namespace Blind
         }
         IEnumerator CoGoDown()
         {
+            _coroutineState = -1;
             while (true)
             {
                 if (Get<Image>((int)Images.Image_Line_Down).transform.position.y + DOWN_DIST >= Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y)
                 {
                     Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * DOWN_DIST;
                     _coroutine = null;
+                    _coroutineState = 0;
                     break;
                 }
                 Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position -= Vector3.up * 800f * Time.unscaledDeltaTime;

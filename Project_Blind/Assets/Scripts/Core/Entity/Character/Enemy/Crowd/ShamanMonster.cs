@@ -17,15 +17,6 @@ namespace Blind
         protected void Awake()
         {
             base.Awake();
-            /*
-            sensingRange = new Vector2(8f, 5f);
-            _speed = 0.07f;
-            _runSpeed = 0.1f;
-            _attackCoolTime = 0.5f;
-            _attackSpeed = 0.3f;
-            _attackRange = new Vector2(6f, 5f);
-            _stunTime = 1f;
-            */
             _patrolTime = 1.5f;
         }
 

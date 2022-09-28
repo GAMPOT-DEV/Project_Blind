@@ -40,7 +40,7 @@ namespace Blind
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
             state = State.Patrol;
@@ -238,10 +238,9 @@ namespace Blind
         {
             base.onHurt();
             _anim.SetTrigger("Hurt");
-            Debug.Log(Hp.GetHP());
-            //state = State.Hitted;
             flipToFacing();
             HurtMove(GetFacing());
+            StartCoroutine(onHurtAnim());
             if (co_stun != null)
             {
                 StopCoroutine(co_stun);
@@ -265,6 +264,14 @@ namespace Blind
                         Flip();
                     break;
             }
+        }
+
+        private IEnumerator onHurtAnim()
+        {
+            Debug.Log(_renderer.material);
+            _renderer.material.SetFloat("EnableHit",1);
+            yield return new WaitForSeconds(1f);
+            _renderer.material.SetFloat("EnableHit",0);
         }
 
         protected void Flip()
