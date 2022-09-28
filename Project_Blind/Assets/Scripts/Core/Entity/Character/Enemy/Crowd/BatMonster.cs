@@ -39,9 +39,9 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            
             if (!createAttackHitBox)
             {
+                Debug.Log("ÆÐ¸µ");
                 AttackHitBox();
                 createAttackHitBox = true;
             }

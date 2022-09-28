@@ -92,6 +92,7 @@ namespace Blind
                     updateAvoid();
                     break;
             }
+
             if (Hp.GetHP() <= 0)
                 state = State.Die;
 
@@ -185,10 +186,6 @@ namespace Blind
         protected virtual void updateHitted()
         {
             _anim.SetTrigger("Hurt");
-            if (Hp.GetHP() <= 0)
-            {
-                state = State.Die;
-            }
             NextAction();
         }
         
@@ -236,6 +233,7 @@ namespace Blind
         {
             base.onHurt();
             _anim.SetTrigger("Hurt");
+            Debug.Log(Hp.GetHP());
             //state = State.Hitted;
             flipToFacing();
             HurtMove(GetFacing());
