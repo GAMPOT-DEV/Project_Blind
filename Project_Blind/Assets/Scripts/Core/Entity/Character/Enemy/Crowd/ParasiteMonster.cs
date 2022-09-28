@@ -30,7 +30,7 @@ namespace Blind {
                     currentAttack = 1;
                 else
                     currentAttack = 2;
-
+                SoundManager.Instance.Play("Crowd/Parasite/Attack1");
             }
 
             flipToFacing();
@@ -61,6 +61,11 @@ namespace Blind {
             col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
             col.size = new Vector2(13, 10);
             col.isTrigger = true;
+        }
+
+        public override void WalkSound()
+        {
+            SoundManager.Instance.Play("Crowd/Parasite/Move");
         }
     }
 }

@@ -39,6 +39,7 @@ namespace Blind
         private State tmp = State.Die;
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
+        protected bool onSound = false;
 
         protected void Awake()
         {
@@ -104,12 +105,14 @@ namespace Blind
         {
             if (attackSense.Attackable() && attackable)
             {
+                SoundManager.Instance.StopEffect();
                 state = State.Attack;
                 return;
             }
 
             if (playerFinder.FindPlayer())
             {
+                SoundManager.Instance.StopEffect();
                 state = State.Chase;
                 if (co_patrol != null)
                 {
@@ -165,13 +168,21 @@ namespace Blind
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
+                onSound = false;
                 return;
             }
 
             if (attackSense.Attackable() && attackable)
             {
                 state = State.Attack;
+                onSound = false;
                 return;
+            }
+
+            if (!onSound)
+            {
+                onSound = true;
+                WalkSound();
             }
 
             _anim.SetInteger("State", 2);
@@ -195,6 +206,7 @@ namespace Blind
         protected virtual void updateHitted()
         {
             _anim.SetTrigger("Hurt");
+            onSound = false;
             NextAction();
         }
         
@@ -286,7 +298,9 @@ namespace Blind
 
         protected IEnumerator CoPatrol(float patrolTime)
         {
+            
             yield return new WaitForSeconds(patrolTime);
+            SoundManager.Instance.StopEffect();
             state = State.Default;
             co_patrol = null;
         }
@@ -368,6 +382,11 @@ namespace Blind
         }
 
         public virtual void AttackHitBox()
+        {
+            return;
+        }
+
+        public virtual void WalkSound()
         {
             return;
         }
