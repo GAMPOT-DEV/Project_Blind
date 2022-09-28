@@ -13,7 +13,7 @@ namespace Blind
             base.Awake();
 
             Data.sensingRange = new Vector2(12f, 8f);
-            Data.speed = 0.3f ;
+            Data.speed = 0.3f;
             Data.runSpeed = 0.33f;
             Data.attackCoolTime = 0.5f;
             Data.attackSpeed = 0.3f;
@@ -35,31 +35,20 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            if (!createAttackHitBox)
-            {
-                Debug.Log("ÆÐ¸µ");
-                AttackHitBox();
-                createAttackHitBox = true;
-            }
-
-            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
+            if (currentAttack == 0)
             {
                 if (Random.Range(0, 100) > 20)
-                {
-                    _anim.SetBool("Basic Attack", true);
-                }
+                    currentAttack = 1;
                 else
-                {
-                    _anim.SetBool("Skill Attack", true);
-                }
-            }
-        }
+                    currentAttack = 2;
 
-        public void AttackHitBox()
-        {
-            col = gameObject.AddComponent<BoxCollider2D>();
-            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
-            col.size = new Vector2(7, 10);
+            }
+
+            flipToFacing();
+            if (currentAttack == 1)
+                _anim.SetInteger("State", 30);
+            else if (currentAttack == 2)
+                _anim.SetInteger("State", 31);
         }
 
         public void DeadSound()

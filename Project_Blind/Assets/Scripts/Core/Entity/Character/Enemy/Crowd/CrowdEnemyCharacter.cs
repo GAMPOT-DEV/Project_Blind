@@ -24,8 +24,9 @@ namespace Blind
         protected float _patrolTime;
         protected Animator _anim;
         protected float _chaseRange = 20;
-        protected float afterDelayTime = 0.3f;
+        protected float afterDelayTime = 0.6f;
         protected bool attackable = true;
+        protected int currentAttack = 0;
 
         public float CurrentStunGauge = 0;
         public float MaxStunGauge = 10f;
@@ -143,6 +144,12 @@ namespace Blind
                 return;
             }
 
+            if (attackSense.Attackable() && attackable)
+            {
+                state = State.Attack;
+                return;
+            }
+
             if (co_default == null)
             {
                 co_default = StartCoroutine(CoDefault());
@@ -199,11 +206,7 @@ namespace Blind
         protected virtual void updateDie()
         {
             gameObject.layer = 16;
-            if (_anim.GetBool("Dead") == false)
-            {
-                _anim.Play("Dead");
-                _anim.SetBool("Dead", true);
-            }
+            _anim.SetInteger("State", 6);
             DeathCallback.Invoke();
             Destroy(gameObject, 3f);
         }
@@ -309,12 +312,19 @@ namespace Blind
             NextAction();
 
             createAttackHitBox = false;
+            currentAttack = 0;
             Destroy(col);
+            attackable = false;
             StartCoroutine(Delay());
         }
 
         public void AniParingenable()
         {
+            if (!createAttackHitBox)
+            {
+                AttackHitBox();
+                createAttackHitBox = true;
+            }
             IsAttack = true;
         }
 
@@ -355,6 +365,14 @@ namespace Blind
                 state = State.Chase;
             else
                 state = State.Patrol;
+        }
+
+        public void AttackHitBox()
+        {
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(_col.offset.x + 3.5f, _col.offset.y);
+            col.size = new Vector2(7, 10);
+            col.isTrigger = true;
         }
     }
 }
