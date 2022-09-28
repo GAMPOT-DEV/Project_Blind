@@ -8,9 +8,11 @@ namespace Blind
     {
         private bool _isInvincibility;
         public UnitHP Hp { get; protected set; }
+        protected Renderer _renderer;
         public void Awake(ScriptableObjects.Character data)
         {
             Hp = new UnitHP(data.maxHp);
+            _renderer = GetComponent<Renderer>();
         }
 
         public void HittedWithKnockBack(AttackInfo attackInfo)
