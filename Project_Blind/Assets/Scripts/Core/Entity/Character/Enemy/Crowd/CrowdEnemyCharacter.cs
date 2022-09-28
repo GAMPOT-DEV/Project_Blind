@@ -25,7 +25,7 @@ namespace Blind
         protected Animator _anim;
         protected float _chaseRange = 20;
         protected float afterDelayTime = 0.6f;
-        protected bool attackable = true;
+        [SerializeField] protected bool attackable = true;
         protected int currentAttack = 0;
 
         public float CurrentStunGauge = 0;
@@ -39,6 +39,7 @@ namespace Blind
         private State tmp = State.Die;
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
+        protected bool onSound = false;
 
         protected override void Awake()
         {
@@ -104,12 +105,14 @@ namespace Blind
         {
             if (attackSense.Attackable() && attackable)
             {
+                SoundManager.Instance.StopEffect();
                 state = State.Attack;
                 return;
             }
 
             if (playerFinder.FindPlayer())
             {
+                SoundManager.Instance.StopEffect();
                 state = State.Chase;
                 if (co_patrol != null)
                 {
@@ -165,13 +168,21 @@ namespace Blind
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
+                onSound = false;
                 return;
             }
 
             if (attackSense.Attackable() && attackable)
             {
                 state = State.Attack;
+                onSound = false;
                 return;
+            }
+
+            if (!onSound)
+            {
+                onSound = true;
+                WalkSound();
             }
 
             _anim.SetInteger("State", 2);
@@ -195,6 +206,7 @@ namespace Blind
         protected virtual void updateHitted()
         {
             _anim.SetTrigger("Hurt");
+            onSound = false;
             NextAction();
         }
         
@@ -241,6 +253,8 @@ namespace Blind
             flipToFacing();
             HurtMove(GetFacing());
             StartCoroutine(onHurtAnim());
+            currentAttack = 0;
+
             if (co_stun != null)
             {
                 StopCoroutine(co_stun);
@@ -293,7 +307,9 @@ namespace Blind
 
         protected IEnumerator CoPatrol(float patrolTime)
         {
+            
             yield return new WaitForSeconds(patrolTime);
+            SoundManager.Instance.StopEffect();
             state = State.Default;
             co_patrol = null;
         }
@@ -321,7 +337,6 @@ namespace Blind
             createAttackHitBox = false;
             currentAttack = 0;
             Destroy(col);
-            attackable = false;
             StartCoroutine(Delay());
         }
 
@@ -337,7 +352,6 @@ namespace Blind
 
         public void AniAttackStart()
         {
-            attackable = false;
             IsAttack = false;
             _attack.EnableDamage();
         }
@@ -355,6 +369,7 @@ namespace Blind
 
         protected IEnumerator Delay()
         {
+            attackable = false;
             yield return new WaitForSeconds(afterDelayTime);
             attackable = true;
         }
@@ -375,6 +390,11 @@ namespace Blind
         }
 
         public virtual void AttackHitBox()
+        {
+            return;
+        }
+
+        public virtual void WalkSound()
         {
             return;
         }
