@@ -25,7 +25,7 @@ namespace Blind
         
         enum Texts
         {
-
+            Text_Money
         }
         enum Images
         {
@@ -44,12 +44,7 @@ namespace Blind
         }
         protected override void Start()
         {
-            EnemyCharacter monster = FindObjectOfType<EnemyCharacter>();
-            if (monster != null)
-            {
-                Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => monster.Hp.GetDamage(1.0f), Define.UIEvent.Click);
-                Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => monster.Hp.GetHeal(1.0f), Define.UIEvent.Click);
-            }
+
         }
         public override void Init()
         {
@@ -72,6 +67,7 @@ namespace Blind
 
             //InitTexts();
             InitEvents();
+            DisplayMoney();
         }
         private void InitTexts()
         {
@@ -85,6 +81,9 @@ namespace Blind
             Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.Hit(5.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.Hp.GetHeal(1.0f), Define.UIEvent.Click);
             Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(TestWaveGauge, Define.UIEvent.Click);
+
+            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => DataManager.Instance.SubMoney(1), Define.UIEvent.Click);
+            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => DataManager.Instance.AddMoney(1), Define.UIEvent.Click);
         }
         private void HandleUIKeyInput()
         {
@@ -221,7 +220,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp += value;
+                    _hp += value * Time.deltaTime * 100;
                     Get<Image>((int)Images.Image_RealHp).fillAmount = _hp / _maxHp;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
@@ -239,7 +238,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp -= value;
+                    _hp -= value * Time.deltaTime * 100;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
                 }
@@ -271,6 +270,10 @@ namespace Blind
                 Get<Image>((int)Images.Charge).color = new Color(1f, 1f, 1f, _chargeAlpha / 255f);
                 yield return new WaitForSeconds(0.01f);
             }
+        }
+        public void DisplayMoney()
+        {
+            Get<Text>((int)Texts.Text_Money).text = DataManager.Instance.GameData.money.ToString();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Blind
             Test
         }
 
-        protected State state;
+        [SerializeField] protected State state;
         protected float _patrolTime;
         protected Animator _anim;
         protected float _chaseRange = 20;
@@ -49,6 +49,11 @@ namespace Blind
             _anim = GetComponent<Animator>();
             player = GameObject.FindGameObjectWithTag("Player");
             //attackSense.setRange(Data.attackRange);
+        }
+
+        protected void Start()
+        {
+            SceneLinkedSMB<CrowdEnemyCharacter>.Initialise(_anim, this);
         }
 
         protected virtual void FixedUpdate()
@@ -89,22 +94,26 @@ namespace Blind
             }
             if (Hp.GetHP() <= 0)
                 state = State.Die;
-            /*if (state != tmp)
-            {
-                Debug.Log(state);
-                tmp = state;
-            }*/
+
             _characterController2D.OnFixedUpdate();
         }
 
         protected virtual void updatePatrol()
         {
+            if (attackSense.Attackable() && attackable)
+            {
+                state = State.Attack;
+                return;
+            }
+
             if (playerFinder.FindPlayer())
             {
                 state = State.Chase;
-                if (co_patrol != null) StopCoroutine(co_patrol);
-                co_patrol = null;
-                _anim.SetBool("Patrol", false);
+                if (co_patrol != null)
+                {
+                    StopCoroutine(co_patrol);
+                    co_patrol = null;
+                }
                 return;
             }
 
@@ -113,56 +122,49 @@ namespace Blind
                 state = State.Default;
                 if (co_patrol != null) StopCoroutine(co_patrol);
                 co_patrol = null;
-                _anim.SetBool("Patrol", false);
                 return;
             }
 
             if (co_patrol == null)
             {
-                _anim.SetBool("Patrol", true);
                 co_patrol = StartCoroutine(CoPatrol(_patrolTime));
             }
 
+            _anim.SetInteger("State", 1);
             _characterController2D.Move(patrolDirection);
         }
-        
+
         protected virtual void updateDefault()
         {
             if (playerFinder.FindPlayer())
             {
                 state = State.Chase;
-                _anim.SetBool("Default", false);
                 return;
             }
 
             if (co_default == null)
             {
                 co_default = StartCoroutine(CoDefault());
-                _anim.SetBool("Default", true);
             }
+
+            _anim.SetInteger("State", 0);
         }
         
         protected virtual void updateChase()
         {
-            if (_anim.GetBool("Chase") == false)
-            {
-                _anim.SetBool("Chase", true);
-            }
-
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
-                _anim.SetBool("Chase", false);
                 return;
             }
 
             if (attackSense.Attackable() && attackable)
             {
                 state = State.Attack;
-                _anim.SetBool("Chase", false);
                 return;
             }
 
+            _anim.SetInteger("State", 2);
             _characterController2D.Move(playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
@@ -177,6 +179,7 @@ namespace Blind
             {
                 co_stun = StartCoroutine(CoStun());
             }
+            _anim.SetInteger("State", 5);
         }
 
         protected virtual void updateHitted()
@@ -232,11 +235,32 @@ namespace Blind
         protected override void onHurt()
         {
             base.onHurt();
-            state = State.Hitted;
+            _anim.SetTrigger("Hurt");
+            //state = State.Hitted;
+            flipToFacing();
+            HurtMove(GetFacing());
             if (co_stun != null)
             {
                 StopCoroutine(co_stun);
-                _anim.SetBool("Stun", false);
+            }
+        }
+
+        protected void flipToFacing()
+        {
+            if (player == null)
+                player = GameObject.FindGameObjectWithTag("Player");
+
+            switch (GetFacing())
+            {
+                case Facing.Left:
+                    if (player.transform.position.x > transform.position.x)
+                        Flip();
+                    break;
+
+                case Facing.Right:
+                    if (player.transform.position.x < transform.position.x)
+                        Flip();
+                    break;
             }
         }
 
@@ -262,17 +286,11 @@ namespace Blind
             yield return new WaitForSeconds(patrolTime);
             state = State.Default;
             co_patrol = null;
-            _anim.SetBool("Patrol", false);
         }
 
         public virtual IEnumerator CoStun()
         {
-            _anim.SetBool("Stun", true);
-            _anim.SetBool("Basic Attack", false);
-            _anim.SetBool("Skill Attack", false);
-
             yield return new WaitForSeconds(Data.stunTime);
-            _anim.SetBool("Stun", false);
             NextAction();
 
             co_stun = null;
@@ -281,7 +299,6 @@ namespace Blind
         public IEnumerator CoDefault()
         {
             yield return new WaitForSeconds(1f);
-            _anim.SetBool("Default", false);
             state = State.Patrol;
             Flip();
             co_default = null;
@@ -328,20 +345,16 @@ namespace Blind
         protected virtual void NextAction()
         {
             if (attackSense.Attackable())
-                state = State.Attack;
+            {
+                if (attackable)
+                    state = State.Attack;
+                else
+                    state = State.Default;
+            }
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
                 state = State.Patrol;
-        }
-
-        protected virtual void offAllAnimation()
-        {
-            _anim.SetBool("Patrol", false);
-            _anim.SetBool("Default", false);
-            _anim.SetBool("Chase", false);
-            _anim.SetBool("Stun", false);
-            _anim.SetBool("Attack", false);
         }
     }
 }

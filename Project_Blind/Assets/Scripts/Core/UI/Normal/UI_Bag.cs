@@ -20,6 +20,7 @@ namespace Blind
             Image_TestGetItem7,
             Image_TestClearBag,
 
+            Image_EmptyText,
             Image_Dump,
         }
         enum Texts
@@ -69,6 +70,8 @@ namespace Blind
         public void RefreshUI()
         { 
             Size = DataManager.Instance.GameData.bagItemInfos.Count;
+            if (Size == 0) Get<Image>((int)Images.Image_EmptyText).gameObject.SetActive(true);
+            else Get<Image>((int)Images.Image_EmptyText).gameObject.SetActive(false);
 
             if (_currSelectItemId == Define.BagItem.Unknown) ItemWindow.SetActive(false);
             else ItemWindow.SetActive(true);
