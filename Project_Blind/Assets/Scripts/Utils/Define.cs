@@ -134,6 +134,12 @@ public class Define
 
         Test1,
         Test2,
+
+        CutScene1,
+        CutScene2,
+        CutScene3,
+        CutScene4,
+        CutScene5
     }
     public enum TalismanAbility
     {

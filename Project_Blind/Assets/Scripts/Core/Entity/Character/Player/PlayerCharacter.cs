@@ -97,6 +97,7 @@ namespace Blind
             // TEST
             if (FindObjectOfType<UI_FieldScene>() == null)
                 UIManager.Instance.ShowSceneUI<UI_FieldScene>();
+            OnWaveGaugeChanged.Invoke(_currentWaveGauge);
         }
 
         private void Start()
