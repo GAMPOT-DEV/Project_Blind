@@ -153,6 +153,8 @@ namespace Blind
         
         protected virtual void updateChase()
         {
+            flipToFacing();
+
             if (playerFinder.MissPlayer())
             {
                 state = State.Patrol;
