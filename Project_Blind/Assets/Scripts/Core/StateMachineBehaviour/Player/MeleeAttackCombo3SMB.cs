@@ -13,11 +13,9 @@ namespace Blind
         {
             _isOnClick = false;
             _monoBehaviour.StopMoveY();
-            Debug.Log("실행됨");
             if (!_monoBehaviour.isPowerAttack)
             {
-                SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
-                Debug.Log("실행됨");
+                SoundManager.Instance.Play("Player/Attack/3타(수정)수정", Define.Sound.Effect);
             }
         }
 
@@ -76,6 +74,10 @@ namespace Blind
                 _monoBehaviour.MeleeAttackCombo3();
                 _monoBehaviour.isPowerAttack = true;
             }
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
+            }
             
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack))
             {
@@ -104,6 +106,7 @@ namespace Blind
             if(_monoBehaviour._clickcount == 3)
                 _monoBehaviour.MeleeAttackComoEnd();
             _monoBehaviour._attack.DefultDamage();
+            SoundManager.Instance.StopEffect();
             _monoBehaviour.DisableAttack();
             _powerAttack = false;
         }

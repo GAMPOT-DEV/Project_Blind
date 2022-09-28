@@ -15,7 +15,7 @@ namespace Blind
             _isOnClick = false;
             _monoBehaviour.ReAttackSize(4,2, _monoBehaviour.Data.damage);
             _monoBehaviour.StopMoveY();
-            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
+            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/2타", Define.Sound.Effect);
         }
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
         {
@@ -66,6 +66,10 @@ namespace Blind
             {
                 _monoBehaviour.MeleeAttackCombo2();
                 _monoBehaviour.isPowerAttack = true;
+            }
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
             }
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack))
             {

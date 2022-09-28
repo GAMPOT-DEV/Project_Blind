@@ -19,7 +19,7 @@ namespace Blind
             _isOnClick = false;
             _monoBehaviour.ReAttackSize(3,5, _monoBehaviour.Data.damage);
             _monoBehaviour.StopMoveY();
-            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
+            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/1타", Define.Sound.Effect);
             if (!_monoBehaviour.isJump)
             {
                 _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
@@ -84,6 +84,10 @@ namespace Blind
             {
                 _monoBehaviour.MeleeAttackCombo1();
                 _monoBehaviour.isPowerAttack = true;
+            }
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
             }
             
 

@@ -47,6 +47,7 @@ namespace Blind
         public bool isParingCheck = false;
         public bool isInputCheck;
         public int maxWaveGauge;
+        private bool _isInput = false;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
         {
@@ -137,9 +138,8 @@ namespace Blind
             }
 
             if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
-            {
                 flip = 0;
-            }
+
 
             if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down)
             {
@@ -155,7 +155,6 @@ namespace Blind
             if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
             {
                 _animator.SetBool("RunEnd", true);
-                SoundManager.Instance.StopEffect();
             }
 
             speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
@@ -437,9 +436,13 @@ namespace Blind
 
         public bool CheckForItemT()
         {
-            return InputController.Instance.ItemT.Down;
+            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.TestItem1);
         }
 
+        public bool CheckForItemUsing()
+        {
+            return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.TestItem2);
+        }
         public void ItemT()
         {
             _animator.SetTrigger("ItemT");
