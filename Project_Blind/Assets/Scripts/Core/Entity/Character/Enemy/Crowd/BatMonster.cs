@@ -6,10 +6,6 @@ namespace Blind
 {
     public class BatMonster : CrowdEnemyCharacter
     {
-        private Coroutine Co_attack;
-        private Coroutine Co_hitted;
-        private Coroutine Co_stun;
-        private Coroutine Co_die;
         [SerializeField] private Transform AttackHitBoxRange;
 
         protected void Awake()
@@ -17,8 +13,8 @@ namespace Blind
             base.Awake();
 
             Data.sensingRange = new Vector2(12f, 8f);
-            Data.speed = 0.1f ;
-            Data.runSpeed = 0.07f;
+            Data.speed = 0.3f ;
+            Data.runSpeed = 0.33f;
             Data.attackCoolTime = 0.5f;
             Data.attackSpeed = 0.3f;
             Data.attackRange = new Vector2(9f, 8f);
