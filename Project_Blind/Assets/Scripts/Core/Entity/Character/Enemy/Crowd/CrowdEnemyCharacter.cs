@@ -256,6 +256,7 @@ namespace Blind
             {
                 StopCoroutine(co_stun);
                 co_stun = null;
+                NextAction();
             }
         }
 
