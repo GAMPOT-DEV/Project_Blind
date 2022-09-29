@@ -11,8 +11,6 @@ namespace Blind
         protected override void Awake()
         {
             base.Awake();
-
-            _patrolTime = 3f;
         }
 
         private void Start()
