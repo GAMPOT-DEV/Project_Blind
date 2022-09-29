@@ -224,10 +224,15 @@ namespace Blind
         {
             int RanNum = Random.Range(0, 100);
             if (RanNum > 50)
+            {
+                if (GetFacing() == Facing.Left)
+                    Flip();
                 return 1;
+            }
             else
             {
-                Flip();
+                if(GetFacing() == Facing.Right)
+                    Flip();
                 return -1;
             }
         }
@@ -251,6 +256,7 @@ namespace Blind
             {
                 StopCoroutine(co_stun);
                 co_stun = null;
+                NextAction();
             }
         }
 
@@ -393,13 +399,14 @@ namespace Blind
             return;
         }
 
-        public void Reset()
+        public override void Reset()
         {
             gameObject.SetActive(true);
             state = State.Patrol;
             patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
             Hp.ResetHp();
             gameObject.transform.position = startPosition.position;
+
 
             //È¤½Ã ¸ô¶ó¼­
             attackable = true;
@@ -409,6 +416,7 @@ namespace Blind
             co_default = null;
             col = null;
             createAttackHitBox = false;
-    }
+            gameObject.layer = 14;
+        }
     }
 }

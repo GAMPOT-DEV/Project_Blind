@@ -74,6 +74,11 @@ namespace Blind
             return;
         }
 
+        public virtual void Reset()
+        {
+            return;
+        }
+
         protected override void HurtMove(Facing enemyFacing)
         {
             _characterController2D.Move(new Vector2((float)enemyFacing*1, 0));
