@@ -31,6 +31,7 @@ namespace Blind
         
         private void PushSubmitButton()
         {
+            SoundManager.Instance.Play("Select");
             string text = Get<Text>((int)Texts.Text_Input).text;
             try
             {

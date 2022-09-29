@@ -147,7 +147,9 @@ public class Define
 
         village1,
         village2,
-        village3
+        village3,
+
+        RestScript
     }
     public enum TalismanAbility
     {

@@ -65,6 +65,7 @@ namespace Blind
         }
         private void BuyItem(Define.BagItem itemId)
         {
+            SoundManager.Instance.Play("Select");
             int cost = dict[(int)itemId].cost;
             bool result = DataManager.Instance.SubMoney(cost);
             if (result == false) return;

@@ -103,6 +103,7 @@ namespace Blind
         }
         IEnumerator CoDisplayLastScript()
         {
+            SoundManager.Instance.StopBGM();
             yield return new WaitForSeconds(0.5f);
             UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
             ui.SetScriptTitle(Define.ScriptTitle.CutScene7);

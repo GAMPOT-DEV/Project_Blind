@@ -102,6 +102,7 @@ namespace Blind
         }
         private void PushDumpButton()
         {
+            SoundManager.Instance.Play("Select");
             if (Size == 0) return;
             if (_currSelectItemId == Define.BagItem.Unknown) return;
             UI_DumpBagItem dumpUI = UIManager.Instance.ShowNormalUI<UI_DumpBagItem>();

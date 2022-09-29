@@ -98,6 +98,7 @@ namespace Blind
         }
         public void PushItemIcon()
         {
+            SoundManager.Instance.Play("Select");
             _owner.PushClueItem(_index);
         }
         public void SetClickedState()

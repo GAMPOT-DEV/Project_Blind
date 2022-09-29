@@ -159,7 +159,8 @@ namespace Blind
         }
         private void PushRefreshButton()
         {
-            for(int i = 0; i < EQUIP_SIZE; i++)
+            SoundManager.Instance.Play("Select");
+            for (int i = 0; i < EQUIP_SIZE; i++)
             {
                 if (EquipItem[i] == 0) continue;
                 DataManager.Instance.EquipOrUnequipTalisman((Define.TalismanItem)EquipItem[i]);

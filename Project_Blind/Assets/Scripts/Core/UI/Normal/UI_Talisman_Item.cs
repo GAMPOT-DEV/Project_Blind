@@ -68,6 +68,7 @@ namespace Blind
         }
         private void PushUnequipButton()
         {
+            SoundManager.Instance.Play("Select");
             bool result = DataManager.Instance.EquipOrUnequipTalisman((Define.TalismanItem)ItemId);
             if (result == false) return;
             TalismanInfo info;

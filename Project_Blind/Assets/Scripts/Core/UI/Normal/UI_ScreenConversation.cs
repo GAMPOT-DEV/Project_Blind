@@ -23,6 +23,7 @@ namespace Blind
         string _name = "";
 
         public Action EndEvent = null;
+        public bool StopMove = true;
 
         Coroutine _showText;
 
@@ -36,8 +37,11 @@ namespace Blind
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
-            PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
-            if (player != null) player.Talk();
+            if (StopMove)
+            {
+                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
+                if (player != null) player.Talk();
+            }
         }
         protected override void Start()
         {
@@ -76,9 +80,12 @@ namespace Blind
             if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
                 UIManager.Instance.CloseNormalUI(this);
-                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
-                if(player != null) player.UnTalk();
-                UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+                if (StopMove)
+                {
+                    PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
+                    if (player != null) player.UnTalk();
+                    UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+                }
                 if (EndEvent != null) EndEvent.Invoke();
                 EndEvent = null;
                 return;

@@ -101,6 +101,7 @@ namespace Blind
         }
         private void PushButton(int num)
         {
+            SoundManager.Instance.Play("CursorMove");
             DataManager.Instance.SaveGameData();
             Get<Image>(_currCursor).sprite = _sprites[_currCursor].NonClicked;
             _currCursor = num;
