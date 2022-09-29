@@ -8,21 +8,10 @@ namespace Blind
     {
         [SerializeField] private Transform AttackHitBoxRange;
 
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
         private void Start()
         {
             _attack.Init(7, 10);
         }
-
-        protected override void FixedUpdate()
-        {
-            base.FixedUpdate();
-        }
-
         protected override void updateAttack()
         {
             if (currentAttack == 0)

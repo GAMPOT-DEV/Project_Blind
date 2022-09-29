@@ -6,7 +6,6 @@ namespace Blind
     public class AttackAnimatorFx : AttackFX
     {
         private Animator _animator;
-        private static readonly int Play1 = Animator.StringToHash("Play");
 
         protected override void Awake()
         {
@@ -14,11 +13,10 @@ namespace Blind
             _animator = GetComponent<Animator>();
         }
 
-        public virtual void Play(Facing face)
+        public override void Play(Facing face)
         {
             base.Play(face);
-            _animator.Play(Play1,-1,0);
+            _animator.SetTrigger("Enter");
         }
-        
     }
 }
