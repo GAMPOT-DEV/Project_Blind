@@ -331,6 +331,7 @@ namespace Blind
         #region Effect Event
         private void PushVibrationOnOffButton()
         {
+            SoundManager.Instance.Play("Select");
             if (_gameData.vibration)
             {
                 Get<Image>((int)Images.Button_ScreenVibrationOnOff).sprite = Button_Off;
@@ -346,12 +347,14 @@ namespace Blind
         }
         private void ChangeMotionEffect()
         {
+            SoundManager.Instance.Play("Select");
             _gameData.motionEffect = Get<Slider>((int)Sliders.Slider_MotionEffect).value;
         }
         #endregion
         #region ScreenEvent
         private void PushRightButton()
         {
+            SoundManager.Instance.Play("Select");
             _gameData.resolutionIndex = (_gameData.resolutionIndex + 1) % SIZE;
             Get<Text>((int)Texts.Text_ScreenSizeValue).text =
                 $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
@@ -359,6 +362,7 @@ namespace Blind
         }
         private void PushLeftButton()
         {
+            SoundManager.Instance.Play("Select");
             _gameData.resolutionIndex = (_gameData.resolutionIndex - 1 + SIZE) % SIZE;
             Get<Text>((int)Texts.Text_ScreenSizeValue).text =
                $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
@@ -366,6 +370,7 @@ namespace Blind
         }
         private void PushWindowModeButton()
         {
+            SoundManager.Instance.Play("Select");
             if (_gameData.windowMode)
             {
                 _gameData.windowMode = false;
@@ -413,6 +418,7 @@ namespace Blind
         }
         private void ChangeCursor(int nextCursor)
         {
+            SoundManager.Instance.Play("CursorMove");
             ExitCursor(_currCursor);
             EnterCursor(nextCursor);
         }

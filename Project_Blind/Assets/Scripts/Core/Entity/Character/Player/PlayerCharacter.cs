@@ -437,12 +437,12 @@ namespace Blind
 
         public bool CheckForItemT()
         {
-            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.TestItem1);
+            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.WaveStick);
         }
 
         public bool CheckForItemUsing()
         {
-            return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.TestItem2);
+            return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.Potion);
         }
         public void ItemT()
         {

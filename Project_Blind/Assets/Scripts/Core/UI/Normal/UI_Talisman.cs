@@ -13,16 +13,7 @@ namespace Blind
             ItemPanel2,
             ItemPanel3,
 
-            Image_TestGetItem1,
-            Image_TestGetItem2,
-            Image_TestGetItem3,
-            Image_TestGetItem4,
-            Image_TestGetItem5,
-            Image_TestGetItem6,
-            Image_TestGetItem7,
-
             Image_EmptyText,
-            Image_TestClear,
 
         }
         enum Texts
@@ -78,21 +69,7 @@ namespace Blind
             // UI를 데이터 정보에 맞게 갱신해준다.
             RefreshUI();
 
-            TestInit();
-
             Get<Button>((int)Buttons.Button_Refresh).gameObject.BindEvent(PushRefreshButton);
-        }
-        void TestInit()
-        {
-            Get<Image>((int)Images.Image_TestGetItem1).gameObject.BindEvent(() => PushTestImage(Define.TalismanItem.TestTalisman1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem2).gameObject.BindEvent(() => PushTestImage(Define.TalismanItem.TestTalisman2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem3).gameObject.BindEvent(() => PushTestImage(Define.TalismanItem.TestTalisman3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem4).gameObject.BindEvent(() => PushTestImage(Define.TalismanItem.TestTalisman4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem5).gameObject.BindEvent(() => PushTestImage(Define.TalismanItem.TestTalisman5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem6).gameObject.BindEvent(() => PushTestImage(Define.TalismanItem.TestTalisman6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem7).gameObject.BindEvent(() => PushTestImage(Define.TalismanItem.TestTalisman7), Define.UIEvent.Click);
-
-            Get<Image>((int)Images.Image_TestClear).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }
         // 현재 가지고 있는 단서들의 정보를 이용해서 UI를 갱신해준다.
         public void RefreshUI()
@@ -182,7 +159,8 @@ namespace Blind
         }
         private void PushRefreshButton()
         {
-            for(int i = 0; i < EQUIP_SIZE; i++)
+            SoundManager.Instance.Play("Select");
+            for (int i = 0; i < EQUIP_SIZE; i++)
             {
                 if (EquipItem[i] == 0) continue;
                 DataManager.Instance.EquipOrUnequipTalisman((Define.TalismanItem)EquipItem[i]);

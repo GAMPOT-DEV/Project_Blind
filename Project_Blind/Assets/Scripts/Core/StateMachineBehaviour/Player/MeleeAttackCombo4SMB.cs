@@ -9,7 +9,7 @@ namespace Blind
         private bool _powerAttack = false;
         private bool _checkForPowerAttack = false;
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.ReAttackSize(3,4, _monoBehaviour.Data.damage + 2);
+            _monoBehaviour.ReAttackSize(6, 4, _monoBehaviour.Data.damage + 2);
             _monoBehaviour.StopMoveY();
             if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/5타(수정)", Define.Sound.Effect);
         }

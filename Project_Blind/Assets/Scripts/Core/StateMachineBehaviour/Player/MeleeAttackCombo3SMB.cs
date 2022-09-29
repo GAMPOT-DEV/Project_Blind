@@ -12,6 +12,7 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
         {
             _isOnClick = false;
+            _monoBehaviour.ReAttackSize(6, 6, _monoBehaviour.Data.damage);
             _monoBehaviour.StopMoveY();
             if (!_monoBehaviour.isPowerAttack)
             {

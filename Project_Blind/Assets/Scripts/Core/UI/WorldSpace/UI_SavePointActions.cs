@@ -27,15 +27,22 @@ namespace Blind
         }
         private void PushStoreButton()
         {
+            SoundManager.Instance.Play("Select");
             UIManager.Instance.ShowNormalUI<UI_Shop>();
         }
         private void PushRestButton()
         {
+            SoundManager.Instance.Play("Select");
             SavePoint save = FindObjectOfType<SavePoint>();
             if (save != null) save.DoInteraction();
+            UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
+            ui.SetName("¼®Å¾");
+            ui.SetScriptTitle(Define.ScriptTitle.RestScript);
+            ui.StopMove = false;
         }
         private void PushLeaveButton()
         {
+            SoundManager.Instance.Play("Select");
             UIManager.Instance.CloseWorldSpaceUI(this);
         }
         private void OnDestroy()

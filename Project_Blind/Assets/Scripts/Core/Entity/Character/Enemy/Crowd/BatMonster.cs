@@ -10,15 +10,15 @@ namespace Blind
 
         private void Start()
         {
-            _attack.Init(7, 10);
+            _attack.Init(WallCheck, 7, 7);
         }
         protected override void updateAttack()
         {
             if (currentAttack == 0)
             {
-                if (Random.Range(0, 100) > 20)
-                    currentAttack = 1;
-                else
+                //if (Random.Range(0, 100) > 20)
+                    //currentAttack = 1;
+                //else
                     currentAttack = 2;
             }
 
