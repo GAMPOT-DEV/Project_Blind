@@ -401,6 +401,7 @@ namespace Blind
             Hp.ResetHp();
             gameObject.transform.position = startPosition.position;
 
+
             //È¤½Ã ¸ô¶ó¼­
             attackable = true;
             IsAttack = false;
@@ -409,6 +410,7 @@ namespace Blind
             co_default = null;
             col = null;
             createAttackHitBox = false;
-    }
+            gameObject.layer = 14;
+        }
     }
 }
