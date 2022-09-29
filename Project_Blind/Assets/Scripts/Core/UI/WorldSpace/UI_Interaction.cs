@@ -127,6 +127,10 @@ namespace Blind
             yield return new WaitForSeconds(0.5f);
             UIManager.Instance.CloseWorldSpaceUI(this);
         }
+        private void OnDestroy()
+        {
+            UIManager.Instance.KeyInputEvents -= HandleKeyInput;
+        }
     }
 }
 
