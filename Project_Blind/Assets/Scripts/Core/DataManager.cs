@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -295,6 +295,20 @@ namespace Blind
             }
             SaveGameData();
             return true;
+        }
+
+        public void CaveOpen()
+        {
+            _gameData.caveClear = 1;
+        }
+        public void ClearCaveData()
+        {
+            _gameData.caveClear = 0;
+
+        }
+        public int GetClearCave()
+        {
+            return _gameData.caveClear;
         }
     }
 }
