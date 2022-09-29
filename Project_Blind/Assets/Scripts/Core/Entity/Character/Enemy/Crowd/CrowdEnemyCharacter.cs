@@ -21,11 +21,9 @@ namespace Blind
         }
 
         [SerializeField] protected State state;
-        protected float _patrolTime;
         protected Animator _anim;
         protected float _chaseRange = 20;
-        protected float afterDelayTime = 0.6f;
-        [SerializeField] protected bool attackable = true;
+        protected bool attackable = true;
         protected int currentAttack = 0;
 
         public float CurrentStunGauge = 0;
@@ -47,13 +45,11 @@ namespace Blind
             patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
             playerFinder.setRange(Data.sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
-            _anim = GetComponent<Animator>();  
-            //attackSense.setRange(Data.attackRange);
+            _anim = GetComponent<Animator>();
         }
 
         protected void Start()
         {
-            SceneLinkedSMB<CrowdEnemyCharacter>.Initialise(_anim, this);
             player = GameObject.FindGameObjectWithTag("Player");
         }
 
@@ -131,7 +127,7 @@ namespace Blind
 
             if (co_patrol == null)
             {
-                co_patrol = StartCoroutine(CoPatrol(_patrolTime));
+                co_patrol = StartCoroutine(CoPatrol(Data.patrolTime));
             }
 
             _anim.SetInteger("State", 1);
@@ -370,7 +366,7 @@ namespace Blind
         protected IEnumerator Delay()
         {
             attackable = false;
-            yield return new WaitForSeconds(afterDelayTime);
+            yield return new WaitForSeconds(Data.attackCoolTime);
             attackable = true;
         }
 
