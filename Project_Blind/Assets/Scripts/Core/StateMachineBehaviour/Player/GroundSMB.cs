@@ -32,6 +32,7 @@ namespace Blind
                 _monoBehaviour.MakePlatformFallthrough();
             if(_monoBehaviour.CheckForParing())
                 _monoBehaviour.Paring();
+            
             if (_monoBehaviour.CheckForAttack())
             {
                 _monoBehaviour.MeleeAttack();
