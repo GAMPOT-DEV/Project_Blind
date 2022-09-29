@@ -18,7 +18,7 @@ namespace Blind
         public MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
-        protected Transform startingPosition;
+        protected Transform startPosition;
         protected Vector2 patrolDirection;
         protected PlayerFinder playerFinder;
         protected EnemyAttack attackSense;
