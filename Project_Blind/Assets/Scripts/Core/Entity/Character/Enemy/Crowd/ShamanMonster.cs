@@ -6,10 +6,6 @@ namespace Blind
     public class ShamanMonster : CrowdEnemyCharacter
     {
         public GameObject Circle;
-
-        private Coroutine Co_attack;
-        private Coroutine Co_stun;
-        private Coroutine Co_die;
         private Coroutine Co_avoid;
 
         [SerializeField] private float _projectileSpeed = 10;

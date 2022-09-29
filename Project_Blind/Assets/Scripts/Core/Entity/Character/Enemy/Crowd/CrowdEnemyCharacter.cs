@@ -36,7 +36,6 @@ namespace Blind
         protected Coroutine co_stun;
         private Coroutine co_default;
 
-        private State tmp = State.Die;
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
         protected bool onSound = false;
@@ -258,6 +257,7 @@ namespace Blind
             if (co_stun != null)
             {
                 StopCoroutine(co_stun);
+                co_stun = null;
             }
         }
 
