@@ -53,6 +53,7 @@ namespace Blind
                 PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
                 if (player != null)
                 {
+                    SoundManager.Instance.Play("Select");
                     player.Talk();
                     UI_WorldSpace ui = UIManager.Instance.ShowWorldSpaceUI<UI_SavePointActions>();
                     ui.SetPosition(transform.position, Vector3.up * 8);

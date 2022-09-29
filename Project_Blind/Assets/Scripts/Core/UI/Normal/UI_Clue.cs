@@ -9,14 +9,6 @@ namespace Blind
     {
         enum Images
         {
-            Image_TestGetClue1,
-            Image_TestGetClue2,
-            Image_TestGetClue3,
-            Image_TestGetClue4,
-            Image_TestGetClue5,
-            Image_TestGetClue6,
-            Image_TestGetClue7,
-            Image_TestClearClue,
         }
         enum Texts
         {
@@ -52,20 +44,6 @@ namespace Blind
 
             // UI를 데이터 정보에 맞게 갱신해준다.
             RefreshUI();
-
-            TestInit();
-        }
-        void TestInit()
-        {
-            Get<Image>((int)Images.Image_TestGetClue1).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue2).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue3).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue4).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue5).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue6).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetClue7).gameObject.BindEvent(() => PushTestImage(Define.ClueItem.TestClue7), Define.UIEvent.Click);
-
-            Get<Image>((int)Images.Image_TestClearClue).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }
         // 현재 가지고 있는 단서들의 정보를 이용해서 UI를 갱신해준다.
         public void RefreshUI()
