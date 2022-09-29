@@ -50,6 +50,13 @@ namespace Blind
 
             if (Input.GetKeyDown(KeyCode.N))
             {
+                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
+                if (player != null)
+                {
+                    player.Talk();
+                    UI_WorldSpace ui = UIManager.Instance.ShowWorldSpaceUI<UI_SavePointActions>();
+                    ui.SetPosition(transform.position, Vector3.up * 8);
+                }
                 Disappear();
                 StartCoroutine(CoCloseUI());
             }
