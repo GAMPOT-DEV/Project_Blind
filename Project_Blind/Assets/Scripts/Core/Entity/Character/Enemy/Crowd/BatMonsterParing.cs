@@ -9,7 +9,7 @@ namespace Blind
         private float currentLens;
         private float CheckLens;
         private CinemachineVirtualCamera _camera;
-        public override void OnCheckForParing(PlayerCharacter _player)
+        public override bool OnCheckForParing(PlayerCharacter _player)
         {
             if (_gameobject.IsAttack)
             {
@@ -22,7 +22,10 @@ namespace Blind
                 _player._source.GenerateImpulse();
                 _player.isParingCheck = true;
                 EnemyDibuff();
+                return true;
             }
+
+            return false;
         }
 
         public override void EnemyDibuff()
