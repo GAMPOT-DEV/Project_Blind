@@ -53,10 +53,12 @@ namespace Blind
                 _monoBehaviour.PlayAttackFx(0,_monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
+            
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
+            _monoBehaviour.UpdateVelocity();
             if (!_monoBehaviour.isJump)
             {
                 _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
@@ -90,7 +92,13 @@ namespace Blind
                 _monoBehaviour.Deed();
             }
             
-
+            if (_monoBehaviour.CheckForDash())
+            {
+                _monoBehaviour.DashStart();
+            }
+            
+            if(_monoBehaviour.CheckForParing())
+                _monoBehaviour.Paring();
 
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack)){
                 Debug.Log("강공격!");
