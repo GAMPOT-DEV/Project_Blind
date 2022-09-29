@@ -353,7 +353,6 @@ namespace Blind
 
         public void enableAttack()
         {
-            PlayAttackFx(0,GetFacing());
             _attack.EnableDamage();
         }
 
@@ -515,7 +514,6 @@ namespace Blind
         {
             if (_renderer == null)
             {
-                Debug.Log("tlfgjpdah");
                 return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
             }
             else return _renderer.flipX ? Facing.Left : Facing.Right;
@@ -526,7 +524,6 @@ namespace Blind
         }
         public void DebuffOn()
         {
-            Debug.Log("디버프 걸림");
             isOnLava = true;
             _defaultSpeed -= 1.0f;
             Data.jumpSpeed = 0.5f;

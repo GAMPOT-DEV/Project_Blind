@@ -21,6 +21,7 @@ namespace Blind
                 animator.speed = 0.06f;
                 _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
+                _monoBehaviour.transform.GetChild(1).GetChild(8).GetComponent<AttackFX>().Play(_monoBehaviour.GetFacing());
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();

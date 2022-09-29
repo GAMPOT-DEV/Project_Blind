@@ -10,6 +10,7 @@ namespace Blind
     public class FirstPhase : BossPhase
     {
         protected Random _rand = new Random();
+        private Coroutine _coroutine;
 
         public void Init(FirstBossEnemy firstBossEnemy)
         {
@@ -21,23 +22,28 @@ namespace Blind
             _pattern = pattern;
             _pattern.Initialise(_parent);
         }
-        public override void Start()
+        public override void Play()
         {
-            StartCoroutine(StartAttackState());
+            _coroutine = StartCoroutine(StartAttackState());
         }
 
         public override void End()
         {
         }
+
+        public override void Stop()
+        {
+            StopCoroutine(_coroutine);
+        }
+
         public IEnumerator StartAttackState()
         {
+            yield return new WaitForSeconds(3f);
             while (true)
             {
                 var next = _rand.Next(0, 3);
                 SetAttackPattern(_patternList[next]);
-                Debug.Log("start");
                 yield return StartPattern();
-                Debug.Log("end");
                 yield return new WaitForSeconds(1.5f);
             }
         }

@@ -20,6 +20,7 @@ namespace Blind
             state = State.Phase;
         }
 
+
         protected virtual void FixedUpdate()
         {
             // switch (state)

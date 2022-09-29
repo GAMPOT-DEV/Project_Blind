@@ -54,15 +54,6 @@ namespace Blind
             Play(audioClip, type, pitch);
         }
 
-        public void PlayNoOverlapEffect(string path,float pitch = 1.0f)
-        {
-            AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
-            if (audioSource.isPlaying) return;
-            AudioClip audioClip = GetOrAddAudioClip(path);
-            audioSource.pitch = pitch;
-            audioSource.clip = audioClip;
-            audioSource.Play();
-        }
         public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
         {
             if (audioClip == null) return;
@@ -78,10 +69,19 @@ namespace Blind
             }
             else
             {
-                AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
-                audioSource.pitch = pitch;
-                audioSource.PlayOneShot(audioClip);
+                AudioSource audioSource = ResourceManager.Instance.Instantiate("SFX/SoundEffect")
+                    .GetComponent<AudioSource>();
+                audioSource.clip = audioClip;
+                audioSource.volume = DataManager.Instance.GameData.effectVolume;
+                StartCoroutine(PlayBgm(audioSource));
             }
+        }
+        private IEnumerator PlayBgm(AudioSource audioSource)
+        {
+            audioSource.Play();
+            Debug.Log(audioSource.clip.length);
+            yield return new WaitForSeconds(audioSource.clip.length);
+            Destroy(audioSource.gameObject);
         }
         public void StopBGM()
         {
