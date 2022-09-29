@@ -33,9 +33,11 @@ namespace Blind
         {
             while (true)
             {
-                var next = _rand.Next(0, 4);
+                var next = _rand.Next(0, 3);
                 SetAttackPattern(_patternList[next]);
+                Debug.Log("start");
                 yield return StartPattern();
+                Debug.Log("end");
                 yield return new WaitForSeconds(1.5f);
             }
         }
