@@ -88,7 +88,8 @@ public class Define
         Skill,
         ChangeSlot,
         ItemT,
-        PowerAttack
+        PowerAttack,
+        ItemUsing
     }
     public enum ClueItem
     {

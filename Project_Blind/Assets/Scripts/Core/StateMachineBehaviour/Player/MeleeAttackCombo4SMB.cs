@@ -11,7 +11,7 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             _monoBehaviour.ReAttackSize(3,4, _monoBehaviour.Data.damage + 2);
             _monoBehaviour.StopMoveY();
-            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
+            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/5타(수정)", Define.Sound.Effect);
         }
 
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -53,6 +53,11 @@ namespace Blind
                 _monoBehaviour.UpdateFacing();
             }
             else _monoBehaviour.GroundedHorizontalMovement(false);
+            
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
+            }
             
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack && _monoBehaviour.CurrentWaveGauge >= 10)) 
             {

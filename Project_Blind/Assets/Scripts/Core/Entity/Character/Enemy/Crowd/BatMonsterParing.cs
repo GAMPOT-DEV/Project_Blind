@@ -13,6 +13,7 @@ namespace Blind
         {
             if (_gameobject.IsAttack)
             {
+                SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
                 _player.CharacterInvincible();
                 if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
                     _player.CurrentWaveGauge += _player.paringWaveGauge;
@@ -20,18 +21,8 @@ namespace Blind
                     _player.CurrentWaveGauge = _player.maxWaveGauge;
                 _player._source.GenerateImpulse();
                 _player.isParingCheck = true;
-                SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
                 EnemyDibuff();
             }
-        }
-        public IEnumerator CameraZoomIn()
-        {
-            float current = _camera.m_Lens.OrthographicSize;
-            Debug.Log(current);
-            _camera.m_Lens.OrthographicSize = current - 10f;
-            yield return new WaitForSeconds(0.1f);
-            Debug.Log(current);
-            _camera.m_Lens.OrthographicSize = current;
         }
 
         public override void EnemyDibuff()
