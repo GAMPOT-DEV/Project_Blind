@@ -10,7 +10,7 @@ namespace Blind
     {
         [SerializeField] private ChinDir dir;
         private Vector3  _originPos;
-        [FormerlySerializedAs("_parent")] public BossPattern4 Parent;
+        [FormerlySerializedAs("_parent")] public BossPattern3 Parent;
         public enum ChinDir
         {
             Upper = 1,

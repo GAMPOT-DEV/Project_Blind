@@ -8,7 +8,7 @@ namespace Blind
     /// <summary>
     /// 물기 패턴
     /// </summary>
-    public class BossPattern4: BossAttackPattern<FirstBossEnemy>
+    public class BossPattern3: BossAttackPattern<FirstBossEnemy>
     {
         [SerializeField] private float damage = 1f;
         [SerializeField] private int MaxHitCount = 1;
