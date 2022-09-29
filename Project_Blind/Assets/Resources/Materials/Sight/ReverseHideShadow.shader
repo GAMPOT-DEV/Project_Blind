@@ -1,10 +1,16 @@
-Shader "Universal Render Pipeline/2D/FogFxShader"
+Shader "Universal Render Pipeline/2D/ReverseHideShadow"
 {
     Properties
     {
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
+        _HitColor("HitColor", Color) = (1,1,1,0)
+        _EnableHit("EnableHit", Float) = 0
+        
+        _OutlineColor("Outline Color", Color) = (1,1,1,1)
+        _Outline ("OutlineWidth", Range(0, 1)) = 1
+
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,0)
         [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
@@ -61,8 +67,9 @@ Shader "Universal Render Pipeline/2D/FogFxShader"
             SAMPLER(sampler_MaskTex);
             TEXTURE2D(_NormalMap);
             SAMPLER(sampler_NormalMap);
+            float4 _HitColor;
             half4 _MainTex_ST;
-            float _ShowInShadow;
+            float _EnableHit;
 
             #if USE_SHAPE_LIGHT_TYPE_0
             SHAPE_LIGHT(0)
@@ -100,8 +107,8 @@ Shader "Universal Render Pipeline/2D/FogFxShader"
             {
                 half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
-                
-                return CombinedShapeLightShared(main, mask, i.lightingUV);
+
+                return main - CombinedShapeLightShared(main, mask, i.lightingUV);
             }
             ENDHLSL
         }

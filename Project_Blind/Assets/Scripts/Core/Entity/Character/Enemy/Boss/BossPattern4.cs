@@ -28,6 +28,7 @@ namespace Blind
 
         public override Coroutine AttackPattern()
         {
+            _attackAbleCount = 1;
             transform.position = GameManager.Instance.Player.transform.position;
             _upperChin.gameObject.SetActive(true);
             _lowerChin.gameObject.SetActive(true);

@@ -15,7 +15,7 @@ namespace Blind
 
         private void Start()
         {
-            //startingPosition = gameObject.transform;
+            
         }
 
         protected override void FixedUpdate()
@@ -99,6 +99,7 @@ namespace Blind
 
         public void AttackSound()
         {
+            transform.GetChild(4).GetComponent<PreAttack>().Play();
             SoundManager.Instance.Play("Crowd/Shaman/BigAttack");
         }
 
