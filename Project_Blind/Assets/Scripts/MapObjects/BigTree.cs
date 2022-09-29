@@ -4,30 +4,30 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class BigTree : MonoBehaviour
+    public class BigTree : InteractionAble
     {
-        // Start is called before the first frame update
-        void Start()
+        public override void DoInteraction()
         {
-
+            DataManager.Instance.CaveOpen();
         }
 
-        // Update is called once per frame
-        void Update()
+        protected override void OnTriggerEnter2D(Collider2D collision)
         {
-          
-        }
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if(collision != null)
+            if(collision.CompareTag("Player"))
             {
-                if(collision.gameObject.CompareTag("Player"))
-                {
-                    Debug.Log("¡¢√À«‘");
-                }
+                StartCoroutine(CheckWaveSpread());
             }
         }
-    }
 
+        protected override void OnTriggerExit2D(Collider2D collision)
+        {
+        }
+
+        IEnumerator CheckWaveSpread()
+        {
+            DoInteraction();
+            yield return null;
+        }
+    }
 }
 

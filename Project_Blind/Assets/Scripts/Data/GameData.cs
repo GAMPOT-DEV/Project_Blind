@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -26,6 +26,7 @@ namespace Blind
         #endregion
 
         public int money = 0;
+        public int caveClear = 0;
 
         #region Clue
         public List<ClueInfo> clueInfos = new List<ClueInfo>();
