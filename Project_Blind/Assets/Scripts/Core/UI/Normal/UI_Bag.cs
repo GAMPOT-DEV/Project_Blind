@@ -11,15 +11,6 @@ namespace Blind
         {
             Image_Item,
 
-            Image_TestGetItem1,
-            Image_TestGetItem2,
-            Image_TestGetItem3,
-            Image_TestGetItem4,
-            Image_TestGetItem5,
-            Image_TestGetItem6,
-            Image_TestGetItem7,
-            Image_TestClearBag,
-
             Image_EmptyText,
             Image_Dump,
         }
@@ -64,8 +55,6 @@ namespace Blind
             Get<Image>((int)Images.Image_Dump).gameObject.BindEvent(PushDumpButton, Define.UIEvent.Click);
 
             RefreshUI();
-
-            TestInit();
         }
         public void RefreshUI()
         { 
@@ -134,19 +123,6 @@ namespace Blind
                 _currSelectItemId = Define.BagItem.Unknown;
             }
             RefreshUI();
-        }
-
-        void TestInit()
-        {
-            Get<Image>((int)Images.Image_TestGetItem1).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem2).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem2), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem3).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem3), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem4).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem4), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem5).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem5), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem6).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem6), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestGetItem7).gameObject.BindEvent(() => PushTestImage(Define.BagItem.TestItem7), Define.UIEvent.Click);
-
-            Get<Image>((int)Images.Image_TestClearBag).gameObject.BindEvent(PushTestClear, Define.UIEvent.Click);
         }
         private void PushTestImage(Define.BagItem itemEnum)
         {

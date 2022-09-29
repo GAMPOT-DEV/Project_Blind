@@ -58,10 +58,10 @@ namespace Blind
         }
         private void BindEvents()
         {
-            Get<Button>((int)Buttons.Button_BuyItem1).gameObject.BindEvent(() => BuyItem(Define.BagItem.TestItem1));
-            Get<Button>((int)Buttons.Button_BuyItem2).gameObject.BindEvent(() => BuyItem(Define.BagItem.TestItem2));
-            Get<Button>((int)Buttons.Button_BuyItem3).gameObject.BindEvent(() => BuyItem(Define.BagItem.TestItem3));
-            Get<Button>((int)Buttons.Button_BuyItem4).gameObject.BindEvent(() => BuyItem(Define.BagItem.TestItem4));
+            Get<Button>((int)Buttons.Button_BuyItem1).gameObject.BindEvent(() => BuyItem(Define.BagItem.WaveStick));
+            Get<Button>((int)Buttons.Button_BuyItem2).gameObject.BindEvent(() => BuyItem(Define.BagItem.Potion));
+            Get<Button>((int)Buttons.Button_BuyItem3).gameObject.BindEvent(() => BuyItem(Define.BagItem.Potion2));
+            Get<Button>((int)Buttons.Button_BuyItem4).gameObject.BindEvent(() => BuyItem(Define.BagItem.Potion3));
         }
         private void BuyItem(Define.BagItem itemId)
         {

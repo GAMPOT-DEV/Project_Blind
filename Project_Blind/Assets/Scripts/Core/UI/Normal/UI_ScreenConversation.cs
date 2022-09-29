@@ -20,7 +20,7 @@ namespace Blind
 
         int page = 0;
         string _titleStr;
-        string _name = "이름 없음";
+        string _name = "";
 
         public Action EndEvent = null;
 
