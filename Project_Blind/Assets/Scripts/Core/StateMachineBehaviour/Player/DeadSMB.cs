@@ -14,6 +14,7 @@ namespace Blind
             AnimatorControllerPlayable controller)
         {
             Debug.Log("Test");
+            _monoBehaviour.DieStopVector(Vector2.zero);
         }
     }
 }

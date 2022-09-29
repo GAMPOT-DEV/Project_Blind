@@ -116,7 +116,6 @@ namespace Blind
                     _player.CurrentWaveGauge = _player.maxWaveGauge;
                 _player.isParingCheck = true;
                 _isParing = false;
-                Time.timeScale = 0.5f;
                 SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
                 col.GetComponent<Projectile>().OnParing();
             }
