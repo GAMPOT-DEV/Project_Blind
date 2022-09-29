@@ -15,7 +15,6 @@ namespace Blind
 
         private void Start()
         {
-            startingPosition = gameObject.transform;
             _attack.Init(7, 10);
         }
 
