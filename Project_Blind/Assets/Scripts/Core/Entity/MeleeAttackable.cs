@@ -18,7 +18,9 @@ using UnityEngine;
          public LayerMask hitLayer;
          private Collider2D hitobj;
          private bool _isSpriteFlip;
- 
+         private Transform point;
+
+
          private Vector2 _hitbox;
  
          public void Awake()
@@ -37,8 +39,17 @@ using UnityEngine;
              this._damage = _damage;
              _defultdamage = _damage;
          }
- 
-         public void EnableDamage()
+
+        public void Init(Transform point, int x = 1, int y = 1, int _damage = 1)
+        {
+            this.x = x;
+            this.y = y;
+            this._damage = _damage;
+            _defultdamage = _damage;
+            this.point = point;
+        }
+
+        public void EnableDamage()
          {
              canDamage = true;
          }
@@ -77,8 +88,10 @@ using UnityEngine;
          {
              var entity = gameObject.GetComponent<Character>();
              var facing = entity.GetFacing();
-             
+
              var position = transform.position;
+            if (point != null)
+                position = point.position;
              var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
              
              _hitbox = pointA;

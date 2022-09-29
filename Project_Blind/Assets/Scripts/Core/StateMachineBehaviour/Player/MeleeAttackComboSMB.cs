@@ -17,7 +17,7 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _isOnClick = false;
-            _monoBehaviour.ReAttackSize(3,5, _monoBehaviour.Data.damage);
+            _monoBehaviour.ReAttackSize(6, 5, _monoBehaviour.Data.damage);
             if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/1타", Define.Sound.Effect);
             
 
