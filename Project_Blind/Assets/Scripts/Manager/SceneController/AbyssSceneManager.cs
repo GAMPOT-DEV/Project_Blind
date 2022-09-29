@@ -16,7 +16,6 @@ namespace Blind
 
         protected override void Awake()
         {
-            player = ResourceManager.Instance.Instantiate("Player2").GetComponent<PlayerCharacter>();
             base.Awake();
             currentStage = _stageInfo.GetEnumerator();
             currentStage.MoveNext();
