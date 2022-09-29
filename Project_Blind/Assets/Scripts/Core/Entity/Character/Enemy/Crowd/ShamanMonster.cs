@@ -15,7 +15,7 @@ namespace Blind
 
         private void Start()
         {
-            //startingPosition = gameObject.transform;
+            
         }
 
         protected override void FixedUpdate()

@@ -22,12 +22,8 @@ namespace Blind
 
         [SerializeField] protected State state;
         protected Animator _anim;
-        protected float _chaseRange = 20;
         protected bool attackable = true;
         protected int currentAttack = 0;
-
-        public float CurrentStunGauge = 0;
-        public float MaxStunGauge = 10f;
         public bool IsAttack = false;
 
         private Coroutine co_patrol;
@@ -43,6 +39,7 @@ namespace Blind
             base.Awake();
             state = State.Patrol;
             patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
+            startPosition = gameObject.transform;
             playerFinder.setRange(Data.sensingRange);
             attackSense = GetComponentInChildren<EnemyAttack>();
             _anim = GetComponent<Animator>();
@@ -215,7 +212,7 @@ namespace Blind
             gameObject.layer = 16;
             _anim.SetInteger("State", 6);
             DeathCallback.Invoke();
-            Destroy(gameObject, 3f);
+     
         }
 
         protected virtual void updateAvoid()
@@ -358,9 +355,10 @@ namespace Blind
             Destroy(col);
         }
 
-        public void AniDestroy()
+        public IEnumerator AniDestroy()
         {
-            Destroy(gameObject, 1f);
+            yield return new WaitForSeconds(1f);
+            gameObject.SetActive(false);
         }
 
         protected IEnumerator Delay()
@@ -394,5 +392,23 @@ namespace Blind
         {
             return;
         }
+
+        public void Reset()
+        {
+            gameObject.SetActive(true);
+            state = State.Patrol;
+            patrolDirection = new Vector2(RandomDirection() * Data.speed, 0);
+            Hp.ResetHp();
+            gameObject.transform.position = startPosition.position;
+
+            //È¤½Ã ¸ô¶ó¼­
+            attackable = true;
+            IsAttack = false;
+            co_patrol = null;
+            co_stun = null;
+            co_default = null;
+            col = null;
+            createAttackHitBox = false;
+    }
     }
 }
