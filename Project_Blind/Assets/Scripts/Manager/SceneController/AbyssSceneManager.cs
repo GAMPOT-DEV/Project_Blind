@@ -35,9 +35,10 @@ namespace Blind
                 if (currentStage.Current != null)
                     currentStage.Current.Enable();
                 currentStageIndex++;
-                Debug.Log("ÇöÀç ½ºÅ×ÀÌÁö´Â : " + currentStageIndex);
+                Debug.Log("í˜„ì¬ ìŠ¤í…Œì´ì§€ëŠ” : " + currentStageIndex);
                 if (currentStageIndex == 6)
                 {
+                    
                     currentStage.Current.GetComponent<FadeOutExit>().StartFadeOut();
                     return;
                 }
@@ -51,7 +52,7 @@ namespace Blind
         public void ShowText(string stage)
         {
             UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-            ui.SetName("¿øÈ¿´ë»ç" + stage); //°¡½Ã¼ºÀ» À§ÇØ ÀÓ½Ã·Î  stage Ãß°¡, ÀÌÈÄ Á¦°ÅÇÏ¸é µÊ
+            ui.SetName("ì›íš¨ëŒ€ì‚¬" + stage); //ê°€ì‹œì„±ì„ ìœ„í•´ ì„ì‹œë¡œ  stage ì¶”ê°€, ì´í›„ ì œê±°í•˜ë©´ ë¨
             ui.SetScriptTitle((Define.ScriptTitle)Enum.Parse(typeof(Define.ScriptTitle), stage));
         }
 
