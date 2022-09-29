@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Security.Cryptography;
+using Cinemachine;
 using Spine.Unity;
 using UnityEngine;
 
@@ -50,6 +52,7 @@ namespace Blind
         {
             _isParing = false;
         }
+        
 
         public void OnDrawGizmos()
         {
@@ -80,10 +83,13 @@ namespace Blind
             Facings(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>().GetFacing());
             if (col.gameObject.GetComponent<BatMonster>() != null)
             {
-                Debug.Log("DD");
                 ParingEffect<BatMonster>.Initialise(col.gameObject.GetComponent<BatMonster>());
                 BatMonsterParing batMonsterparing = col.gameObject.AddComponent<BatMonsterParing>();
-                batMonsterparing.OnCheckForParing(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>());
+                if (batMonsterparing.OnCheckForParing(gameObject.transform.parent.gameObject
+                        .GetComponent<PlayerCharacter>()))
+                {
+                    Debug.Log("실행됨 ㅇㅇ");
+                }
                 _isParing = false;
                 Destroy(batMonsterparing);
             }

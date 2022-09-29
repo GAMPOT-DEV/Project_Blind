@@ -25,14 +25,10 @@ namespace Blind
                 Player = collision.GetComponent<PlayerCharacter>();
                 if(Player != null)
                 {
-                    _ui = UIManager.Instance.ShowWorldSpaceUI<UI_TestInteraction>();
+                    _ui = UIManager.Instance.ShowWorldSpaceUI<UI_Interaction>();
                     _ui.SetPosition(transform.position, Vector3.down * 3);
                     //특정 키 눌러 ui interact하면 진행
-                    if(true)
-                    {
-                        DoInteraction();
-                    }
-                    
+                                        
                 }
                 
             }

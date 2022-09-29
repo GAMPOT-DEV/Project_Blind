@@ -5,16 +5,19 @@ using UnityEngine.UI;
 
 namespace Blind.Abyss
 {
-    public class FadeOutExit : MonoBehaviour
+    public class FadeOutExit : Stage
     {
+        public GameObject ExitPoint;
         private PlayerCharacter Player;
         public Image panel;
         public Transform exit;
-        private void Awake()
+        protected override void Awake()
         {
-            Player = ResourceManager.Instance.Instantiate("Player2").GetComponent<PlayerCharacter>();
+            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
+            ExitPoint.GetComponent<ExitPoint>().stage = this;
         }
-        private void Start()
+        
+        public void StartFadeOut()
         {
             StartCoroutine(FadeOut());
         }

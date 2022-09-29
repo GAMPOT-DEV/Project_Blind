@@ -24,18 +24,15 @@ public class Define
         Unknown,
         GameScene,
         MainScene,
-        김종현,
-        TestFogOfWar,
         심연,
         절외부,
         숲,
         마을,
         고목,
         동굴,
-        장산범입구,
         장산범방,
-        맵테스트,
-        숲맵테스트,
+        
+
     }
 
     public enum Sound
@@ -148,6 +145,12 @@ public class Define
         CutScene3,
         CutScene4,
         CutScene5,
+
+        temple,
+
+        village1,
+        village2,
+        village3
     }
     public enum TalismanAbility
     {

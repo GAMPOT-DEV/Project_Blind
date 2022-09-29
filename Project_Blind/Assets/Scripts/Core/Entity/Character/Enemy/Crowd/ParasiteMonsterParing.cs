@@ -4,7 +4,7 @@ namespace Blind
 {
     public class ParasiteMonsterParing: ParingEffect<ParasiteMonster>
     {
-        public override void OnCheckForParing(PlayerCharacter _player)
+        public override bool OnCheckForParing(PlayerCharacter _player)
         {
             Debug.Log(_gameobject.name + " " + _gameobject.IsAttack);
             if (_gameobject.IsAttack)
@@ -18,7 +18,10 @@ namespace Blind
                 _player.isParingCheck = true;
                 SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
                 EnemyDibuff();
+                return true;
             }
+
+            return false;
         }
 
         public override void EnemyDibuff()

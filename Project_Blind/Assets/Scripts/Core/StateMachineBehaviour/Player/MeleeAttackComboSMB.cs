@@ -18,14 +18,8 @@ namespace Blind
         {
             _isOnClick = false;
             _monoBehaviour.ReAttackSize(3,5, _monoBehaviour.Data.damage);
-            _monoBehaviour.StopMoveY();
             if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/1타", Define.Sound.Effect);
-            if (!_monoBehaviour.isJump)
-            {
-                _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
-                _monoBehaviour.GroundedHorizontalMovement(true);
-                _monoBehaviour.UpdateJump();
-            }
+            
 
         }
 
@@ -62,6 +56,7 @@ namespace Blind
             _monoBehaviour.UpdateVelocity();
             if (!_monoBehaviour.isJump)
             {
+                Debug.Log("실행됨!!");
                 _monoBehaviour.AirborneVerticalMovement(_monoBehaviour.gravity + 4);
                 _monoBehaviour.UpdateJump();
                 _monoBehaviour.CheckForGrounded();

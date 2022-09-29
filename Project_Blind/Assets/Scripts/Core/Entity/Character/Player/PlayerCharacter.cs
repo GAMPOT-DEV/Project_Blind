@@ -427,7 +427,7 @@ namespace Blind
             Hp.ResetHp();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
-            gameObject.transform.position = spawnPoint.position;
+            gameObject.transform.position = GameManager.Instance.GetTransform().position;
         }
 
         public void GetItem()
@@ -459,6 +459,7 @@ namespace Blind
         public void Talk()
         {
             InputController.Instance.ReleaseControl();
+            _moveVector = Vector2.zero;
             _animator.SetBool("Talk", true);
         }
 

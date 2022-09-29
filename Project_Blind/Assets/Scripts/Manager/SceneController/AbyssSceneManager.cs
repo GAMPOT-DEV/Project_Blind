@@ -9,14 +9,14 @@ namespace Blind
     {
         [SerializeField] private List<Stage> _stageInfo;
         private IEnumerator<Stage> currentStage;
-        private int currentStageIndex;
+        public int currentStageIndex;
         public PlayerCharacter player;
         public GameObject fadeOut;
 
 
         protected override void Awake()
         {
-            player = ResourceManager.Instance.Instantiate("Player2").GetComponent<PlayerCharacter>();
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
             base.Awake();
             currentStage = _stageInfo.GetEnumerator();
             currentStage.MoveNext();
@@ -35,14 +35,16 @@ namespace Blind
                 if (currentStage.Current != null)
                     currentStage.Current.Enable();
                 currentStageIndex++;
+                Debug.Log("í˜„ì¬ ìŠ¤í…Œì´ì§€ëŠ” : " + currentStageIndex);
                 if (currentStageIndex == 6)
                 {
-                    fadeOut.GetComponent<FadeOutExit>().enabled = true;
+                    
+                    currentStage.Current.GetComponent<FadeOutExit>().StartFadeOut();
                     return;
                 }
-                Debug.Log("ÇöÀç ½ºÅ×ÀÌÁö´Â : " + currentStageIndex);
                 player._moveVector = Vector3.zero;
                 ShowText("Stage" + currentStageIndex);
+                GameManager.Instance.SetSpawnPoint(currentStage.Current.GetComponentInChildren<Transform>());
 
             }
         }
@@ -50,7 +52,7 @@ namespace Blind
         public void ShowText(string stage)
         {
             UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-            ui.SetName("¿øÈ¿´ë»ç" + stage); //°¡½Ã¼ºÀ» À§ÇØ ÀÓ½Ã·Î  stage Ãß°¡, ÀÌÈÄ Á¦°ÅÇÏ¸é µÊ
+            ui.SetName("ì›íš¨ëŒ€ì‚¬" + stage); //ê°€ì‹œì„±ì„ ìœ„í•´ ì„ì‹œë¡œ  stage ì¶”ê°€, ì´í›„ ì œê±°í•˜ë©´ ë¨
             ui.SetScriptTitle((Define.ScriptTitle)Enum.Parse(typeof(Define.ScriptTitle), stage));
         }
 

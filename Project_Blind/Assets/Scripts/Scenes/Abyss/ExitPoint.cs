@@ -22,6 +22,7 @@ namespace Blind.Abyss
         {
             if (col.CompareTag("Player"))
             {
+                if(AbyssSceneManager.Instance.currentStageIndex <6)
                 stage.NextStage();
             }
         }

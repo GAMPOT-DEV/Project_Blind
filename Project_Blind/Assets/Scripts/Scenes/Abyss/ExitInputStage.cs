@@ -16,7 +16,7 @@ namespace Blind.Abyss
         }
         void Update()
         {
-            if (InputController.Instance.Wave.Down)
+            if (WaveSense.IsUsing)
             {
                 _leaveWall.Disable();
             }
