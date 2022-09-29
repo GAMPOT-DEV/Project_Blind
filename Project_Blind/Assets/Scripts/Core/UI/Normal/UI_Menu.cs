@@ -111,16 +111,19 @@ namespace Blind
         }
         private void PushBagButton()
         {
+            SoundManager.Instance.Play("CursorMove");
             _bagUI.SetActive(true);
             _currActiveUI = _bagUI;
         }
         private void PushTalismanButton()
         {
+            SoundManager.Instance.Play("CursorMove");
             _talismanUI.SetActive(true);
             _currActiveUI = _talismanUI;
         }
         private void PushClueButton()
         {
+            SoundManager.Instance.Play("CursorMove");
             //UIManager.Instance.ShowNormalUI<UI_Clue>();
             _clueUI.SetActive(true);
             _currActiveUI = _clueUI;

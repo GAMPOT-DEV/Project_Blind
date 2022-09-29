@@ -105,26 +105,21 @@ public class Define
     {
         Unknown = 0,
 
-        TestItem1 = 1,
-        TestItem2 = 2,
-        TestItem3 = 3,
-        TestItem4 = 4,
-        TestItem5 = 5,
-        TestItem6 = 6,
-        TestItem7 = 7,
+        WaveStick = 1,
+        Potion = 2,
+        Potion2 = 3,
+        Potion3 = 4,
     }
 
     public enum TalismanItem
     {
         Unknown = 0,
 
-        TestTalisman1 = 1,
-        TestTalisman2 = 2,
-        TestTalisman3 = 3,
-        TestTalisman4 = 4,
-        TestTalisman5 = 5,
-        TestTalisman6 = 6,
-        TestTalisman7 = 7,
+        Talisman_Blue = 1,
+        Talisman_Green = 2,
+        Talisman_Purple = 3,
+        Talisman_Red = 4,
+        Talisman_Yellow = 5,
     }
     public enum ScriptTitle
     {
@@ -145,12 +140,16 @@ public class Define
         CutScene3,
         CutScene4,
         CutScene5,
+        CutScene6,
+        CutScene7,
 
         temple,
 
         village1,
         village2,
-        village3
+        village3,
+
+        RestScript
     }
     public enum TalismanAbility
     {

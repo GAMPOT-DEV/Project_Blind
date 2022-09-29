@@ -107,12 +107,14 @@ namespace Blind
         }
         private void PushYesButton()
         {
+            SoundManager.Instance.Play("Select");
             Time.timeScale = 1;
             UIManager.Instance.Clear();
             _transition.TransitionInternal();
         }
         private void PushNoButton()
         {
+            SoundManager.Instance.Play("Select");
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;
             ClosePopupUI();
         }
@@ -133,6 +135,7 @@ namespace Blind
         }
         private void ChangeCursor(int nextCursor)
         {
+            SoundManager.Instance.Play("CursorMove");
             ExitCursor(_currCursor);
             EnterCursor(nextCursor);
         }

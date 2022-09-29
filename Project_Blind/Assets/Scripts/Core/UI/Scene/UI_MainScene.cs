@@ -130,6 +130,7 @@ namespace Blind
         }
         private void PushStartButton()
         {
+            SoundManager.Instance.Play("Select");
             ChangeCursor((int)Images.Image_Start);
             ResourceManager.Instance.Instantiate("UI/Video");
             _goNextScene = true;
@@ -166,6 +167,7 @@ namespace Blind
         }
         private void ChangeCursor(int nextCursor)
         {
+            SoundManager.Instance.Play("CursorMove");
             ExitCursor(_currCursor);
             EnterCursor(nextCursor);
         }
