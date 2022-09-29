@@ -224,10 +224,15 @@ namespace Blind
         {
             int RanNum = Random.Range(0, 100);
             if (RanNum > 50)
+            {
+                if (GetFacing() == Facing.Left)
+                    Flip();
                 return 1;
+            }
             else
             {
-                Flip();
+                if(GetFacing() == Facing.Right)
+                    Flip();
                 return -1;
             }
         }
@@ -393,7 +398,7 @@ namespace Blind
             return;
         }
 
-        public void Reset()
+        public override void Reset()
         {
             gameObject.SetActive(true);
             state = State.Patrol;
