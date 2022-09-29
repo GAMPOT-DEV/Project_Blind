@@ -55,6 +55,7 @@ namespace Blind
 
         public void AttackSound()
         {
+            transform.GetChild(4).GetComponent<PreAttack>().Play();
             if(currentAttack == 1)
                 SoundManager.Instance.Play("Crowd/Bat/SmallAttack");
             else if(currentAttack == 2)
