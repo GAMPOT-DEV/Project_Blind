@@ -12,7 +12,6 @@ namespace Blind.Abyss
         public Transform exit;
         private void Awake()
         {
-            Player = ResourceManager.Instance.Instantiate("Player2").GetComponent<PlayerCharacter>();
         }
         private void Start()
         {
