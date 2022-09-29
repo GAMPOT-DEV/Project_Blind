@@ -42,6 +42,7 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
+            _monoBehaviour.UpdateVelocity();
 
             if (!_monoBehaviour.isJump)
             {
@@ -71,6 +72,14 @@ namespace Blind
             {
                 _monoBehaviour.Deed();
             }
+            if (_monoBehaviour.CheckForDash())
+            {
+                _monoBehaviour.DashStart();
+            }
+            
+            if(_monoBehaviour.CheckForParing())
+                _monoBehaviour.Paring();
+
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack))
             {
                 animator.speed = 1.0f;
