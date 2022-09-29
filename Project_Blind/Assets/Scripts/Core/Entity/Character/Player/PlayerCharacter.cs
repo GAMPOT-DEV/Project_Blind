@@ -514,7 +514,6 @@ namespace Blind
         {
             if (_renderer == null)
             {
-                Debug.Log("tlfgjpdah");
                 return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
             }
             else return _renderer.flipX ? Facing.Left : Facing.Right;

@@ -53,6 +53,8 @@ namespace Blind
             AnimatorControllerPlayable controller)
         {
             _monoBehaviour.UpdateVelocity();
+            _monoBehaviour.CheckForGrounded();
+            Debug.Log(_monoBehaviour.isJump);
             if (!_monoBehaviour.isJump)
             {
                 Debug.Log("실행됨!!");
@@ -74,7 +76,6 @@ namespace Blind
             if (_monoBehaviour._clickcount >= 2 && _monoBehaviour.isJump)
             {
                 _monoBehaviour.MeleeAttackCombo1();
-                Debug.Log("dd");
             }
 
             if (_monoBehaviour.CheckForPowerAttack() && _monoBehaviour.CurrentWaveGauge >= 10)

@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using System.Collections;
 using UnityEngine;
 namespace Blind
 {
@@ -18,23 +20,29 @@ namespace Blind
         {
             Init();
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
-            bossHand.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z + 80);
-            
+
+
             bossHand.CheckBossPattern(false);
             int range = RandomRange();
+            return StartCoroutine( StartAttack(range, bossHand));
+        }
+
+        IEnumerator StartAttack(int range, BossHand bossHand)
+        {
             if (range == 0)
             {
+                bossHand.GetComponent<SpriteRenderer>().flipX = false;
                 bossHand.transform.position = _floorStart.position;
-                bossHand.GetTransform(_floorStart.position, _floorEnd.position);
-                bossHand.GetFacing(false);
+                bossHand.GetTransform(_floorStart.position, _floorEnd.position, false);
             }
             else
             {
+                Debug.Log("실행됨ㅇㅇ");
+                bossHand.GetComponent<SpriteRenderer>().flipX = true;
                 bossHand.transform.position = _floorEnd.position;
-                bossHand.GetTransform(_floorEnd.position,_floorStart.position);
-                bossHand.GetFacing(true);
+                bossHand.GetTransform(_floorEnd.position,_floorStart.position, false);
             }
-            return null;
+            yield return new WaitForSeconds(3f);
         }
         
         private int RandomRange()

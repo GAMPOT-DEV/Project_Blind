@@ -82,12 +82,13 @@ namespace Blind
         {
             yield return new WaitForSeconds(1f);
             var bossHand = ResourceManager.Instance.Instantiate("Enemy/Boss/BossHand").GetComponent<BossHand>();
+            bossHand.transform.rotation = Quaternion.Euler(bossHand.transform.rotation.x, bossHand.transform.rotation.y, bossHand.transform.rotation.z + -80f);
             bossHand.CheckBossPattern(true);
 
             bossHand.transform.position = RealAttackPostion.position;
             currentPostion = player.transform.position;
             //Debug.Log(RealAttackPostion.position + " " + currentPostion);
-            bossHand.GetTransform(RealAttackPostion.position, currentPostion);
+            bossHand.GetTransform(RealAttackPostion.position, currentPostion, true);
         }
 
         private int RandomRange(int end = 5)

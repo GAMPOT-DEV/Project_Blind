@@ -45,6 +45,8 @@ namespace Blind
             AnimatorControllerPlayable controller)
         {
             _monoBehaviour.UpdateVelocity();
+            _monoBehaviour.CheckForGrounded();
+
             
             if (!_monoBehaviour.isJump)
             {

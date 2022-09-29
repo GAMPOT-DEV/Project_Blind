@@ -260,6 +260,17 @@ Transform:
   m_Father: {fileID: 2118668587}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1134368554 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4858200014329738510, guid: dfd81b18b91fc4ddf953efee05dbe86a, type: 3}
+  m_PrefabInstance: {fileID: 2056553215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be2bb8acfebc46aca2004e47453bd8c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1405754268
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -267,6 +278,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 141728911735631416, guid: 272dd70257b114612bf4410bba428837, type: 3}
+      propertyPath: m_Intensity
+      value: 1.3
+      objectReference: {fileID: 0}
     - target: {fileID: 599213341604062642, guid: 272dd70257b114612bf4410bba428837, type: 3}
       propertyPath: transitionDestinationTag
       value: 0
@@ -803,6 +818,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5341663325182879233, guid: dfd81b18b91fc4ddf953efee05dbe86a, type: 3}
+      propertyPath: _patternList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5341663325182879233, guid: dfd81b18b91fc4ddf953efee05dbe86a, type: 3}
+      propertyPath: _patternList.Array.data[2]
+      value: 
+      objectReference: {fileID: 1134368554}
     - target: {fileID: 5375035079661745816, guid: dfd81b18b91fc4ddf953efee05dbe86a, type: 3}
       propertyPath: m_IsActive
       value: 1
