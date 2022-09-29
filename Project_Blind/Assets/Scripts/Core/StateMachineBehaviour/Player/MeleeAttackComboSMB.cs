@@ -17,7 +17,7 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             _isOnClick = false;
-            _monoBehaviour.ReAttackSize(3,5, _monoBehaviour.Data.damage);
+            _monoBehaviour.ReAttackSize(6, 5, _monoBehaviour.Data.damage);
             if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/1타", Define.Sound.Effect);
             
 
@@ -29,6 +29,7 @@ namespace Blind
                 animator.speed = 0.2f;
                 _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
+                _monoBehaviour.transform.GetChild(1).GetChild(8).GetComponent<AttackFX>().Play(_monoBehaviour.GetFacing());
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();

@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Blind
 {
-    [RequireComponent(typeof(ParticleSystem))]
     public abstract class AttackFX : MonoBehaviour
     {
         private Facing _face = Facing.Left;

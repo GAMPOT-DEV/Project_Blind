@@ -30,9 +30,6 @@ namespace Blind
         }
         enum Images
         {
-            Image_TestDamage,
-            Image_TestHeal,
-
             Charge,
             Image_RealHp,
             Image_RealGauge,
@@ -83,13 +80,6 @@ namespace Blind
         {
             _player.Hp.RefreshHpUI += OnHpChanged;
             _player.OnWaveGaugeChanged += OnWaveGaugeChanged;
-            // Test
-            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => _player.Hit(5.0f), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => _player.Hp.GetHeal(1.0f), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(TestWaveGauge, Define.UIEvent.Click);
-
-            Get<Image>((int)Images.Image_TestDamage).gameObject.BindEvent(() => DataManager.Instance.SubMoney(1), Define.UIEvent.Click);
-            Get<Image>((int)Images.Image_TestHeal).gameObject.BindEvent(() => DataManager.Instance.AddMoney(1), Define.UIEvent.Click);
         }
         private void HandleUIKeyInput()
         {

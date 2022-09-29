@@ -18,7 +18,8 @@ namespace Blind
         {
             _parent = firstBossEnemy;
         }
-        public abstract void Start();
+        public abstract void Play();
         public abstract void End();
+        public abstract void Stop();
     }
 }

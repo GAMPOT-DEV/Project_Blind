@@ -28,11 +28,7 @@ namespace Blind
                     _ui = UIManager.Instance.ShowWorldSpaceUI<UI_Interaction>();
                     _ui.SetPosition(transform.position, Vector3.down * 3);
                     //특정 키 눌러 ui interact하면 진행
-                    if(true)
-                    {
-                        DoInteraction();
-                    }
-                    
+                                        
                 }
                 
             }

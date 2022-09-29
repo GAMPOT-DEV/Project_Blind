@@ -353,7 +353,6 @@ namespace Blind
 
         public void enableAttack()
         {
-            PlayAttackFx(0,GetFacing());
             _attack.EnableDamage();
         }
 
@@ -428,7 +427,7 @@ namespace Blind
             Hp.ResetHp();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
-            gameObject.transform.position = spawnPoint.position;
+            gameObject.transform.position = GameManager.Instance.GetTransform().position;
         }
 
         public void GetItem()
@@ -438,12 +437,12 @@ namespace Blind
 
         public bool CheckForItemT()
         {
-            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.TestItem1);
+            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.WaveStick);
         }
 
         public bool CheckForItemUsing()
         {
-            return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.TestItem2);
+            return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.Potion);
         }
         public void ItemT()
         {
@@ -460,6 +459,7 @@ namespace Blind
         public void Talk()
         {
             InputController.Instance.ReleaseControl();
+            _moveVector = Vector2.zero;
             _animator.SetBool("Talk", true);
         }
 
@@ -524,7 +524,6 @@ namespace Blind
         }
         public void DebuffOn()
         {
-            Debug.Log("디버프 걸림");
             isOnLava = true;
             _defaultSpeed -= 1.0f;
             Data.jumpSpeed = 0.5f;
