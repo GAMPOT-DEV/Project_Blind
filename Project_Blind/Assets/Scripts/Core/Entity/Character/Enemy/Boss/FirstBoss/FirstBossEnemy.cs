@@ -22,6 +22,11 @@ namespace Blind
                 phase.Init(this);
             }
         }
+        public override void Reset()
+        {
+            base.Reset();
+            _bossPhase.Reset();
+        }
 
         private void Start()
         {
