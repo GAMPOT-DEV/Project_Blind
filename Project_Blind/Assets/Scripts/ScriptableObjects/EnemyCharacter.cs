@@ -13,5 +13,6 @@ namespace Blind.ScriptableObjects
         [SerializeField] public Vector2 attackRange;
         [SerializeField] public int damage;
         [SerializeField] public float stunTime;
+        [SerializeField] public float HpBarHeight;
     }
 }
