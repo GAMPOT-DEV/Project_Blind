@@ -9,13 +9,14 @@ namespace Blind
     {
         [SerializeField] private List<Stage> _stageInfo;
         private IEnumerator<Stage> currentStage;
-        private int currentStageIndex;
+        public int currentStageIndex;
         public PlayerCharacter player;
         public GameObject fadeOut;
 
 
         protected override void Awake()
         {
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
             base.Awake();
             currentStage = _stageInfo.GetEnumerator();
             currentStage.MoveNext();
@@ -34,14 +35,15 @@ namespace Blind
                 if (currentStage.Current != null)
                     currentStage.Current.Enable();
                 currentStageIndex++;
+                Debug.Log("현재 스테이지는 : " + currentStageIndex);
                 if (currentStageIndex == 6)
                 {
-                    fadeOut.GetComponent<FadeOutExit>().enabled = true;
+                    currentStage.Current.GetComponent<FadeOutExit>().StartFadeOut();
                     return;
                 }
-                Debug.Log("현재 스테이지는 : " + currentStageIndex);
                 player._moveVector = Vector3.zero;
                 ShowText("Stage" + currentStageIndex);
+                GameManager.Instance.SetSpawnPoint(currentStage.Current.GetComponentInChildren<Transform>());
 
             }
         }
