@@ -83,7 +83,6 @@ namespace Blind
             Facings(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>().GetFacing());
             if (col.gameObject.GetComponent<BatMonster>() != null)
             {
-                Debug.Log("DD");
                 ParingEffect<BatMonster>.Initialise(col.gameObject.GetComponent<BatMonster>());
                 BatMonsterParing batMonsterparing = col.gameObject.AddComponent<BatMonsterParing>();
                 if (batMonsterparing.OnCheckForParing(gameObject.transform.parent.gameObject
