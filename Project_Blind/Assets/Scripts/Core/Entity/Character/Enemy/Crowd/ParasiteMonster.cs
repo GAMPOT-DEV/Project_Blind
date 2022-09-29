@@ -8,7 +8,6 @@ namespace Blind {
         protected void Awake()
         {
             base.Awake();
-            _patrolTime = 2;
         }
 
         private void Start()
