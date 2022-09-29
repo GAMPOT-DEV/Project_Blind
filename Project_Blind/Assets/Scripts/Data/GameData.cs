@@ -12,7 +12,7 @@ namespace Blind
         // Sound
         public float mastetVolume = 1.0f;
         public float bgmVolume = 1.0f;
-        public float effectVolume = 1.0f;
+        public float effectVolume = 0.5f;
 
         // Effect
         public bool vibration = true;
