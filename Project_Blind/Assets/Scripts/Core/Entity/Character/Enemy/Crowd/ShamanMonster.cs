@@ -6,18 +6,11 @@ namespace Blind
     public class ShamanMonster : CrowdEnemyCharacter
     {
         public GameObject Circle;
-
-        private Coroutine Co_attack;
-        private Coroutine Co_stun;
-        private Coroutine Co_die;
         private Coroutine Co_avoid;
-
-        [SerializeField] private float _projectileSpeed = 10;
 
         protected void Awake()
         {
             base.Awake();
-            _patrolTime = 1.5f;
         }
 
         private void Start()
@@ -32,6 +25,7 @@ namespace Blind
 
         protected override void updateAttack()
         {
+            flipToFacing();
             _anim.SetInteger("State", 3);
         }
 
@@ -58,7 +52,7 @@ namespace Blind
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = player.transform.position - gameObject.transform.position;
-            projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, _projectileSpeed, gameObject);
+            projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, Data.attackSpeed, gameObject);
             _anim.SetBool("Basic Attack", false);
             NextAction();
         }

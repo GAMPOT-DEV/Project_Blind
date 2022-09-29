@@ -38,12 +38,12 @@ namespace Blind
             _sprite = GetComponent<SpriteRenderer>();
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
-            CreateHpUI();
+            CreateHpUI(Data.HpBarHeight);
             playerFinder = GetComponentInChildren<PlayerFinder>();
             _col = GetComponent<CapsuleCollider2D>();
         }
 
-        protected void CreateHpUI()
+        protected void CreateHpUI(float BarHeight)
         {
             // UI매니저로 UI_UnitHP 생성
             _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
@@ -54,7 +54,7 @@ namespace Blind
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;
             // 오브젝트의 머리 위에 위치하도록 설정
-            _unitHPUI.SetPosition(transform.position, Vector3.up * 9);
+            _unitHPUI.SetPosition(transform.position, Vector3.up * BarHeight);
         }
 
         public override Facing GetFacing()
