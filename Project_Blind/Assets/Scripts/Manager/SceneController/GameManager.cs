@@ -66,6 +66,16 @@ namespace Blind
                 enemyArr[i].Reset();
             }
         }
+
+        public Transform GetTransform()
+        {
+            return SpawnPoint.transform;
+        }
+
+        public void SetSpawnPoint(Transform newPoint)
+        {
+            SpawnPoint = newPoint;
+        }
     }
 }
 
