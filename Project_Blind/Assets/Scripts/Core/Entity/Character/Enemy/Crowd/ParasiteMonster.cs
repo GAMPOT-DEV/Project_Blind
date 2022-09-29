@@ -25,9 +25,13 @@ namespace Blind {
             if (currentAttack == 0)
             {
                 if (Random.Range(0, 100) > 20)
+                {
                     currentAttack = 1;
+                }
                 else
+                {
                     currentAttack = 2;
+                }
                 SoundManager.Instance.Play("Crowd/Parasite/Attack1");
             }
 
@@ -64,6 +68,15 @@ namespace Blind {
         public override void WalkSound()
         {
             SoundManager.Instance.Play("Crowd/Parasite/Move");
+        }
+
+        public void Attack1()
+        {
+            transform.GetChild(4).GetChild(0).GetComponent<PreAttack>().Play();
+        }
+        public void Attack2()
+        {
+            transform.GetChild(4).GetChild(1).GetComponent<PreAttack>().Play();
         }
     }
 }
