@@ -9,7 +9,6 @@ namespace Blind.ScriptableObjects
         [SerializeField] public float speed;
         [SerializeField] public float runSpeed;
         [SerializeField] public float attackCoolTime;
-        [SerializeField] public float attackSpeed;
         [SerializeField] public int damage;
         [SerializeField] public float stunTime;
         [SerializeField] public float HpBarHeight;
@@ -18,5 +17,8 @@ namespace Blind.ScriptableObjects
         [SerializeField] public float patrolTime;
         [SerializeField] public Vector2 BasicAttackRange;
         [SerializeField] public Vector2 SkillAttackRange;
+
+        //Shaman Only
+        [SerializeField] public float attackSpeed;
     }
 }
