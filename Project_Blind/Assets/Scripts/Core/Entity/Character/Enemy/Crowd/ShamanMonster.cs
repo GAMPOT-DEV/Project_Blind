@@ -28,6 +28,7 @@ namespace Blind
 
         protected override void updateAttack()
         {
+            flipToFacing();
             _anim.SetInteger("State", 3);
         }
 
