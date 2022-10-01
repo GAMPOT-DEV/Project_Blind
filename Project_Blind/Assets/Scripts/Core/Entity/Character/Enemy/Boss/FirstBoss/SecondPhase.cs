@@ -18,6 +18,7 @@ namespace Blind
         {
             SceneLinkedSMB<SecondPhase>.Initialise(_animator, this);
             Hp.SetHealth();
+            _animator.SetTrigger("Ganrim");
         }
 
         public void StartPattern(int pattern)
