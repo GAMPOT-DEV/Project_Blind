@@ -4,30 +4,29 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class BigTree : InteractionAble
+    public class Clue : InteractionAble
     {
-        public override void DoInteraction()
-        {
-            DataManager.Instance.CaveOpen();
-        }
-
+        public Define.ClueItem clueItem;
         protected override void OnTriggerEnter2D(Collider2D collision)
         {
             if(collision.CompareTag("Player"))
             {
-                StartCoroutine(CheckWaveSpread());
+                DataManager.Instance.AddClueItem(clueItem);
+                gameObject.SetActive(false);
             }
+
         }
 
         protected override void OnTriggerExit2D(Collider2D collision)
         {
         }
 
-        IEnumerator CheckWaveSpread()
+        public override void DoInteraction()
         {
-            DoInteraction();
-            yield return null;
         }
+
     }
+
+
 }
 

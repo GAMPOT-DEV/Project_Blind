@@ -414,6 +414,8 @@ namespace Blind
             yield return new WaitForEndOfFrame();
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
             InputController.Instance.GainControl();
+            var gameObject = ResourceManager.Instance.Instantiate("FX/EnvFx/Respawn");
+            gameObject.transform.position = GameManager.Instance.Player.transform.position;
         }
 
         public void DieStopVector(Vector2 stop)

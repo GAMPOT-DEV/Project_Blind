@@ -7,9 +7,11 @@ namespace Blind
     public class SavePoint : InteractionAble
     {
         private PlayerCharacter Player;
-        public void Heal() // ÆÄµ¿°ÔÀÌÁö ¹× HPÈ¸º¹
+        public void Heal() // ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ HPÈ¸ï¿½ï¿½
         {
             Player.CurrentWaveGauge = Player.maxWaveGauge;
+            var gO = ResourceManager.Instance.Instantiate("FX/HitFX/Heal");
+            gO.transform.position = Player.transform.position;
             Player.Hp.ResetHp();
         }
 
@@ -27,7 +29,7 @@ namespace Blind
                 {
                     _ui = UIManager.Instance.ShowWorldSpaceUI<UI_Interaction>();
                     _ui.SetPosition(transform.position, Vector3.down * 3);
-                    //Æ¯Á¤ Å° ´­·¯ ui interactÇÏ¸é ÁøÇà
+                    //Æ¯ï¿½ï¿½ Å° ï¿½ï¿½ï¿½ï¿½ ui interactï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½
                                         
                 }
                 
