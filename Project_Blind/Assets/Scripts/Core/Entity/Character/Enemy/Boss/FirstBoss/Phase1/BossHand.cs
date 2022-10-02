@@ -22,6 +22,7 @@ namespace Blind
         private bool isCameraShakeStop = false; // ���� 1: true, ���� 2: false
         private CinemachineImpulseSource _source;
         private bool isBossPatternCheck;
+        private bool isPatternCheck;
         public void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
@@ -33,7 +34,12 @@ namespace Blind
         {
             if (!isStop)
             {
-                transform.position = Vector2.MoveTowards(transform.position, EndTransform, 0.5f);
+                if(isPatternCheck)
+                    transform.position = Vector2.MoveTowards(transform.position, EndTransform, 1f);
+                else
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, EndTransform, 0.5f);
+                }
                 if(!isBossPatternCheck)_source.GenerateImpulse();
                 if (transform.position.x == EndTransform.x)
                 {
@@ -79,8 +85,9 @@ namespace Blind
             isBossPatternCheck = isBossPattern;
         }
 
-        public void GetTransform(Vector2 left, Vector2 right)
+        public void GetTransform(Vector2 left, Vector2 right, bool isPatternCheck)
         {
+            this.isPatternCheck = isPatternCheck;
             transform.position = left;
             EndTransform = right;
         }
@@ -99,7 +106,7 @@ namespace Blind
                 if (!_player._isInvincibility)
                 {
                     _collider.isTrigger = true;
-                    _player.HitWithKnockBack(new AttackInfo(5f,facing));
+                    _player.HitWithKnockBack(new AttackInfo(1f,facing));
                     StartCoroutine(ResetTrigger());
                 }
             }

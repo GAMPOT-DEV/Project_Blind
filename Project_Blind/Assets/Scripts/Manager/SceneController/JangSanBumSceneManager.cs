@@ -8,7 +8,7 @@ namespace Blind.JangSanBum
         [SerializeField] private Point _entryPoint;
         [SerializeField] private Point _exitPoint;
         [SerializeField] private GameObject wall;
-        [SerializeField] private FirstBossEnemy _firstBossEnemy;
+        [SerializeField] private SecondPhase _firstBossEnemy;
 
         protected override void Awake()
         {
@@ -16,7 +16,7 @@ namespace Blind.JangSanBum
             _entryPoint.SetAction(() =>
             {
                 wall.SetActive(true);
-                _firstBossEnemy.Play();
+                _firstBossEnemy.gameObject.SetActive(true);
             });
             _exitPoint.SetAction(() =>
             {
