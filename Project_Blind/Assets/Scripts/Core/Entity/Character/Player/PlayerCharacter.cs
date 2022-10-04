@@ -1,4 +1,4 @@
-﻿using Spine.Unity;
+using Spine.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -427,6 +427,7 @@ namespace Blind
         {
             RespawnFacing();
             Hp.ResetHp();
+            DebuffOff();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
             gameObject.transform.position = GameManager.Instance.GetTransform().position;
@@ -546,6 +547,7 @@ namespace Blind
 
         public void DebuffOff()
         {
+            isOnLava = false;
             _defaultSpeed += 2.0f;
             Data.jumpSpeed = 0.7f;
             Debug.Log("디버프 풀림");
