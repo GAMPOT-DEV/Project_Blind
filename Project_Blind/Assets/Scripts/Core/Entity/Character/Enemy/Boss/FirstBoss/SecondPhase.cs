@@ -4,21 +4,35 @@ using System.Collections;
 using Random = System.Random;
 namespace Blind
 {
-    public class SecondPhase : BossEnemyCharacter
+    public class SecondPhase : BossPhase
     {
         protected Random _rand = new Random();
         private Animator _animator;
-        protected override void Awake()
+        [SerializeField] private Transform point;
+
+        public void Init(FirstBossEnemy firstBossEnemy)
         {
-            _animator = GetComponent<Animator>();
-            base.Awake();
+            _parent = firstBossEnemy;
+            _animator = _parent.gameObject.GetComponent<Animator>();
         }
 
-        private void Start()
+        public float ReturnHp()
         {
-            SceneLinkedSMB<SecondPhase>.Initialise(_animator, this);
-            Hp.SetHealth();
-            _animator.SetTrigger("Ganrim");
+            return _parent.Hp.GetHP();
+        }
+        
+        public override void Play()
+        {
+            
+        }
+
+        public override void End()
+        {
+        }
+
+        public override void Stop()
+        {
+            
         }
 
         public void StartPattern(int pattern)

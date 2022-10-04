@@ -3,7 +3,7 @@ using UnityEngine.Animations;
 
 namespace Blind
 {
-    public class Pattern1SMB : SceneLinkedSMB<SecondPhase>
+    public class Pattern1SMB : SceneLinkedSMB<FirstBossEnemy>
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             
