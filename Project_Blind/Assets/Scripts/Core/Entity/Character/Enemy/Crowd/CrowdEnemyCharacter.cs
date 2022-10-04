@@ -341,6 +341,7 @@ namespace Blind
 
         public void AniParingenable()
         {
+            Debug.Log("Dd");
             if (!createAttackHitBox)
             {
                 AttackHitBox();
@@ -408,7 +409,7 @@ namespace Blind
             gameObject.transform.position = startPosition.position;
 
 
-            //È¤½Ã ¸ô¶ó¼­
+            //È¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             attackable = true;
             IsAttack = false;
             co_patrol = null;

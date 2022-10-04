@@ -1,10 +1,9 @@
 using UnityEngine;
 using UnityEngine.Animations;
 
-
 namespace Blind
 {
-    public class DefultSMB : SceneLinkedSMB<FirstBossEnemy>
+    public class GanrimSMB: SceneLinkedSMB<FirstBossEnemy>
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
         }
@@ -12,6 +11,10 @@ namespace Blind
             AnimatorControllerPlayable controller)
         {
             
+        }
+        public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            _monoBehaviour.BossPhaseStart();
         }
     }
 }
