@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2320744197022703102}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -8, z: 0}
-  m_LocalScale: {x: 36.227875, y: 1.2714038, z: 1}
+  m_LocalPosition: {x: 0, y: -6.61, z: -0}
+  m_LocalScale: {x: 9.063363, y: 9.063363, z: 9.063363}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2176902310378890848}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a92d330f81f92ec45be62186d8275b4a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -103,7 +103,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.85, y: 1.05}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dir: -1
+  Parent: {fileID: 0}
 --- !u!1 &2324475547580092848
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,8 +229,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8857913103875110163}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 8, z: 0}
-  m_LocalScale: {x: 36.227875, y: 1.2714038, z: 1}
+  m_LocalPosition: {x: 0, y: 13.262, z: 0}
+  m_LocalScale: {x: 7.909278, y: 7.909278, z: 7.909278}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2176902310378890848}
@@ -276,7 +277,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5aa36e4d2ab97ea47b9003663c06ef1c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -304,7 +305,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 2.27, y: 2.5}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -326,3 +327,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dir: 1
+  Parent: {fileID: 0}
