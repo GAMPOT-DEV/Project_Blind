@@ -11,6 +11,7 @@ namespace Blind
     {
         protected Random _rand = new Random();
         private Coroutine _coroutine;
+        private int _patternCount = 0;
 
         public void Init(FirstBossEnemy firstBossEnemy)
         {
@@ -41,9 +42,14 @@ namespace Blind
             yield return new WaitForSeconds(3f);
             while (true)
             {
+                if (_patternCount >= 6)
+                {
+                    
+                }
                 var next = _rand.Next(0, 3);
                 SetAttackPattern(_patternList[next]);
                 yield return StartPattern();
+                _patternCount++;
                 yield return new WaitForSeconds(1.5f);
             }
         }

@@ -64,6 +64,11 @@ namespace Blind
             Debug.Log("dd");
             _bossPhase.Current.Play();
         }
+
+        public void NextPhase()
+        {
+            _bossPhase.MoveNext();
+        }
         
     }
 }
