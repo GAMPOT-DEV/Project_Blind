@@ -16,6 +16,7 @@ namespace Blind.JangSanBum
             _entryPoint.SetAction(() =>
             {
                 wall.SetActive(true);
+                _firstBossEnemy.gameObject.SetActive(true);
                 _firstBossEnemy.Play();
             });
             _exitPoint.SetAction(() =>

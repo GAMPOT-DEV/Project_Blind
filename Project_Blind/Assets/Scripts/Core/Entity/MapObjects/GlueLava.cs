@@ -7,7 +7,7 @@ namespace Blind
     public class GlueLava : MonoBehaviour
     {
         private PlayerCharacter character;
-        private void Awake()
+        private void Start()
         {
             character = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
         }
@@ -18,8 +18,7 @@ namespace Blind
             {
                 if (!character.isOnLava)
                 {
-                    Debug.Log("Á¡¾×ÁúÀ» ¹âÀ½");
-                    PlayerCharacter character = collision.gameObject.GetComponent<PlayerCharacter>();
+                    Debug.Log("ì ì•¡ì§ˆì„ ë°ŸìŒ");
                     character.DebuffOn();
 
                 }

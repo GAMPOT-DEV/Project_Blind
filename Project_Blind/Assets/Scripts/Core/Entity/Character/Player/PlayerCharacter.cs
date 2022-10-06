@@ -1,4 +1,4 @@
-﻿using Spine.Unity;
+using Spine.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -414,6 +414,8 @@ namespace Blind
             yield return new WaitForEndOfFrame();
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
             InputController.Instance.GainControl();
+            var gameObject = ResourceManager.Instance.Instantiate("FX/EnvFx/Respawn");
+            gameObject.transform.position = GameManager.Instance.Player.transform.position;
         }
 
         public void DieStopVector(Vector2 stop)
@@ -425,6 +427,7 @@ namespace Blind
         {
             RespawnFacing();
             Hp.ResetHp();
+            DebuffOff();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
             gameObject.transform.position = GameManager.Instance.GetTransform().position;
@@ -544,6 +547,7 @@ namespace Blind
 
         public void DebuffOff()
         {
+            isOnLava = false;
             _defaultSpeed += 2.0f;
             Data.jumpSpeed = 0.7f;
             Debug.Log("디버프 풀림");

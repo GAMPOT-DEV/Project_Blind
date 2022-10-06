@@ -20,6 +20,7 @@ namespace Blind
                 if (PhysicHelper.ColliderHasPlatformEffector (col))
                     fallthroughColliderCount++;
             }
+            Debug.Log(fallthroughColliderCount + " " + colliderCount);
 
             if (fallthroughColliderCount == colliderCount)
             {
