@@ -12,6 +12,7 @@ namespace Blind
         [SerializeField] private List<Transform> AttackPosition;
         [SerializeField] private List<Transform> Pattern2AttackPosition;
         [SerializeField] private BoxCollider2D AttackRange;
+        [SerializeField] public Transform ShoutePatternPosition;
         public Transform _floorStart;
         public Transform _floorEnd;
         private IEnumerator<BossPhase> _bossPhase;
