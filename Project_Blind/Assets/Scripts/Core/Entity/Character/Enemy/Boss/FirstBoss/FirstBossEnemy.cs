@@ -9,12 +9,16 @@ namespace Blind
     public class FirstBossEnemy : BossEnemyCharacter
     { 
         [SerializeField] private List<BossPhase> phaseList;
+        [SerializeField] private List<Transform> AttackPosition;
+        [SerializeField] private List<Transform> Pattern2AttackPosition;
+        [SerializeField] private BoxCollider2D AttackRange;
         public Transform _floorStart;
         public Transform _floorEnd;
         private IEnumerator<BossPhase> _bossPhase;
         [SerializeField] private Transform point;
         private Animator _animator;
         private bool isStart = false;
+        private int next;
         protected override void Awake()
         {
             base.Awake();
@@ -26,6 +30,7 @@ namespace Blind
             _bossPhase.MoveNext();
             foreach (var phase in phaseList)
             {
+                
                 phase.Init(this);
             }
         }
@@ -61,13 +66,46 @@ namespace Blind
 
         public void BossPhaseStart()
         {
-            Debug.Log("dd");
             _bossPhase.Current.Play();
         }
 
         public void NextPhase()
         {
             _bossPhase.MoveNext();
+            StartCoroutine(NextPhaseStart());
+        }
+
+        public void AttackInit(int x, int y, int damage)
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().Init(x,y,damage);
+        }
+
+        IEnumerator NextPhaseStart()
+        {
+            yield return new WaitForSeconds(3f);
+            BossPhaseStart();
+        }
+
+        public void Pattern2Start(int random)
+        {
+            AttackRange.gameObject.transform.position = Pattern2AttackPosition[random].position;
+        }
+        
+
+        public void AttackNextPosition()
+        {
+            next = (next + 1) % AttackPosition.Count;
+            AttackRange.gameObject.transform.position = AttackPosition[next].position;
+        }
+
+        public void enableAttack()
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().isAttack = true;
+        }
+
+        public void disableAttack()
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().isAttack = false;
         }
         
     }

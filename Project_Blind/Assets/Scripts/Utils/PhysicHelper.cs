@@ -1,19 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Blind
 {
     /// <summary>
     /// 현재는 레이캐스트가 맞은 오브젝트에 PlatformEffector가 있는지 판별하는 클래스(나중에 플랫폼 이펙트 말고도 다른 걸 판별할 때 써도됨)
     /// </summary>
-    public class PhysicHelper : Singleton<PhysicHelper>
+    public class PhysicHelper : MonoBehaviour
     {
+        private static PhysicHelper s_Instance;
+
+        static PhysicHelper Instance
+        {
+            get
+            {
+                if (s_Instance != null)
+                    return s_Instance;
+
+                s_Instance = FindObjectOfType<PhysicHelper> ();
+
+                if (s_Instance != null)
+                    return s_Instance;
+            
+                Create ();
+            
+                return s_Instance;
+            }
+            set
+            {
+                s_Instance = value;
+            }
+        }
+
+        static void Create()
+        {
+            GameObject physicsHelperGameObject = new GameObject("PhysicsHelper");
+            s_Instance = physicsHelperGameObject.AddComponent<PhysicHelper> ();
+        }
         Dictionary<Collider2D, PlatformEffector2D> m_PlatformEffectorCache = new Dictionary<Collider2D, PlatformEffector2D> ();
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             if (Instance != this)
             {
                 Destroy (gameObject);
