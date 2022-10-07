@@ -92,6 +92,7 @@ namespace Data
     {
         public int id;
         public int abilityValue;
+        public int cost;
         public string name;
         public string description;
         public string iconPath;

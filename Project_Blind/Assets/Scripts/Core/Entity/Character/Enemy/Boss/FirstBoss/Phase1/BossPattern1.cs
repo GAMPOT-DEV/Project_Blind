@@ -16,6 +16,7 @@ namespace Blind
 
         private void Init()
         {
+            Debug.Log("ddd");
             player = GameManager.Instance.Player;
             _collider = rangeObject.GetComponent<BoxCollider2D>();
             rangeObject.transform.position = player.transform.position;
@@ -26,7 +27,9 @@ namespace Blind
 
         Vector2 Return_RandomPosion()
         {
+            rangeObject.transform.position = player.transform.position;
             Vector2 originposion = rangeObject.transform.position;
+            Debug.Log(rangeObject.transform.position);
             float random_x = _collider.bounds.size.x;
             float random_y = _collider.bounds.size.y;
             random_x = Random.Range((random_x / 2) * -1, random_x / 2);

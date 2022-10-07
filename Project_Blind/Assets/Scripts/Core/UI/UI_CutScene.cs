@@ -103,7 +103,17 @@ namespace Blind
         }
         IEnumerator CoDisplayLastScript()
         {
+            float lastBGMSound = DataManager.Instance.GameData.bgmVolume;
+            float currBgmSound = lastBGMSound;
+            while (true)
+            {
+                currBgmSound -= lastBGMSound * Time.deltaTime * 30;
+                if (currBgmSound < 0f) break;
+                SoundManager.Instance.ChangeVolume(Define.Sound.Bgm, currBgmSound);
+                yield return new WaitForSeconds(0.1f);
+            }
             SoundManager.Instance.StopBGM();
+            SoundManager.Instance.ChangeVolume(Define.Sound.Bgm, lastBGMSound);
             yield return new WaitForSeconds(0.5f);
             UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
             ui.SetScriptTitle(Define.ScriptTitle.CutScene7);

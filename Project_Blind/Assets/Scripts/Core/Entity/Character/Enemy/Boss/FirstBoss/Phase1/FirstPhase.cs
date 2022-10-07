@@ -17,6 +17,7 @@ namespace Blind
         {
             _parent = firstBossEnemy;
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
+            Debug.Log("페이즈 1");
         }
         public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)
         {
@@ -44,7 +45,8 @@ namespace Blind
             {
                 if (_patternCount >= 6)
                 {
-                    
+                    Stop();
+                    _parent.NextPhase();
                 }
                 var next = _rand.Next(0, 3);
                 SetAttackPattern(_patternList[next]);

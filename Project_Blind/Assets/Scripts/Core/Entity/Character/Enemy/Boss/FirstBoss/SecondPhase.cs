@@ -8,12 +8,13 @@ namespace Blind
     {
         protected Random _rand = new Random();
         private Animator _animator;
-        [SerializeField] private Transform point;
+        private Coroutine _coroutine;
 
         public void Init(FirstBossEnemy firstBossEnemy)
         {
             _parent = firstBossEnemy;
             _animator = _parent.gameObject.GetComponent<Animator>();
+            Debug.Log("dd");
         }
 
         public float ReturnHp()
@@ -23,7 +24,7 @@ namespace Blind
         
         public override void Play()
         {
-            
+            _coroutine = StartCoroutine(StartPattern());
         }
 
         public override void End()
@@ -32,25 +33,38 @@ namespace Blind
 
         public override void Stop()
         {
-            
+            StopCoroutine(_coroutine);   
         }
 
-        public void StartPattern(int pattern)
+        private void Setting()
         {
-            switch (pattern)
+            _animator = _parent.gameObject.GetComponent<Animator>();
+        }
+
+        public IEnumerator StartPattern()
+        {
+            Setting();
+            yield return new WaitForSeconds(3f);
+            while (true)
             {
-                case 1:
-                    Pattern1();
-                    break;
-                case 2:
-                    Pattern2();
-                    break;
-                case 3:
-                    Pattern3();
-                    break;
-                case 4:
-                    Pattern4();
-                    break;
+                int pattern = Range();
+                switch (pattern)
+                {
+                    case 1:
+                        Pattern1();
+                        break;
+                    case 2:
+                        Pattern2();
+                        break;
+                    case 3:
+                        Pattern3();
+                        break;
+                    case 4:
+                        Pattern4();
+                        break;
+                }
+
+                yield return new WaitForSeconds(3f);
             }
         }
 
@@ -73,6 +87,8 @@ namespace Blind
         public void Pattern3()
         {
             var next = _rand.Next(0, 3);
+            
+            _parent.Pattern2Start(next);
             if (next == 0)
                 _animator.SetTrigger("biteL");
             else if(next == 1)
