@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ namespace Blind
             Image_Background,
             Image_Interaction
         }
+
+        public Action InteractionAction;
 
         float panelValue = 20f;
         float interactionValue = 20f;
@@ -53,10 +56,12 @@ namespace Blind
                 PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
                 if (player != null)
                 {
-                    SoundManager.Instance.Play("Select");
                     player.Talk();
-                    UI_WorldSpace ui = UIManager.Instance.ShowWorldSpaceUI<UI_SavePointActions>();
-                    ui.SetPosition(transform.position, Vector3.up * 8);
+                    //UI_WorldSpace ui = UIManager.Instance.ShowWorldSpaceUI<UI_SavePointActions>();
+                    //ui.SetPosition(transform.position, Vector3.up * 8);
+
+                    if(InteractionAction != null)
+                        InteractionAction.Invoke();
                 }
                 Disappear();
                 StartCoroutine(CoCloseUI());
