@@ -8,16 +8,6 @@ namespace Blind
         public GameObject Circle;
         private Coroutine Co_avoid;
 
-        protected void Awake()
-        {
-            base.Awake();
-        }
-
-        private void Start()
-        {
-            
-        }
-
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -53,7 +43,6 @@ namespace Blind
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = (player.transform.position - new Vector3(0, 3f, 0)) - gameObject.transform.position;
             projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, Data.attackSpeed, gameObject);
-            _anim.SetBool("Basic Attack", false);
             NextAction();
         }
 
@@ -106,6 +95,14 @@ namespace Blind
         public override void WalkSound()
         {
             SoundManager.Instance.Play("Crowd/Shaman/Move");
+        }
+
+        protected override void DropMoney()
+        {
+            if (player.GetComponent<PlayerCharacter>().TalismanMoney)
+                DataManager.Instance.AddMoney(Random.Range(4, 6) * 2);
+            else
+                DataManager.Instance.AddMoney(Random.Range(4, 6));
         }
     }
 }

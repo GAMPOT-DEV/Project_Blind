@@ -12,7 +12,6 @@ namespace Blind
         private Transform RealAttackPostion;
         private List<float> randomRangeList;
         private Vector2 currentPostion;
-        private bool isAttackStart;
 
         private void Init()
         {
@@ -21,7 +20,6 @@ namespace Blind
             _collider = rangeObject.GetComponent<BoxCollider2D>();
             rangeObject.transform.position = player.transform.position;
             RealAttackPostion = this.transform;
-            isAttackStart = false;
             randomRangeList = new List<float>();
         }
 

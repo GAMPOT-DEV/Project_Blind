@@ -12,7 +12,7 @@ namespace Blind
         protected SpriteRenderer _sprite;
         protected CapsuleCollider2D _col;
 
-        [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
+        [SerializeField] protected ScriptableObjects.EnemyCharacter Data;
 
         protected GameObject player;
         public MeleeAttackable _attack;

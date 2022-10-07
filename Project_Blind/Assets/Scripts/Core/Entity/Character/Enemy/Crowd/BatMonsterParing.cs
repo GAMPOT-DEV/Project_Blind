@@ -1,39 +1,40 @@
+using System;
 using System.Collections;
 using Cinemachine;
 using UnityEngine;
 
 namespace Blind
 {
-    public class BatMonsterParing: ParingEffect<BatMonster>
+    public class BatMonsterParing: ParingEffect
     {
         private float currentLens;
         private float CheckLens;
         private CinemachineVirtualCamera _camera;
-        public override bool OnCheckForParing(PlayerCharacter _player)
+        private BatMonster _character;
+
+        private void Awake()
         {
-            if (_gameobject.IsAttack)
+            _character = gameObject.GetComponent<BatMonster>();
+        }
+
+        public override void GetParing()
+        {
+            var player = GameManager.Instance.Player;
+            if (_character.IsAttack)
             {
                 SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
-                _player.CharacterInvincible();
-                if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
-                    _player.CurrentWaveGauge += _player.paringWaveGauge;
-                else
-                    _player.CurrentWaveGauge = _player.maxWaveGauge;
-                _player._source.GenerateImpulse();
-                _player.isParingCheck = true;
-                EnemyDibuff();
-                return true;
+                player.CharacterInvincible();
+                player.CurrentWaveGauge += player.paringWaveGauge;
+                player._source.GenerateImpulse();
+                player.isParingCheck = true;
+                EnemyDebuff();
             }
-
-            return false;
         }
 
-        public override void EnemyDibuff()
+        public override void EnemyDebuff()
         {
-            _gameobject._attack.DisableDamage();
-            _gameobject.OnStun();
+            _character._attack.DisableDamage();
+            _character.OnStun();
         }
-
-        
     }
 }

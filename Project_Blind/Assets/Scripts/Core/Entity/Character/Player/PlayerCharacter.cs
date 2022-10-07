@@ -19,7 +19,6 @@ namespace Blind
         private ISkeletonComponent skeletonmecanim;
         public MeleeAttackable _attack;
         private Animator _animator;
-        private SpriteRenderer _renderer;
         [SerializeField] public Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
@@ -37,7 +36,6 @@ namespace Blind
         private bool _candash = true;
         public bool isCheck = false;
         public float nextDash_x;
-        private int _dashCount;
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
@@ -48,6 +46,7 @@ namespace Blind
         public bool isInputCheck;
         public int maxWaveGauge;
         private bool _isInput = false;
+        public bool TalismanMoney = false;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
         {
@@ -89,7 +88,6 @@ namespace Blind
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
-            _dashCount = 1;
             gravity = Data.gravity;
             
 
@@ -158,7 +156,7 @@ namespace Blind
                 _animator.SetBool("RunEnd", true);
             }
 
-            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
+            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed; //일단 여기
             float desiredSpeed = useInput ? flip * speed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
@@ -390,7 +388,6 @@ namespace Blind
 
         protected override void HurtMove(Facing enemyFacing)
         {
-            Debug.Log("실행됨");
             _moveVector.x = Data.hurtMove * (float)enemyFacing;
         }
 
@@ -461,8 +458,8 @@ namespace Blind
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
             bullet.transform.position = _bulletPoint.position;
-            if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
-            else bullet.GetFacing(_renderer.flipX);
+            if(_renderer == null) bullet.GetFacing(GetFacing());
+            else bullet.GetFacing(GetFacing());
         }
 
         public void HpHeal()
@@ -496,13 +493,11 @@ namespace Blind
             if (faceLeft)
             {
                 if(faceRight) return;
-                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = false;
-                else _renderer.flipX = false;
+                if(_renderer == null) skeletonmecanim.Skeleton.ScaleX = 1;
             }
             else if(faceRight)
             {
-                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
-                else _renderer.flipX = true;
+                if(_renderer == null) skeletonmecanim.Skeleton.ScaleX = -1;
             }
         }
         
@@ -519,17 +514,17 @@ namespace Blind
         
         public void RespawnFacing()
         {
-            if (_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
-            else _renderer.flipX = true;
+            if (_renderer == null) skeletonmecanim.Skeleton.ScaleX = 1;
         }
 
         public override Facing GetFacing()
         {
             if (_renderer == null)
             {
-                return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+                return skeletonmecanim.Skeleton.ScaleX < 0 ? Facing.Right : Facing.Left;
             }
-            else return _renderer.flipX ? Facing.Left : Facing.Right;
+
+            return Facing.Right;
         }
 
         public void Log() {
@@ -583,6 +578,34 @@ namespace Blind
         {
             
             
+        }
+
+        public void ChangeHp(int value)
+        {
+            Hp.ChangeHp(value);
+        }
+
+        public void ChangeDamage(int value)
+        {
+            _attack.ChangeDamage(value);
+        }
+
+        public void ChangeWaveGauge(int value)
+        {
+            maxWaveGauge += value;
+            if (_currentWaveGauge > maxWaveGauge)
+                _currentWaveGauge = maxWaveGauge;
+        }
+
+        public void ChangeMoneyProb(bool value)
+        {
+            TalismanMoney = value;
+        }
+
+        public void ChangeSpeed(int value)
+        {
+            Data.maxSpeed += value;
+            Data.dashSpeed += value;
         }
     }
 }

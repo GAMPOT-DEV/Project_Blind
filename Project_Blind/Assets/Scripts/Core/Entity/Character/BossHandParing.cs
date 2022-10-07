@@ -3,20 +3,19 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class BossHandParing: ParingEffect<BossHand>
+    public class BossHandParing: ParingEffect
     {
-        public override bool OnCheckForParing(PlayerCharacter _player)
+        public override void GetParing()
         {
-            Debug.Log("실행됨");
-            _player.GetComponent<CinemachineImpulseSource>().GenerateImpulse();
-            _player.CharacterInvincible();
-            _player.CurrentWaveGauge += _player.paringWaveGauge;
-            return true;
+            var player = GameManager.Instance.Player;
+            player.GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+            player.CharacterInvincible();
+            player.CurrentWaveGauge += player.paringWaveGauge;
         }
 
-        public override void EnemyDibuff()
+        public override void EnemyDebuff()
         {
-            _gameobject.Paring();
+            gameObject.GetComponent<BossHand>().Paring();
         }
     }
 }

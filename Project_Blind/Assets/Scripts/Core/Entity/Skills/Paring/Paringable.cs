@@ -39,7 +39,7 @@ namespace Blind
             }
             else
             {
-                _isFlip = _skeletonComponent.Skeleton.FlipX;
+                _isFlip = _skeletonComponent.Skeleton.ScaleX < 0;
             }
         }
 
@@ -81,50 +81,13 @@ namespace Blind
             if (!_isParing) return;
 
             Facings(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>().GetFacing());
-            if (col.gameObject.GetComponent<BatMonster>() != null)
+            var paring = col.gameObject.GetComponent<ParingEffect>();
+            if (paring != null)
             {
-                ParingEffect<BatMonster>.Initialise(col.gameObject.GetComponent<BatMonster>());
-                BatMonsterParing batMonsterparing = col.gameObject.AddComponent<BatMonsterParing>();
-                if (batMonsterparing.OnCheckForParing(gameObject.transform.parent.gameObject
-                        .GetComponent<PlayerCharacter>()))
-                {
-                    Debug.Log("실행됨 ㅇㅇ");
-                }
+                paring.GetParing();
                 _isParing = false;
-                Destroy(batMonsterparing);
-            }
-            else if (col.gameObject.GetComponent<ParasiteMonster>() != null)
-            {
-                ParingEffect<ParasiteMonster>.Initialise(col.gameObject.GetComponent<ParasiteMonster>());
-                ParasiteMonsterParing batMonsterparing = col.gameObject.AddComponent<ParasiteMonsterParing>();
-                batMonsterparing.OnCheckForParing(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>());
-                _isParing = false;
-                Destroy(batMonsterparing);
-            }
-            else if (col.gameObject.GetComponent<BossHand>() != null)
-            {
-                Debug.Log("sdw");
-                ParingEffect<BossHand>.Initialise(col.gameObject.GetComponent<BossHand>());
-                BossHandParing bossHandParing = col.gameObject.AddComponent<BossHandParing>();
-                bossHandParing.OnCheckForParing(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>());
-                bossHandParing.EnemyDibuff();
-                _isParing = false;
-                Destroy(bossHandParing);
-            }
-            else if (col.gameObject.GetComponent<Projectile>() != null)
-            {
-                Debug.Log("패링 확인");
-                PlayerCharacter _player = gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>();
-                _player.CharacterInvincible();
-                if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
-                    _player.CurrentWaveGauge += _player.paringWaveGauge;
-                else
-                    _player.CurrentWaveGauge = _player.maxWaveGauge;
-                _player._source.GenerateImpulse();
-                _player.isParingCheck = true;
-                _isParing = false;
-                SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
-                col.GetComponent<Projectile>().OnParing();
+                var player = GameManager.Instance.Player;
+                player.transform.GetChild(1).GetChild(9).GetComponent<AttackFX>().Play(player.GetComponent<PlayerCharacter>().GetFacing());
             }
         }
     }

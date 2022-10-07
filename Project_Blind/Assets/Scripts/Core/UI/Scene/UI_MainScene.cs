@@ -54,7 +54,6 @@ namespace Blind
         public override void Init()
         {
             base.Init();
-            Debug.Log("Main Scene");
             Bind<Image>(typeof(Images));
 
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;

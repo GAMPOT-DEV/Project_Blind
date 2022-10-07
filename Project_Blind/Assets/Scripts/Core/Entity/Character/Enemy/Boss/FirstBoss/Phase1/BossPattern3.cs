@@ -11,9 +11,6 @@ namespace Blind
     public class BossPattern3: BossAttackPattern<FirstBossEnemy>
     {
         [SerializeField] private float damage = 1f;
-        [SerializeField] private int MaxHitCount = 1;
-        [SerializeField] private float AttackTime = 1f;
-        private int _hitCount = 0;
         private Chin _upperChin;
         private Chin _lowerChin;
         private int _attackAbleCount = 1;

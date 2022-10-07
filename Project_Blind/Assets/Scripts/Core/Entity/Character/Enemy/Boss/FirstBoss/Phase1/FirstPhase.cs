@@ -13,8 +13,9 @@ namespace Blind
         private Coroutine _coroutine;
         private int _patternCount = 0;
 
-        public void Init(FirstBossEnemy firstBossEnemy)
+        public override void Init(FirstBossEnemy firstBossEnemy)
         {
+            base.Init(firstBossEnemy);
             _parent = firstBossEnemy;
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
             Debug.Log("페이즈 1");

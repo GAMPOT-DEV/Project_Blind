@@ -82,5 +82,13 @@ namespace Blind
             _health = _maxHealth;
             SetHealth();
         }
+
+        public void ChangeHp(int value)
+        {
+            _maxHealth += value;
+            if (_health > _maxHealth)
+                _health = _maxHealth;
+            SetHealth();
+        }
     }
 }

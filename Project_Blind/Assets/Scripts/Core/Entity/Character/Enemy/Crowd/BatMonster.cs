@@ -8,7 +8,7 @@ namespace Blind
     {
         [SerializeField] private Transform AttackHitBoxRange;
 
-        private void Start()
+        protected override void Start()
         {
             _attack.Init(WallCheck, 7, 7);
         }
@@ -54,6 +54,14 @@ namespace Blind
         public override void WalkSound()
         {
             SoundManager.Instance.Play("Crowd/Bat/Patrol");
+        }
+
+        protected override void DropMoney()
+        {
+            if(player.GetComponent<PlayerCharacter>().TalismanMoney)
+                DataManager.Instance.AddMoney(Random.Range(3, 5) * 2);
+            else
+                DataManager.Instance.AddMoney(Random.Range(3, 5));
         }
     }
 }
