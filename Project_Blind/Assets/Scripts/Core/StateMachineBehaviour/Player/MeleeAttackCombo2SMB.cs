@@ -8,7 +8,6 @@ namespace Blind
         UI_FieldScene ui = null;
         private bool _powerAttack = false;
         private bool _isOnClick = false;
-        private bool _checkForPowerAttack = false;
 
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
@@ -21,7 +20,6 @@ namespace Blind
         {
             if (_monoBehaviour.isPowerAttack && _monoBehaviour.CurrentWaveGauge >= 10) {
                 animator.speed = 0.1f;
-                _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
                 _monoBehaviour.transform.GetChild(1).GetChild(8).GetComponent<AttackFX>().Play(_monoBehaviour.GetFacing());
                 if (ui == null)
@@ -101,7 +99,6 @@ namespace Blind
                     ui.StopCharge();
                 }
                 _powerAttack = true;
-                _checkForPowerAttack = false;
                 _monoBehaviour.isPowerAttack = false;
             }
         }

@@ -5,13 +5,9 @@ namespace Blind
 {
     public class ParingSMB: SceneLinkedSMB<PlayerCharacter>
     {
-        private bool isOneSound = false;
         public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            isOneSound = false;
             _monoBehaviour.EnableParing();
-            Debug.Log("응애");
-            _monoBehaviour.transform.GetChild(1).GetChild(9).GetComponent<AttackFX>().Play(_monoBehaviour.GetFacing());
             if (_monoBehaviour.isJump)
             {
                 _monoBehaviour.DieStopVector(Vector2.zero);

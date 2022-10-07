@@ -45,7 +45,7 @@ namespace Blind
             _anim = GetComponent<Animator>();
         }
 
-        protected void Start()
+        protected virtual void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player");
         }
@@ -212,7 +212,6 @@ namespace Blind
             gameObject.layer = 16;
             _anim.SetInteger("State", 6);
             DeathCallback.Invoke();
-     
         }
 
         protected virtual void updateAvoid()
@@ -364,7 +363,9 @@ namespace Blind
 
         public IEnumerator AniDestroy()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
+            DropMoney();
+            yield return new WaitForSeconds(0.8f);
             gameObject.SetActive(false);
         }
 
@@ -400,6 +401,11 @@ namespace Blind
             return;
         }
 
+        protected virtual void DropMoney()
+        {
+            return;
+        }
+
         public override void Reset()
         {
             gameObject.SetActive(true);
@@ -408,8 +414,6 @@ namespace Blind
             Hp.ResetHp();
             gameObject.transform.position = startPosition.position;
 
-
-            //Ȥ�� ����
             attackable = true;
             IsAttack = false;
             co_patrol = null;

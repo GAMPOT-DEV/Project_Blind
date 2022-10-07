@@ -5,12 +5,12 @@ using UnityEngine;
 namespace Blind {
     public class ParasiteMonster : CrowdEnemyCharacter
     {
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
         }
 
-        private void Start()
+        protected override void Start()
         {
             _attack.Init(13, 10);
         }
@@ -77,6 +77,14 @@ namespace Blind {
         public void Attack2()
         {
             transform.GetChild(4).GetChild(1).GetComponent<PreAttack>().Play();
+        }
+
+        protected override void DropMoney()
+        {
+            if (player.GetComponent<PlayerCharacter>().TalismanMoney)
+                DataManager.Instance.AddMoney(Random.Range(8, 12) * 2);
+            else
+                DataManager.Instance.AddMoney(Random.Range(8, 12));
         }
     }
 }
