@@ -2,32 +2,30 @@ using UnityEngine;
 
 namespace Blind
 {
-    public class ParasiteMonsterParing: ParingEffect<ParasiteMonster>
+    public class ParasiteMonsterParing: ParingEffect
     {
-        public override bool OnCheckForParing(PlayerCharacter _player)
+        private ParasiteMonster _character;
+        private void Awake()
         {
-            Debug.Log(_gameobject.name + " " + _gameobject.IsAttack);
-            if (_gameobject.IsAttack)
-            {
-                _player.CharacterInvincible();
-                if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
-                    _player.CurrentWaveGauge += _player.paringWaveGauge;
-                else
-                    _player.CurrentWaveGauge = _player.maxWaveGauge;
-                _player._source.GenerateImpulse();
-                _player.isParingCheck = true;
-                SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
-                EnemyDibuff();
-                return true;
-            }
-
-            return false;
+            _character = gameObject.GetComponent<ParasiteMonster>();
         }
-
-        public override void EnemyDibuff()
+        public override void GetParing()
         {
-            _gameobject._attack.DisableDamage();
-            _gameobject.OnStun();
+            var player = GameManager.Instance.Player;
+            if (_character.IsAttack)
+            {
+                player.CharacterInvincible();
+                player.CurrentWaveGauge += player.paringWaveGauge;
+                player._source.GenerateImpulse();
+                player.isParingCheck = true;
+                SoundManager.Instance.Play("Player/패링2", Define.Sound.Effect);
+                EnemyDebuff();
+            }
+        }
+        public override void EnemyDebuff()
+        {
+            _character._attack.DisableDamage();
+            _character.OnStun();
         }
     }
 }

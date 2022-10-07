@@ -28,7 +28,6 @@ namespace Blind
         {
             var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit");
             obj.transform.position = transform.position + Vector3.up * 5;
-            Debug.Log(damage);
             Hp.GetDamage(damage);
             if (Hp.GetHP() > 1 && !_isInvincibility)
             {
