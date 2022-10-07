@@ -43,7 +43,6 @@ namespace Blind
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
             Vector2 dir = (player.transform.position - new Vector3(0, 3f, 0)) - gameObject.transform.position;
             projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, Data.attackSpeed, gameObject);
-            _anim.SetBool("Basic Attack", false);
             NextAction();
         }
 
