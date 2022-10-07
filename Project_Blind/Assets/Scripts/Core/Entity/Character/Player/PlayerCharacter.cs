@@ -388,7 +388,6 @@ namespace Blind
 
         protected override void HurtMove(Facing enemyFacing)
         {
-            Debug.Log("실행됨");
             _moveVector.x = Data.hurtMove * (float)enemyFacing;
         }
 

@@ -51,6 +51,7 @@ GameObject:
   - component: {fileID: 3758395228494642314}
   - component: {fileID: 3758395228494642421}
   - component: {fileID: 3758395228494642420}
+  - component: {fileID: 2224674204125776020}
   m_Layer: 14
   m_Name: Bat Monster
   m_TagString: Enemy
@@ -369,6 +370,18 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 8192
+--- !u!114 &2224674204125776020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3758395228494642423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51fa0ec8ccd4ab8aaa12054800c7ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3758395228640963974
 GameObject:
   m_ObjectHideFlags: 0
