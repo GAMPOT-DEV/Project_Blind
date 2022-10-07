@@ -86,8 +86,8 @@ namespace Blind
             {
                 paring.GetParing();
                 _isParing = false;
-                transform.GetChild(1).GetChild(9).GetComponent<AttackFX>().Play(GetComponent<PlayerCharacter>().GetFacing());
-                Debug.Log("패링");
+                var player = GameManager.Instance.Player;
+                player.transform.GetChild(1).GetChild(9).GetComponent<AttackFX>().Play(player.GetComponent<PlayerCharacter>().GetFacing());
             }
         }
     }
