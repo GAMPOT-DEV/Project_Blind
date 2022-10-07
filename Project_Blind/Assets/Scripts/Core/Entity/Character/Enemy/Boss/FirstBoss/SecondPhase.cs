@@ -10,8 +10,9 @@ namespace Blind
         private Animator _animator;
         private Coroutine _coroutine;
 
-        public void Init(FirstBossEnemy firstBossEnemy)
+        public override void Init(FirstBossEnemy firstBossEnemy)
         {
+            base.Init(firstBossEnemy);
             _parent = firstBossEnemy;
             _animator = _parent.gameObject.GetComponent<Animator>();
             Debug.Log("dd");
