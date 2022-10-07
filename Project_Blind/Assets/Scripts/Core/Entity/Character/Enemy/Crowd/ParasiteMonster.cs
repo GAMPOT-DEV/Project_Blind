@@ -27,12 +27,13 @@ namespace Blind {
                 if (Random.Range(0, 100) > 20)
                 {
                     currentAttack = 1;
+                    SoundManager.Instance.Play("Crowd/Parasite/hwarang_swing");
                 }
                 else
                 {
                     currentAttack = 2;
+                    SoundManager.Instance.Play("Crowd/Parasite/Attack1");
                 }
-                SoundManager.Instance.Play("Crowd/Parasite/Attack1");
             }
 
             flipToFacing();

@@ -89,7 +89,7 @@ namespace Blind
         public void AttackSound()
         {
             transform.GetChild(4).GetComponent<PreAttack>().Play();
-            SoundManager.Instance.Play("Crowd/Shaman/BigAttack");
+            SoundManager.Instance.Play("Crowd/Shaman/munyeo_throw");
         }
 
         public override void WalkSound()

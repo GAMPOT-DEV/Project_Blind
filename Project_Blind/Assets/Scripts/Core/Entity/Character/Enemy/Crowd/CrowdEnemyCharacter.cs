@@ -340,7 +340,6 @@ namespace Blind
 
         public void AniParingenable()
         {
-            Debug.Log("Dd");
             if (!createAttackHitBox)
             {
                 AttackHitBox();

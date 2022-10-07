@@ -14,13 +14,11 @@ namespace Blind
         }
         protected override void updateAttack()
         {
-            if (currentAttack == 0)
-            {
-                //if (Random.Range(0, 100) > 20)
-                    //currentAttack = 1;
-                //else
-                    currentAttack = 2;
-            }
+            if (!attackable)
+                state = State.Default;
+            
+            currentAttack = 2;
+            
 
             flipToFacing();
             if (currentAttack == 1)
@@ -48,12 +46,12 @@ namespace Blind
             if(currentAttack == 1)
                 SoundManager.Instance.Play("Crowd/Bat/SmallAttack");
             else if(currentAttack == 2)
-                SoundManager.Instance.Play("Crowd/Bat/BigAttack");
+                SoundManager.Instance.Play("Crowd/Bat/Mongdungi_Attack");
         }
 
         public override void WalkSound()
         {
-            SoundManager.Instance.Play("Crowd/Bat/Patrol");
+            //SoundManager.Instance.Play("Crowd/Bat/Patrol");
         }
 
         protected override void DropMoney()
