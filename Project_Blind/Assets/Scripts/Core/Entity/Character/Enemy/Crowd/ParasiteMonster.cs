@@ -78,5 +78,13 @@ namespace Blind {
         {
             transform.GetChild(4).GetChild(1).GetComponent<PreAttack>().Play();
         }
+
+        protected override void DropMoney()
+        {
+            if (player.GetComponent<PlayerCharacter>().TalismanMoney)
+                DataManager.Instance.AddMoney(Random.Range(8, 12) * 2);
+            else
+                DataManager.Instance.AddMoney(Random.Range(8, 12));
+        }
     }
 }

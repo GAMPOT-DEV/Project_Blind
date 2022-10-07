@@ -363,10 +363,10 @@ namespace Blind
 
         public IEnumerator AniDestroy()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
+            DropMoney();
+            yield return new WaitForSeconds(0.8f);
             gameObject.SetActive(false);
-            if (Random.Range(0, 100) < player.GetComponent<PlayerCharacter>().MoneyDropProb)
-                DataManager.Instance.AddMoney(Random.Range(10, 15));
         }
 
         protected IEnumerator Delay()
@@ -401,6 +401,11 @@ namespace Blind
             return;
         }
 
+        protected virtual void DropMoney()
+        {
+            return;
+        }
+
         public override void Reset()
         {
             gameObject.SetActive(true);
@@ -409,8 +414,6 @@ namespace Blind
             Hp.ResetHp();
             gameObject.transform.position = startPosition.position;
 
-
-            //Ȥ�� ����
             attackable = true;
             IsAttack = false;
             co_patrol = null;

@@ -8,59 +8,103 @@ namespace Blind
     {
         PlayerCharacter Player;
 
+        public void EquipTalisman(int itemId)
+        {
+            switch (itemId)
+            {
+                case 1:
+                    EquipBlue();
+                    break;
+                case 2:
+                    EquipGreen();
+                    break;
+                case 3:
+                    EquipPurple();
+                    break;
+                case 4:
+                    EquipRed();
+                    break;
+                case 5:
+                    EquipYellow();
+                    break;
+            }
+        }
+
+        public void UnequipTalisman(int itemId)
+        {
+            switch (itemId)
+            {
+                case 1:
+                    UnequipBlue();
+                    break;
+                case 2:
+                    UnequipGreen();
+                    break;
+                case 3:
+                    UnequipPurple();
+                    break;
+                case 4:
+                    UnequipRed();
+                    break;
+                case 5:
+                    UnequipYellow();
+                    break;
+            }
+        }
+
         //Green: HP +
-        public void EquipGreen()
+        private void EquipGreen()
         {
             Player.ChangeHp(3);
         }
 
-        public void UnequipGreen()
+        private void UnequipGreen()
         {
             Player.ChangeHp(-3);
         }
 
         //Red: Attack Damage +
-        public void EquipRed()
+        private void EquipRed()
         {
             Player.ChangeDamage(1);
         }
 
-        public void UnequipRed()
+        private void UnequipRed()
         {
             Player.ChangeDamage(-1);
         }
 
         //Purple: Wave Gauge +
-        public void EquipPurple()
+        private void EquipPurple()
         {
             Player.ChangeWaveGauge(1);
         }
 
-        public void UnequipPurple()
+        private void UnequipPurple()
         {
             Player.ChangeWaveGauge(-1);
         }
 
         //Blue: Speed +
-        public void EquipBlue()
+        private void EquipBlue()
         {
-            Player.ChangeWaveGauge(1);
+            Player.ChangeSpeed(1);
         }
 
-        public void UnequipBlue()
+        private void UnequipBlue()
         {
-            Player.ChangeWaveGauge(-1);
+            Player.ChangeSpeed(-1);
         }
 
         //Yellow: Coin +
-        public void EquipYellow()
+        private void EquipYellow()
         {
-            Player.ChangeMoneyProb(Player.MoneyDropProb);
+            Player.ChangeMoneyProb(true);
         }
 
-        public void UnequipYellow()
+        private void UnequipYellow()
         {
-            Player.ChangeMoneyProb(-Player.MoneyDropProb);
+            Player.ChangeMoneyProb(false);
         }
     }
 }
