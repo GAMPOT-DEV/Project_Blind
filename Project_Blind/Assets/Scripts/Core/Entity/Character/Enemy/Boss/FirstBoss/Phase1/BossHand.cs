@@ -52,7 +52,7 @@ namespace Blind
             {
                 if (!isParing)
                 {
-                    TargetPostion = new Vector2(transform.position.x + (5f * -(float)facing), transform.position.y);
+                    TargetPostion = new Vector2(transform.position.x + (5f * (float)facing), transform.position.y);
                     isParing = true;
                 }
                 transform.position = Vector2.MoveTowards(transform.position,

@@ -17,6 +17,11 @@ namespace Blind
             this.damage = damage;
         }
 
+        public void ReAttackSize(Vector2 size)
+        {
+            _col.size = size;
+        }
+
         public void OnTriggerStay2D(Collider2D col)
         {
             Debug.Log(isAttack);

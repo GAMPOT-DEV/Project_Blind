@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Cinemachine;
 using UnityEngine;
 using Random = System.Random;
 
@@ -13,6 +14,8 @@ namespace Blind
         [SerializeField] private List<Transform> Pattern2AttackPosition;
         [SerializeField] private BoxCollider2D AttackRange;
         [SerializeField] public Transform ShoutePatternPosition;
+        [SerializeField] private Transform Pattern3Attackposition;
+        public CinemachineImpulseSource _source;
         public Transform _floorStart;
         public Transform _floorEnd;
         private IEnumerator<BossPhase> _bossPhase;
@@ -91,12 +94,22 @@ namespace Blind
         {
             AttackRange.gameObject.transform.position = Pattern2AttackPosition[random].position;
         }
+
+        public void Pattern3Start()
+        {
+            AttackRange.gameObject.transform.position = Pattern3Attackposition.position;
+        }
         
 
         public void AttackNextPosition()
         {
             next = (next + 1) % AttackPosition.Count;
             AttackRange.gameObject.transform.position = AttackPosition[next].position;
+        }
+
+        public void CamaraShake()
+        {
+            _source.GenerateImpulse();
         }
 
         public void enableAttack()
