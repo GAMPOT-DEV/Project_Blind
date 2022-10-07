@@ -24,6 +24,7 @@ namespace Blind
         [SerializeField] private Sprite Image_Shop_Clicked;
         [SerializeField] private Sprite Image_GoBack_Non_Clicked;
         [SerializeField] private Sprite Image_GoBack_Clicked;
+        [SerializeField] private GameObject ShopUI;
 
         struct ImageInfo
         {
@@ -51,6 +52,8 @@ namespace Blind
             player = FindObjectOfType<PlayerCharacter>();
             Bind<Button>(typeof(Buttons));
             SoundManager.Instance.Play("tower_in");
+
+            ShopUI.SetActive(false);
 
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;
             UIManager.Instance.KeyInputEvents += HandleKeyInput;
@@ -155,6 +158,8 @@ namespace Blind
         }
         private void EnterCursor(int idx)
         {
+            if (idx == (int)Buttons.Button_Shop) ShopUI.SetActive(true);
+            else ShopUI.SetActive(false);
             _currCursor = idx;
             Button currImage = Get<Button>(idx);
             ImageInfo imageInfo = _imageInfos[idx].click;

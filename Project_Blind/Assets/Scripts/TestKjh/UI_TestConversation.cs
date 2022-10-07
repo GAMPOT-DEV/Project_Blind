@@ -49,6 +49,9 @@ namespace Blind
             Bind<Image>(typeof(Images));
             Get<Image>((int)Images.NextButtonImage).gameObject.BindEvent(PushNextButton, Define.UIEvent.Click);
             Get<Image>((int)Images.BackGroundImage).gameObject.BindEvent(DragUI, Define.UIEvent.Drag);
+
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
         }
         protected override void Start()
         {
@@ -108,6 +111,7 @@ namespace Blind
                 {
                     DataManager.Instance.AddClueItem(ClueItem);
                 }
+                UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
                 return;
             }
 
@@ -143,6 +147,20 @@ namespace Blind
             }
             // _showText 코루틴 null로 설정
             _showText = null;
+        }
+        private void HandleUIKeyInput()
+        {
+            if (!Input.anyKey)
+                return;
+
+            if (_uiNum != UIManager.Instance.UINum)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                PushNextButton();
+                return;
+            }
         }
     }
 }
