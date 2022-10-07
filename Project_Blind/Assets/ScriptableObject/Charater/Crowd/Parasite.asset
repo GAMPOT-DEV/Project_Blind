@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 10
   sensingRange: {x: 12, y: 8}
-  speed: 0.27
-  runSpeed: 0.3
+  speed: 0.3
+  runSpeed: 0.35
   attackCoolTime: 0.5
-  attackSpeed: 0.3
-  attackRange: {x: 9, y: 8}
   damage: 1
   stunTime: 1
   HpBarHeight: 12
-  patrolTime: 2
+  patrolTime: 2.5
+  BasicAttackRange: {x: 0, y: 0}
+  SkillAttackRange: {x: 0, y: 0}
+  attackSpeed: 0.3
