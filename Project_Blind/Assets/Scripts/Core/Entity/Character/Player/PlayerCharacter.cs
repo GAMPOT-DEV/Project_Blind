@@ -48,6 +48,7 @@ namespace Blind
         public bool isInputCheck;
         public int maxWaveGauge;
         private bool _isInput = false;
+        public int MoneyDropProb = 30;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
         {
@@ -573,6 +574,30 @@ namespace Blind
         {
             
             
+        }
+
+        public void ChangeHp(int value)
+        {
+            Hp.ChangeHp(value);
+        }
+
+        public void ChangeDamage(int value)
+        {
+            _attack.ChangeDamage(value);
+        }
+
+        public void ChangeWaveGauge(int value)
+        {
+            _currentWaveGauge += value;
+            if (_currentWaveGauge > maxWaveGauge)
+                _currentWaveGauge = maxWaveGauge;
+            else if (_currentWaveGauge < 0)
+                _currentWaveGauge = 0;
+        }
+
+        public void ChangeMoneyProb(int value)
+        {
+            MoneyDropProb += value;
         }
     }
 }

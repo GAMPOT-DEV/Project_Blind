@@ -212,7 +212,6 @@ namespace Blind
             gameObject.layer = 16;
             _anim.SetInteger("State", 6);
             DeathCallback.Invoke();
-     
         }
 
         protected virtual void updateAvoid()
@@ -366,6 +365,8 @@ namespace Blind
         {
             yield return new WaitForSeconds(1f);
             gameObject.SetActive(false);
+            if (Random.Range(0, 100) < player.GetComponent<PlayerCharacter>().MoneyDropProb)
+                DataManager.Instance.AddMoney(Random.Range(10, 15));
         }
 
         protected IEnumerator Delay()
