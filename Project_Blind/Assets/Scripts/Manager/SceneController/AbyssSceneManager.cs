@@ -16,10 +16,14 @@ namespace Blind
 
         protected override void Awake()
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
             base.Awake();
             currentStage = _stageInfo.GetEnumerator();
             currentStage.MoveNext();
+        }
+
+        protected void Start()
+        {
+            player = GameManager.Instance.Player;
             currentStage.Current!.Enable();
             currentStageIndex = 1;
             ShowText("Stage1");
@@ -55,9 +59,5 @@ namespace Blind
             ui.SetName("원효대사" + stage); //가시성을 위해 임시로  stage 추가, 이후 제거하면 됨
             ui.SetScriptTitle((Define.ScriptTitle)Enum.Parse(typeof(Define.ScriptTitle), stage));
         }
-
-
-
-
     }
 }
