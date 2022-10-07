@@ -32,6 +32,7 @@ namespace Blind
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
             _bossPhase = phaseList.GetEnumerator();
             _bossPhase.MoveNext();
+            _source = GetComponent<CinemachineImpulseSource>();
             foreach (var phase in phaseList)
             {
                 
@@ -95,11 +96,15 @@ namespace Blind
             AttackRange.gameObject.transform.position = Pattern2AttackPosition[random].position;
         }
 
-        public void Pattern3Start()
+        public void Pattern4Start()
         {
             AttackRange.gameObject.transform.position = Pattern3Attackposition.position;
         }
         
+        public void Pattern4ReAttackSize()
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().ReAttackSize(new Vector2(5,3));
+        }
 
         public void AttackNextPosition()
         {

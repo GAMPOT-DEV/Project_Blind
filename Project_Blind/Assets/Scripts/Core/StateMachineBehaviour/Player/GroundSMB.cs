@@ -62,6 +62,11 @@ namespace Blind
                 _monoBehaviour.ItemT();
             }
 
+            if (_monoBehaviour.CheckForItemUsing())
+            {
+                _monoBehaviour.ItemUsing();
+            }
+
             if (_monoBehaviour.CheckForSkill())
             {
                 _monoBehaviour.Skill();

@@ -447,6 +447,11 @@ namespace Blind
         {
             return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.Potion);
         }
+
+        public void ItemUsing()
+        {
+            _animator.SetTrigger("Item");
+        }
         public void ItemT()
         {
             _animator.SetTrigger("ItemT");
@@ -458,6 +463,11 @@ namespace Blind
             bullet.transform.position = _bulletPoint.position;
             if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
             else bullet.GetFacing(_renderer.flipX);
+        }
+
+        public void HpHeal()
+        {
+            Hp.GetHeal(3);
         }
         public void Talk()
         {
