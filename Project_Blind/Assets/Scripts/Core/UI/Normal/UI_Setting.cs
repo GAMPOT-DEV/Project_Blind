@@ -33,7 +33,7 @@ namespace Blind
 
         [SerializeField] private Type _type;
 
-        [SerializeField] private GameObject testKeyChange;
+        //[SerializeField] private GameObject testKeyChange;
         [SerializeField] private GameObject parentUI;
 
         private Dictionary<Define.KeyAction, KeyCode> newKeyDict;
@@ -204,7 +204,7 @@ namespace Blind
             Enum2KeyAction.Add(Texts.Text_AfterChange_Wave, Define.KeyAction.Wave);
             Enum2KeyAction.Add(Texts.Text_AfterChange_Interaction, Define.KeyAction.Interaction);
 
-            testKeyChange.SetActive(false);
+            //testKeyChange.SetActive(false);
 
             InitBeforeChangeTexts();
         }
@@ -347,7 +347,6 @@ namespace Blind
         }
         private void ChangeMotionEffect()
         {
-            SoundManager.Instance.Play("Select");
             _gameData.motionEffect = Get<Slider>((int)Sliders.Slider_MotionEffect).value;
         }
         #endregion
@@ -470,7 +469,7 @@ namespace Blind
         private void ControllInput(bool changeNow)
         {
             _isInputKeyChange = changeNow;
-            testKeyChange.SetActive(changeNow);
+            //testKeyChange.SetActive(changeNow);
             if (parentUI == null) return;
             parentUI.GetComponent<UI_Menu>().CanInput = !changeNow;
         }

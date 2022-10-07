@@ -45,11 +45,11 @@ namespace Blind
             if (!isLoading)
             {
                 isLoading = true;
-                yield return UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeScenOut());
+                yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
                 string sceneName = newSceneName.ToString();
                 DataManager.Instance.PlayerCharacterDataValue.DestinationTag = destinationTag;
                 yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName,destinationTag));
-                UI_ScreenFader.Instance.StartCoroutine(UI_ScreenFader.FadeSceneIn());
+                yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
                 isLoading = false;
             }
         }

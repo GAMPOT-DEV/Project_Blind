@@ -15,7 +15,6 @@ namespace Blind
         public Vector2 EndTransform;
         private Vector2 TargetPostion;
         private bool isRight;
-        private int speed = 2;
         private Facing facing;
         private bool isStop;
         private bool isParing = false;
@@ -52,7 +51,7 @@ namespace Blind
             {
                 if (!isParing)
                 {
-                    TargetPostion = new Vector2(transform.position.x + (5f * -(float)facing), transform.position.y);
+                    TargetPostion = new Vector2(transform.position.x + (5f * (float)facing), transform.position.y);
                     isParing = true;
                 }
                 transform.position = Vector2.MoveTowards(transform.position,

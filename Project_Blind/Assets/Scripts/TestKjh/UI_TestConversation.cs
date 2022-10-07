@@ -49,6 +49,9 @@ namespace Blind
             Bind<Image>(typeof(Images));
             Get<Image>((int)Images.NextButtonImage).gameObject.BindEvent(PushNextButton, Define.UIEvent.Click);
             Get<Image>((int)Images.BackGroundImage).gameObject.BindEvent(DragUI, Define.UIEvent.Drag);
+
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
         }
         protected override void Start()
         {
@@ -98,14 +101,8 @@ namespace Blind
             if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
                 UIManager.Instance.CloseWorldSpaceUI(this);
-                if(Owner != null)
-                {
-                    if (Owner.GetComponent<ConversationTest>() != null)
-                    {
-                        Owner.GetComponent<ConversationTest>()._player.GetComponent<PlayerCharacter>().UnTalk();
-                        Owner.GetComponent<ConversationTest>()._state = Define.ObjectState.NonKeyDown;
-                    }
-                }
+                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
+                player.GetComponent<PlayerCharacter>().UnTalk();
                 if (BagItem != Define.BagItem.Unknown)
                 {
                     DataManager.Instance.AddBagItem(BagItem);
@@ -114,6 +111,7 @@ namespace Blind
                 {
                     DataManager.Instance.AddClueItem(ClueItem);
                 }
+                UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
                 return;
             }
 
@@ -149,6 +147,20 @@ namespace Blind
             }
             // _showText 코루틴 null로 설정
             _showText = null;
+        }
+        private void HandleUIKeyInput()
+        {
+            if (!Input.anyKey)
+                return;
+
+            if (_uiNum != UIManager.Instance.UINum)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                PushNextButton();
+                return;
+            }
         }
     }
 }

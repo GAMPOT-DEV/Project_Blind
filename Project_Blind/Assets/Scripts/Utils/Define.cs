@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -148,6 +148,7 @@ public class Define
         village1,
         village2,
         village3,
+        BigTree,
 
         RestScript
     }

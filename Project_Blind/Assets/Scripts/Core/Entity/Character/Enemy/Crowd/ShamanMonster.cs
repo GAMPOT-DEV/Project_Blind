@@ -8,16 +8,6 @@ namespace Blind
         public GameObject Circle;
         private Coroutine Co_avoid;
 
-        protected void Awake()
-        {
-            base.Awake();
-        }
-
-        private void Start()
-        {
-            
-        }
-
         protected override void FixedUpdate()
         {
             base.FixedUpdate();

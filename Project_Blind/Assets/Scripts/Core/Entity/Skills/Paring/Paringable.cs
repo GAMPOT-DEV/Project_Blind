@@ -39,7 +39,7 @@ namespace Blind
             }
             else
             {
-                _isFlip = _skeletonComponent.Skeleton.FlipX;
+                _isFlip = _skeletonComponent.Skeleton.ScaleX < 0;
             }
         }
 

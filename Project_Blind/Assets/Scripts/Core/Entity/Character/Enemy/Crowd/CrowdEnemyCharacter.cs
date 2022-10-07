@@ -45,7 +45,7 @@ namespace Blind
             _anim = GetComponent<Animator>();
         }
 
-        protected void Start()
+        protected virtual void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player");
         }

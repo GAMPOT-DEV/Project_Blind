@@ -300,6 +300,7 @@ namespace Blind
         public void CaveOpen()
         {
             _gameData.caveClear = 1;
+            Debug.Log("cave opened");
         }
         public void ClearCaveData()
         {

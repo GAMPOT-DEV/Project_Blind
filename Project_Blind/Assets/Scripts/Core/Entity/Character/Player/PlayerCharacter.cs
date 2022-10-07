@@ -19,7 +19,6 @@ namespace Blind
         private ISkeletonComponent skeletonmecanim;
         public MeleeAttackable _attack;
         private Animator _animator;
-        private SpriteRenderer _renderer;
         [SerializeField] public Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
@@ -37,7 +36,6 @@ namespace Blind
         private bool _candash = true;
         public bool isCheck = false;
         public float nextDash_x;
-        private int _dashCount;
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
@@ -90,7 +88,6 @@ namespace Blind
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
-            _dashCount = 1;
             gravity = Data.gravity;
             
 
@@ -457,8 +454,8 @@ namespace Blind
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
             bullet.transform.position = _bulletPoint.position;
-            if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
-            else bullet.GetFacing(_renderer.flipX);
+            if(_renderer == null) bullet.GetFacing(GetFacing());
+            else bullet.GetFacing(GetFacing());
         }
         public void Talk()
         {
@@ -487,13 +484,11 @@ namespace Blind
             if (faceLeft)
             {
                 if(faceRight) return;
-                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = false;
-                else _renderer.flipX = false;
+                if(_renderer == null) skeletonmecanim.Skeleton.ScaleX = 1;
             }
             else if(faceRight)
             {
-                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
-                else _renderer.flipX = true;
+                if(_renderer == null) skeletonmecanim.Skeleton.ScaleX = -1;
             }
         }
         
@@ -510,17 +505,17 @@ namespace Blind
         
         public void RespawnFacing()
         {
-            if (_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
-            else _renderer.flipX = true;
+            if (_renderer == null) skeletonmecanim.Skeleton.ScaleX = 1;
         }
 
         public override Facing GetFacing()
         {
             if (_renderer == null)
             {
-                return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
+                return skeletonmecanim.Skeleton.ScaleX < 0 ? Facing.Right : Facing.Left;
             }
-            else return _renderer.flipX ? Facing.Left : Facing.Right;
+
+            return Facing.Right;
         }
 
         public void Log() {
