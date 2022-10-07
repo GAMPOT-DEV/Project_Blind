@@ -36,7 +36,7 @@ namespace Blind {
                 }
             }
 
-            flipToFacing();
+            //flipToFacing();
             if (currentAttack == 1)
                 _anim.SetInteger("State", 30);
             else if (currentAttack == 2)

@@ -20,7 +20,7 @@ namespace Blind
             currentAttack = 2;
             
 
-            flipToFacing();
+            //flipToFacing();
             if (currentAttack == 1)
                 _anim.SetInteger("State", 30);
             else if (currentAttack == 2)
