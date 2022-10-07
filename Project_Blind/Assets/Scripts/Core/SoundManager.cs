@@ -79,7 +79,6 @@ namespace Blind
         private IEnumerator PlayBgm(AudioSource audioSource)
         {
             audioSource.Play();
-            Debug.Log(audioSource.clip.length);
             yield return new WaitForSeconds(audioSource.clip.length);
             Destroy(audioSource.gameObject);
         }

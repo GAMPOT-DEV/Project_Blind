@@ -14,7 +14,7 @@ namespace Blind
             Pattern
         };
 
-        public void Init(FirstBossEnemy firstBossEnemy)
+        public virtual void Init(FirstBossEnemy firstBossEnemy)
         {
             _parent = firstBossEnemy;
         }

@@ -8,7 +8,7 @@ namespace Blind
     {
         [SerializeField] private Transform AttackHitBoxRange;
 
-        private void Start()
+        protected override void Start()
         {
             _attack.Init(WallCheck, 7, 7);
         }
