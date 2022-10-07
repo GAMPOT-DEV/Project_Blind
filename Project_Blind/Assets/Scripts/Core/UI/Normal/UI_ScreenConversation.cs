@@ -24,6 +24,7 @@ namespace Blind
 
         public Action EndEvent = null;
         public bool StopMove = true;
+        public bool AutoDisappear = false;
 
         Coroutine _showText;
 
@@ -37,17 +38,22 @@ namespace Blind
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
-            if (StopMove)
-            {
-                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
-                if (player != null) player.Talk();
-            }
         }
         protected override void Start()
         {
             conversations = ConversationScriptStorage.Instance.GetConversation(_titleStr);
             Get<Text>((int)Texts.Text_Name).text = _name;
             ShowText(0);
+
+            if (StopMove)
+            {
+                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
+                if (player != null) player.Talk();
+            }
+            if (AutoDisappear)
+            {
+                StartCoroutine(CoAutoDisappear());
+            }
         }
         public void SetScriptTitle(Define.ScriptTitle title)
         {
@@ -79,15 +85,7 @@ namespace Blind
             page++;
             if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
-                UIManager.Instance.CloseNormalUI(this);
-                if (StopMove)
-                {
-                    PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
-                    if (player != null) player.UnTalk();
-                    UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
-                }
-                if (EndEvent != null) EndEvent.Invoke();
-                EndEvent = null;
+                EndFunc();
                 return;
             }
             ShowText(page);
@@ -103,9 +101,26 @@ namespace Blind
                 }
                 text += conversations[ConversationScriptStorage.Instance.LanguageNumber][page].script[i];
                 Get<Text>((int)Texts.Text_Script).text = text;
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
             }
             _showText = null;
+        }
+        IEnumerator CoAutoDisappear()
+        {
+            yield return new WaitForSeconds(2f);
+            EndFunc();
+        }
+        private void EndFunc()
+        {
+            UIManager.Instance.CloseNormalUI(this);
+            UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
+            if (StopMove)
+            {
+                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
+                if (player != null) player.UnTalk();
+            }
+            if (EndEvent != null) EndEvent.Invoke();
+            EndEvent = null;
         }
         #region Update
         private void HandleUIKeyInput()

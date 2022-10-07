@@ -98,14 +98,8 @@ namespace Blind
             if (page >= conversations[ConversationScriptStorage.Instance.LanguageNumber].Count)
             {
                 UIManager.Instance.CloseWorldSpaceUI(this);
-                if(Owner != null)
-                {
-                    if (Owner.GetComponent<ConversationTest>() != null)
-                    {
-                        Owner.GetComponent<ConversationTest>()._player.GetComponent<PlayerCharacter>().UnTalk();
-                        Owner.GetComponent<ConversationTest>()._state = Define.ObjectState.NonKeyDown;
-                    }
-                }
+                PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
+                player.GetComponent<PlayerCharacter>().UnTalk();
                 if (BagItem != Define.BagItem.Unknown)
                 {
                     DataManager.Instance.AddBagItem(BagItem);

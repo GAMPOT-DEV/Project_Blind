@@ -29,8 +29,9 @@ namespace Blind
                 {
                     _ui = UIManager.Instance.ShowWorldSpaceUI<UI_Interaction>();
                     _ui.SetPosition(transform.position, Vector3.down * 3);
+                    (_ui as UI_Interaction).InteractionAction += (() => UIManager.Instance.ShowNormalUI<UI_SavePoint>());
                     //Ư�� Ű ���� ui interact�ϸ� ����
-                                        
+
                 }
                 
             }
