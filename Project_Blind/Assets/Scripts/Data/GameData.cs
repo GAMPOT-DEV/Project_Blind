@@ -104,6 +104,7 @@ namespace Blind
         #region Talisman
         public Dictionary<int, TalismanInfo> TalismanInfoBySlot { get; private set; } = new Dictionary<int, TalismanInfo>();
         public Dictionary<int, TalismanInfo> TalismanInfoById { get; private set; } = new Dictionary<int, TalismanInfo>();
+        public TalismanEffect Effect;
         public void MakeTalismanDict()
         {
             foreach (TalismanInfo talismanInfo in talismanInfos)
@@ -111,6 +112,7 @@ namespace Blind
                 TalismanInfoBySlot.Add(talismanInfo.slot, talismanInfo);
                 TalismanInfoById.Add(talismanInfo.itemId, talismanInfo);
             }
+            Effect = new TalismanEffect();
         }
         public void AddTalismanItem(TalismanInfo talisman)
         {
@@ -128,11 +130,13 @@ namespace Blind
         {
             talisman.equiped = true;
             currEquipCnt++;
+            Effect.EquipTalisman(talisman.itemId);
         }
         public void UnequipTalismanItem(TalismanInfo talisman)
         {
             talisman.equiped = false;
             currEquipCnt--;
+            Effect.UnequipTalisman(talisman.itemId);
         }
         public void ClearTalismanData()
         {

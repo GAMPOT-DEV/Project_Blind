@@ -45,6 +45,8 @@ namespace Blind
         public bool isParingCheck = false;
         public bool isInputCheck;
         public int maxWaveGauge;
+        private bool _isInput = false;
+        public bool TalismanMoney = false;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge
         {
@@ -154,7 +156,7 @@ namespace Blind
                 _animator.SetBool("RunEnd", true);
             }
 
-            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
+            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed; //일단 여기
             float desiredSpeed = useInput ? flip * speed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
@@ -566,6 +568,34 @@ namespace Blind
         {
             
             
+        }
+
+        public void ChangeHp(int value)
+        {
+            Hp.ChangeHp(value);
+        }
+
+        public void ChangeDamage(int value)
+        {
+            _attack.ChangeDamage(value);
+        }
+
+        public void ChangeWaveGauge(int value)
+        {
+            maxWaveGauge += value;
+            if (_currentWaveGauge > maxWaveGauge)
+                _currentWaveGauge = maxWaveGauge;
+        }
+
+        public void ChangeMoneyProb(bool value)
+        {
+            TalismanMoney = value;
+        }
+
+        public void ChangeSpeed(int value)
+        {
+            Data.maxSpeed += value;
+            Data.dashSpeed += value;
         }
     }
 }

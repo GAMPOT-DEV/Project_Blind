@@ -55,5 +55,13 @@ namespace Blind
         {
             SoundManager.Instance.Play("Crowd/Bat/Patrol");
         }
+
+        protected override void DropMoney()
+        {
+            if(player.GetComponent<PlayerCharacter>().TalismanMoney)
+                DataManager.Instance.AddMoney(Random.Range(3, 5) * 2);
+            else
+                DataManager.Instance.AddMoney(Random.Range(3, 5));
+        }
     }
 }
