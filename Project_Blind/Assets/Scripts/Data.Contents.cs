@@ -67,6 +67,7 @@ namespace Data
     public class BagItem
     {
         public int id;
+        public int cost;
         public string name;
         public string shortDescription;
         public string longDescription;
@@ -81,6 +82,31 @@ namespace Data
             Dictionary<int, BagItem> dict = new Dictionary<int, BagItem>();
             foreach(BagItem bagItem in bagItems)
                 dict.Add(bagItem.id, bagItem);
+            return dict;
+        }
+    }
+    #endregion
+    #region Talisman
+    [Serializable]
+    public class TalismanItem
+    {
+        public int id;
+        public int abilityValue;
+        public int cost;
+        public string name;
+        public string description;
+        public string iconPath;
+        public Define.TalismanAbility ability;
+    }
+    [Serializable]
+    public class TalismanItemData : ILoader<int, TalismanItem>
+    {
+        public List<TalismanItem> talismanItems = new List<TalismanItem>();
+        public Dictionary<int, TalismanItem> MakeDict()
+        {
+            Dictionary<int, TalismanItem> dict = new Dictionary<int, TalismanItem>();
+            foreach(TalismanItem talismanItem in talismanItems)
+                dict.Add(talismanItem.id, talismanItem);
             return dict;
         }
     }

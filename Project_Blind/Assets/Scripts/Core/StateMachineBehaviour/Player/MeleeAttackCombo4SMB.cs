@@ -9,9 +9,9 @@ namespace Blind
         private bool _powerAttack = false;
         private bool _checkForPowerAttack = false;
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.ReAttackSize(3,4, _monoBehaviour.Data.damage + 2);
+            _monoBehaviour.ReAttackSize(6, 4, _monoBehaviour.Data.damage + 2);
             _monoBehaviour.StopMoveY();
-            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
+            if(!_monoBehaviour.isPowerAttack) SoundManager.Instance.Play("Player/Attack/5타(수정)", Define.Sound.Effect);
         }
 
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -21,6 +21,7 @@ namespace Blind
                 animator.speed = 0.06f;
                 _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
+                _monoBehaviour.transform.GetChild(1).GetChild(8).GetComponent<AttackFX>().Play(_monoBehaviour.GetFacing());
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();
@@ -36,7 +37,6 @@ namespace Blind
                 {
                     _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 }
-                _monoBehaviour.PlayAttackFx(3,_monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
         }
@@ -44,6 +44,10 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
+            _monoBehaviour.UpdateVelocity();
+            _monoBehaviour.CheckForGrounded();
+
+            
             if (!_monoBehaviour.isJump)
             {
                 _monoBehaviour.AirborneVerticalMovement(1f);
@@ -54,6 +58,19 @@ namespace Blind
             }
             else _monoBehaviour.GroundedHorizontalMovement(false);
             
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
+            }
+            if (_monoBehaviour.CheckForDash())
+            {
+                _monoBehaviour.DashStart();
+            }
+            
+            if(_monoBehaviour.CheckForParing())
+                _monoBehaviour.Paring();
+
+            
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack && _monoBehaviour.CurrentWaveGauge >= 10)) 
             {
                 animator.speed = 1.0f;
@@ -62,7 +79,6 @@ namespace Blind
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
-                _monoBehaviour.PlayAttackFx(7,_monoBehaviour.GetFacing());
 
                 if (ui == null)
                 {

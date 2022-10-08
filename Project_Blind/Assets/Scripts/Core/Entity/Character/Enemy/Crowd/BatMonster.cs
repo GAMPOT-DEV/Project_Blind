@@ -6,64 +6,60 @@ namespace Blind
 {
     public class BatMonster : CrowdEnemyCharacter
     {
-        private Coroutine Co_attack;
-        private Coroutine Co_hitted;
-        private Coroutine Co_stun;
-        private Coroutine Co_die;
         [SerializeField] private Transform AttackHitBoxRange;
 
-        protected void Awake()
+        protected override void Start()
         {
-            base.Awake();
-
-            Data.sensingRange = new Vector2(12f, 8f);
-            Data.speed = 0.1f ;
-            Data.runSpeed = 0.07f;
-            Data.attackCoolTime = 0.5f;
-            Data.attackSpeed = 0.3f;
-            Data.attackRange = new Vector2(9f, 8f);
-            Data.stunTime = 1.5f;
-            _patrolTime = 3f;
+            _attack.Init(WallCheck, 7, 7);
         }
-
-        private void Start()
-        {
-            startingPosition = gameObject.transform;
-            _attack.Init(7, 10);
-        }
-
-        protected override void FixedUpdate()
-        {
-            base.FixedUpdate();
-        }
-
         protected override void updateAttack()
         {
+            if (!attackable)
+                state = State.Default;
             
-            if (!createAttackHitBox)
-            {
-                AttackHitBox();
-                createAttackHitBox = true;
-            }
+            currentAttack = 2;
+            
 
-            if (_anim.GetBool("Basic Attack") == false && _anim.GetBool("Skill Attack") == false)
-            {
-                if (Random.Range(0, 100) > 20)
-                {
-                    _anim.SetBool("Basic Attack", true);
-                }
-                else
-                {
-                    _anim.SetBool("Skill Attack", true);
-                }
-            }
+            flipToFacing();
+            if (currentAttack == 1)
+                _anim.SetInteger("State", 30);
+            else if (currentAttack == 2)
+                _anim.SetInteger("State", 31);
         }
 
-        public void AttackHitBox()
+        public override void AttackHitBox()
         {
             col = gameObject.AddComponent<BoxCollider2D>();
-            col.offset = new Vector2(_col.offset.x +3.5f, _col.offset.y);
+            col.offset = new Vector2(_col.offset.x + 3.5f, _col.offset.y);
             col.size = new Vector2(7, 10);
+            col.isTrigger = true;
+        }
+
+        public void DeadSound()
+        {
+            SoundManager.Instance.Play("Crowd/Bat/Death");
+        }
+
+        public void AttackSound()
+        {
+            transform.GetChild(4).GetComponent<PreAttack>().Play();
+            if(currentAttack == 1)
+                SoundManager.Instance.Play("Crowd/Bat/SmallAttack");
+            else if(currentAttack == 2)
+                SoundManager.Instance.Play("Crowd/Bat/Mongdungi_Attack");
+        }
+
+        public override void WalkSound()
+        {
+            //SoundManager.Instance.Play("Crowd/Bat/Patrol");
+        }
+
+        protected override void DropMoney()
+        {
+            if(player.GetComponent<PlayerCharacter>().TalismanMoney)
+                DataManager.Instance.AddMoney(Random.Range(3, 5) * 2);
+            else
+                DataManager.Instance.AddMoney(Random.Range(3, 5));
         }
     }
 }

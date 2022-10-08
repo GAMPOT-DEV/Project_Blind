@@ -29,9 +29,13 @@ namespace Blind
             _monoBehaviour.UpdateVelocity();
             _monoBehaviour.UpdateFacing();
             if (_monoBehaviour.CheckForFallInput())
+            {
                 _monoBehaviour.MakePlatformFallthrough();
+                Debug.Log("dD");
+            }
             if(_monoBehaviour.CheckForParing())
                 _monoBehaviour.Paring();
+            
             if (_monoBehaviour.CheckForAttack())
             {
                 _monoBehaviour.MeleeAttack();
@@ -56,6 +60,11 @@ namespace Blind
             if (_monoBehaviour.CheckForItemT())
             {
                 _monoBehaviour.ItemT();
+            }
+
+            if (_monoBehaviour.CheckForItemUsing())
+            {
+                _monoBehaviour.ItemUsing();
             }
 
             if (_monoBehaviour.CheckForSkill())

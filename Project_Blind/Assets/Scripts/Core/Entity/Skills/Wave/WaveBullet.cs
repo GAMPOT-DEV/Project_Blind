@@ -10,11 +10,11 @@ namespace Blind
         [SerializeField] private float maxsize = 30f;
         [SerializeField] private float time;
         [SerializeField] private float _coolTime;
-
+        private PlayerCharacter _player;
         private Light2D _light2D;
 
         private Rigidbody2D rigid;
-        private bool facing;
+        private Facing facing;
         [SerializeField] private int speed;
         private bool isFire = false;
         private GameObject enemy;
@@ -27,9 +27,14 @@ namespace Blind
             _light2D = GetComponent<Light2D>();
         }
 
-        public void GetFacing(bool _playerfacing)
+        public void Init(PlayerCharacter player)
         {
-            facing = _playerfacing;
+            _player = player;
+        }
+
+        public void GetFacing(Facing playerFacing)
+        {
+            facing = playerFacing;
             isFire = true;
         }
 
@@ -37,7 +42,7 @@ namespace Blind
         {
             if (isFire)
             {
-                if (facing) rigid.velocity = transform.right * speed;
+                if (facing == Facing.Right) rigid.velocity = transform.right * speed;
                 else rigid.velocity = -transform.right * speed;
             }
             else
@@ -85,6 +90,8 @@ namespace Blind
                 _light2D.pointLightOuterRadius = radius;
                 yield return null;
             }
+
+            _player.bulletCheck = false;
             Destroy(gameObject);
         }
 

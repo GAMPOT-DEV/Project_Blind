@@ -33,7 +33,7 @@ namespace Blind
 
         [SerializeField] private Type _type;
 
-        [SerializeField] private GameObject testKeyChange;
+        //[SerializeField] private GameObject testKeyChange;
         [SerializeField] private GameObject parentUI;
 
         private Dictionary<Define.KeyAction, KeyCode> newKeyDict;
@@ -204,7 +204,7 @@ namespace Blind
             Enum2KeyAction.Add(Texts.Text_AfterChange_Wave, Define.KeyAction.Wave);
             Enum2KeyAction.Add(Texts.Text_AfterChange_Interaction, Define.KeyAction.Interaction);
 
-            testKeyChange.SetActive(false);
+            //testKeyChange.SetActive(false);
 
             InitBeforeChangeTexts();
         }
@@ -331,6 +331,7 @@ namespace Blind
         #region Effect Event
         private void PushVibrationOnOffButton()
         {
+            SoundManager.Instance.Play("Select");
             if (_gameData.vibration)
             {
                 Get<Image>((int)Images.Button_ScreenVibrationOnOff).sprite = Button_Off;
@@ -352,6 +353,7 @@ namespace Blind
         #region ScreenEvent
         private void PushRightButton()
         {
+            SoundManager.Instance.Play("Select");
             _gameData.resolutionIndex = (_gameData.resolutionIndex + 1) % SIZE;
             Get<Text>((int)Texts.Text_ScreenSizeValue).text =
                 $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
@@ -359,6 +361,7 @@ namespace Blind
         }
         private void PushLeftButton()
         {
+            SoundManager.Instance.Play("Select");
             _gameData.resolutionIndex = (_gameData.resolutionIndex - 1 + SIZE) % SIZE;
             Get<Text>((int)Texts.Text_ScreenSizeValue).text =
                $"{_resolutions[_gameData.resolutionIndex].width} * {_resolutions[_gameData.resolutionIndex].height}";
@@ -366,6 +369,7 @@ namespace Blind
         }
         private void PushWindowModeButton()
         {
+            SoundManager.Instance.Play("Select");
             if (_gameData.windowMode)
             {
                 _gameData.windowMode = false;
@@ -413,6 +417,7 @@ namespace Blind
         }
         private void ChangeCursor(int nextCursor)
         {
+            SoundManager.Instance.Play("CursorMove");
             ExitCursor(_currCursor);
             EnterCursor(nextCursor);
         }
@@ -464,7 +469,7 @@ namespace Blind
         private void ControllInput(bool changeNow)
         {
             _isInputKeyChange = changeNow;
-            testKeyChange.SetActive(changeNow);
+            //testKeyChange.SetActive(changeNow);
             if (parentUI == null) return;
             parentUI.GetComponent<UI_Menu>().CanInput = !changeNow;
         }

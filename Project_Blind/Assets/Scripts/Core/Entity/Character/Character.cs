@@ -8,21 +8,23 @@ namespace Blind
     {
         private bool _isInvincibility;
         public UnitHP Hp { get; protected set; }
+        protected Renderer _renderer;
         public void Awake(ScriptableObjects.Character data)
         {
             Hp = new UnitHP(data.maxHp);
+            _renderer = GetComponent<Renderer>();
         }
 
-        public void HittedWithKnockBack(AttackInfo attackInfo)
+        public void HitWithKnockBack(AttackInfo attackInfo)
         {
             if (!_isInvincibility)
             {
-                Hitted(attackInfo.Damage);
+                Hit(attackInfo.Damage);
                 HurtMove(attackInfo.EnemyFacing);
 
             }
         }
-        public void Hitted(float damage)
+        public void Hit(float damage)
         {
             var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit");
             obj.transform.position = transform.position + Vector3.up * 5;
@@ -54,10 +56,8 @@ namespace Blind
             _isInvincibility = false;
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
         }
-        public void PlayAttackFx(int level, Facing face)
+        public virtual void PlayAttackFx(int level)
         {
-            //Debug.Log(transform.GetChild(1).GetChild(level));
-            transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(face);
         }
     }
 }

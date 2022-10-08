@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,18 +24,15 @@ public class Define
         Unknown,
         GameScene,
         MainScene,
-        김종현,
-        TestFogOfWar,
         심연,
         절외부,
         숲,
         마을,
         고목,
         동굴,
-        장산범입구,
         장산범방,
-        맵테스트,
-        숲맵테스트,
+        
+
     }
 
     public enum Sound
@@ -88,7 +85,8 @@ public class Define
         Skill,
         ChangeSlot,
         ItemT,
-        PowerAttack
+        PowerAttack,
+        ItemUsing
     }
     public enum ClueItem
     {
@@ -107,13 +105,57 @@ public class Define
     {
         Unknown = 0,
 
-        TestItem1 = 1,
-        TestItem2 = 2,
-        TestItem3 = 3,
-        TestItem4 = 4,
-        TestItem5 = 5,
-        TestItem6 = 6,
-        TestItem7 = 7,
+        WaveStick = 1,
+        Potion = 2,
+        Potion2 = 3,
+        Potion3 = 4,
+    }
+
+    public enum TalismanItem
+    {
+        Unknown = 0,
+
+        Talisman_Blue = 1,
+        Talisman_Green = 2,
+        Talisman_Purple = 3,
+        Talisman_Red = 4,
+        Talisman_Yellow = 5,
+    }
+    public enum ScriptTitle
+    {
+        Unknown,
+
+        Test1,
+        Test2,
+        Stage1,
+        Stage2,
+        Stage2_1,
+        Stage2_2,
+        Stage3,
+        Stage4,
+        Stage5,
+
+        CutScene1,
+        CutScene2,
+        CutScene3,
+        CutScene4,
+        CutScene5,
+        CutScene6,
+        CutScene7,
+
+        temple,
+
+        village1,
+        village2,
+        village3,
+        BigTree,
+
+        RestScript
+    }
+    public enum TalismanAbility
+    {
+        STR,
+        DEX,
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -17,6 +17,7 @@ namespace Blind
         public Dictionary<string, Data.Conversation> ConversationDict { get; private set; } = new Dictionary<string, Data.Conversation>();
         public Dictionary<int, Data.Clue> ClueDict { get; private set; } = new Dictionary<int, Data.Clue>();
         public Dictionary<int, Data.BagItem> BagItemDict { get; private set; } = new Dictionary<int, Data.BagItem>();
+        public Dictionary<int, Data.TalismanItem> TalismanItemDict { get; private set; } = new Dictionary<int, Data.TalismanItem>();
 
         private PlayerCharacterData _playerCharacterData = null;
         public PlayerCharacterData PlayerCharacterDataValue
@@ -40,6 +41,7 @@ namespace Blind
             ConversationDict = LoadJson<Data.ConversationData, string, Data.Conversation>("ConversationData").MakeDict();
             ClueDict = LoadJson<Data.ClueData, int, Data.Clue>("ClueData").MakeDict();
             BagItemDict = LoadJson<Data.BagItemData, int, Data.BagItem>("BagItemData").MakeDict();
+            TalismanItemDict = LoadJson<Data.TalismanItemData, int, Data.TalismanItem>("TalismanItemData").MakeDict();
         }
         Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
         {
@@ -79,6 +81,7 @@ namespace Blind
             }
 
             _gameData.MakeClueDict();
+            _gameData.MakeTalismanDict();
             _gameData.MakeBagItemDict();
         }
         public void SaveGameData()
@@ -104,15 +107,19 @@ namespace Blind
         }
         public void DeleteClueItem(Define.ClueItem itemId)
         {
-            int id = (int)itemId;
+            return;
 
-            ClueInfo clue = null;
-            _gameData.ClueInfoById.TryGetValue(id, out clue);
-            if (clue == null)
-                return;
+            // 수정 필요
 
-            _gameData.DeleteClueItem(clue);
-            SaveGameData();
+            //int id = (int)itemId;
+
+            //ClueInfo clue = null;
+            //_gameData.ClueInfoById.TryGetValue(id, out clue);
+            //if (clue == null)
+            //    return;
+
+            //_gameData.DeleteClueItem(clue);
+            //SaveGameData();
         }
         public bool HaveClueItem(Define.ClueItem itemId)
         {
@@ -127,7 +134,71 @@ namespace Blind
             _gameData.ClearClueData();
             SaveGameData();
         }
+        #region Talisman
+        public bool AddTalismanItem(Define.TalismanItem itemId)
+        {
+            int id = (int)itemId;
 
+            TalismanInfo talisman = null;
+            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
+            if (talisman != null)
+                return false;
+
+            talisman = new TalismanInfo() { itemId = id, equiped = false, slot = UI_Talisman.Size++ };
+            _gameData.AddTalismanItem(talisman);
+            SaveGameData();
+            return true;
+        }
+        public void DeleteTalismanItem(Define.TalismanItem itemId)
+        {
+            return;
+
+            // 수정 필요
+
+            //int id = (int)itemId;
+
+            //TalismanInfo talisman = null;
+            //_gameData.TalismanInfoById.TryGetValue(id, out talisman);
+            //if (talisman == null)
+            //    return;
+
+            //_gameData.DeleteTalismanItem(talisman);
+            //SaveGameData();
+        }
+        public bool HaveTalismanItem(Define.TalismanItem itemId)
+        {
+            int id = (int)itemId;
+            TalismanInfo talisman;
+            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
+            if (talisman == null) return false;
+            return true;
+        }
+        public bool EquipOrUnequipTalisman(Define.TalismanItem itemId)
+        {
+            int id = (int)itemId;
+            TalismanInfo talisman;
+            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
+            if (talisman == null) return false;
+
+            if (talisman.equiped == false)
+            {
+                if (_gameData.currEquipCnt >= 3) return false;
+                _gameData.EquipTalismanItem(talisman);
+                SaveGameData();
+                return true;
+            }
+
+            _gameData.UnequipTalismanItem(talisman);
+            SaveGameData();
+            return true;
+        }
+        public void ClearTalismanData()
+        {
+            _gameData.ClearTalismanData();
+            SaveGameData();
+        }
+        #endregion
+        #region Bag
         public bool AddBagItem(Define.BagItem itemId, int cnt = 1)
         {
             int id = (int)itemId;
@@ -138,12 +209,14 @@ namespace Blind
             if (item != null)
             {
                 _gameData.AddBagItem(id, cnt);
+                RefreshFieldUI();
                 SaveGameData();
                 return false;
             }
 
             item = new BagItemInfo() { itemId = id, slot = UI_Bag.Size++, itemCnt = cnt };
             _gameData.AddBagItem(item);
+            RefreshFieldUI();
             SaveGameData();
             return true;
         }
@@ -170,6 +243,7 @@ namespace Blind
             else
                 _gameData.DeleteBagItem(item, cnt);
 
+            RefreshFieldUI();
             SaveGameData();
             return true;
         }
@@ -189,6 +263,53 @@ namespace Blind
             _gameData.BagItemInfoById.TryGetValue(id, out item);
             if (item == null) return false;
             return true;
+        }
+        #endregion
+        private void RefreshFieldUI()
+        {
+            UI_FieldScene ui = FindObjectOfType<UI_FieldScene>();
+            if (ui != null) ui.RefreshItemCnt();
+        }
+
+        public bool AddMoney(int money)
+        {
+            if (money <= 0) return false;
+            _gameData.money += money;
+            UI_FieldScene ui = FindObjectOfType<UI_FieldScene>();
+            if(ui != null)
+            {
+                ui.DisplayMoney();
+            }
+            SaveGameData();
+            return true;
+        }
+        public bool SubMoney(int money)
+        {
+            if (money <= 0) return false;
+            if (_gameData.money < money) return false;
+            _gameData.money -= money;
+            UI_FieldScene ui = FindObjectOfType<UI_FieldScene>();
+            if (ui != null)
+            {
+                ui.DisplayMoney();
+            }
+            SaveGameData();
+            return true;
+        }
+
+        public void CaveOpen()
+        {
+            _gameData.caveClear = 1;
+            Debug.Log("cave opened");
+        }
+        public void ClearCaveData()
+        {
+            _gameData.caveClear = 0;
+
+        }
+        public int GetClearCave()
+        {
+            return _gameData.caveClear;
         }
     }
 }

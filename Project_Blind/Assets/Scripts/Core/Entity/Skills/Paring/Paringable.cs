@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Security.Cryptography;
+using Cinemachine;
 using Spine.Unity;
 using UnityEngine;
 
@@ -19,13 +21,16 @@ namespace Blind
         private bool _isParing;
         [SerializeField] private LayerMask _hitLayer;
         private Vector2 hitbox;
-
+        [SerializeField] private GameObject ParingBox;
+        private BoxCollider2D _paringBox;
+        private Facing face = Facing.Left;
         public void Init(int x = 1, int y = 1)
         {
             this.x = x;
             this.y = y;
             _sprite = GetComponent<SpriteRenderer>();
             _skeletonComponent = GetComponent<SkeletonMecanim>();
+            _paringBox = ParingBox.GetComponent<BoxCollider2D>();
             _filter.layerMask = _hitLayer;
             _filter.useLayerMask = true;
             if (_sprite != null)
@@ -34,7 +39,7 @@ namespace Blind
             }
             else
             {
-                _isFlip = _skeletonComponent.Skeleton.FlipX;
+                _isFlip = _skeletonComponent.Skeleton.ScaleX < 0;
             }
         }
 
@@ -47,6 +52,7 @@ namespace Blind
         {
             _isParing = false;
         }
+        
 
         public void OnDrawGizmos()
         {
@@ -57,66 +63,31 @@ namespace Blind
             Gizmos.DrawLine(size, new Vector2(hitbox.x, size.y));
 
         }
-
-        public void FixedUpdate()
+        public virtual void Facings(Facing _face)
+        {
+            if (face != _face)
+            {
+                face = _face;
+                var position = transform.localPosition;
+                position = new Vector3((float)_face*Math.Abs(position.x),position.y,position.z);
+                transform.localPosition = position;
+                var localScale = transform.localScale;
+                localScale = new Vector3(-(float)_face*Math.Abs(localScale.x),localScale.y,localScale.z);
+                transform.localScale = localScale;
+            }
+        }
+        public void OnTriggerStay2D(Collider2D col)
         {
             if (!_isParing) return;
-            
-            var entity = gameObject.GetComponent<Character>();
-            var facing = entity.GetFacing();
-             
-            var position = transform.position;
-            var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
-             
-            hitbox = pointA;
-            size = new Vector2(pointA.x + ((float)facing * x), pointA.y + y);
 
-            int hitCount = Physics2D.OverlapArea(pointA, size, _filter, _result);
-            for (int i = 0; i < hitCount; i++)
+            Facings(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>().GetFacing());
+            var paring = col.gameObject.GetComponent<ParingEffect>();
+            if (paring != null)
             {
-                _hitObj = _result[i];
-                Debug.Log(_hitObj.name);    
-                if (_hitObj.GetComponent<BatMonster>() != null)
-                {
-                    Debug.Log("DD");
-                    ParingEffect<BatMonster>.Initialise(_hitObj.GetComponent<BatMonster>());
-                    BatMonsterParing batMonsterparing = _hitObj.gameObject.AddComponent<BatMonsterParing>();
-                    batMonsterparing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
-                    _isParing = false;
-                    Destroy(batMonsterparing);
-                }
-                else if (_hitObj.GetComponent<ParasiteMonster>() != null)
-                {
-                    ParingEffect<ParasiteMonster>.Initialise(_hitObj.GetComponent<ParasiteMonster>());
-                    ParasiteMonsterParing batMonsterparing = _hitObj.gameObject.AddComponent<ParasiteMonsterParing>();
-                    batMonsterparing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
-                    _isParing = false;
-                    Destroy(batMonsterparing);
-                }
-                else if(_hitObj.GetComponent<BossHand>() != null)
-                {
-                    Debug.Log("sdw");
-                    ParingEffect<BossHand>.Initialise(_hitObj.GetComponent<BossHand>());
-                    BossHandParing bossHandParing = _hitObj.gameObject.AddComponent<BossHandParing>();
-                    bossHandParing.OnCheckForParing(gameObject.GetComponent<PlayerCharacter>());
-                    bossHandParing.EnemyDibuff();
-                    _isParing = false;
-                    Destroy(bossHandParing);
-                }
-                else if (_hitObj.GetComponent<Projectile>() != null)
-                {
-                    Debug.Log("패링 확인"); 
-                    PlayerCharacter _player = GetComponent<PlayerCharacter>();
-                    _player.CharacterInvincible();
-                    if (_player.CurrentWaveGauge + _player.paringWaveGauge < _player.maxWaveGauge)
-                        _player.CurrentWaveGauge += _player.paringWaveGauge;
-                    else
-                        _player.CurrentWaveGauge = _player.maxWaveGauge;
-                    _player.isParingCheck = true;
-                    Time.timeScale = 0.5f;
-                    SoundManager.Instance.Play("Player/패링1", Define.Sound.Effect);
-                    _hitObj.GetComponent<Projectile>().OnParing();
-                }
+                paring.GetParing();
+                _isParing = false;
+                var player = GameManager.Instance.Player;
+                player.transform.GetChild(1).GetChild(9).GetComponent<AttackFX>().Play(player.GetComponent<PlayerCharacter>().GetFacing());
             }
         }
     }

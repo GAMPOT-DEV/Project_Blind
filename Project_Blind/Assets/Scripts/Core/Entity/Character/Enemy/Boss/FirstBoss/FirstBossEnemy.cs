@@ -1,77 +1,149 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Cinemachine;
 using UnityEngine;
 using Random = System.Random;
 
 namespace Blind
 {
     public class FirstBossEnemy : BossEnemyCharacter
-    {
-        private IBossPhase Phase;
-        [SerializeField] private List<BossAttackPattern<FirstBossEnemy>> _patternList = new List<BossAttackPattern<FirstBossEnemy>>();
+    { 
+        [SerializeField] private List<BossPhase> phaseList;
+        [SerializeField] private List<Transform> AttackPosition;
+        [SerializeField] private List<Transform> Pattern2AttackPosition;
+        [SerializeField] private BoxCollider2D AttackRange;
+        [SerializeField] public Transform ShoutePatternPosition;
+        [SerializeField] private Transform Pattern3Attackposition;
+        public CinemachineImpulseSource _source;
         public Transform _floorStart;
         public Transform _floorEnd;
-        private BossAttackPattern<FirstBossEnemy> _pattern;
-        private Random _rand = new Random();
-
-        private void Awake()
+        private IEnumerator<BossPhase> _bossPhase;
+        [SerializeField] private Transform point;
+        private Animator _animator;
+        private bool isStart = false;
+        private int next;
+        protected override void Awake()
         {
             base.Awake();
+            _animator = GetComponent<Animator>();
+            SceneLinkedSMB<FirstBossEnemy>.Initialise(_animator, this);
+            _animator.speed = 0f;
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
-            _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
-            StartCoroutine(StartAttackState());
+            _bossPhase = phaseList.GetEnumerator();
+            _bossPhase.MoveNext();
+            _source = GetComponent<CinemachineImpulseSource>();
+
+            foreach (var phase in phaseList)
+            {
+                
+                phase.Init(this);
+            }
+
+            // Test
+            ResourceManager.Instance.Instantiate("UI/Normal/UI_BossHp");
+            Hp.SetHealth();
+            StartCoroutine(CoTestBossHp());
         }
 
-        public IEnumerator StartAttackState()
+        protected override void FixedUpdate()
         {
-            while (true)
+            if (!isStart) return;
+            
+            transform.position = Vector2.MoveTowards(transform.position, point.position, 1f);
+
+            if (transform.position.y == point.transform.position.y)
             {
-                var next = _rand.Next(1, 5);
-                //Debug.Log(next);
-                ChangePattern(next);
-                yield return StartPattern();
-                yield return new WaitForSeconds(1f);
+                isStart = false;
+                _animator.speed = 1f;
             }
         }
-        public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)
+
+        public override void Reset()
         {
-            _pattern = pattern;
-            _pattern.Initialise(gameObject.GetComponent<FirstBossEnemy>());
+            base.Reset();
+            if (_bossPhase.Current != null) _bossPhase.Current.Stop();
+            _bossPhase.Reset();
         }
 
-        public Coroutine StartPattern()
+        public void Play()
         {
-            return _pattern.AttackPattern();
-        }
-
-        IEnumerator BossPatternTest()
-        {
-            ChangePattern(1);
-            yield return new WaitForSeconds(1.5f);
-            ChangePattern(2);
-            yield return new WaitForSeconds(1.5f);
-            ChangePattern(3);
-            yield return new WaitForSeconds(1.5f);
-            ChangePattern(4);
-        }
-        public void ChangePattern(int pattern)
-        {
-            switch (pattern)
+            if (_bossPhase.Current != null)
             {
-                case 1:
-                    SetAttackPattern(_patternList[0]);
-                    break;
-                case 2:
-                    SetAttackPattern(_patternList[1]);
-                    break;
-                case 3:
-                    SetAttackPattern(_patternList[2]);
-                    break;
-                case 4:
-                    SetAttackPattern(_patternList[3]);
-                    break;
+                isStart = true;
+                _animator.SetTrigger("Ganrim");
             }
         }
+
+        public void BossPhaseStart()
+        {
+            _bossPhase.Current.Play();
+        }
+
+        public void NextPhase()
+        {
+            _bossPhase.MoveNext();
+            StartCoroutine(NextPhaseStart());
+        }
+
+        public void AttackInit(int x, int y, int damage)
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().Init(x,y,damage);
+        }
+
+        IEnumerator NextPhaseStart()
+        {
+            yield return new WaitForSeconds(3f);
+            BossPhaseStart();
+        }
+
+        public void Pattern2Start(int random)
+        {
+            AttackRange.gameObject.transform.position = Pattern2AttackPosition[random].position;
+        }
+
+        public void Pattern3Start()
+        {
+            AttackRange.gameObject.transform.position = Pattern3Attackposition.position;
+        }
+        
+        public void Pattern4Start()
+        {
+            AttackRange.gameObject.transform.position = Pattern3Attackposition.position;
+        }
+        public void Pattern4ReAttackSize()
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().ReAttackSize(new Vector2(5,3));
+        }
+        
+
+        public void AttackNextPosition()
+        {
+            next = (next + 1) % AttackPosition.Count;
+            AttackRange.gameObject.transform.position = AttackPosition[next].position;
+        }
+
+        public void CamaraShake()
+        {
+            _source.GenerateImpulse();
+        }
+
+        public void enableAttack()
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().isAttack = true;
+        }
+
+        public void disableAttack()
+        {
+            AttackRange.gameObject.GetComponent<BossAttack>().isAttack = false;
+        }
+
+        // Test
+        IEnumerator CoTestBossHp()
+        {
+            yield return new WaitForSeconds(2f);
+            Hp.GetDamage(2);
+        }
+        
     }
 }

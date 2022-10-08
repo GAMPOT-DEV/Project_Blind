@@ -1,4 +1,4 @@
-﻿using Spine.Unity;
+using Spine.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,12 +19,12 @@ namespace Blind
         private ISkeletonComponent skeletonmecanim;
         public MeleeAttackable _attack;
         private Animator _animator;
-        private SpriteRenderer _renderer;
-        private Paringable _paring;
+        [SerializeField] public Paringable _paring;
         public Vector2 _playerposition;
         public ScriptableObjects.PlayerCharacter Data;
         private Rigidbody2D rigid;
         public CinemachineImpulseSource _source;
+        public CinemachineVirtualCamera _camera;
 
         [FormerlySerializedAs("_spawnPoint")] public Transform spawnPoint;
         [SerializeField] private Transform _bulletPoint;
@@ -36,7 +36,6 @@ namespace Blind
         private bool _candash = true;
         public bool isCheck = false;
         public float nextDash_x;
-        private int _dashCount;
         public bool isJump;
         protected const float GroundedStickingVelocityMultiplier = 3f;    // This is to help the character stick to vertically moving platforms.
         private GameObject _waveSense;
@@ -44,9 +43,12 @@ namespace Blind
         public bool isPowerAttackEnd;
         public bool isPowerAttack;
         public bool isParingCheck = false;
+        public bool isInputCheck;
         public int maxWaveGauge;
+        private bool _isInput = false;
+        public bool TalismanMoney = false;
         [SerializeField] private int _currentWaveGauge = 30;
-        public int CurrentWaveGauge
+        public int CurrentWaveGauge 
         {
             get { return _currentWaveGauge; }
             set
@@ -67,7 +69,7 @@ namespace Blind
         private float currentmovevector_x;
         public float gravity;
         private bool soundPlay;
-
+        public bool bulletCheck;
         public Action<int> OnWaveGaugeChanged;
 
         public void Awake()
@@ -77,31 +79,33 @@ namespace Blind
             _characterController2D = GetComponent<PlayerCharacterController2D>();
             skeletonmecanim = GetComponent<SkeletonMecanim>();
             _attack = GetComponent<MeleeAttackable>();
-            _paring = GetComponent<Paringable>();
             _animator = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
             rigid = GetComponent<Rigidbody2D>();
             _source = GetComponent<CinemachineImpulseSource>();
+            _camera = GetComponent<CinemachineVirtualCamera>();
+            _camera = GameObject.Find("CM Virtual Camera").GetComponent<CinemachineVirtualCamera>();
             _defaultSpeed = Data.maxSpeed;
             //_dashSpeed = 10f;
             //_defaultTime = 0.2f;
-            _dashCount = 1;
             gravity = Data.gravity;
             
 
             ResourceManager.Instance.Destroy(ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense").gameObject);
             _attack.Init(Data.attack_x,Data.attack_y,Data.damage);
-            _paring.Init(Data.paring_x, Data.paring_y);
 
 
             // TEST
             if (FindObjectOfType<UI_FieldScene>() == null)
                 UIManager.Instance.ShowSceneUI<UI_FieldScene>();
+            OnWaveGaugeChanged.Invoke(_currentWaveGauge);
         }
 
         private void Start()
         {
             SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
+            Hp.SetHealth();
+            DataManager.Instance.ClearBagData();
         }
 
         public void OnFixedUpdate()
@@ -116,7 +120,7 @@ namespace Blind
             if (playerCharacterData == null) return;
             Hp.SetHealth(playerCharacterData.Hp);
             CurrentWaveGauge = playerCharacterData.CurrentWaveGage;
-            transform.position = SceneController.SetDestination(playerCharacterData.DestinationTag);
+            transform.position = SceneController.SetDestination(SceneController.Instance.DestinationTag);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
@@ -124,7 +128,6 @@ namespace Blind
             int flip = 0;
             float speed = 0;
             float jumpattackspeed = 3f;
-            bool isInputCheck;
             if (InputController.Instance.LeftMove.Held)
             {
                 flip = -1;
@@ -135,9 +138,8 @@ namespace Blind
             }
 
             if (InputController.Instance.LeftMove.Held && InputController.Instance.RightMove.Held)
-            {
                 flip = 0;
-            }
+
 
             if (InputController.Instance.LeftMove.Down || InputController.Instance.RightMove.Down)
             {
@@ -145,14 +147,17 @@ namespace Blind
                 _animator.SetBool("RunEnd", false);
                 SoundManager.Instance.StopEffect();
             }
-            else isInputCheck = true;
+            else
+            {
+                isInputCheck = true;
+            }
 
             if (!InputController.Instance.LeftMove.Held && !InputController.Instance.RightMove.Held)
             {
                 _animator.SetBool("RunEnd", true);
             }
 
-            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed;
+            speed = !isJumpAttack ? Data.maxSpeed : jumpattackspeed; //일단 여기
             float desiredSpeed = useInput ? flip * speed * speedScale : 0f;
             float acceleration = useInput && isInputCheck ? Data.groundAcceleration : Data.groundDeceleration;
             _moveVector.x = Mathf.MoveTowards(_moveVector.x, desiredSpeed, acceleration * Time.deltaTime);
@@ -203,7 +208,6 @@ namespace Blind
                 if(!(InputController.Instance.DownJump.Held)) { // 아래 버튼을 누르지 않았다면
                     _moveVector.y = Data.jumpSpeed;
                 }
-                Debug.Log(_moveVector.y);
                 var obj = ResourceManager.Instance.Instantiate("FX/EnvFx/JumpFx");
                 obj.transform.position = transform.position + Vector3.up * 2;
                 SoundManager.Instance.Play("Jump",Define.Sound.Effect);
@@ -348,7 +352,6 @@ namespace Blind
 
         public void enableAttack()
         {
-            PlayAttackFx(0,GetFacing());
             _attack.EnableDamage();
         }
 
@@ -409,6 +412,8 @@ namespace Blind
             yield return new WaitForEndOfFrame();
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
             InputController.Instance.GainControl();
+            var gameObject = ResourceManager.Instance.Instantiate("FX/EnvFx/Respawn");
+            gameObject.transform.position = GameManager.Instance.Player.transform.position;
         }
 
         public void DieStopVector(Vector2 stop)
@@ -420,9 +425,10 @@ namespace Blind
         {
             RespawnFacing();
             Hp.ResetHp();
+            DebuffOff();
             _animator.SetTrigger("Respawn");
             _animator.SetBool("Dead", false);
-            gameObject.transform.position = spawnPoint.position;
+            gameObject.transform.position = GameManager.Instance.GetTransform().position;
         }
 
         public void GetItem()
@@ -432,9 +438,18 @@ namespace Blind
 
         public bool CheckForItemT()
         {
-            return InputController.Instance.ItemT.Down;
+            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.WaveStick) && !bulletCheck;
         }
 
+        public bool CheckForItemUsing()
+        {
+            return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.Potion);
+        }
+
+        public void ItemUsing()
+        {
+            _animator.SetTrigger("Item");
+        }
         public void ItemT()
         {
             _animator.SetTrigger("ItemT");
@@ -443,17 +458,27 @@ namespace Blind
         public void ThrowItem()
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
+            bullet.Init(this);
+            bulletCheck = true;
             bullet.transform.position = _bulletPoint.position;
-            if(_renderer == null) bullet.GetFacing(skeletonmecanim.Skeleton.FlipX);
-            else bullet.GetFacing(_renderer.flipX);
+            if(_renderer == null) bullet.GetFacing(GetFacing());
+            else bullet.GetFacing(GetFacing());
+        }
+
+        public void HpHeal()
+        {
+            Hp.GetHeal(3);
         }
         public void Talk()
         {
+            InputController.Instance.ReleaseControl();
+            _moveVector = Vector2.zero;
             _animator.SetBool("Talk", true);
         }
 
         public void UnTalk()
         {
+            InputController.Instance.GainControl();
             _animator.SetBool("Talk" , false);
         }
         
@@ -471,13 +496,11 @@ namespace Blind
             if (faceLeft)
             {
                 if(faceRight) return;
-                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = false;
-                else _renderer.flipX = false;
+                if(_renderer == null) skeletonmecanim.Skeleton.ScaleX = 1;
             }
             else if(faceRight)
             {
-                if(_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
-                else _renderer.flipX = true;
+                if(_renderer == null) skeletonmecanim.Skeleton.ScaleX = -1;
             }
         }
         
@@ -494,14 +517,17 @@ namespace Blind
         
         public void RespawnFacing()
         {
-            if (_renderer == null) skeletonmecanim.Skeleton.FlipX = true;
-            else _renderer.flipX = true;
+            if (_renderer == null) skeletonmecanim.Skeleton.ScaleX = 1;
         }
 
         public override Facing GetFacing()
         {
-            if (_renderer == null) return skeletonmecanim.Skeleton.FlipX ? Facing.Right : Facing.Left;
-            else return _renderer.flipX ? Facing.Left : Facing.Right;
+            if (_renderer == null)
+            {
+                return skeletonmecanim.Skeleton.ScaleX < 0 ? Facing.Right : Facing.Left;
+            }
+
+            return Facing.Right;
         }
 
         public void Log() {
@@ -509,10 +535,9 @@ namespace Blind
         }
         public void DebuffOn()
         {
-            Debug.Log("디버프 걸림");
             isOnLava = true;
-            _defaultSpeed -= 2.0f;
-            Data.jumpSpeed = 0.3f;
+            _defaultSpeed -= 1.0f;
+            Data.jumpSpeed = 0.5f;
             StartCoroutine(GetDotDamage());
 
         }
@@ -530,6 +555,7 @@ namespace Blind
 
         public void DebuffOff()
         {
+            isOnLava = false;
             _defaultSpeed += 2.0f;
             Data.jumpSpeed = 0.7f;
             Debug.Log("디버프 풀림");
@@ -555,6 +581,44 @@ namespace Blind
         {
             
             
+        }
+
+        public void ChangeHp(int value)
+        {
+            Hp.ChangeHp(value);
+        }
+
+        public void ChangeDamage(int value)
+        {
+            _attack.ChangeDamage(value);
+        }
+
+        public void ChangeWaveGauge(int value)
+        {
+            maxWaveGauge += value;
+            if (_currentWaveGauge > maxWaveGauge)
+                _currentWaveGauge = maxWaveGauge;
+        }
+
+        public void ChangeMoneyProb(bool value)
+        {
+            TalismanMoney = value;
+        }
+
+        public void ChangeSpeed(int value)
+        {
+            Data.maxSpeed += value;
+            Data.dashSpeed += value;
+        }
+
+        public override void PlayAttackFx(int level)
+        {
+            base.PlayAttackFx(level);
+            if (isPowerAttack)
+            {
+                level += 4;
+            }
+            transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(GetFacing());
         }
     }
 }

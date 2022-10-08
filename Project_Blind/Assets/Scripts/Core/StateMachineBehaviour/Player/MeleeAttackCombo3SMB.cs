@@ -12,12 +12,11 @@ namespace Blind
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
         {
             _isOnClick = false;
+            _monoBehaviour.ReAttackSize(6, 6, _monoBehaviour.Data.damage);
             _monoBehaviour.StopMoveY();
-            Debug.Log("실행됨");
             if (!_monoBehaviour.isPowerAttack)
             {
-                SoundManager.Instance.Play("Player/휘두름", Define.Sound.Effect);
-                Debug.Log("실행됨");
+                SoundManager.Instance.Play("Player/Attack/3타(수정)수정", Define.Sound.Effect);
             }
         }
 
@@ -28,6 +27,7 @@ namespace Blind
                 animator.speed = 0.1f;
                 _checkForPowerAttack = true;
                 _monoBehaviour.EndPowerAttack();
+                _monoBehaviour.transform.GetChild(1).GetChild(8).GetComponent<AttackFX>().Play(_monoBehaviour.GetFacing());
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();
@@ -43,7 +43,6 @@ namespace Blind
                 {
                     _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 }
-                _monoBehaviour.PlayAttackFx(2,_monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
         }
@@ -52,6 +51,10 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
+            _monoBehaviour.UpdateVelocity();
+            _monoBehaviour.CheckForGrounded();
+
+            
             if (!_monoBehaviour.isJump)
             {
                 _monoBehaviour.AirborneVerticalMovement(1f);
@@ -76,6 +79,18 @@ namespace Blind
                 _monoBehaviour.MeleeAttackCombo3();
                 _monoBehaviour.isPowerAttack = true;
             }
+            if(_monoBehaviour.CheckForDeed())
+            {
+                _monoBehaviour.Deed();
+            }
+            if (_monoBehaviour.CheckForDash())
+            {
+                _monoBehaviour.DashStart();
+            }
+            
+            if(_monoBehaviour.CheckForParing())
+                _monoBehaviour.Paring();
+
             
             if ((_monoBehaviour.isPowerAttackEnd &&!_powerAttack))
             {
@@ -85,7 +100,6 @@ namespace Blind
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
-                _monoBehaviour.PlayAttackFx(6,_monoBehaviour.GetFacing());
                 if (ui == null)
                 {
                     ui = FindObjectOfType<UI_FieldScene>();
@@ -104,6 +118,7 @@ namespace Blind
             if(_monoBehaviour._clickcount == 3)
                 _monoBehaviour.MeleeAttackComoEnd();
             _monoBehaviour._attack.DefultDamage();
+            SoundManager.Instance.StopEffect();
             _monoBehaviour.DisableAttack();
             _powerAttack = false;
         }

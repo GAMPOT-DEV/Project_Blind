@@ -21,7 +21,11 @@ namespace Blind
             base.Init();
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
-            Get<Text>((int)Texts.InteractionText).text = "Press Key";
+        }
+        protected override void Start()
+        {
+            base.Start();
+            Get<Text>((int)Texts.InteractionText).text = Text;
         }
     }
 }

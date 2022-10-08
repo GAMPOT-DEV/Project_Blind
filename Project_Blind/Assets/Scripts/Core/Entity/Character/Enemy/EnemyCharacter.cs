@@ -12,13 +12,13 @@ namespace Blind
         protected SpriteRenderer _sprite;
         protected CapsuleCollider2D _col;
 
-        [SerializeField] protected new ScriptableObjects.EnemyCharacter Data;
+        [SerializeField] protected ScriptableObjects.EnemyCharacter Data;
 
         protected GameObject player;
         public MeleeAttackable _attack;
         public LayerMask WallLayer;
         public Transform WallCheck;
-        protected Transform startingPosition;
+        protected Transform startPosition;
         protected Vector2 patrolDirection;
         protected PlayerFinder playerFinder;
         protected EnemyAttack attackSense;
@@ -31,21 +31,20 @@ namespace Blind
 
         public onDeath DeathCallback = () => {};
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             base.Awake(Data);
             _attack = GetComponent<MeleeAttackable>();
             _sprite = GetComponent<SpriteRenderer>();
             _characterController2D = GetComponent<CharacterController2D>();
             rigid = GetComponent<Rigidbody2D>();
-            CreateHpUI();
+            CreateHpUI(Data.HpBarHeight);
             playerFinder = GetComponentInChildren<PlayerFinder>();
             _col = GetComponent<CapsuleCollider2D>();
         }
 
-        protected void CreateHpUI()
+        protected void CreateHpUI(float BarHeight)
         {
-            Debug.LogWarning("??");
             // UI매니저로 UI_UnitHP 생성
             _unitHPUI = UIManager.Instance.ShowWorldSpaceUI<UI_UnitHP>();
             // UI에서 UnitHP 참조
@@ -55,7 +54,7 @@ namespace Blind
             // UI에서 이 오브젝트의 정보가 필요할 수도 있으므로 참조
             _unitHPUI.Owner = gameObject;
             // 오브젝트의 머리 위에 위치하도록 설정
-            _unitHPUI.SetPosition(transform.position, Vector3.up * 9);
+            _unitHPUI.SetPosition(transform.position, Vector3.up * BarHeight);
         }
 
         public override Facing GetFacing()
@@ -71,6 +70,11 @@ namespace Blind
         }
 
         protected override void onHurt()
+        {
+            return;
+        }
+
+        public virtual void Reset()
         {
             return;
         }

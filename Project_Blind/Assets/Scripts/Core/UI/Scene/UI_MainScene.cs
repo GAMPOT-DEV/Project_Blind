@@ -12,6 +12,7 @@ namespace Blind
         const int BUTTON_COUNT = (int)Images.Image_Exit + 1;
         private Action[] _actions = new Action[BUTTON_COUNT];
         private int _currCursor;
+        private bool _goNextScene = false;
         TransitionPoint _transition;
 
         [SerializeField] private Sprite _startSprite_Click;
@@ -53,7 +54,6 @@ namespace Blind
         public override void Init()
         {
             base.Init();
-            Debug.Log("Main Scene");
             Bind<Image>(typeof(Images));
 
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;
@@ -108,7 +108,7 @@ namespace Blind
             if (_uiNum != UIManager.Instance.UINum)
                 return;
 
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return) && _goNextScene == false)
             {
                 Debug.Log("Enter");
                 _actions[_currCursor].Invoke();
@@ -129,8 +129,16 @@ namespace Blind
         }
         private void PushStartButton()
         {
-            ChangeCursor((int)Images.Image_Start);
+            // 컷씬 O
+            //SoundManager.Instance.Play("Select");
+            //ChangeCursor((int)Images.Image_Start);
+            //ResourceManager.Instance.Instantiate("UI/Video");
+            //_goNextScene = true;
+            //gameObject.SetActive(false);
+
+            // 컷씬 X
             UIManager.Instance.Clear();
+            SoundManager.Instance.StopBGM();
             _transition.TransitionInternal();
         }
         private void PushOptionButton()
@@ -162,6 +170,7 @@ namespace Blind
         }
         private void ChangeCursor(int nextCursor)
         {
+            SoundManager.Instance.Play("CursorMove");
             ExitCursor(_currCursor);
             EnterCursor(nextCursor);
         }

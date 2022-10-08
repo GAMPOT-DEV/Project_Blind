@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -12,7 +12,7 @@ namespace Blind
         // Sound
         public float mastetVolume = 1.0f;
         public float bgmVolume = 1.0f;
-        public float effectVolume = 1.0f;
+        public float effectVolume = 0.5f;
 
         // Effect
         public bool vibration = true;
@@ -25,9 +25,15 @@ namespace Blind
         public bool windowMode = false;
         #endregion
 
+        public int money = 0;
+        public int caveClear = 0;
+
         #region Clue
         public List<ClueInfo> clueInfos = new List<ClueInfo>();
         #endregion
+
+        public List<TalismanInfo> talismanInfos = new List<TalismanInfo>();
+        public int currEquipCnt = 0;
 
         public List<BagItemInfo> bagItemInfos = new List<BagItemInfo>();
     }
@@ -36,6 +42,13 @@ namespace Blind
     {
         public int slot;
         public int itemId;
+    }
+    [Serializable]
+    public class TalismanInfo
+    {
+        public int slot;
+        public int itemId;
+        public bool equiped;
     }
     [Serializable]
     public class BagItemInfo
@@ -48,7 +61,6 @@ namespace Blind
     {
         public UnitHP Hp;
         public int CurrentWaveGage;
-        public TransitionDestination.DestinationTag DestinationTag;
 
         public PlayerCharacterData(UnitHP hp, int currentWaveGage)
         {
@@ -86,6 +98,51 @@ namespace Blind
             clueInfos.Clear();
             ClueInfoBySlot.Clear();
             ClueInfoById.Clear();
+        }
+        #endregion
+        #region Talisman
+        public Dictionary<int, TalismanInfo> TalismanInfoBySlot { get; private set; } = new Dictionary<int, TalismanInfo>();
+        public Dictionary<int, TalismanInfo> TalismanInfoById { get; private set; } = new Dictionary<int, TalismanInfo>();
+        public TalismanEffect Effect;
+        public void MakeTalismanDict()
+        {
+            foreach (TalismanInfo talismanInfo in talismanInfos)
+            {
+                TalismanInfoBySlot.Add(talismanInfo.slot, talismanInfo);
+                TalismanInfoById.Add(talismanInfo.itemId, talismanInfo);
+            }
+            Effect = new TalismanEffect();
+        }
+        public void AddTalismanItem(TalismanInfo talisman)
+        {
+            talismanInfos.Add(talisman);
+            TalismanInfoBySlot.Add(talisman.slot, talisman);
+            TalismanInfoById.Add(talisman.itemId, talisman);
+        }
+        public void DeleteTalismanItem(TalismanInfo talisman)
+        {
+            talismanInfos.Remove(talisman);
+            TalismanInfoBySlot.Remove(talisman.slot);
+            TalismanInfoById.Remove(talisman.itemId);
+        }
+        public void EquipTalismanItem(TalismanInfo talisman)
+        {
+            talisman.equiped = true;
+            currEquipCnt++;
+            Effect.EquipTalisman(talisman.itemId);
+        }
+        public void UnequipTalismanItem(TalismanInfo talisman)
+        {
+            talisman.equiped = false;
+            currEquipCnt--;
+            Effect.UnequipTalisman(talisman.itemId);
+        }
+        public void ClearTalismanData()
+        {
+            talismanInfos.Clear();
+            TalismanInfoBySlot.Clear();
+            TalismanInfoById.Clear();
+            currEquipCnt = 0;
         }
         #endregion
         #region BagItemDict

@@ -9,6 +9,7 @@ namespace Blind
     public class UI_Menu : UI_Base
     {
         [SerializeField] private GameObject _bagUI;
+        [SerializeField] private GameObject _talismanUI;
         [SerializeField] private GameObject _clueUI;
         [SerializeField] private GameObject _settingUI;
 
@@ -62,11 +63,12 @@ namespace Blind
             _transition = GameObject.Find("TransitionStart_Main").GetComponent<TransitionPoint>();
 
             _bagUI.SetActive(false);
+            _talismanUI.SetActive(false);
             _clueUI.SetActive(false);
             _settingUI.SetActive(false);
 
             _uis[(int)Images.Image_Bag] = _bagUI;
-            _uis[(int)Images.Image_Talisman] = null;
+            _uis[(int)Images.Image_Talisman] = _talismanUI;
             _uis[(int)Images.Image_Clue] = _clueUI;
             _uis[(int)Images.Image_Setting] = _settingUI;
 
@@ -109,15 +111,19 @@ namespace Blind
         }
         private void PushBagButton()
         {
+            SoundManager.Instance.Play("CursorMove");
             _bagUI.SetActive(true);
             _currActiveUI = _bagUI;
         }
         private void PushTalismanButton()
         {
-            Debug.Log("PushTalismanButton");
+            SoundManager.Instance.Play("CursorMove");
+            _talismanUI.SetActive(true);
+            _currActiveUI = _talismanUI;
         }
         private void PushClueButton()
         {
+            SoundManager.Instance.Play("CursorMove");
             //UIManager.Instance.ShowNormalUI<UI_Clue>();
             _clueUI.SetActive(true);
             _currActiveUI = _clueUI;

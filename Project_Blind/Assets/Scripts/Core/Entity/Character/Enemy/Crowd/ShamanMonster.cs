@@ -6,35 +6,7 @@ namespace Blind
     public class ShamanMonster : CrowdEnemyCharacter
     {
         public GameObject Circle;
-
-        private Coroutine Co_attack;
-        private Coroutine Co_stun;
-        private Coroutine Co_die;
         private Coroutine Co_avoid;
-
-        private State tmp = State.Die;
-
-        [SerializeField] private float _projectileSpeed = 10;
-
-        protected void Awake()
-        {
-            base.Awake();
-            /*
-            sensingRange = new Vector2(8f, 5f);
-            _speed = 0.07f;
-            _runSpeed = 0.1f;
-            _attackCoolTime = 0.5f;
-            _attackSpeed = 0.3f;
-            _attackRange = new Vector2(6f, 5f);
-            _stunTime = 1f;
-            */
-            _patrolTime = 1.5f;
-        }
-
-        private void Start()
-        {
-            //startingPosition = gameObject.transform;
-        }
 
         protected override void FixedUpdate()
         {
@@ -43,14 +15,15 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            _anim.SetBool("Basic Attack", true);
+            flipToFacing();
+            _anim.SetInteger("State", 3);
         }
 
         protected override void updateAvoid()
         {
             if (Co_avoid == null)
             {
-                _anim.SetBool("Avoid", true);
+                
                 Co_avoid = StartCoroutine(CoAvoid());
             }
 
@@ -61,15 +34,15 @@ namespace Blind
                 state = State.Attack;
             }
 
+            _anim.SetInteger("State", 7);
             _characterController2D.Move(-playerFinder.ChasePlayer() * Data.runSpeed);
         }
 
         public void AniMakeProjectile()
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
-            Vector2 dir = playerFinder.PlayerPosition().position - gameObject.transform.position;
-            projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, _projectileSpeed, gameObject);
-            _anim.SetBool("Basic Attack", false);
+            Vector2 dir = (player.transform.position - new Vector3(0, 3f, 0)) - gameObject.transform.position;
+            projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, Data.attackSpeed, gameObject);
             NextAction();
         }
 
@@ -84,10 +57,9 @@ namespace Blind
             else if (playerFinder.FindPlayer())
                 state = State.Chase;
             else
-                state = State.Default;
+                state = State.Patrol;
 
             Co_avoid = null;
-            _anim.SetBool("Avoid", false);
         }
 
         protected override void NextAction()
@@ -107,6 +79,30 @@ namespace Blind
             {
                 state = State.Default;
             }
+        }
+
+        public void DeadSound()
+        {
+            SoundManager.Instance.Play("Crowd/Shaman/Death");
+        }
+
+        public void AttackSound()
+        {
+            transform.GetChild(4).GetComponent<PreAttack>().Play();
+            SoundManager.Instance.Play("Crowd/Shaman/munyeo_throw");
+        }
+
+        public override void WalkSound()
+        {
+            SoundManager.Instance.Play("Crowd/Shaman/Move");
+        }
+
+        protected override void DropMoney()
+        {
+            if (player.GetComponent<PlayerCharacter>().TalismanMoney)
+                DataManager.Instance.AddMoney(Random.Range(4, 6) * 2);
+            else
+                DataManager.Instance.AddMoney(Random.Range(4, 6));
         }
     }
 }

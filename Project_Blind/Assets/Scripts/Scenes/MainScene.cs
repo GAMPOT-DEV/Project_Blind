@@ -15,6 +15,9 @@ namespace Blind
             UIManager.Instance.ShowSceneUI<UI_MainScene>();
 
             DataManager.Instance.LoadGameData();
+            DataManager.Instance.AddClueItem(Define.ClueItem.TestClue1);
+
+            SoundManager.Instance.Play(bgm, Define.Sound.Bgm);
         }
         public override void Clear()
         {
