@@ -29,6 +29,8 @@ namespace Blind
             // 적 캐릭터 리스트 할당
             enemyArr = Enemy.GetComponentsInChildren<CrowdEnemyCharacter>();
 
+            DataManager.Instance.LoadGameData();
+            
         }
 
         public void Start()
