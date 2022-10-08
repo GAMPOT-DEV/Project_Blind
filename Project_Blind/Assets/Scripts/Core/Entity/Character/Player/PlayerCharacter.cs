@@ -48,7 +48,7 @@ namespace Blind
         private bool _isInput = false;
         public bool TalismanMoney = false;
         [SerializeField] private int _currentWaveGauge = 30;
-        public int CurrentWaveGauge
+        public int CurrentWaveGauge 
         {
             get { return _currentWaveGauge; }
             set

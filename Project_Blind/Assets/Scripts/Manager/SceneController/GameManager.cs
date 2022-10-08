@@ -24,17 +24,20 @@ namespace Blind
             base.Awake();
             // 플레이어 할당하는 코드
             // 나중에 고치면 좋을듯
+            
             Player = ResourceManager.Instance.Instantiate("Player3").GetComponent<PlayerCharacter>();
+            Debug.Log(Player);
             Enemy = GameObject.Find("Enemy");
             // 적 캐릭터 리스트 할당
             enemyArr = Enemy.GetComponentsInChildren<CrowdEnemyCharacter>();
 
-            DataManager.Instance.LoadGameData();
+            //DataManager.Instance.LoadGameData();
             
         }
 
         public void Start()
         {
+            Debug.Log("dd");
             Player.spawnPoint = SpawnPoint;
             Player.transform.SetParent(GameObject.Find("Entity").transform);
             GameObject.Find("CM Virtual Camera").GetComponent<CinemachineVirtualCamera>().Follow = Player.transform;
