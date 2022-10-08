@@ -32,12 +32,17 @@ namespace Blind
             gameObject.AddComponent<BossAttackPattern<FirstBossEnemy>>();
             _bossPhase = phaseList.GetEnumerator();
             _bossPhase.MoveNext();
-            _source = GetComponent<CinemachineImpulseSource>();
+
             foreach (var phase in phaseList)
             {
                 
                 phase.Init(this);
             }
+
+            // Test
+            ResourceManager.Instance.Instantiate("UI/Normal/UI_BossHp");
+            Hp.SetHealth();
+            StartCoroutine(CoTestBossHp());
         }
 
         protected override void FixedUpdate()
@@ -96,15 +101,11 @@ namespace Blind
             AttackRange.gameObject.transform.position = Pattern2AttackPosition[random].position;
         }
 
-        public void Pattern4Start()
+        public void Pattern3Start()
         {
             AttackRange.gameObject.transform.position = Pattern3Attackposition.position;
         }
         
-        public void Pattern4ReAttackSize()
-        {
-            AttackRange.gameObject.GetComponent<BossAttack>().ReAttackSize(new Vector2(5,3));
-        }
 
         public void AttackNextPosition()
         {
@@ -125,6 +126,13 @@ namespace Blind
         public void disableAttack()
         {
             AttackRange.gameObject.GetComponent<BossAttack>().isAttack = false;
+        }
+
+        // Test
+        IEnumerator CoTestBossHp()
+        {
+            yield return new WaitForSeconds(2f);
+            Hp.GetDamage(2);
         }
         
     }
