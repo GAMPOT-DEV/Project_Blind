@@ -43,7 +43,6 @@ namespace Blind
                 {
                     _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 }
-                _monoBehaviour.PlayAttackFx(0,_monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
             
@@ -102,7 +101,6 @@ namespace Blind
                 _monoBehaviour.enableAttack();
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
-                _monoBehaviour.PlayAttackFx(4,_monoBehaviour.GetFacing());
 
                 if (ui == null)
                 {

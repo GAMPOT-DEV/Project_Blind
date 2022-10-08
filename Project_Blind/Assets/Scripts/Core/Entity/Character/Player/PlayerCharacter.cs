@@ -610,5 +610,15 @@ namespace Blind
             Data.maxSpeed += value;
             Data.dashSpeed += value;
         }
+
+        public override void PlayAttackFx(int level)
+        {
+            base.PlayAttackFx(level);
+            if (isPowerAttack)
+            {
+                level += 4;
+            }
+            transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(GetFacing());
+        }
     }
 }
