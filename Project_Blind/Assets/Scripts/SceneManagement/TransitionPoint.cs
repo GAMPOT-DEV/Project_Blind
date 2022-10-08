@@ -29,6 +29,18 @@ namespace Blind
             }
         }
 
+        public IEnumerator LodingTranition()
+        {
+            bool isLoading = false;
+            if (!isLoading)
+            {
+                isLoading = true;
+                yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
+                yield return StartCoroutine(LoadingSceneController.LoadSceneProcess("LoadingScene", true));
+                yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
+                isLoading = false;
+            }
+        }
         public void TransitionInternal()
         {
             //씬을 옮기기 전에 가져가야 할 데이터가 있는지 확인합니다
@@ -44,10 +56,16 @@ namespace Blind
             else
             {
                 //다른 씬으로 이동할 경우입니다.
-                var player = GameManager.Instance.Player;
-                if(player!=null)
-                    DataManager.Instance.PlayerCharacterDataValue = new PlayerCharacterData(player.Hp,player.CurrentWaveGauge);
-                SceneController.TransitionToScene(this);
+                if (GameManager.IsExist())
+                {
+                    var player = GameManager.Instance.Player;
+                    Debug.Log(player);
+                    if (player != null)
+                        DataManager.Instance.PlayerCharacterDataValue =
+                            new PlayerCharacterData(player.Hp, player.CurrentWaveGauge);
+                }
+                LodingHub.Instance.StartNextScene(this);
+                StartCoroutine(LodingTranition());
             }
         }
     }

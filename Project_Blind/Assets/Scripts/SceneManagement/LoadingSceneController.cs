@@ -21,7 +21,7 @@ namespace Blind
             //SceneManager.LoadScene("LoadingScene");
         }
 
-        public static IEnumerator LoadSceneProcess(string nextScene,TransitionDestination.DestinationTag destinationTag)
+        public static IEnumerator LoadSceneProcess(string nextScene, bool isLoding)
         {
             yield return null;
             AsyncOperation op = SceneManager.LoadSceneAsync(nextScene);
@@ -41,6 +41,7 @@ namespace Blind
                     if (timer >= 1.0f)
                     {
                         op.allowSceneActivation = true;
+                        if(isLoding) LodingHub.Instance.NextScene();
                         yield break;
                     }
 
