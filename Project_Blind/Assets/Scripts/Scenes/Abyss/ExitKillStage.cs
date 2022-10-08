@@ -23,7 +23,7 @@ namespace Blind.Abyss
         {
             base.Enable();
             _enemyCharacter.gameObject.SetActive(true);
-        }
+        }   
         
     }
 }
