@@ -56,11 +56,8 @@ namespace Blind
             _isInvincibility = false;
             // 나중에 데미지관련 class만들어서 무적 넣을 예정
         }
-        public void PlayAttackFx(int level, Facing face)
+        public virtual void PlayAttackFx(int level)
         {
-            //Debug.Log(transform.GetChild(1).GetChild(level));
-            Debug.Log("응애" + level);
-            transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(face);
         }
     }
 }

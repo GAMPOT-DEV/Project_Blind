@@ -34,7 +34,6 @@ namespace Blind
             else
             {
                 if(_monoBehaviour.isJump) _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
-                _monoBehaviour.PlayAttackFx(1,_monoBehaviour.GetFacing());
                 _monoBehaviour.enableAttack();
             }
         }
@@ -88,7 +87,6 @@ namespace Blind
                 _monoBehaviour.AttackableMove(_monoBehaviour.Data.attackMove * (float)_monoBehaviour.GetFacing());
                 _monoBehaviour.CurrentWaveGauge -= 10;
                 _monoBehaviour.isPowerAttackEnd = false;
-                _monoBehaviour.PlayAttackFx(5,_monoBehaviour.GetFacing());
 
                 if (ui == null)
                 {
