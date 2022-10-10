@@ -15,7 +15,7 @@ namespace Blind
 
         protected override void updateAttack()
         {
-            flipToFacing();
+            //flipToFacing();
             _anim.SetInteger("State", 3);
         }
 
@@ -23,7 +23,6 @@ namespace Blind
         {
             if (Co_avoid == null)
             {
-                
                 Co_avoid = StartCoroutine(CoAvoid());
             }
 
@@ -41,7 +40,20 @@ namespace Blind
         public void AniMakeProjectile()
         {
             var projectile = Instantiate(Circle, WallCheck.position, transform.rotation);
-            Vector2 dir = (player.transform.position - new Vector3(0, 3f, 0)) - gameObject.transform.position;
+
+            Vector2 dir = Vector2.zero;
+            if(GetFacing() == Facing.Left && player.transform.position.x > transform.position.x)
+            {
+                dir = Vector2.left;
+            }
+            else if(GetFacing() == Facing.Right && player.transform.position.x < transform.position.x)
+            {
+                dir = Vector2.right;
+            } else
+            {
+                dir = (player.transform.position - new Vector3(0, 3f, 0)) - gameObject.transform.position;
+            }
+            
             projectile.GetComponent<Projectile>().SetProjectile(dir, Data.damage, Data.attackSpeed, gameObject);
             NextAction();
         }
@@ -89,7 +101,7 @@ namespace Blind
         public void AttackSound()
         {
             transform.GetChild(4).GetComponent<PreAttack>().Play();
-            SoundManager.Instance.Play("Crowd/Shaman/BigAttack");
+            SoundManager.Instance.Play("Crowd/Shaman/munyeo_throw");
         }
 
         public override void WalkSound()

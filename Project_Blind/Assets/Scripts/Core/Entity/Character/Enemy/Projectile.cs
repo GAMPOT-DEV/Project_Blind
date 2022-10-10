@@ -20,6 +20,7 @@ namespace Blind {
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.Rotate(new Vector3(0, 0, angle));
             monster = shaman;
+            //SoundManager.Instance.Play("Crowd/Shaman/munyeo_thrown_in_air");
             StartCoroutine(CoDestroy());
         }
 
@@ -31,6 +32,7 @@ namespace Blind {
                 {
                     CrowdEnemyCharacter enemy = collision.gameObject.GetComponent<CrowdEnemyCharacter>();
                     enemy.OnStun();
+                    SoundManager.Instance.Play("Crowd/Shaman/munyeo_thrown_hit");
 
                     Destroy(gameObject);
                 }
@@ -41,6 +43,7 @@ namespace Blind {
                     PlayerCharacter player = collision.gameObject.GetComponent<PlayerCharacter>();
                     Facing facing = dir.x >= 0 ? Facing.Right : Facing.Left;
                     player.HitWithKnockBack(new AttackInfo(_damage,facing));
+                    SoundManager.Instance.Play("Crowd/Shaman/munyeo_thrown_hit");
 
                     Destroy(gameObject);
                 }

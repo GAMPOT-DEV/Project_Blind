@@ -33,6 +33,7 @@ namespace Blind
         protected BoxCollider2D col;
         protected bool createAttackHitBox;
         protected bool onSound = false;
+        protected int hurtCnt = 0;
 
         protected override void Awake()
         {
@@ -245,11 +246,17 @@ namespace Blind
         protected override void onHurt()
         {
             base.onHurt();
-            _anim.SetTrigger("Hurt");
+            if(hurtCnt >= 2)
+            {
+                state = State.Attack;
+                hurtCnt = 0;
+            }
             flipToFacing();
+            _anim.SetTrigger("Hurt");
             HurtMove(GetFacing());
             StartCoroutine(onHurtAnim());
             currentAttack = 0;
+            hurtCnt++;
 
             if (co_stun != null)
             {
@@ -340,7 +347,6 @@ namespace Blind
 
         public void AniParingenable()
         {
-            Debug.Log("Dd");
             if (!createAttackHitBox)
             {
                 AttackHitBox();

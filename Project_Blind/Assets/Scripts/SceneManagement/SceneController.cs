@@ -12,6 +12,7 @@ namespace Blind
     public class SceneController : Manager<SceneController>
     {
         public bool isLoading;
+        public TransitionDestination.DestinationTag DestinationTag;
         public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
         protected override void Awake()
         {
@@ -47,8 +48,8 @@ namespace Blind
                 isLoading = true;
                 yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
                 string sceneName = newSceneName.ToString();
-                DataManager.Instance.PlayerCharacterDataValue.DestinationTag = destinationTag;
-                yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName,destinationTag));
+                DestinationTag = destinationTag;
+                yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName, false));
                 yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
                 isLoading = false;
             }
