@@ -37,6 +37,7 @@ namespace Blind
         private void OnTriggerEnter2D(Collider2D col)
         {
             var waveHitObj = col.gameObject.GetComponent<WaveHitObj>();
+            Debug.Log(col.gameObject.name);
             if (waveHitObj != null)
             {
                 waveHitObj.GetHit();
