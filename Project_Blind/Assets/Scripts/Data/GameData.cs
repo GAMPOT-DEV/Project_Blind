@@ -61,7 +61,6 @@ namespace Blind
     {
         public UnitHP Hp;
         public int CurrentWaveGage;
-        public TransitionDestination.DestinationTag DestinationTag;
 
         public PlayerCharacterData(UnitHP hp, int currentWaveGage)
         {

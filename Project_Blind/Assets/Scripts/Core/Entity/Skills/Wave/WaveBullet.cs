@@ -10,7 +10,7 @@ namespace Blind
         [SerializeField] private float maxsize = 30f;
         [SerializeField] private float time;
         [SerializeField] private float _coolTime;
-
+        private PlayerCharacter _player;
         private Light2D _light2D;
 
         private Rigidbody2D rigid;
@@ -25,6 +25,11 @@ namespace Blind
         {
             rigid = GetComponent<Rigidbody2D>();
             _light2D = GetComponent<Light2D>();
+        }
+
+        public void Init(PlayerCharacter player)
+        {
+            _player = player;
         }
 
         public void GetFacing(Facing playerFacing)
@@ -85,6 +90,8 @@ namespace Blind
                 _light2D.pointLightOuterRadius = radius;
                 yield return null;
             }
+
+            _player.bulletCheck = false;
             Destroy(gameObject);
         }
 
