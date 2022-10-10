@@ -6,7 +6,7 @@ namespace Blind
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex)
         {
-            SoundManager.Instance.Play("Player/빠른 이동", Define.Sound.Effect);
+            SoundManager.Instance.Play("Player/Dash", Define.Sound.Effect);
             _monoBehaviour.GroundedHorizontalMovement(false);
             _monoBehaviour.StopDash();
             animator.speed = 2.5f;
