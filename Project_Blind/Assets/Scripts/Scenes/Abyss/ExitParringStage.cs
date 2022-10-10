@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +13,14 @@ namespace Blind.Abyss
         public GameObject monster;
         protected override void Awake()
         {
-            _leaveWall.Enable();
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
             base.Awake();
+            _leaveWall.Enable();
 
+        }
+
+        private void Start()
+        {
+            player = GameManager.Instance.Player;
         }
 
         private void Update()
@@ -33,4 +38,3 @@ namespace Blind.Abyss
         }
     }
 }
-

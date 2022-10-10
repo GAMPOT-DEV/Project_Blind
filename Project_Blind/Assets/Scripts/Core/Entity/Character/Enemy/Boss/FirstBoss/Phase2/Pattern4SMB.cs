@@ -7,7 +7,7 @@ namespace Blind
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             _monoBehaviour.AttackInit(3,3,3);
-            _monoBehaviour.Pattern3Start();
+            _monoBehaviour.Pattern4Start();
         }
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
             

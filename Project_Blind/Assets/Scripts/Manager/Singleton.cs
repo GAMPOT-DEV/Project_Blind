@@ -35,13 +35,26 @@ namespace Blind
                 var className = typeof(T).ToString(); // 클래스 이름 가져오기
                 var managerObj = new GameObject(className); // 게임 오브젝트 새로 만들기
                 s_instance = managerObj.AddComponent<T>(); // 클래스 붙이기
+                DontDestroyOnLoad(s_instance);
             }
-            DontDestroyOnLoad(s_instance);
         }
 
         private static void Find()
         {
             s_instance = FindObjectOfType<T>(); // 현재 씬에 클래스가 있는지 확인
+        }
+
+        public static bool IsExist()
+        {
+            Find();
+            if (s_instance == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

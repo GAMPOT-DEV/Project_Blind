@@ -48,7 +48,7 @@ namespace Blind
         private bool _isInput = false;
         public bool TalismanMoney = false;
         [SerializeField] private int _currentWaveGauge = 30;
-        public int CurrentWaveGauge
+        public int CurrentWaveGauge 
         {
             get { return _currentWaveGauge; }
             set
@@ -69,7 +69,7 @@ namespace Blind
         private float currentmovevector_x;
         public float gravity;
         private bool soundPlay;
-
+        public bool bulletCheck;
         public Action<int> OnWaveGaugeChanged;
 
         public void Awake()
@@ -105,6 +105,7 @@ namespace Blind
         {
             SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
             Hp.SetHealth();
+            DataManager.Instance.ClearBagData();
         }
 
         public void OnFixedUpdate()
@@ -119,7 +120,7 @@ namespace Blind
             if (playerCharacterData == null) return;
             Hp.SetHealth(playerCharacterData.Hp);
             CurrentWaveGauge = playerCharacterData.CurrentWaveGage;
-            transform.position = SceneController.SetDestination(playerCharacterData.DestinationTag);
+            transform.position = SceneController.SetDestination(SceneController.Instance.DestinationTag);
         }
         
         public void GroundedHorizontalMovement(bool useInput, float speedScale = 0.1f, bool isJumpAttack = false)
@@ -437,12 +438,17 @@ namespace Blind
 
         public bool CheckForItemT()
         {
-            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.WaveStick);
+            return InputController.Instance.ItemT.Down && DataManager.Instance.HaveBagItem(Define.BagItem.WaveStick) && !bulletCheck;
         }
 
         public bool CheckForItemUsing()
         {
             return InputController.Instance.ItemUsing.Down && DataManager.Instance.HaveBagItem(Define.BagItem.Potion);
+        }
+
+        public void ItemUsing()
+        {
+            _animator.SetTrigger("Item");
         }
         public void ItemT()
         {
@@ -452,9 +458,16 @@ namespace Blind
         public void ThrowItem()
         {
             var bullet = ResourceManager.Instance.Instantiate("Item/WaveBullet").GetComponent<WaveBullet>();
+            bullet.Init(this);
+            bulletCheck = true;
             bullet.transform.position = _bulletPoint.position;
             if(_renderer == null) bullet.GetFacing(GetFacing());
             else bullet.GetFacing(GetFacing());
+        }
+
+        public void HpHeal()
+        {
+            Hp.GetHeal(3);
         }
         public void Talk()
         {
@@ -596,6 +609,16 @@ namespace Blind
         {
             Data.maxSpeed += value;
             Data.dashSpeed += value;
+        }
+
+        public override void PlayAttackFx(int level)
+        {
+            base.PlayAttackFx(level);
+            if (isPowerAttack)
+            {
+                level += 4;
+            }
+            transform.GetChild(1).GetChild(level).GetComponent<AttackFX>().Play(GetFacing());
         }
     }
 }

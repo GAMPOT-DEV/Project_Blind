@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,10 +14,14 @@ namespace Blind.Abyss
         public Transform exit;
         protected override void Awake()
         {
-            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
             ExitPoint.GetComponent<ExitPoint>().stage = this;
         }
-        
+
+        private void Start()
+        {
+            Player = GameManager.Instance.Player;
+        }
+
         public void StartFadeOut()
         {
             StartCoroutine(FadeOut());
