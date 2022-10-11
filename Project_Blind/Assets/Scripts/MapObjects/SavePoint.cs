@@ -9,7 +9,7 @@ namespace Blind
         private PlayerCharacter Player;
         public void Heal() // �ĵ������� �� HPȸ��
         {
-            Player.CurrentWaveGauge = Player.maxWaveGauge;
+            Player.CurrentWaveGauge = Player.Data.maxWaveGauge;
             var gO = ResourceManager.Instance.Instantiate("FX/HitFX/Heal");
             gO.transform.position = Player.transform.position;
             Player.Hp.ResetHp();
