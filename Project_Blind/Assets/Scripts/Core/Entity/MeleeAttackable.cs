@@ -49,11 +49,6 @@ using UnityEngine;
             this.point = point;
         }
 
-        public void ChangeDamage(int value)
-        {
-            this._damage += value;
-        }
-
         public void EnableDamage()
          {
              canDamage = true;

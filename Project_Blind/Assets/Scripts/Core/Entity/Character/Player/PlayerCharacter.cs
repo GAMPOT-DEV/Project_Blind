@@ -44,7 +44,7 @@ namespace Blind
         public bool isPowerAttack;
         public bool isParingCheck = false;
         public bool isInputCheck;
-        public int maxWaveGauge;
+        //public int maxWaveGauge;
         private bool _isInput = false;
         public bool TalismanMoney = false;
         [SerializeField] private int _currentWaveGauge = 30;
@@ -592,14 +592,15 @@ namespace Blind
 
         public void ChangeDamage(int value)
         {
-            _attack.ChangeDamage(value);
+            Data.damage += value;
+            _attack.DamageReset(Data.damage);
         }
 
         public void ChangeWaveGauge(int value)
         {
-            maxWaveGauge += value;
-            if (_currentWaveGauge > maxWaveGauge)
-                _currentWaveGauge = maxWaveGauge;
+            Data.maxWaveGauge += value;
+            if (_currentWaveGauge > Data.maxWaveGauge)
+                _currentWaveGauge = Data.maxWaveGauge;
         }
 
         public void ChangeMoneyProb(bool value)
