@@ -296,6 +296,10 @@ namespace Blind
             SaveGameData();
             return true;
         }
+        public int GetMoney()
+        {
+            return _gameData.money;
+        }
 
         public void CaveOpen()
         {
