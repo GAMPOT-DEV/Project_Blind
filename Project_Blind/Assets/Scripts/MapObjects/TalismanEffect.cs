@@ -10,13 +10,12 @@ namespace Blind
 
         public TalismanEffect()
         {
-            Player = FindObjectOfType<PlayerCharacter>();
+            Player = GameManager.Instance.Player;
         }
 
         public void EquipTalisman(int itemId)
         {
-            if(Player == null)
-                Player = FindObjectOfType<PlayerCharacter>();
+            Player = GameManager.Instance.Player;
 
             switch (itemId)
             {
@@ -40,8 +39,7 @@ namespace Blind
 
         public void UnequipTalisman(int itemId)
         {
-            if (Player == null)
-                Player = FindObjectOfType<PlayerCharacter>();
+            Player = GameManager.Instance.Player;
 
             switch (itemId)
             {
