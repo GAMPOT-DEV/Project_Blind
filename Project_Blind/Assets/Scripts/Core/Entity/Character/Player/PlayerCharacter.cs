@@ -410,6 +410,7 @@ namespace Blind
             yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
             
             Respawn();
+            GameManager.Instance.ResetStage();
             yield return new WaitForEndOfFrame();
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
             InputController.Instance.GainControl();
