@@ -8,8 +8,15 @@ namespace Blind
     {
         PlayerCharacter Player;
 
+        public TalismanEffect()
+        {
+            Player = GameManager.Instance.Player;
+        }
+
         public void EquipTalisman(int itemId)
         {
+            Player = GameManager.Instance.Player;
+
             switch (itemId)
             {
                 case 1:
@@ -32,6 +39,8 @@ namespace Blind
 
         public void UnequipTalisman(int itemId)
         {
+            Player = GameManager.Instance.Player;
+
             switch (itemId)
             {
                 case 1:
