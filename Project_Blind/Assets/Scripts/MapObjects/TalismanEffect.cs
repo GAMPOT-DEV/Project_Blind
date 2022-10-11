@@ -8,8 +8,16 @@ namespace Blind
     {
         PlayerCharacter Player;
 
+        public TalismanEffect()
+        {
+            Player = FindObjectOfType<PlayerCharacter>();
+        }
+
         public void EquipTalisman(int itemId)
         {
+            if(Player == null)
+                Player = FindObjectOfType<PlayerCharacter>();
+
             switch (itemId)
             {
                 case 1:
@@ -32,6 +40,9 @@ namespace Blind
 
         public void UnequipTalisman(int itemId)
         {
+            if (Player == null)
+                Player = FindObjectOfType<PlayerCharacter>();
+
             switch (itemId)
             {
                 case 1:
