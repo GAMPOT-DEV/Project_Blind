@@ -405,6 +405,7 @@ namespace Blind
         IEnumerator DieRespawn()
         {
             InputController.Instance.ReleaseControl(true);
+            DataManager.Instance.SubMoney(DataManager.Instance.GetMoney() / 2);
             yield return new WaitForSeconds(1.0f);
             yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
             
