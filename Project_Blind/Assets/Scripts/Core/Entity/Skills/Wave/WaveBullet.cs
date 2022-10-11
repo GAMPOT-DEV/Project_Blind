@@ -23,6 +23,7 @@ namespace Blind
         private bool isExit;
         public void Awake()
         {
+            gameObject.transform.rotation = Quaternion.Euler(0,0,-32);
             rigid = GetComponent<Rigidbody2D>();
             _light2D = GetComponent<Light2D>();
         }
