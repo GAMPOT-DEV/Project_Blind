@@ -72,7 +72,8 @@ namespace Blind
                 AudioSource audioSource = ResourceManager.Instance.Instantiate("SFX/SoundEffect")
                     .GetComponent<AudioSource>();
                 audioSource.clip = audioClip;
-                audioSource.volume = DataManager.Instance.GameData.effectVolume;
+                //audioSource.volume = DataManager.Instance.GameData.effectVolume;
+                audioSource.volume = _audioSources[(int)Define.Sound.Effect].volume;
                 StartCoroutine(PlayBgm(audioSource));
             }
         }
