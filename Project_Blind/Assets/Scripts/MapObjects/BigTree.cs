@@ -14,11 +14,11 @@ namespace Blind
         private void Awake()
         {
             videoPlayer = tree.GetComponent<VideoPlayer>();
+            //DataManager.Instance.ClearCaveData(); //동굴바위를 다시 생성시키고 싶다면 주석해제
         }
 
         public override void DoInteraction()
         {
-            //DataManager.Instance.ClearCaveData(); 동굴바위를 다시 생성시키고 싶다면 주석해제
             DataManager.Instance.CaveOpen();
             DataManager.Instance.SaveGameData();
         }

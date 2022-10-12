@@ -108,7 +108,7 @@ namespace Blind
             while (true)
             {
                 currBgmSound -= lastBGMSound * Time.deltaTime * 30;
-                if (currBgmSound < 0f) break;
+                if (currBgmSound <= 0f) break;
                 SoundManager.Instance.ChangeVolume(Define.Sound.Bgm, currBgmSound);
                 yield return new WaitForSeconds(0.1f);
             }

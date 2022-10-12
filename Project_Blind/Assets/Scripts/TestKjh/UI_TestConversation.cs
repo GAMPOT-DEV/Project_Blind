@@ -39,7 +39,7 @@ namespace Blind
         enum Images
         {
             BackGroundImage,
-            NextButtonImage,
+            //NextButtonImage,
             NPCNameImage
         }
         public override void Init()
@@ -47,7 +47,7 @@ namespace Blind
             base.Init();
             Bind<Text>(typeof(Texts));
             Bind<Image>(typeof(Images));
-            Get<Image>((int)Images.NextButtonImage).gameObject.BindEvent(PushNextButton, Define.UIEvent.Click);
+            //Get<Image>((int)Images.NextButtonImage).gameObject.BindEvent(PushNextButton, Define.UIEvent.Click);
             Get<Image>((int)Images.BackGroundImage).gameObject.BindEvent(DragUI, Define.UIEvent.Drag);
 
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;

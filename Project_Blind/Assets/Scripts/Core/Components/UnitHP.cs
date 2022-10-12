@@ -51,6 +51,7 @@ namespace Blind
         public void GetHeal(float heal) {
             if(_health + heal > _maxHealth) {
                 _health = _maxHealth;
+                SetHealth();
                 return;
             }
             _health += heal;

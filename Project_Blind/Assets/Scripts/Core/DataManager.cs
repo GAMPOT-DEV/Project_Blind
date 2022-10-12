@@ -50,7 +50,7 @@ namespace Blind
         }
 
         #region Load, Save Data
-        string FileName = "/GameData.json";
+        string FileName = "/GameData1.json";
         GameData _gameData;
         public GameData GameData
         {
@@ -64,7 +64,7 @@ namespace Blind
                 return _gameData;
             }
         }
-        public void LoadGameData()
+        private void LoadGameData()
         {
             string filePath = Application.persistentDataPath + FileName;
 
@@ -83,6 +83,7 @@ namespace Blind
             _gameData.MakeClueDict();
             _gameData.MakeTalismanDict();
             _gameData.MakeBagItemDict();
+            Debug.Log("Load");
         }
         public void SaveGameData()
         {
@@ -96,12 +97,12 @@ namespace Blind
             int id = (int)itemId;
 
             ClueInfo clue = null;
-            _gameData.ClueInfoById.TryGetValue(id, out clue);
+            GameData.ClueInfoById.TryGetValue(id, out clue);
             if (clue != null)
                 return false;
 
-            clue = new ClueInfo() { itemId = id, slot = UI_Clue.Size++ };
-            _gameData.AddClueItem(clue);
+            clue = new ClueInfo() { itemId = id, slot = GameData.clueInfos.Count };
+            GameData.AddClueItem(clue);
             SaveGameData();
             return true;
         }
@@ -125,13 +126,13 @@ namespace Blind
         {
             int id = (int)itemId;
             ClueInfo clue;
-            _gameData.ClueInfoById.TryGetValue(id, out clue);
+            GameData.ClueInfoById.TryGetValue(id, out clue);
             if (clue == null) return false;
             return true;
         }
         public void ClearClueData()
         {
-            _gameData.ClearClueData();
+            GameData.ClearClueData();
             SaveGameData();
         }
         #region Talisman
@@ -140,12 +141,12 @@ namespace Blind
             int id = (int)itemId;
 
             TalismanInfo talisman = null;
-            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
+            GameData.TalismanInfoById.TryGetValue(id, out talisman);
             if (talisman != null)
                 return false;
 
-            talisman = new TalismanInfo() { itemId = id, equiped = false, slot = UI_Talisman.Size++ };
-            _gameData.AddTalismanItem(talisman);
+            talisman = new TalismanInfo() { itemId = id, equiped = false, slot = GameData.talismanInfos.Count };
+            GameData.AddTalismanItem(talisman);
             SaveGameData();
             return true;
         }
@@ -169,7 +170,7 @@ namespace Blind
         {
             int id = (int)itemId;
             TalismanInfo talisman;
-            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
+            GameData.TalismanInfoById.TryGetValue(id, out talisman);
             if (talisman == null) return false;
             return true;
         }
@@ -177,24 +178,24 @@ namespace Blind
         {
             int id = (int)itemId;
             TalismanInfo talisman;
-            _gameData.TalismanInfoById.TryGetValue(id, out talisman);
+            GameData.TalismanInfoById.TryGetValue(id, out talisman);
             if (talisman == null) return false;
 
             if (talisman.equiped == false)
             {
-                if (_gameData.currEquipCnt >= 3) return false;
-                _gameData.EquipTalismanItem(talisman);
+                if (GameData.currEquipCnt >= 3) return false;
+                GameData.EquipTalismanItem(talisman);
                 SaveGameData();
                 return true;
             }
 
-            _gameData.UnequipTalismanItem(talisman);
+            GameData.UnequipTalismanItem(talisman);
             SaveGameData();
             return true;
         }
         public void ClearTalismanData()
         {
-            _gameData.ClearTalismanData();
+            GameData.ClearTalismanData();
             SaveGameData();
         }
         #endregion
@@ -204,18 +205,18 @@ namespace Blind
             int id = (int)itemId;
 
             BagItemInfo item = null;
-            _gameData.BagItemInfoById.TryGetValue(id, out item);
+            GameData.BagItemInfoById.TryGetValue(id, out item);
 
             if (item != null)
             {
-                _gameData.AddBagItem(id, cnt);
+                GameData.AddBagItem(id, cnt);
                 RefreshFieldUI();
                 SaveGameData();
                 return false;
             }
 
-            item = new BagItemInfo() { itemId = id, slot = UI_Bag.Size++, itemCnt = cnt };
-            _gameData.AddBagItem(item);
+            item = new BagItemInfo() { itemId = id, slot = GameData.bagItemInfos.Count, itemCnt = cnt };
+            GameData.AddBagItem(item);
             RefreshFieldUI();
             SaveGameData();
             return true;
@@ -225,7 +226,7 @@ namespace Blind
             int id = (int)itemId;
 
             BagItemInfo item = null;
-            _gameData.BagItemInfoById.TryGetValue(id, out item);
+            GameData.BagItemInfoById.TryGetValue(id, out item);
             if (item == null)
                 return false;
 
@@ -237,11 +238,11 @@ namespace Blind
             if (item.itemCnt == cnt)
             {
                 int slot = item.slot;
-                _gameData.DeleteBagItem(item);
-                OneIndexForwardBag(slot + 1, _gameData.bagItemInfos.Count + 1);
+                GameData.DeleteBagItem(item);
+                OneIndexForwardBag(slot + 1, GameData.bagItemInfos.Count + 1);
             }
             else
-                _gameData.DeleteBagItem(item, cnt);
+                GameData.DeleteBagItem(item, cnt);
 
             RefreshFieldUI();
             SaveGameData();
@@ -249,18 +250,19 @@ namespace Blind
         }
         private void OneIndexForwardBag(int start, int end)
         {
-            _gameData.OneIndexForwardBag(start, end);
+            GameData.OneIndexForwardBag(start, end);
         }
         public void ClearBagData()
         {
-            _gameData.ClearBagData();
+            GameData.ClearBagData();
+            RefreshFieldUI();
             SaveGameData();
         }
         public bool HaveBagItem(Define.BagItem itemId)
         {
             int id = (int)itemId;
             BagItemInfo item;
-            _gameData.BagItemInfoById.TryGetValue(id, out item);
+            GameData.BagItemInfoById.TryGetValue(id, out item);
             if (item == null) return false;
             return true;
         }
@@ -274,7 +276,7 @@ namespace Blind
         public bool AddMoney(int money)
         {
             if (money <= 0) return false;
-            _gameData.money += money;
+            GameData.money += money;
             UI_FieldScene ui = FindObjectOfType<UI_FieldScene>();
             if(ui != null)
             {
@@ -286,8 +288,8 @@ namespace Blind
         public bool SubMoney(int money)
         {
             if (money <= 0) return false;
-            if (_gameData.money < money) return false;
-            _gameData.money -= money;
+            if (GameData.money < money) return false;
+            GameData.money -= money;
             UI_FieldScene ui = FindObjectOfType<UI_FieldScene>();
             if (ui != null)
             {
@@ -296,20 +298,24 @@ namespace Blind
             SaveGameData();
             return true;
         }
+        public int GetMoney()
+        {
+            return GameData.money;
+        }
 
         public void CaveOpen()
         {
-            _gameData.caveClear = 1;
+            GameData.caveClear = 1;
             Debug.Log("cave opened");
         }
         public void ClearCaveData()
         {
-            _gameData.caveClear = 0;
+            GameData.caveClear = 0;
 
         }
         public int GetClearCave()
         {
-            return _gameData.caveClear;
+            return GameData.caveClear;
         }
     }
 }

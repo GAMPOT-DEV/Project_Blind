@@ -7,9 +7,10 @@ namespace Blind
     public class TalismanEffect : MonoBehaviour
     {
         PlayerCharacter Player;
-
         public void EquipTalisman(int itemId)
         {
+            Player = GameManager.Instance.Player;
+
             switch (itemId)
             {
                 case 1:
@@ -32,6 +33,8 @@ namespace Blind
 
         public void UnequipTalisman(int itemId)
         {
+            Player = GameManager.Instance.Player;
+
             switch (itemId)
             {
                 case 1:
