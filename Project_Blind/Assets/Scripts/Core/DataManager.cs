@@ -64,7 +64,7 @@ namespace Blind
                 return _gameData;
             }
         }
-        public void LoadGameData()
+        private void LoadGameData()
         {
             string filePath = Application.persistentDataPath + FileName;
 
@@ -255,6 +255,7 @@ namespace Blind
         public void ClearBagData()
         {
             GameData.ClearBagData();
+            RefreshFieldUI();
             SaveGameData();
         }
         public bool HaveBagItem(Define.BagItem itemId)

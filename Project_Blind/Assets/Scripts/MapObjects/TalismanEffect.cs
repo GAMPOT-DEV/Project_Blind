@@ -7,12 +7,6 @@ namespace Blind
     public class TalismanEffect : MonoBehaviour
     {
         PlayerCharacter Player;
-
-        public TalismanEffect()
-        {
-            Player = GameManager.Instance.Player;
-        }
-
         public void EquipTalisman(int itemId)
         {
             Player = GameManager.Instance.Player;
