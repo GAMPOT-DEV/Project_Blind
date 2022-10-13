@@ -14,6 +14,8 @@ namespace Blind
         public Define.ScriptTitle ScriptTitle;
         public Define.BagItem BagItem;
         public Define.ClueItem ClueItem;
+        public int Xoffset;
+        public int Yoffset;
 
         protected override void Init(int x = 5, int y = 5)
         {
@@ -44,7 +46,7 @@ namespace Blind
             (_ui as UI_TestConversation).Title = ScriptTitle;
             (_ui as UI_TestConversation).BagItem = BagItem;
             (_ui as UI_TestConversation).ClueItem = ClueItem;
-            _ui.SetPosition(gameObject.transform.position, Vector3.up * 3);
+            _ui.SetPosition(gameObject.transform.position, Vector3.up * Yoffset + Vector3.right * Xoffset);
 
             PlayerCharacter player = FindObjectOfType<PlayerCharacter>();
             player.GetComponent<PlayerCharacter>().Talk();

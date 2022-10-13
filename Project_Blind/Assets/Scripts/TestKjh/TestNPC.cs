@@ -13,6 +13,8 @@ namespace Blind
         [SerializeField] private Define.ScriptTitle ScriptTitle;
         [SerializeField] private Define.BagItem BagItem;
         [SerializeField] private Define.ClueItem ClueItem;
+        [SerializeField] private int Xoffset;
+        [SerializeField] private int Yoffset;
         void Awake()
         {
             //_interactionConversation = gameObject.GetOrAddComponent<ConversationTest>();
@@ -25,6 +27,8 @@ namespace Blind
             _interaction.ScriptTitle = ScriptTitle;
             _interaction.BagItem = BagItem;
             _interaction.ClueItem = ClueItem;
+            _interaction.Xoffset = Xoffset;
+            _interaction.Yoffset = Yoffset;
         }
     }
 }

@@ -108,6 +108,8 @@ namespace Blind
         {
             foreach (TalismanInfo talismanInfo in talismanInfos)
             {
+                talismanInfo.equiped = false;
+                currEquipCnt = 0;
                 TalismanInfoBySlot.Add(talismanInfo.slot, talismanInfo);
                 TalismanInfoById.Add(talismanInfo.itemId, talismanInfo);
             }
