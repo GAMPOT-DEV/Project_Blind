@@ -130,16 +130,16 @@ namespace Blind
         private void PushStartButton()
         {
             // 컷씬 O
-            //SoundManager.Instance.Play("Select");
-            //ChangeCursor((int)Images.Image_Start);
-            //ResourceManager.Instance.Instantiate("UI/Video");
-            //_goNextScene = true;
-            //gameObject.SetActive(false);
+            SoundManager.Instance.Play("Select");
+            ChangeCursor((int)Images.Image_Start);
+            ResourceManager.Instance.Instantiate("UI/Video");
+            _goNextScene = true;
+            gameObject.SetActive(false);
 
             // 컷씬 X
-            UIManager.Instance.Clear();
-            SoundManager.Instance.StopBGM();
-            _transition.TransitionInternal();
+            //UIManager.Instance.Clear();
+            //SoundManager.Instance.StopBGM();
+            //_transition.TransitionInternal();
         }
         private void PushOptionButton()
         {
