@@ -110,6 +110,7 @@ namespace Blind
             
             if (col.gameObject.layer == 6 || col.gameObject.layer == 7)
             {
+                _light2D.intensity = 0.8f;
                 Bright();
                 ActivateInvisibleFloor();
                 position = gameObject.transform.position;
@@ -118,6 +119,7 @@ namespace Blind
             }
             else if (col.gameObject.layer == 14)
             {
+                _light2D.intensity = 0.8f;
                 Bright();
                 ActivateInvisibleFloor();
                 enemy = col.gameObject;
