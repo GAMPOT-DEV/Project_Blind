@@ -21,8 +21,7 @@ namespace Blind.ScriptableObjects
         [SerializeField] public float attackMove = 1f;
         [SerializeField] public float maxComboDelay;
         [SerializeField] public float hurtMove = 1f;
-        [SerializeField] public int maxWaveGauge;
-
+        
         [SerializeField] public int attack_x;
         [SerializeField] public int attack_y;
         [SerializeField] public int damage;
