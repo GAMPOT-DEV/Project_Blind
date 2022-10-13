@@ -207,6 +207,17 @@ namespace Blind
             //testKeyChange.SetActive(false);
 
             InitBeforeChangeTexts();
+
+            if (_gameData.windowMode)
+            {
+                Get<Image>((int)Images.Button_WindowModeOnOff).sprite = Button_On;
+                UIManager.Instance.IsWindowMode = _gameData.windowMode;
+            }
+            else
+            {
+                Get<Image>((int)Images.Button_WindowModeOnOff).sprite = Button_Off;
+                UIManager.Instance.IsWindowMode = _gameData.windowMode;
+            }
         }
         private void OnEnable()
         {
