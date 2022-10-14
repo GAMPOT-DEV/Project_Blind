@@ -62,10 +62,7 @@ namespace Blind
 
             _transition = GameObject.Find("TransitionStart_Main").GetComponent<TransitionPoint>();
 
-            _bagUI.SetActive(false);
-            _talismanUI.SetActive(false);
-            _clueUI.SetActive(false);
-            _settingUI.SetActive(false);
+           
 
             _uis[(int)Images.Image_Bag] = _bagUI;
             _uis[(int)Images.Image_Talisman] = _talismanUI;
@@ -80,6 +77,14 @@ namespace Blind
             _sprites[(int)Images.Image_Clue].NonClicked = _clue_NonClicked;
             _sprites[(int)Images.Image_Setting].Clicked = _setting_Clicked;
             _sprites[(int)Images.Image_Setting].NonClicked = _setting_NonClicked;
+
+        }
+        protected override void Start()
+        {
+            _bagUI.SetActive(false);
+            _talismanUI.SetActive(false);
+            _clueUI.SetActive(false);
+            _settingUI.SetActive(false);
 
             PushButton(_currCursor);
         }

@@ -38,8 +38,8 @@ namespace Blind
         private int _index;
         private bool _pushZButton = false;
 
-        private float UP_DIST;
-        private float DOWN_DIST;
+        //private float UP_DIST;
+        //private float DOWN_DIST;
 
         private Coroutine _coroutine = null;
         int _coroutineState = 0;
@@ -51,8 +51,8 @@ namespace Blind
             _cludData = DataManager.Instance.ClueDict;
             Get<Image>((int)Images.Image_ItemIcon).gameObject.BindEvent(PushItemIcon, Define.UIEvent.Click);
 
-            UP_DIST = 500f;
-            DOWN_DIST = 130f;
+            //UP_DIST = 500f;
+            //DOWN_DIST = 130f;
         }
         private void OnEnable()
         {
@@ -157,9 +157,9 @@ namespace Blind
             _coroutineState = 1;
             while (true)
             {
-                if (Get<Image>((int)Images.Image_Line_Down).transform.position.y + UP_DIST <= Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y)
+                if (Get<Image>((int)Images.Image_Line_Down).transform.position.y + UIManager.Instance.Resolution.height / 2 <= Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y)
                 {
-                    Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * UP_DIST;
+                    Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * UIManager.Instance.Resolution.height / 2;
                     _coroutine = null;
                     _coroutineState = 0;
                     break;
@@ -173,9 +173,9 @@ namespace Blind
             _coroutineState = -1;
             while (true)
             {
-                if (Get<Image>((int)Images.Image_Line_Down).transform.position.y + DOWN_DIST >= Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y)
+                if (Get<Image>((int)Images.Image_Line_Down).transform.position.y + UIManager.Instance.Resolution.height / 10 >= Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position.y)
                 {
-                    Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * DOWN_DIST;
+                    Get<GameObject>((int)GameObjects.Go_ClueDescAndLineUp).transform.position = Get<Image>((int)Images.Image_Line_Down).transform.position + Vector3.up * UIManager.Instance.Resolution.height / 10;
                     _coroutine = null;
                     _coroutineState = 0;
                     break;
