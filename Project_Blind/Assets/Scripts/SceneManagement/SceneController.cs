@@ -45,10 +45,12 @@ namespace Blind
         {
             if (!isLoading)
             {
+                Debug.Log("ddw");
                 isLoading = true;
                 yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
                 string sceneName = newSceneName.ToString();
                 DestinationTag = destinationTag;
+                Debug.Log(DestinationTag);
                 yield return StartCoroutine(LoadingSceneController.LoadSceneProcess(sceneName, false));
                 yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
                 isLoading = false;

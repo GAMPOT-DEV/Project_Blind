@@ -59,7 +59,6 @@ namespace Blind
                 if (GameManager.IsExist())
                 {
                     var player = GameManager.Instance.Player;
-                    Debug.Log(player);
                     if (player != null)
                         DataManager.Instance.PlayerCharacterDataValue =
                             new PlayerCharacterData(player.Hp, player.CurrentWaveGauge);
