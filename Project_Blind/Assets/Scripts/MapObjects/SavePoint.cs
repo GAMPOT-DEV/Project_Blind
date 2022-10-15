@@ -30,6 +30,7 @@ namespace Blind
                     _ui = UIManager.Instance.ShowWorldSpaceUI<UI_Interaction>();
                     _ui.SetPosition(transform.position, Vector3.down * 3);
                     (_ui as UI_Interaction).InteractionAction += (() => UIManager.Instance.ShowNormalUI<UI_SavePoint>());
+                    (_ui as UI_Interaction).isConversation = false;
                     //Ư�� Ű ���� ui interact�ϸ� ����
 
                 }
@@ -48,6 +49,7 @@ namespace Blind
         {
             Heal();
             ResetEnemy();
+            DataManager.Instance.SaveGameData();
         }
     }
 
