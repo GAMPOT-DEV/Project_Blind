@@ -107,7 +107,7 @@ namespace Blind
         }
         private void OnHpChanged(float hp, float maxHp)
         {
-            if (_hp == hp) return;
+            if (_hp == hp && _maxHp == maxHp) return;
             if (_coHpChange != null)
             {
                 StopCoroutine(_coHpChange);
@@ -119,16 +119,17 @@ namespace Blind
             _coHpChange = StartCoroutine(CoChangeHp(lastHp, hp, time));
             //Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
         }
-        private void OnWaveGaugeChanged(int gauge)
+        private void OnWaveGaugeChanged(int gauge, int maxGuage)
         {
-            if (_currWaveGauge == gauge) return;
+            if (_currWaveGauge == (float)gauge && _maxWaveGauge == (float)maxGuage) return;
+            Debug.Log(maxGuage);
             if (_coWaveChange != null)
             {
                 StopCoroutine(_coWaveChange);
                 _coWaveChange = null;
             }
             float lastGauge = _currWaveGauge;
-            _maxWaveGauge = 30f;
+            _maxWaveGauge = (float)maxGuage;
             float time = 1f / (Mathf.Abs((float)gauge - lastGauge) * 10f);
             _coWaveChange = StartCoroutine(CoChangeWave(lastGauge, gauge, time));
 
@@ -154,7 +155,7 @@ namespace Blind
         }
         IEnumerator CoChangeHp(float lastHp, float targetHp, float time)
         {
-            float value = 0.15f;
+            float value = _maxHp;
             if (lastHp < targetHp)
             {
                 while (true)
@@ -167,7 +168,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp += value * Time.deltaTime * 100;
+                    _hp += value * Time.deltaTime;
                     Get<Image>((int)Images.Image_RealHp).fillAmount = _hp / _maxHp;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
@@ -185,7 +186,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp -= value * Time.deltaTime * 100;
+                    _hp -= value * Time.deltaTime;
                     Get<Slider>((int)Sliders.Slider_HP).value = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
                 }
@@ -193,7 +194,7 @@ namespace Blind
         }
         IEnumerator CoChangeWave(float lastWave, float targetWave, float time)
         {
-            float value = 0.15f;
+            float value = _maxWaveGauge;
             if (lastWave < targetWave)
             {
                 while (true)
@@ -206,7 +207,7 @@ namespace Blind
                         _coWaveChange = null;
                         break;
                     }
-                    _currWaveGauge += value * Time.deltaTime * 150;
+                    _currWaveGauge += value * Time.deltaTime;
                     Get<Image>((int)Images.Image_RealGauge).fillAmount = _currWaveGauge / _maxWaveGauge;
                     Get<Slider>((int)Sliders.Slider_WaveGauge).value = _currWaveGauge / _maxWaveGauge;
                     yield return new WaitForSeconds(time / 5f);
@@ -224,7 +225,7 @@ namespace Blind
                         _coWaveChange = null;
                         break;
                     }
-                    _currWaveGauge -= value * Time.deltaTime * 150;
+                    _currWaveGauge -= value * Time.deltaTime;
                     Get<Slider>((int)Sliders.Slider_WaveGauge).value = _currWaveGauge / _maxWaveGauge;
                     yield return new WaitForSeconds(time / 5f);
                 }
