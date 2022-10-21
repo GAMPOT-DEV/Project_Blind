@@ -14,7 +14,10 @@ namespace Blind
             Image_Interaction
         }
 
+        [SerializeField] private Sprite ConversationSprite;
+
         public Action InteractionAction;
+        public bool isConversation = true;
 
         float panelValue = 20f;
         float interactionValue = 20f;
@@ -27,6 +30,11 @@ namespace Blind
             Bind<Image>(typeof(Images));
             UIManager.Instance.KeyInputEvents -= HandleKeyInput;
             UIManager.Instance.KeyInputEvents += HandleKeyInput;
+            
+        }
+        protected override void Start()
+        {
+            if (isConversation) Get<Image>((int)Images.Image_Interaction).sprite = ConversationSprite;
             Appear();
         }
         private void Appear()

@@ -55,9 +55,9 @@ namespace Blind
             {
                 _currentWaveGauge = value;
                 if (_currentWaveGauge < 0) _currentWaveGauge = 0;
-                if (_currentWaveGauge > 30) _currentWaveGauge = 30;
+                if (_currentWaveGauge > maxWaveGauge) _currentWaveGauge = maxWaveGauge;
                 if (OnWaveGaugeChanged != null)
-                    OnWaveGaugeChanged.Invoke(_currentWaveGauge);
+                    OnWaveGaugeChanged.Invoke(_currentWaveGauge, maxWaveGauge);
             }
         }
         
@@ -70,7 +70,7 @@ namespace Blind
         public float gravity;
         private bool soundPlay;
         public bool bulletCheck;
-        public Action<int> OnWaveGaugeChanged;
+        public Action<int, int> OnWaveGaugeChanged;
 
         public void Awake()
         {
@@ -98,14 +98,15 @@ namespace Blind
             // TEST
             if (FindObjectOfType<UI_FieldScene>() == null)
                 UIManager.Instance.ShowSceneUI<UI_FieldScene>();
-            OnWaveGaugeChanged.Invoke(_currentWaveGauge);
+            OnWaveGaugeChanged.Invoke(_currentWaveGauge, maxWaveGauge);
         }
 
         private void Start()
         {
             SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
             Hp.SetHealth();
-            DataManager.Instance.ClearBagData();
+            //DataManager.Instance.ClearBagData();
+            Debug.Log(maxWaveGauge);
         }
 
         public void OnFixedUpdate()
@@ -600,6 +601,7 @@ namespace Blind
             maxWaveGauge += value;
             if (_currentWaveGauge > maxWaveGauge)
                 _currentWaveGauge = maxWaveGauge;
+            CurrentWaveGauge = _currentWaveGauge;
         }
 
         public void ChangeMoneyProb(bool value)
