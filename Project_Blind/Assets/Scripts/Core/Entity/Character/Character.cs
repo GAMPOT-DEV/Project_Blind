@@ -20,7 +20,7 @@ namespace Blind
             if (!_isInvincibility)
             {
                 Hit(attackInfo.Damage);
-                HurtMove(attackInfo.EnemyFacing);
+                if(!gameObject.tag.Equals("Boss")) HurtMove(attackInfo.EnemyFacing);
 
             }
         }

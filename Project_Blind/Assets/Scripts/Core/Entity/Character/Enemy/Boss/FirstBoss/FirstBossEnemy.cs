@@ -13,6 +13,7 @@ namespace Blind
         [SerializeField] private List<Transform> AttackPosition;
         [SerializeField] private List<Transform> Pattern2AttackPosition;
         [SerializeField] private BoxCollider2D AttackRange;
+        [SerializeField] private BoxCollider2D HitBox;
         [SerializeField] public Transform ShoutePatternPosition;
         [SerializeField] private Transform Pattern3Attackposition;
         public CinemachineImpulseSource _source;
@@ -33,7 +34,7 @@ namespace Blind
             _bossPhase = phaseList.GetEnumerator();
             _bossPhase.MoveNext();
             _source = GetComponent<CinemachineImpulseSource>();
-
+            HitBox.gameObject.SetActive(false);
             foreach (var phase in phaseList)
             {
                 
@@ -83,12 +84,13 @@ namespace Blind
         public void NextPhase()
         {
             _bossPhase.MoveNext();
+            HitBox.gameObject.SetActive(true);
             StartCoroutine(NextPhaseStart());
         }
 
         public void AttackInit(int x, int y, int damage)
         {
-            AttackRange.gameObject.GetComponent<BossAttack>().Init(x,y,damage);
+            AttackRange.gameObject.GetComponent<BossAttack>().ReAttackSize(new Vector2(x,y));
         }
 
         IEnumerator NextPhaseStart()
@@ -97,6 +99,16 @@ namespace Blind
             BossPhaseStart();
         }
 
+        public bool CheckForDead()
+        {
+            return Hp.GetHP() <= 0;
+        }
+
+        public void Dead()
+        {
+            _bossPhase.Current.Stop();
+            _animator.SetBool("Dead", true);
+        }
         public void Pattern2Start(int random)
         {
             AttackRange.gameObject.transform.position = Pattern2AttackPosition[random].position;
@@ -123,13 +135,9 @@ namespace Blind
             AttackRange.gameObject.transform.position = AttackPosition[next].position;
         }
 
-        public void CamaraShake()
-        {
-            _source.GenerateImpulse();
-        }
-
         public void enableAttack()
         {
+            _source.GenerateImpulse();
             AttackRange.gameObject.GetComponent<BossAttack>().isAttack = true;
         }
 
