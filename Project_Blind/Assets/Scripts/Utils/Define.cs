@@ -31,12 +31,12 @@ public class Define
         고목,
         동굴,
         장산범방,
-        abyss,
-        temple,
-        forest,
-        village,
-        cave,
-        bossstage,
+        Abyss,
+        Temple,
+        Forest,
+        Village,
+        Cave,
+        Bossstage,
 
     }
 
