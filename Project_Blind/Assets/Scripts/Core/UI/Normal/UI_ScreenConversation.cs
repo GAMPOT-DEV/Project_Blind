@@ -38,6 +38,7 @@ namespace Blind
             UIManager.Instance.KeyInputEvents -= HandleUIKeyInput;
             UIManager.Instance.KeyInputEvents += HandleUIKeyInput;
 
+            Debug.Log("h");
         }
         protected override void Start()
         {

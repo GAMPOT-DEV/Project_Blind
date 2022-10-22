@@ -58,6 +58,10 @@ namespace Blind
             UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
             ui.SetName("의문의 목소리"); //가시성을 위해 임시로  stage 추가, 이후 제거하면 됨
             ui.SetScriptTitle((Define.ScriptTitle)Enum.Parse(typeof(Define.ScriptTitle), stage));
+
+            if (stage == "Stage5") return;
+
+            ui.EndEvent += (() => ResourceManager.Instance.Instantiate($"UI/Explains/UI_Explain_{stage}"));
         }
     }
 }

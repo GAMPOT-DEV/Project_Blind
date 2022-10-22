@@ -81,7 +81,8 @@ namespace Blind
         {
             audioSource.Play();
             yield return new WaitForSeconds(audioSource.clip.length);
-            Destroy(audioSource.gameObject);
+            if (audioSource != null)
+                Destroy(audioSource.gameObject);
         }
         public void StopBGM()
         {
