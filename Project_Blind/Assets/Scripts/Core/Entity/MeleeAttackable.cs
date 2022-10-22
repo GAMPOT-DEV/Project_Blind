@@ -1,4 +1,5 @@
-﻿using Spine.Unity;
+﻿using System;
+using Spine.Unity;
 using UnityEngine;
      
  namespace Blind
@@ -19,7 +20,7 @@ using UnityEngine;
          private Collider2D hitobj;
          private bool _isSpriteFlip;
          private Transform point;
-
+         private bool isBossAttack;
 
          private Vector2 _hitbox;
  
@@ -57,6 +58,7 @@ using UnityEngine;
         public void EnableDamage()
          {
              canDamage = true;
+             isBossAttack = false;
          }
  
          public void DisableDamage()
@@ -96,9 +98,9 @@ using UnityEngine;
 
              var position = transform.position;
             if (point != null)
-                position = point.position;
-             var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
-             
+                position = point.position; 
+            var pointA = new Vector2(position.x + (float)facing * 1, position.y + 1);
+            
              _hitbox = pointA;
              size = new Vector2(pointA.x + ((float)facing * x), pointA.y + y);
              
@@ -106,7 +108,12 @@ using UnityEngine;
              for (var i = 0; i < hitCount; i++)
              {
                  hitobj = ResultObj[i];
-                 hitobj.GetComponent<Character>().HitWithKnockBack(new AttackInfo(_damage, facing));
+                 if(hitobj.gameObject.tag.Equals("Boss"))
+                 {
+                     Debug.Log("실행ㅇㅇ!!");
+                     hitobj.transform.parent.gameObject.transform.parent.GetComponent<Character>().HitWithKnockBack(new AttackInfo(_damage, facing));
+                 }
+                 else hitobj.GetComponent<Character>().HitWithKnockBack(new AttackInfo(_damage, facing));
                  entity.HitSuccess();
                  canDamage = false;
              }

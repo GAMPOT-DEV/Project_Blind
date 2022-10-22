@@ -11,6 +11,7 @@ namespace Blind
             player.GetComponent<CinemachineImpulseSource>().GenerateImpulse();
             player.CharacterInvincible();
             player.CurrentWaveGauge += player.paringWaveGauge;
+            EnemyDebuff();
         }
 
         public override void EnemyDebuff()

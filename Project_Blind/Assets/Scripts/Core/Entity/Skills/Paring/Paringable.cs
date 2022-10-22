@@ -79,7 +79,7 @@ namespace Blind
         public void OnTriggerStay2D(Collider2D col)
         {
             if (!_isParing) return;
-
+            Debug.Log("dd");
             Facings(gameObject.transform.parent.gameObject.GetComponent<PlayerCharacter>().GetFacing());
             var paring = col.gameObject.GetComponent<ParingEffect>();
             if (paring != null)

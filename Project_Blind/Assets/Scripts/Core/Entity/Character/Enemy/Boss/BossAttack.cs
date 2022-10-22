@@ -19,7 +19,7 @@ namespace Blind
 
         public void ReAttackSize(Vector2 size)
         {
-            _col.size = size;
+            gameObject.GetComponent<BoxCollider2D>().size = size;
         }
 
         public void OnTriggerStay2D(Collider2D col)

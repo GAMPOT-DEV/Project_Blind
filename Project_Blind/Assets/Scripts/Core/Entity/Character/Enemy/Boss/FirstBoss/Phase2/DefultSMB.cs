@@ -11,7 +11,10 @@ namespace Blind
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
-            
+            if (_monoBehaviour.CheckForDead())
+            {
+                _monoBehaviour.Dead();
+            }
         }
     }
 }
