@@ -157,11 +157,11 @@ public class Define
 
         RestScript,
 
-        Cut1Scene1,
-        Cut1Scene2,
-        Cut1Scene3,
-        Cut1Scene4,
-        Cut1Scene5,
+        ForestCutScene1,
+        ForestCutScene2,
+        ForestCutScene3,
+        ForestCutScene4,
+        ForestCutScene5,
     }
     public enum TalismanAbility
     {
