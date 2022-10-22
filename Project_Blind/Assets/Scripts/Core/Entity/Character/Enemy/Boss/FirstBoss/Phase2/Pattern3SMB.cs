@@ -12,11 +12,11 @@ namespace Blind
             var wave = ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense 2").GetComponent<WaveSense>();
             wave.transform.position = _monoBehaviour.ShoutePatternPosition.position;
             wave.StartSpread();
+            _monoBehaviour._source.GenerateImpulse();
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
-            
         }
     }
 }
