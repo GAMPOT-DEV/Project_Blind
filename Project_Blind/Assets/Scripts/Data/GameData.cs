@@ -27,6 +27,7 @@ namespace Blind
 
         public int money = 0;
         public int caveClear = 0;
+        public int forestCutSceneData = 0;
 
         #region Clue
         public List<ClueInfo> clueInfos = new List<ClueInfo>();
