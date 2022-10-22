@@ -317,6 +317,23 @@ namespace Blind
         {
             return GameData.caveClear;
         }
+
+        public void ForestCutSceneDone()
+        {
+            GameData.forestCutSceneData = 1;
+        }
+
+        public void ClearForestCutSceneData()
+        {
+            GameData.forestCutSceneData = 0;
+        }
+
+        public int GetForestCutSceneData()
+        {
+            return GameData.forestCutSceneData;
+        }
+
+
     }
 }
 

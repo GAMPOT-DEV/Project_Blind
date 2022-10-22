@@ -17,6 +17,7 @@ namespace Blind
         }
 
 
+        /*
         IEnumerator waitForInput()
         {
             while (flag == false)
@@ -30,6 +31,7 @@ namespace Blind
                 yield return null;
             }
         }
+        */
 
         public void displayImage()
         {
@@ -39,6 +41,9 @@ namespace Blind
         IEnumerator showForSeconds(float time)
         {
             image.gameObject.SetActive(true);
+            UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
+            ui.SetName("남모");
+            ui.SetScriptTitle(Define.ScriptTitle.CutScene1);
             float _time = 0;
             while (_time <= 2f)
             {
@@ -46,12 +51,7 @@ namespace Blind
                 _time += 0.01f;
                 yield return null;
             }
-            _time = 0;
-            while (_time <= time)
-            {
-                _time += 0.01f;
-                yield return null;
-            }
+            while(UIManager.Instance.getNormalUiCount() > 0) yield return null;
             _time = 0;
             while (_time <= 2f)
             {
@@ -59,6 +59,7 @@ namespace Blind
                 _time += 0.01f;
                 yield return null;
             }
+            InputController.Instance.GainControl();
             image.gameObject.SetActive(false);
         }
 
@@ -66,7 +67,13 @@ namespace Blind
         {
             if (collision.transform.CompareTag("Player"))
             {
-                StartCoroutine(waitForInput());
+                if(DataManager.Instance.GetForestCutSceneData() == 0)
+                {
+
+                    DataManager.Instance.ForestCutSceneDone();
+                    DataManager.Instance.SaveGameData();
+                    displayImage();
+                }
             }
         }
 
