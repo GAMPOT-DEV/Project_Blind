@@ -41,9 +41,11 @@ namespace Blind
         IEnumerator showForSeconds(float time)
         {
             image.gameObject.SetActive(true);
+
             UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
             ui.SetName("남모");
-            ui.SetScriptTitle(Define.ScriptTitle.CutScene1);
+            ui.SetScriptTitle(Define.ScriptTitle.ForestCutScene1);
+
             float _time = 0;
             while (_time <= 2f)
             {
@@ -51,7 +53,30 @@ namespace Blind
                 _time += 0.01f;
                 yield return null;
             }
-            while(UIManager.Instance.getNormalUiCount() > 0) yield return null;
+
+            while (UIManager.Instance.getNormalUiCount() > 0) yield return null;
+
+
+            ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
+            ui.SetName("준정");
+            ui.SetScriptTitle(Define.ScriptTitle.ForestCutScene2);
+            while (UIManager.Instance.getNormalUiCount() > 0) yield return null;
+
+            ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
+            ui.SetName("남모");
+            ui.SetScriptTitle(Define.ScriptTitle.ForestCutScene3);
+            while (UIManager.Instance.getNormalUiCount() > 0) yield return null;
+
+            ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
+            ui.SetName("준정");
+            ui.SetScriptTitle(Define.ScriptTitle.ForestCutScene4);
+            while (UIManager.Instance.getNormalUiCount() > 0) yield return null;
+
+            ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
+            ui.SetName("남모");
+            ui.SetScriptTitle(Define.ScriptTitle.ForestCutScene5);
+            while (UIManager.Instance.getNormalUiCount() > 0) yield return null;
+
             _time = 0;
             while (_time <= 2f)
             {
@@ -67,7 +92,7 @@ namespace Blind
         {
             if (collision.transform.CompareTag("Player"))
             {
-                if(DataManager.Instance.GetForestCutSceneData() == 0)
+                if (DataManager.Instance.GetForestCutSceneData() == 0)
                 {
 
                     DataManager.Instance.ForestCutSceneDone();
