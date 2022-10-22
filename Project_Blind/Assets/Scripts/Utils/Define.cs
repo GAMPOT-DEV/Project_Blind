@@ -31,7 +31,12 @@ public class Define
         고목,
         동굴,
         장산범방,
-        
+        abyss,
+        temple,
+        forest,
+        village,
+        cave,
+        bossstage,
 
     }
 
@@ -150,7 +155,13 @@ public class Define
         village3,
         BigTree,
 
-        RestScript
+        RestScript,
+
+        Cut1Scene1,
+        Cut1Scene2,
+        Cut1Scene3,
+        Cut1Scene4,
+        Cut1Scene5,
     }
     public enum TalismanAbility
     {
