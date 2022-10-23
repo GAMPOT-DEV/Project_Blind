@@ -10,7 +10,9 @@ namespace Blind
     {
         [SerializeField] private ChinDir dir;
         private Vector3  _originPos;
+        private Vector2 movePosition;
         [FormerlySerializedAs("_parent")] public BossPattern3 Parent;
+        private bool isPlay = false;
         public enum ChinDir
         {
             Upper = 1,
@@ -23,8 +25,23 @@ namespace Blind
             _originPos = transform.position;
         }
 
-        public Coroutine Play()
+        public void FixedUpdate()
         {
+            if (!isPlay) return;
+
+            transform.position = Vector2.MoveTowards(transform.position, movePosition, 0.2f);
+
+            if (transform.position.y == movePosition.y)
+            {
+                transform.position = _originPos;
+                gameObject.SetActive(false);
+                isPlay = false;
+            }
+        }
+
+        public Coroutine Play(Vector2 movePosiotion)
+        {
+            movePosition = movePosiotion;
             return StartCoroutine(play());
         }
 
@@ -38,15 +55,8 @@ namespace Blind
 
         private IEnumerator play()
         {
-            var curTime = 0f;
-            while (curTime < 1)
-            {
-                curTime += Time.deltaTime;
-                transform.position += Vector3.down * (float) dir * 0.1f;
-                yield return null;
-            }
-            transform.position = _originPos;
-            gameObject.SetActive(false);
+            isPlay = true;
+            yield return new WaitForSeconds(3f);
         }
     }
 }

@@ -15,6 +15,14 @@ namespace Blind
             {
                 _monoBehaviour.Dead();
             }
+            
+        }
+        public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            if (GameManager.Instance.Player.isCheckDead)
+            {
+                _monoBehaviour.Reset();
+            }
         }
     }
 }

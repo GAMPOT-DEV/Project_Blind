@@ -17,10 +17,7 @@ namespace Blind
         {
             base.Init(firstBossEnemy);
             _parent = firstBossEnemy;
-            _parent.ToggleRenderer(false);
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
-            _parent.
-            transform.GetChild(3).gameObject.SetActive(true);
             Debug.Log("페이즈 1");
         }
         public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)
@@ -30,6 +27,9 @@ namespace Blind
         }
         public override void Play()
         {
+            transform.GetChild(3).gameObject.SetActive(true);
+            _parent.ToggleRenderer(false);
+            _patternCount = 0;
             SoundManager.Instance.Play("장산범/장산범 1페이즈", Define.Sound.Bgm);
             _coroutine = StartCoroutine(StartAttackState());
         }
@@ -55,7 +55,7 @@ namespace Blind
                     Stop();
                     _parent.NextPhase();
                 }
-                var next = _rand.Next(0, 3);
+                var next = _rand.Next(0, 2);
                 SetAttackPattern(_patternList[next]);
                 yield return StartPattern();
                 _patternCount++;

@@ -23,6 +23,11 @@ namespace Blind
             Debug.Log(boss.name);
             boss.Hp.RefreshHpUI -= OnHpChanged;
             boss.Hp.RefreshHpUI += OnHpChanged;
+            
+            _hp = boss.Hp.GetHP();
+            _maxHp = boss.Hp.GetMaxHP();
+            Get<Image>((int)Images.Image_BossHp_RealHp).fillAmount = _hp / _maxHp;
+            Get<Image>((int)Images.Image_BossHp_AfterImage).fillAmount = _hp / _maxHp;
         }
         private void OnHpChanged(float hp, float maxHp)
         {
@@ -40,7 +45,7 @@ namespace Blind
         }
         IEnumerator CoChangeHp(float lastHp, float targetHp, float time)
         {
-            float value = 0.1f;
+            float value = _maxHp;
             if (lastHp < targetHp)
             {
                 while (true)
@@ -53,7 +58,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp += value * Time.deltaTime * 100;
+                    _hp += value * Time.deltaTime;
                     Get<Image>((int)Images.Image_BossHp_RealHp).fillAmount = _hp / _maxHp;
                     Get<Image>((int)Images.Image_BossHp_AfterImage).fillAmount = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
@@ -71,7 +76,7 @@ namespace Blind
                         _coHpChange = null;
                         break;
                     }
-                    _hp -= value * Time.deltaTime * 100;
+                    _hp -= value * Time.deltaTime;
                     Get<Image>((int)Images.Image_BossHp_AfterImage).fillAmount = _hp / _maxHp;
                     yield return new WaitForSeconds(time / 5f);
                 }

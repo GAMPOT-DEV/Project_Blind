@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Blind.JangSanBum;
 using Cinemachine;
 using UnityEngine;
 using Random = System.Random;
@@ -16,14 +17,18 @@ namespace Blind
         [SerializeField] private BoxCollider2D HitBox;
         [SerializeField] public Transform ShoutePatternPosition;
         [SerializeField] private Transform Pattern3Attackposition;
+        [SerializeField] private GameObject phase1Image;
+        [SerializeField] private Transform StartPosition;
         public CinemachineImpulseSource _source;
         public Transform _floorStart;
         public Transform _floorEnd;
         private IEnumerator<BossPhase> _bossPhase;
         [SerializeField] private Transform point;
+        public bool isOne;
         private Animator _animator;
         private bool isStart = false;
         private int next;
+        public bool isPlayerDead = false;
         protected override void Awake()
         {
             base.Awake();
@@ -34,6 +39,7 @@ namespace Blind
             _bossPhase = phaseList.GetEnumerator();
             _bossPhase.MoveNext();
             _source = GetComponent<CinemachineImpulseSource>();
+            phase1Image .SetActive(false);
             HitBox.gameObject.SetActive(false);
             foreach (var phase in phaseList)
             {
@@ -44,7 +50,6 @@ namespace Blind
             // Test
             ResourceManager.Instance.Instantiate("UI/Normal/UI_BossHp");
             Hp.SetHealth();
-            StartCoroutine(CoTestBossHp());
         }
 
         protected override void FixedUpdate()
@@ -62,13 +67,21 @@ namespace Blind
 
         public override void Reset()
         {
-            base.Reset();
-            if (_bossPhase.Current != null) _bossPhase.Current.Stop();
-            _bossPhase.Reset();
+                base.Reset();
+                if (_bossPhase.Current != null) _bossPhase.Current.Stop();
+                _bossPhase.Reset();
+                _bossPhase.MoveNext();
+                transform.position = StartPosition.position;
+                JangSanBumSceneManager.Instance.Reset();
+                GameManager.Instance.Player.isCheckDead = false;
+                GameManager.Instance.Player.isBossWaveCheck = false;
+                SoundManager.Instance.StopBGM();
+                ResetAnimator();
         }
 
         public void Play()
         {
+            Debug.Log("실행됨 싱ㄴㄴㅊ");
             if (_bossPhase.Current != null)
             {
                 isStart = true;
@@ -81,8 +94,16 @@ namespace Blind
             _bossPhase.Current.Play();
         }
 
+        public void ResetAnimator()
+        {
+            _animator.Rebind();
+            SceneLinkedSMB<FirstBossEnemy>.Initialise(_animator, this);
+            _animator.speed = 0f;
+        }
+
         public void NextPhase()
         {
+            _bossPhase.MoveNext();
             StartCoroutine(NextPhaseStart());
         }
 
@@ -145,6 +166,11 @@ namespace Blind
         {
             _renderer.enabled = trigger;
         }
+
+        public bool CheckForPlayerDead()
+        {
+            return GameManager.Instance.Player.Hp.GetHP() <= 0;
+        }
         IEnumerator NextPhaseScreenFade()
         {
             InputController.Instance.ReleaseControl(true);
@@ -152,21 +178,31 @@ namespace Blind
             yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
             yield return new WaitForSeconds(2.0f);
             
-            _bossPhase.Current.End();
-            _bossPhase.MoveNext();
+            ToggleRenderer(true);
+            phase1Image.SetActive(false);
             HitBox.gameObject.SetActive(true);
             
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
             InputController.Instance.GainControl();
             
         }
-
-        // Test
-        IEnumerator CoTestBossHp()
-        {
-            yield return new WaitForSeconds(2f);
-            Hp.GetDamage(2);
-        }
         
+        public IEnumerator StartNextPhaseScreenFade()
+        {
+            InputController.Instance.ReleaseControl(true);
+            yield return new WaitForSeconds(1.0f);
+            yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
+            yield return new WaitForSeconds(2.0f);
+            phase1Image.SetActive(true);
+            ToggleRenderer(false);
+            
+            yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
+            InputController.Instance.GainControl();
+            
+            BossPhaseStart();
+            
+
+        }
+
     }
 }

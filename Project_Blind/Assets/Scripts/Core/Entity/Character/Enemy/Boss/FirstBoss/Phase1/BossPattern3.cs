@@ -14,6 +14,7 @@ namespace Blind
         private Chin _upperChin;
         private Chin _lowerChin;
         private int _attackAbleCount = 1;
+        private Vector2 centerPosiotion;
 
         private void Awake()
         {
@@ -29,8 +30,22 @@ namespace Blind
             transform.position = GameManager.Instance.Player.transform.position;
             _upperChin.gameObject.SetActive(true);
             _lowerChin.gameObject.SetActive(true);
-            _upperChin.Play();
-            return _lowerChin.Play();
+            centerPosiotion = new Vector2(_upperChin.transform.position.x,
+                (_upperChin.transform.position.y + _lowerChin.transform.position.y) / 2);
+            _upperChin.Play(centerPosiotion);
+            _lowerChin.Play(centerPosiotion);
+            return End();
+        }
+
+        Coroutine End()
+        {
+            return StartCoroutine(realEnd());
+        }
+
+        IEnumerator realEnd()
+        {
+            yield return new WaitForSeconds(3f);
+
         }
 
         public void Attack()

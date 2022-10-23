@@ -1,20 +1,17 @@
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Rendering.Universal;
-
 namespace Blind
 {
-    /// <summary>
-    /// 파동의 로직을 처리하는 클래스입니다.
-    /// </summary>
-    public class WaveSense : MonoBehaviour
+    public class BossWaveSense : MonoBehaviour
     {
         [SerializeField] private float _maxRadious = 20f;
         [SerializeField] private AnimationCurve spreadSpeed;
         [SerializeField] private AnimationCurve fadeAnimation;
         [SerializeField] private float fadeTime = 0.5f;
+        [SerializeField] private FirstBossEnemy boss;
         private float _curTime;
         private CircleCollider2D _collider2D;
         private Light2D _light;
@@ -31,6 +28,7 @@ namespace Blind
             _collider2D = GetComponent<CircleCollider2D>();
             _collider2D.enabled = false;
             _light = GetComponent<Light2D>();
+            GameManager.Instance.Player.isBossWaveCheck = false;
             _radius = 0;
         }
         
@@ -41,10 +39,13 @@ namespace Blind
             {
                 waveHitObj.GetHit();
             }
-            else if (col.gameObject.name.Equals("WaveSense2"))
+            else if (col.tag.Equals("Player")  && col.gameObject.GetComponent<PlayerCharacter>().isBossWaveCheck)
             {
-                Debug.Log("실행됨");
-                Destroy(col.gameObject);
+                col.gameObject.GetComponent<PlayerCharacter>().HitWithKnockBack(new AttackInfo(1,Facing.Right));
+            }
+            else if (col.tag.Equals("Player") && !col.gameObject.GetComponent<PlayerCharacter>().isBossWaveCheck)
+            {
+                col.gameObject.GetComponent<PlayerCharacter>().isBossWaveCheck = true;
             }
         }
 

@@ -106,6 +106,7 @@ namespace Blind
                 if (!_player._isInvincibility)
                 {
                     _collider.isTrigger = true;
+                    SoundManager.Instance.Play("타격-무겁게", Define.Sound.Effect);
                     _player.HitWithKnockBack(new AttackInfo(1f,facing));
                     StartCoroutine(ResetTrigger());
                 }

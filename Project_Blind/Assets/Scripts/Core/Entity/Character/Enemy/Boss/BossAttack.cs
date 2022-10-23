@@ -29,6 +29,7 @@ namespace Blind
 
             if (col.tag.Equals("Player"))
             {
+                SoundManager.Instance.Play("타격-무겁게", Define.Sound.Effect);
                 col.gameObject.GetComponent<Character>().HitWithKnockBack(new AttackInfo(damage,Facing.Right));
                 isAttack = false;
             }
