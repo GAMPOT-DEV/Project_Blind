@@ -17,7 +17,10 @@ namespace Blind
         {
             base.Init(firstBossEnemy);
             _parent = firstBossEnemy;
+            _parent.ToggleRenderer(false);
             _pattern = GetComponent<BossAttackPattern<FirstBossEnemy>>();
+            _parent.
+            transform.GetChild(3).gameObject.SetActive(true);
             Debug.Log("페이즈 1");
         }
         public void SetAttackPattern(BossAttackPattern<FirstBossEnemy> pattern)
@@ -33,6 +36,8 @@ namespace Blind
 
         public override void End()
         {
+            _parent.ToggleRenderer(true);
+            transform.GetChild(3).gameObject.SetActive(false);
         }
 
         public override void Stop()
