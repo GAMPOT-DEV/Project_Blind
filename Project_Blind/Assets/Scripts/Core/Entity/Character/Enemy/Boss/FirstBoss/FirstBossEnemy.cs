@@ -83,8 +83,6 @@ namespace Blind
 
         public void NextPhase()
         {
-            _bossPhase.MoveNext();
-            HitBox.gameObject.SetActive(true);
             StartCoroutine(NextPhaseStart());
         }
 
@@ -142,13 +140,22 @@ namespace Blind
         {
             AttackRange.gameObject.GetComponent<BossAttack>().isAttack = false;
         }
+
+        public void ToggleRenderer(bool trigger)
+        {
+            _renderer.enabled = trigger;
+        }
         IEnumerator NextPhaseScreenFade()
         {
             InputController.Instance.ReleaseControl(true);
             yield return new WaitForSeconds(1.0f);
             yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
-            
             yield return new WaitForSeconds(2.0f);
+            
+            _bossPhase.Current.End();
+            _bossPhase.MoveNext();
+            HitBox.gameObject.SetActive(true);
+            
             yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
             InputController.Instance.GainControl();
             
