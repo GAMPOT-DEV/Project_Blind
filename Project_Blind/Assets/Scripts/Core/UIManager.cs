@@ -1,4 +1,4 @@
-﻿using Blind;
+using Blind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -277,6 +277,11 @@ namespace Blind
             CloseAllNormalUI();
             KeyInputEvents = null;
             SceneUI = null;
+        }
+
+        public int getNormalUiCount()
+        {
+            return _normalUIs.Count;
         }
     }
 }

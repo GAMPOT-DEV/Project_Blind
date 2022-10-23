@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
@@ -39,7 +39,7 @@ namespace Blind
             {
                 videoPlayer.Pause();
                 UI_ScreenConversation ui = UIManager.Instance.ShowNormalUI<UI_ScreenConversation>();
-                ui.SetName("남모");
+                ui.SetName("준정");
                 ui.SetScriptTitle(Define.ScriptTitle.CutScene2);
                 ui.EndEvent += Play;
                 _stop2 = false;
