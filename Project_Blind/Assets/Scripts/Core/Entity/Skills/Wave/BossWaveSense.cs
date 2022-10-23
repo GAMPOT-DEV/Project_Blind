@@ -11,6 +11,7 @@ namespace Blind
         [SerializeField] private AnimationCurve spreadSpeed;
         [SerializeField] private AnimationCurve fadeAnimation;
         [SerializeField] private float fadeTime = 0.5f;
+        [SerializeField] private FirstBossEnemy boss;
         private float _curTime;
         private CircleCollider2D _collider2D;
         private Light2D _light;
@@ -40,7 +41,7 @@ namespace Blind
             }
             else if (col.tag.Equals("Player")  && col.gameObject.GetComponent<PlayerCharacter>().isBossWaveCheck)
             {
-                col.gameObject.GetComponent<PlayerCharacter>().HitWithKnockBack(new AttackInfo(3,Facing.Right));
+                col.gameObject.GetComponent<PlayerCharacter>().HitWithKnockBack(new AttackInfo(1,Facing.Right));
             }
             else if (col.tag.Equals("Player") && !col.gameObject.GetComponent<PlayerCharacter>().isBossWaveCheck)
             {

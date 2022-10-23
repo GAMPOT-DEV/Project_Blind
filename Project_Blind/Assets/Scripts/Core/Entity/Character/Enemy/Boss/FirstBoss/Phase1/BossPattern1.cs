@@ -90,7 +90,7 @@ namespace Blind
             currentPostion = player.transform.position;
             //Debug.Log(RealAttackPostion.position + " " + currentPostion);
             bossHand.GetTransform(RealAttackPostion.position, currentPostion, true);
-            SoundManager.Instance.Play("장산범/위에서 날라오는 공격", Define.Sound.Effect);
+            SoundManager.Instance.Play("장산범/위에서 날아오는 공격", Define.Sound.Effect);
         }
 
         private int RandomRange(int end = 5)

@@ -14,6 +14,10 @@ namespace Blind
             wave.transform.position = _monoBehaviour.ShoutePatternPosition.position;
             wave.StartSpread();
             _monoBehaviour._source.GenerateImpulse();
+            if (_monoBehaviour.CheckForPlayerDead())
+            {
+                _monoBehaviour.isPlayerDead = true;
+            }
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)

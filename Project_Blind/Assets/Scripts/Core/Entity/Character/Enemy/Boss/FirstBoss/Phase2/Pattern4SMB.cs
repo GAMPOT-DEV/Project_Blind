@@ -11,7 +11,10 @@ namespace Blind
             Debug.Log("tlfgoehla");
         }
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            
+            if (_monoBehaviour.CheckForPlayerDead())
+            {
+                _monoBehaviour.isPlayerDead = true;
+            }
         }
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)

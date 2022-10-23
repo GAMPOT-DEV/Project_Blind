@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Animations;
+using System.Collections.Generic;
 
 namespace Blind
 {
@@ -14,7 +15,7 @@ namespace Blind
         }
         public override void OnSLStateExit (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            _monoBehaviour.BossPhaseStart();
+            _monoBehaviour.StartCoroutine(_monoBehaviour.StartNextPhaseScreenFade());
         }
     }
 }

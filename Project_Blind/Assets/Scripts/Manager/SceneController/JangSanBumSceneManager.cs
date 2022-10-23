@@ -32,5 +32,12 @@ namespace Blind.JangSanBum
             _exitPoint.gameObject.SetActive(true);
             _firstBossEnemy.Reset();
         }
+
+        public void Reset()
+        {
+            wall.SetActive(false);
+            _entryPoint.gameObject.SetActive(true);
+            _exitPoint.gameObject.SetActive(true);
+        }
     }
 }

@@ -71,6 +71,7 @@ namespace Blind
         public float gravity;
         private bool soundPlay;
         public bool bulletCheck;
+        public bool isCheckDead;
         public Action<int, int> OnWaveGaugeChanged;
 
         public void Awake()
@@ -402,6 +403,7 @@ namespace Blind
         public void Deed()
         {
             _animator.SetBool("Dead", true);
+            isCheckDead = true;
             StartCoroutine(DieRespawn());
         }
         IEnumerator DieRespawn()

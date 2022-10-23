@@ -41,7 +41,7 @@ namespace Blind
             {
                 waveHitObj.GetHit();
             }
-            else if (col.gameObject.name.Equals("WaveSense 2"))
+            else if (col.gameObject.name.Equals("WaveSense2"))
             {
                 Debug.Log("실행됨");
                 Destroy(col.gameObject);
