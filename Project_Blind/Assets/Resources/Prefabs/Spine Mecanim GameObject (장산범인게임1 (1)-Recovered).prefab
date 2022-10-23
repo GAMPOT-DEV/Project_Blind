@@ -721,7 +721,7 @@ Transform:
   m_GameObject: {fileID: 2310527117158691970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.1, y: 25.3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8205507209122170169}
@@ -914,10 +914,14 @@ MonoBehaviour:
   HitBox: {fileID: 0}
   ShoutePatternPosition: {fileID: 429851111}
   Pattern3Attackposition: {fileID: 0}
+  phase1Image: {fileID: 0}
+  StartPosition: {fileID: 0}
   _source: {fileID: 0}
   _floorStart: {fileID: 0}
   _floorEnd: {fileID: 0}
   point: {fileID: 0}
+  isOne: 0
+  isPlayerDead: 0
 --- !u!1 &3480394184834854831
 GameObject:
   m_ObjectHideFlags: 0
@@ -10159,7 +10163,7 @@ Transform:
   m_GameObject: {fileID: 7490692087334388606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.55, y: 25.33, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4547653668827221345}
