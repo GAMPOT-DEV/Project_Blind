@@ -351,7 +351,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!95 &4346710268408832085
 Animator:
@@ -484,12 +484,14 @@ MonoBehaviour:
   isInputCheck: 0
   maxWaveGauge: 30
   TalismanMoney: 0
+  isBossWaveCheck: 0
   _currentWaveGauge: 30
   attackWaveGauge: 3
   paringWaveGauge: 5
   isOnLava: 0
   gravity: 3
   bulletCheck: 0
+  isCheckDead: 0
 --- !u!114 &3472161182528161063
 MonoBehaviour:
   m_ObjectHideFlags: 0
