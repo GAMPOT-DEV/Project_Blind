@@ -44,7 +44,6 @@ namespace Blind
             // Test
             ResourceManager.Instance.Instantiate("UI/Normal/UI_BossHp");
             Hp.SetHealth();
-            StartCoroutine(CoTestBossHp());
         }
 
         protected override void FixedUpdate()
@@ -154,12 +153,5 @@ namespace Blind
             
         }
 
-        // Test
-        IEnumerator CoTestBossHp()
-        {
-            yield return new WaitForSeconds(2f);
-            Hp.GetDamage(2);
-        }
-        
     }
 }

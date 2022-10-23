@@ -10,7 +10,7 @@ namespace Blind
             SoundManager.Instance.Play("장산범/비명2");
         }
         public override void OnSLStatePostEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            var wave = ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense 2").GetComponent<WaveSense>();
+            var wave = ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense 2").GetComponent<BossWaveSense>();
             wave.transform.position = _monoBehaviour.ShoutePatternPosition.position;
             wave.StartSpread();
             _monoBehaviour._source.GenerateImpulse();
