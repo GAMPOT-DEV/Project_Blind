@@ -44,6 +44,7 @@ namespace Blind
                 {
                     if (isBossPatternCheck) _source.GenerateImpulse();
                     isCameraShakeStop = true;
+                    StartCoroutine(ObjectFade());
                     Destroy(gameObject);
                 }
             }
@@ -51,8 +52,10 @@ namespace Blind
             {
                 if (!isParing)
                 {
-                    TargetPostion = new Vector2(transform.position.x + (5f * (float)facing), transform.position.y);
+                    float move = 5f * (float)facing;
+                    TargetPostion = new Vector2(transform.position.x + move, transform.position.y);
                     isParing = true;
+                    Debug.Log(transform.position.x + " " + TargetPostion.x);
                 }
                 transform.position = Vector2.MoveTowards(transform.position,
                     TargetPostion, 0.1f);
@@ -70,12 +73,10 @@ namespace Blind
         {
             if (facing)
             {
-                sprite.flipX = false;
                 this.facing = Facing.Left;
             }
             else
             {
-                sprite.flipX = true;
                 this.facing = Facing.Right;
             }
         }
@@ -110,7 +111,12 @@ namespace Blind
                 }
             }
         }
-        
+
+        IEnumerator ObjectFade()
+        {
+            yield return new WaitForSeconds(1.0f);
+            yield return StartCoroutine(ObjectFadeManager.s_Instance.FadeOut());
+        }
 
         public void Paring()
         {

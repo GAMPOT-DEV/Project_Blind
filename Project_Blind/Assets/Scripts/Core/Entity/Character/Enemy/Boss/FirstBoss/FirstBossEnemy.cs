@@ -90,11 +90,13 @@ namespace Blind
 
         public void AttackInit(int x, int y, int damage)
         {
-            AttackRange.gameObject.GetComponent<BossAttack>().ReAttackSize(new Vector2(x,y));
+            AttackRange.gameObject.GetComponent<BossAttack>().ReAttackSize(new Vector2(x,y), damage);
         }
 
         IEnumerator NextPhaseStart()
         {
+            yield return new WaitForSeconds(3f);
+            StartCoroutine(NextPhaseScreenFade());
             yield return new WaitForSeconds(3f);
             BossPhaseStart();
         }
@@ -123,12 +125,7 @@ namespace Blind
         {
             AttackRange.gameObject.transform.position = Pattern3Attackposition.position;
         }
-        public void Pattern4ReAttackSize()
-        {
-            AttackRange.gameObject.GetComponent<BossAttack>().ReAttackSize(new Vector2(5,3));
-        }
         
-
         public void AttackNextPosition()
         {
             next = (next + 1) % AttackPosition.Count;
@@ -144,6 +141,17 @@ namespace Blind
         public void disableAttack()
         {
             AttackRange.gameObject.GetComponent<BossAttack>().isAttack = false;
+        }
+        IEnumerator NextPhaseScreenFade()
+        {
+            InputController.Instance.ReleaseControl(true);
+            yield return new WaitForSeconds(1.0f);
+            yield return StartCoroutine(UI_ScreenFader.FadeScenOut());
+            
+            yield return new WaitForSeconds(2.0f);
+            yield return StartCoroutine(UI_ScreenFader.FadeSceneIn());
+            InputController.Instance.GainControl();
+            
         }
 
         // Test

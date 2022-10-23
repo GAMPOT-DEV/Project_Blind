@@ -24,6 +24,7 @@ namespace Blind
 
             bossHand.CheckBossPattern(false);
             int range = RandomRange();
+            SoundManager.Instance.Play("장산범/바닥긁기공격", Define.Sound.Effect);
             return StartCoroutine( StartAttack(range, bossHand));
         }
 
@@ -34,6 +35,7 @@ namespace Blind
                 bossHand.GetComponent<SpriteRenderer>().flipX = false;
                 bossHand.transform.position = _floorStart.position;
                 bossHand.GetTransform(_floorStart.position, _floorEnd.position, false);
+                bossHand.GetFacing(true);
             }
             else
             {
@@ -41,6 +43,7 @@ namespace Blind
                 bossHand.GetComponent<SpriteRenderer>().flipX = true;
                 bossHand.transform.position = _floorEnd.position;
                 bossHand.GetTransform(_floorEnd.position,_floorStart.position, false);
+                bossHand.GetFacing(false);
             }
             yield return new WaitForSeconds(3f);
         }

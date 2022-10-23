@@ -17,14 +17,14 @@ namespace Blind
             this.damage = damage;
         }
 
-        public void ReAttackSize(Vector2 size)
+        public void ReAttackSize(Vector2 size, int damage)
         {
             gameObject.GetComponent<BoxCollider2D>().size = size;
+            this.damage = damage;
         }
 
         public void OnTriggerStay2D(Collider2D col)
         {
-            Debug.Log(isAttack);
             if(!isAttack) return;
 
             if (col.tag.Equals("Player"))

@@ -5,13 +5,22 @@ namespace Blind
 {
     public class Pattern1SMB : SceneLinkedSMB<FirstBossEnemy>
     {
-        public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.AttackInit(3,3,3);
+        public override void OnSLStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            _monoBehaviour.AttackInit(3, 3, 1);
+            _monoBehaviour.gameObject.layer = 15;
+            SoundManager.Instance.Play("장산범/바닥긁기공격", Define.Sound.Effect);
         }
+
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex,
             AnimatorControllerPlayable controller)
         {
-            
+
+        }
+
+        public override void OnSLStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            _monoBehaviour.gameObject.layer = 0;
         }
     }
 }
