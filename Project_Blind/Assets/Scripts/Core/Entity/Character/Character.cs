@@ -20,8 +20,7 @@ namespace Blind
             if (!_isInvincibility)
             {
                 Hit(attackInfo.Damage);
-                if(!gameObject.tag.Equals("Boss")) HurtMove(attackInfo.EnemyFacing);
-
+                SoundManager.Instance.Play("타격 무겁게");
             }
         }
         public void Hit(float damage)
@@ -29,6 +28,7 @@ namespace Blind
             var obj = ResourceManager.Instance.Instantiate("FX/HitFx/hit");
             obj.transform.position = transform.position + Vector3.up * 5;
             Hp.GetDamage(damage);
+            Debug.Log(damage);
             if (Hp.GetHP() > 1 && !_isInvincibility)
             {
                 onHurt();

@@ -47,6 +47,7 @@ namespace Blind
         public int maxWaveGauge;
         private bool _isInput = false;
         public bool TalismanMoney = false;
+        public bool isBossWaveCheck = false;
         [SerializeField] private int _currentWaveGauge = 30;
         public int CurrentWaveGauge 
         {

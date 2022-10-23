@@ -25,6 +25,8 @@ namespace Blind
         
         public override void Play()
         {
+            SoundManager.Instance.Play("장산범/장산범 2페이즈", Define.Sound.Bgm);
+            _animator.SetTrigger("shout");
             _coroutine = StartCoroutine(StartPattern());
         }
 
@@ -63,6 +65,9 @@ namespace Blind
                     case 4:
                         Pattern4();
                         break;
+                    case 5:
+                        yield return _patternList[0].AttackPattern();
+                        break;
                 }
 
                 yield return new WaitForSeconds(3f);
@@ -71,7 +76,7 @@ namespace Blind
 
         public int Range()
         {
-            var rand = _rand.Next(1, 5);
+            var rand = _rand.Next(1, 6);
             return rand;
         }
 

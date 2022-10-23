@@ -27,6 +27,7 @@ namespace Blind
         }
         public override void Play()
         {
+            SoundManager.Instance.Play("장산범/장산범 1페이즈", Define.Sound.Bgm);
             _coroutine = StartCoroutine(StartAttackState());
         }
 

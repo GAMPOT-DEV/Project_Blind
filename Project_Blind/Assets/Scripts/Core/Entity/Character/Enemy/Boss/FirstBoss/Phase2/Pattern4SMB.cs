@@ -6,7 +6,7 @@ namespace Blind
     public class Pattern4SMB: SceneLinkedSMB<FirstBossEnemy>
     {
         public override void OnSLStateEnter(Animator animator,AnimatorStateInfo stateInfo,int layerIndex) {
-            _monoBehaviour.AttackInit(6,6,3);
+            _monoBehaviour.AttackInit(7,10,1);
             _monoBehaviour.Pattern4Start();
             Debug.Log("tlfgoehla");
         }

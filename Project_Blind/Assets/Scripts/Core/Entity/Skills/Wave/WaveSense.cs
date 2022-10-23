@@ -41,6 +41,19 @@ namespace Blind
             {
                 waveHitObj.GetHit();
             }
+            else if (col.tag.Equals("Player") && gameObject.name.Equals("WaveSense 2") && col.gameObject.GetComponent<PlayerCharacter>().isBossWaveCheck)
+            {
+                //col.gameObject.GetComponent<PlayerCharacter>().HitWithKnockBack(new AttackInfo(3,Facing.Right));
+            }
+            else if (col.tag.Equals("Player") && gameObject.name.Equals("WaveSense 2"))
+            {
+                col.gameObject.GetComponent<PlayerCharacter>().isBossWaveCheck = true;
+            }
+            else if (col.name.Equals("WaveSense") && gameObject.name.Equals("WaveSense 2"))
+            {
+                Destroy(col);
+                Destroy(gameObject);
+            }
         }
 
         public void StartSpread()

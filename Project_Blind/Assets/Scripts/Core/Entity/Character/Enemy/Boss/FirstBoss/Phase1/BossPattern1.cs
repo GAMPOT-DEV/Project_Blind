@@ -15,7 +15,6 @@ namespace Blind
 
         private void Init()
         {
-            Debug.Log("ddd");
             player = GameManager.Instance.Player;
             _collider = rangeObject.GetComponent<BoxCollider2D>();
             rangeObject.transform.position = player.transform.position;
@@ -71,6 +70,7 @@ namespace Blind
                     //Debug.Log(RealAttackPostion.position);
                 }
                 var wave = ResourceManager.Instance.Instantiate("MapObjects/Wave/WaveSense 1").GetComponent<WaveSense>();
+                SoundManager.Instance.Play("장산범/파동소리");
                 wave.transform.position = postion;
                 wave.StartSpread();
                 n++;
@@ -90,6 +90,7 @@ namespace Blind
             currentPostion = player.transform.position;
             //Debug.Log(RealAttackPostion.position + " " + currentPostion);
             bossHand.GetTransform(RealAttackPostion.position, currentPostion, true);
+            SoundManager.Instance.Play("장산범/위에서 날라오는 공격", Define.Sound.Effect);
         }
 
         private int RandomRange(int end = 5)
