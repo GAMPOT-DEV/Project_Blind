@@ -157,7 +157,7 @@ namespace Blind
             }
             RefreshUI();
         }
-        private void PushRefreshButton()
+        public void PushRefreshButton()
         {
             SoundManager.Instance.Play("Select");
             for (int i = 0; i < EQUIP_SIZE; i++)

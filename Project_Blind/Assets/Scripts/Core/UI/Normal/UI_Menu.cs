@@ -9,7 +9,7 @@ namespace Blind
     public class UI_Menu : UI_Base
     {
         [SerializeField] private GameObject _bagUI;
-        [SerializeField] private GameObject _talismanUI;
+        [SerializeField] public GameObject _talismanUI;
         [SerializeField] private GameObject _clueUI;
         [SerializeField] private GameObject _settingUI;
 
