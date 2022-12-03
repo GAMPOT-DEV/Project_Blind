@@ -31,6 +31,7 @@ public class Define
         고목,
         동굴,
         장산범방,
+        EndingCredit,
         Abyss,
         Temple,
         Forest,

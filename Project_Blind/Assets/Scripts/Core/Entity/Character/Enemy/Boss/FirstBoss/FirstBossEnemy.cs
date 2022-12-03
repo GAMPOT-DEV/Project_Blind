@@ -19,6 +19,7 @@ namespace Blind
         [SerializeField] private Transform Pattern3Attackposition;
         [SerializeField] private GameObject phase1Image;
         [SerializeField] private Transform StartPosition;
+        [SerializeField] public TransitionPoint tp;
         public CinemachineImpulseSource _source;
         public Transform _floorStart;
         public Transform _floorEnd;
@@ -48,7 +49,6 @@ namespace Blind
             }
 
             // Test
-            ResourceManager.Instance.Instantiate("UI/Normal/UI_BossHp");
             Hp.SetHealth();
         }
 
@@ -201,7 +201,18 @@ namespace Blind
             
             BossPhaseStart();
             
+        }
 
+        public void EndStart()
+        {
+            StartCoroutine(End());
+        }
+
+        public IEnumerator End()
+        {
+            yield return new WaitForSeconds(6f);
+            SoundManager.Instance.StopBGM();
+            tp.TransitionInternal();
         }
 
     }

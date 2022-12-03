@@ -9,7 +9,8 @@ namespace Blind.JangSanBum
         [SerializeField] private Point _exitPoint;
         [SerializeField] private GameObject wall;
         [SerializeField] private FirstBossEnemy _firstBossEnemy;
-
+        private GameObject _firstBossHpBar;
+        private bool isBossBarCheck = false;
         protected override void Awake()
         {
             base.Awake();
@@ -17,6 +18,9 @@ namespace Blind.JangSanBum
             {
                 wall.SetActive(true);
                 _firstBossEnemy.gameObject.SetActive(true);
+                if(!isBossBarCheck) _firstBossHpBar = ResourceManager.Instance.Instantiate("UI/Normal/UI_BossHp");
+                else _firstBossHpBar.SetActive(true);
+                isBossBarCheck = true;
                 _firstBossEnemy.Play();
             });
             _exitPoint.SetAction(() =>
@@ -38,6 +42,7 @@ namespace Blind.JangSanBum
             wall.SetActive(false);
             _entryPoint.gameObject.SetActive(true);
             _exitPoint.gameObject.SetActive(true);
+            _firstBossHpBar.SetActive(false);
         }
     }
 }
