@@ -109,6 +109,17 @@ namespace Blind
         {
             SoundManager.Instance.Play("Select");
             Time.timeScale = 1;
+
+            UI_Menu menu = FindObjectOfType<UI_Menu>();
+            if (menu != null)
+            {
+                UI_Talisman ui = menu._talismanUI.GetComponent<UI_Talisman>();
+                if(ui != null)
+                {
+                    ui.PushRefreshButton();
+                }
+            }
+
             UIManager.Instance.Clear();
             _transition.TransitionInternal();
         }

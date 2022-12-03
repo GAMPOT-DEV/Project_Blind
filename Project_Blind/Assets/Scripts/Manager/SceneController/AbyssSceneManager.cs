@@ -24,6 +24,8 @@ namespace Blind
         protected void Start()
         {
             player = GameManager.Instance.Player;
+            player.Hp.GetHeal(player.Hp.GetMaxHP());
+            player.CurrentWaveGauge = player.maxWaveGauge;
             currentStage.Current!.Enable();
             currentStageIndex = 1;
             ShowText("Stage1");

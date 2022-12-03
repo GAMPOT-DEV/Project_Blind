@@ -70,7 +70,8 @@ namespace Blind
         public void Reverse()
         {
             Image background = Get<Image>((int)Images.Image_HP_Background);
-            background.transform.Rotate(0, 180, 0);
+            if(background != null)
+                background.transform.Rotate(0, 180, 0);
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
